@@ -12,7 +12,6 @@ class App {
   constructor(controllers: Controller[]) {
     dotenv.config();
 
-    this.initializeLiveReloadServer();
     this._app = express();
     this.initializeMiddlewares();
     this.initializeControllers(controllers);
@@ -41,15 +40,6 @@ class App {
     });
   }
 
-  private initializeLiveReloadServer() {
-    const liveReloadServer = livereload.createServer();
-    liveReloadServer.watch(path.join(__dirname));
-    liveReloadServer.server.once("connection", () => {
-      setTimeout(() => {
-        liveReloadServer.refresh("/");
-      }, 100);
-    });
-  }
 }
 
 export default App;
