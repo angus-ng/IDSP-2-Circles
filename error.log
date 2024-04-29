@@ -1,0 +1,13 @@
+2024-04-29, 11:02:30 a.m. - 500 - req.isAuthenticated is not a function
+2024-04-29, 11:03:06 a.m. - 500 - req.isAuthenticated is not a function
+2024-04-29, 11:03:10 a.m. - 500 - req.isAuthenticated is not a function
+2024-04-29, 11:03:13 a.m. - 500 - req.isAuthenticated is not a function
+2024-04-29, 11:03:18 a.m. - 500 - req.isAuthenticated is not a function
+2024-04-29, 11:07:15 a.m. - 500 - req.isAuthenticated is not a function
+2024-04-29, 11:09:00 a.m. - 500 - Failed to lookup view "landing/views/index" in views directory "C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\dist\areas"
+2024-04-29, 11:10:09 a.m. - 500 - path is not defined
+2024-04-29, 11:10:16 a.m. - 500 - Failed to lookup view "landing\views\index" in views directory "C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\dist\areas"
+2024-04-29, 11:10:18 a.m. - 500 - Failed to lookup view "landing\views\index" in views directory "C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\dist\areas"
+2024-04-29, 11:10:36 a.m. - 500 - Failed to lookup view "C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\dist\areas\landing\controllers\landing\views\index" in views directory "C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\dist\areas"
+2024-04-29, 11:10:51 a.m. - 500 - Failed to lookup view "C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\dist\areas\landing\landing\views\index" in views directory "C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\dist\areas"
+2024-04-29, 11:10:55 a.m. - 500 - Failed to lookup view "C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\dist\areas\landing\views\index" in views directory "C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\dist\areas"
