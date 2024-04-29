@@ -4,6 +4,7 @@ import { IAuthenticationService } from "../services/IAuthentication.service";
 import EmailAlreadyExistsException from "../../../exceptions/EmailAlreadyExists";
 import passport from "passport";
 import WrongCredentialsException from "../../../exceptions/WrongCredentialsException";
+import path from "node:path";
 
 class AuthenticationController implements IController {
   public path = "/auth";
@@ -26,22 +27,23 @@ class AuthenticationController implements IController {
   }
 
   private showLoginPage = (_: express.Request, res: express.Response) => {
+    console.log("hello")
     if(res.locals.currentUser) {  
       res.redirect("/posts")
       return
     }
-    res.render("authentication/views/login");
+    res.render(path.join(__dirname, "../views/login"));
   };
 
   private showRegistrationPage = (_: express.Request, res: express.Response) => {
     if(res.locals.currentUser) {  
       res.redirect("/posts")
       return
-    }
-    res.render("authentication/views/register");
+    } 
+    res.render(path.join(__dirname, "../views/register"));
   };
 
-  private login =  passport.authenticate("local", {
+  private login = passport.authenticate("local", {
   successRedirect: "/posts",  
   failureRedirect: "/auth/login",
   failureMessage: true,

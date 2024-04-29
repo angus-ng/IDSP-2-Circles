@@ -11,3 +11,50 @@
 2024-04-29, 11:10:36 a.m. - 500 - Failed to lookup view "C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\dist\areas\landing\controllers\landing\views\index" in views directory "C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\dist\areas"
 2024-04-29, 11:10:51 a.m. - 500 - Failed to lookup view "C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\dist\areas\landing\landing\views\index" in views directory "C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\dist\areas"
 2024-04-29, 11:10:55 a.m. - 500 - Failed to lookup view "C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\dist\areas\landing\views\index" in views directory "C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\dist\areas"
+2024-04-29, 3:00:19 p.m. - 500 - Failed to lookup view "index" in views directory "C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\src\areas"
+2024-04-29, 3:00:20 p.m. - 500 - Failed to lookup view "index" in views directory "C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\src\areas"
+2024-04-29, 3:00:20 p.m. - 500 - Failed to lookup view "index" in views directory "C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\src\areas"
+2024-04-29, 3:00:20 p.m. - 500 - Failed to lookup view "index" in views directory "C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\src\areas"
+2024-04-29, 3:07:48 p.m. - 500 - 
+Invalid `this._db.prisma.user.create()` invocation in
+c:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\src\areas\authentication\services\Authentication.service.ts:53:47
+
+  50   ...user,
+  51 }
+  52   
+→ 53 const User = await this._db.prisma.user.create({
+       data: {
+         id: "4b66068a-dba0-46c6-be50-f7c66c556e9e",
+         username: "a",
+         firstName: "a",
+         ~~~~~~~~~
+         lastName: "a",
+         email: "a@a",
+         password: "$2b$12$6H/kUieXqEvcIrcHUCHMouG3vyioUc6C2oNt.HSKZOMk7NGs9ZSBO",
+     ?   name?: String | Null
+       }
+     })
+
+Unknown argument `firstName`. Available options are marked with ?.
+2024-04-29, 3:08:31 p.m. - 500 - 
+Invalid `this._db.prisma.user.create()` invocation in
+c:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\src\areas\authentication\services\Authentication.service.ts:53:47
+
+  50   ...user,
+  51 }
+  52   
+→ 53 const User = await this._db.prisma.user.create({
+       data: {
+         id: "c5acfdac-88d4-4eae-8653-ee7a79da4f48",
+         username: "a",
+         firstName: "a",
+         ~~~~~~~~~
+         lastName: "a",
+         email: "a@a",
+         password: "$2b$12$lx.O0634O6fSAgk8UJKjPOcHX6t1Y0jAOihol7vdRcXalU5OhiakW",
+     ?   name?: String | Null
+       }
+     })
+
+Unknown argument `firstName`. Available options are marked with ?.
+2024-04-29, 3:08:57 p.m. - 500 - Failed to serialize user into session

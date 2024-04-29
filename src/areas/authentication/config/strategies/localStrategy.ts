@@ -1,9 +1,7 @@
-import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import{ AuthenticationService } from "../../services/Authentication.service";
 
 import { IStrategy } from '../../../../interfaces/strategy.interface';
-import User from "../../../../interfaces/user.interface";
 
 const db = new AuthenticationService()
 

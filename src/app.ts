@@ -2,7 +2,6 @@ import express from "express";
 import errorMiddleware from "./middleware/error.middleware";
 import Controller from "./interfaces/controller.interface";
 import dotenv from "dotenv";
-import path from "node:path";
 
 class App {
   private _app: express.Application;
@@ -25,7 +24,7 @@ class App {
 
   private initializeMiddlewares() {
     require("./middleware/express.middlewares")(this._app);
-    // require("./middleware/passport.middlewares")(this._app);
+    require("./middleware/passport.middlewares")(this._app);
     // require("./middleware/authentication.middlewares")(this._app);
   }
 

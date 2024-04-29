@@ -1,5 +1,5 @@
 // import type { User } from "@prisma/client";
-import User from "../../../interfaces/user.interface";
+import { User } from "@prisma/client";
 export type UserDTO = Omit<User, "id">;
 
 export interface IAuthenticationService {

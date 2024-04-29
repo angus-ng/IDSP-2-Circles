@@ -2,7 +2,7 @@ import DBClient from "../../../PrismaClient";
 import { IAuthenticationService, UserDTO } from "./IAuthentication.service";
 import { compare, hash } from "bcrypt"
 // import type { User } from "@prisma/client";
-import User from "../../../interfaces/user.interface";
+import { User } from "@prisma/client";
 import { randomUUID } from "crypto";
 const salt = 12
 
@@ -23,17 +23,20 @@ export class AuthenticationService implements IAuthenticationService {
           email : email,
         }
     })
-      if(await compare(password, user.password)) {
-        return user
-      }
+    if (!user) {
+      throw new Error("No email in our database")
+    }
+    if(await compare(password, user.password)) {
+      return user
+    }
       throw new Error("Password incorrect")
     } catch (error) {
-      throw new Error("No email in our database")
+      throw new Error("")
     }
   }
   async createUser(user: UserDTO): Promise<User | null> {
     const checkEmail = await this._db.prisma.user.findUnique({where : {email: user.email}})
-    const checkUsername = await this._db.prisma.user.findUnique({where : {username : user.username}})
+    const checkUsername =  null //await this._db.prisma.user.findUnique({where : {username : user.username}})
     try {
       if (checkEmail) {
         throw new Error(`The email ${ user.email } existed ❌`);
