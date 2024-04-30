@@ -80,10 +80,16 @@ export class AuthenticationService implements IAuthenticationService {
       return user;
     }
 
+    let profilePicture = "";
+    if (profile.photos) {
+      profilePicture = profile.photos[0].value
+    }
+
     const newUser = await this._db.prisma.user.create({
       data: {
         username: profile.id,
-        facebookId: profile.id
+        facebookId: profile.id,
+        profilePicture
       }
     })
     return newUser;

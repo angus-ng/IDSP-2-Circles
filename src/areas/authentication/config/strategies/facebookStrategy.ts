@@ -15,6 +15,7 @@ const facebookStrategy = new FacebookStrategy(
   },
   async (accessToken: string, refreshToken: string, profile: Profile, done:VerifyCallback) => {
     try {
+      console.log(profile)
       const user = await db.findOrCreateFB(profile);
       done(null, user)
     } catch (error: any) {

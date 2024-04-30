@@ -231,3 +231,60 @@ Argument `profilePicture` is missing.
 2024-04-30, 12:50:14 p.m. - 500 - Error: No email in our database
 2024-04-30, 1:24:57 p.m. - 500 - Failed to serialize user into session
 2024-04-30, 1:25:12 p.m. - 500 - Bad Request
+2024/4/30 14:48:49 - 500 - 
+Invalid `this._db.prisma.user.create()` invocation in
+c:\Users\angus\Desktop\idsp\src\areas\authentication\services\Authentication.service.ts:83:48
+
+  80   return user;
+  81 }
+  82 
+→ 83 const newUser = await this._db.prisma.user.create({
+       data: {
+         username: "7487839481284174",
+         facebookId: "7487839481284174",
+     +   profilePicture: String
+       }
+     })
+
+Argument `profilePicture` is missing.
+2024/4/30 14:52:03 - 500 - This authorization code has been used.
+2024/4/30 14:52:07 - 500 - 
+Invalid `this._db.prisma.user.create()` invocation in
+c:\Users\angus\Desktop\idsp\src\areas\authentication\services\Authentication.service.ts:83:48
+
+  80   return user;
+  81 }
+  82 
+→ 83 const newUser = await this._db.prisma.user.create({
+       data: {
+         username: "7487839481284174",
+         facebookId: "7487839481284174",
+     +   profilePicture: String
+       }
+     })
+
+Argument `profilePicture` is missing.
+2024/4/30 14:53:47 - 500 - This authorization code has been used.
+2024/4/30 14:53:54 - 500 - 
+Invalid `this._db.prisma.user.create()` invocation in
+c:\Users\angus\Desktop\idsp\src\areas\authentication\services\Authentication.service.ts:83:48
+
+  80   return user;
+  81 }
+  82 
+→ 83 const newUser = await this._db.prisma.user.create({
+       data: {
+         username: "7487839481284174",
+         facebookId: "7487839481284174",
+         profilePicture: {
+           height: 200,
+           is_silhouette: false,
+           url: "https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=7487839481284174&height=200&width=200&ext=1717106034&hash=AbZYH7zc_pAcBivmkjnDf57G",
+           width: 200
+         }
+         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+       }
+     })
+
+Argument `profilePicture`: Invalid value provided. Expected String, provided Object.
+2024/4/30 14:55:29 - 500 - This authorization code has been used.
