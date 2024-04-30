@@ -14,9 +14,67 @@ datasource db {
 }
 
 model User {
-  id       String  @id
-  email    String  @unique
-  name     String?
-  username String
-  password String
+  id             String       @id @default(cuid())
+  firstName      String?
+  lastName       String?
+  username       String       @unique
+  email          String?      @unique
+  profilePicture String
+  password       String?      @unique
+  appleId        String?      @unique
+  googleId       String?      @unique
+  facebookId     String?      @unique
+  Comment        Comment[]
+  Like           Like[]
+  UserCircle     UserCircle[]
+}
+
+model Circle {
+  id         String       @id @default(cuid())
+  name       String
+  picture    String
+  UserCircle UserCircle[]
+}
+
+model Album {
+  id    String @id @default(cuid())
+  name  String
+  likes Like[]
+}
+
+model Photo {
+  id       String    @id @default(cuid())
+  src      String
+  comments Comment[]
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [username])
+  userId    String
+  likeCount Int      @default(0)
+  likes     Like[]
+  photo     Photo    @relation(fields: [photoId], references: [id])
+  photoId   String
+}
+
+model Like {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [username])
+  userId    String
+  Comment   Comment? @relation(fields: [commentId], references: [id])
+  commentId String?
+  album     Album?   @relation(fields: [albumId], references: [id])
+  albumId   String?
+}
+
+model UserCircle {
+  user     User   @relation(fields: [userId], references: [id])
+  userId   String
+  circle   Circle @relation(fields: [circleId], references: [id])
+  circleId String
+
+  @@id([userId, circleId])
 }

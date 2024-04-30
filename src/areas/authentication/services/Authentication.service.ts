@@ -4,6 +4,7 @@ import { compare, hash } from "bcrypt"
 // import type { User } from "@prisma/client";
 import { User } from "@prisma/client";
 import { randomUUID } from "crypto";
+import { Profile } from "passport-facebook";
 const salt = 12
 
 export class AuthenticationService implements IAuthenticationService {
@@ -26,24 +27,31 @@ export class AuthenticationService implements IAuthenticationService {
     if (!user) {
       throw new Error("No email in our database")
     }
-    if(await compare(password, user.password)) {
-      return user
-    }
+    if (user.password) {
+      if(await compare(password, user.password)) {
+        return user
+      }
       throw new Error("Password incorrect")
+    }
     } catch (error) {
       throw new Error("")
     }
   }
   async createUser(user: UserDTO): Promise<User | null> {
-    const checkEmail = await this._db.prisma.user.findUnique({where : {email: user.email}})
-    const checkUsername =  null //await this._db.prisma.user.findUnique({where : {username : user.username}})
     try {
+      let checkEmail;
+    if (user.email) {
+         checkEmail = await this._db.prisma.user.findUnique({where : {email: user.email}}) 
+    }
+    const checkUsername =  null //await this._db.prisma.user.findUnique({where : {username : user.username}})
       if (checkEmail) {
         throw new Error(`The email ${ user.email } existed ❌`);
       } else if (checkUsername) {
         throw new Error(`The username ${ user.username } existed ❌`);
       }
-      user.password = await hash(user.password, salt);
+      if (user.password){
+        user.password = await hash(user.password, salt);
+      }
   
       const newUser: User = {
         id: randomUUID(),
@@ -60,5 +68,26 @@ export class AuthenticationService implements IAuthenticationService {
 
   async getUserById(id: string): Promise<User | null> {
     return await this._db.prisma.user.findUnique({where : {id : id}})
+  }
+
+  async findOrCreateFB(profile: Profile) {
+    const user = await this._db.prisma.user.findUnique({
+      where: {
+        facebookId: profile.id
+      }
+    });
+
+    if (user) {
+      return user;
+    }
+
+    const newUser = await this._db.prisma.user.create({
+      data: {
+        username: profile.id,
+        profilePicture: "",
+        facebookId: profile.id
+      }
+    })
+    return newUser;
   }
 }

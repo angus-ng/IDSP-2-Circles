@@ -24,6 +24,11 @@ class AuthenticationController implements IController {
       res.redirect("/posts")
     });
     this.router.get(`${this.path}/logout`, this.logout);
+    this.router.get(`${this.path}/facebook`, this.facebook), (req:express.Request, res:express.Response) => {
+
+    };
+    this.router.get(`${this.path}/facebook/callback`, this.facebookCb), (req:express.Request, res:express.Response) => {
+    };
   }
 
   private showLoginPage = (_: express.Request, res: express.Response) => {
@@ -77,6 +82,15 @@ class AuthenticationController implements IController {
     });
     res.redirect("/auth/login")
   };
+
+  private facebook = passport.authenticate("facebook")
+
+  private facebookCb = passport.authenticate('facebook', { 
+    successRedirect: "/",
+    failureRedirect: '/auth/login'
+   })
+
+  
 }
 
 export default AuthenticationController;
