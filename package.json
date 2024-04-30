@@ -37,6 +37,7 @@
     "express": "^4.19.2",
     "express-session": "^1.18.0",
     "morgan": "^1.10.0",
-    "passport": "^0.7.0"
+    "passport": "^0.7.0",
+    "tsx": "^4.7.3"
   }
 }

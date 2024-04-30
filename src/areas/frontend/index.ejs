@@ -4,20 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Circles</title>
-    <link href="./output.css" rel="stylesheet">
+    <link href="/output.css" rel="stylesheet">
     <script defer src="./../../static/js/apiCalls.js"></script>
     <script defer src="./../../static/js/frontend.js"></script>
 </head>
-<body class="flex justify-center items-center h-screen">
+<body class="h-screen">
+    <header class="flex justify-between items-center p-4">
+        <div class="flex-1 flex justify-start">
+            <i class=""></i>
+        </div>
 
-    <div class="absolute top-0 left-0 h-full w-full bg-light-mode-bg shadow-background-shadow -z-10">
+        <div class="flex-1 flex justify-center">
+            <h1 class="text-h2 leading-h2">Page Name</h1>
+        </div>
+
+        <div class="flex-1 flex justify-end"> 
+            <i class=""></i> 
+        </div>
+    </header>
+
+    <div class="absolute top-0 left-0 h-full w-full bg-light-mode-bg shadow-background-shadow -z-10 hidden">
+    </div>
+    
+    <div class="absolute top-0 left-0 h-full w-full bg-light-mode-bg -z-10">
     </div>
 
-    <div class="absolute top-0 left-0 h-full w-full bg-gradient-to-b from-gradient-lighter-blue via-gradient-medium-blue to-gradient-darker-blue -z-20">
+    <div class="absolute top-0 left-0 h-full w-full bg-gradient-to-b from-gradient-lighter-blue via-gradient-medium-blue to-gradient-darker-blue -z-20 hidden">
     </div>
 
-    <section class="h-screen flex flex-col justify-between w-325">
-        
+
+    <section class="flex flex-col justify-between w-325">
+
     </section>
 
 </body>
