@@ -10,6 +10,7 @@ import GoogleStrategy from "../areas/authentication/config/strategies/googleStra
 // passportConfig.registerStrategy(passport);
 
 module.exports = (app: Application) => {
+  console.log("hi")
   new PassportConfig([localStrategy, facebookStrategy, GoogleStrategy]);
   app.use(passport.initialize());
   app.use(passport.session());
