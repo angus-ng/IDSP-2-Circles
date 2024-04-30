@@ -20,10 +20,10 @@ model User {
   username       String       @unique
   email          String?      @unique
   profilePicture String
-  password       String       @unique
-  appleId        String?
-  googleId       String?
-  facebookId     String?
+  password       String?      @unique
+  appleId        String?      @unique
+  googleId       String?      @unique
+  facebookId     String?      @unique
   Comment        Comment[]
   Like           Like[]
   UserCircle     UserCircle[]
