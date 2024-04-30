@@ -13,13 +13,12 @@ const facebookStrategy = new FacebookStrategy(
     callbackURL: "http://localhost:5000/auth/facebook/callback",
     profileFields: ["id", "picture.type(large)"]
   },
-  (accessToken: string, refreshToken: string, profile: Profile, done:VerifyCallback) => {
-    console.log(profile)
-    const userOrErr = db.findOrCreateFB(profile);
-    if (typeof userOrErr === "string") {
-      done(null, false, {message: userOrErr})
-    } else {
-      done (null, userOrErr)
+  async (accessToken: string, refreshToken: string, profile: Profile, done:VerifyCallback) => {
+    try {
+      const user = await db.findOrCreateFB(profile);
+      done(null, user)
+    } catch (error: any) {
+      done(error)
     }
   }
 );
@@ -27,6 +26,7 @@ const facebookStrategy = new FacebookStrategy(
 const passportFacebookStrategy: IStrategy = {
   name: 'facebook',
   strategy: facebookStrategy,
+
 };
 
 export default passportFacebookStrategy;

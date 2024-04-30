@@ -9,7 +9,6 @@ const salt = 12
 
 export class AuthenticationService implements IAuthenticationService {
   readonly _db: DBClient = DBClient.getInstance();
-
   async findUserByEmail(email: string): Promise<User | null> {
     return await this._db.prisma.user.findUnique({
       where: {
@@ -17,15 +16,15 @@ export class AuthenticationService implements IAuthenticationService {
       },
     });
   }
-  async getUserByEmailAndPassword(email: string, password: string): Promise<User | null> {
+  async getUserByEmailAndPassword(email: string, password: string): Promise<User | undefined> {
     try {
       const user = await this._db.prisma.user.findUnique({
         where: {
           email : email,
         }
-    })
+    }) 
     if (!user) {
-      throw new Error("No email in our database")
+      throw new Error("No email in our database") 
     }
     if (user.password) {
       if(await compare(password, user.password)) {
@@ -33,8 +32,8 @@ export class AuthenticationService implements IAuthenticationService {
       }
       throw new Error("Password incorrect")
     }
-    } catch (error) {
-      throw new Error("")
+    } catch (error:any) {
+      throw new Error(error)
     }
   }
   async createUser(user: UserDTO): Promise<User | null> {
@@ -53,19 +52,19 @@ export class AuthenticationService implements IAuthenticationService {
         user.password = await hash(user.password, salt);
       }
   
-      const newUser: User = {
-        id: randomUUID(),
-        ...user,
-      }
-  
-      const User = await this._db.prisma.user.create({data: newUser})
+      const User = await this._db.prisma.user.create({
+        data: { 
+          id: randomUUID(),
+          profilePicture: "",
+          ...user,
+        }
+      })
       console.log(User)
       return User
     } catch (error) {
-      throw error
+      throw error 
     }
   }
-
   async getUserById(id: string): Promise<User | null> {
     return await this._db.prisma.user.findUnique({where : {id : id}})
   }
@@ -84,8 +83,28 @@ export class AuthenticationService implements IAuthenticationService {
     const newUser = await this._db.prisma.user.create({
       data: {
         username: profile.id,
-        profilePicture: "",
         facebookId: profile.id
+      }
+    })
+    return newUser;
+  }
+
+  async findOrCreateGoogle(profile: Profile) {
+    const user = await this._db.prisma.user.findUnique({
+      where: {
+        googleId: profile.id
+      }
+    });
+
+    if (user) {
+      return user;
+    }
+
+    const newUser = await this._db.prisma.user.create({
+      data: {
+        username: profile.id,
+        googleId: profile.id,
+        profilePicture: profile._json.picture
       }
     })
     return newUser;

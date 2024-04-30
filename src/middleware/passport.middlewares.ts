@@ -5,14 +5,12 @@ import { setCurrentUser } from "./authentication.middleware";
 import { Application } from "express";
 import localStrategy from "../areas/authentication/config/strategies/localStrategy"
 import facebookStrategy from "../areas/authentication/config/strategies/facebookStrategy";
+import GoogleStrategy from "../areas/authentication/config/strategies/googleStrategy";
 
 // passportConfig.registerStrategy(passport);
 
-
-
-// TODO: Replace any with the correct type
 module.exports = (app: Application) => {
-  new PassportConfig([localStrategy, facebookStrategy]);
+  new PassportConfig([localStrategy, facebookStrategy, GoogleStrategy]);
   app.use(passport.initialize());
   app.use(passport.session());
   app.use(setCurrentUser);

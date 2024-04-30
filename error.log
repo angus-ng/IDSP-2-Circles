@@ -100,3 +100,134 @@ Unknown argument `firstName`. Available options are marked with ?.
 2024-04-29, 10:21:14 p.m. - 500 - Failed to serialize user into session
 2024-04-29, 10:22:56 p.m. - 500 - This authorization code has been used.
 2024-04-29, 10:22:59 p.m. - 500 - Failed to serialize user into session
+2024-04-29, 11:12:47 p.m. - 500 - Failed to serialize user into session
+2024-04-29, 11:15:21 p.m. - 500 - Failed to serialize user into session
+2024-04-29, 11:16:01 p.m. - 500 - Failed to serialize user into session
+2024-04-29, 11:17:28 p.m. - 500 - Failed to serialize user into session
+2024-04-29, 11:17:50 p.m. - 500 - 
+Invalid `this._db.prisma.user.create()` invocation in
+c:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\src\areas\authentication\services\Authentication.service.ts:60:47
+
+  57   ...user,
+  58 }
+  59   
+→ 60 const User = await this._db.prisma.user.create({
+       data: {
+         id: "f3e92af0-8c43-4dcf-9c30-442058884de7",
+         username: "a",
+         email: "a@a",
+         password: "$2b$12$UdyNzMoKHtDDKdY/uKLWKemu5NNdHAub0MNZDxgY/eiHuXuVWlhUG",
+     +   profilePicture: String
+       }
+     })
+
+Argument `profilePicture` is missing.
+2024-04-29, 11:18:15 p.m. - 500 - 
+Invalid `this._db.prisma.user.create()` invocation in
+c:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\src\areas\authentication\services\Authentication.service.ts:60:47
+
+  57   ...user,
+  58 }
+  59   
+→ 60 const User = await this._db.prisma.user.create({
+       data: {
+         id: "f17012ec-b431-4a5b-a9e7-86b31e667851",
+         username: "a",
+         email: "a@a",
+         password: "$2b$12$7V04B9JJ5xFrB41qTCbe5uPuLhLSgr7LgV8fjJwPdljBHLEhH3wPa",
+     +   profilePicture: String
+       }
+     })
+
+Argument `profilePicture` is missing.
+2024-04-29, 11:18:53 p.m. - 500 - Failed to serialize user into session
+2024-04-30, 12:17:33 a.m. - 500 - 
+Invalid `this._db.prisma.user.create()` invocation in
+c:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\src\areas\authentication\services\Authentication.service.ts:60:47
+
+  57   ...user,
+  58 }
+  59   
+→ 60 const User = await this._db.prisma.user.create({
+       data: {
+         id: "5594993f-282c-43ec-a2e0-3bd809357e0c",
+         username: "q",
+         email: "q@q",
+         password: "$2b$12$j3fSS1bxwL.JN9PaeoMVDuDa6MlnuHqgPdYCQ9v94JOyVI31Qb9/.",
+     +   profilePicture: String
+       }
+     })
+
+Argument `profilePicture` is missing.
+2024-04-30, 12:17:51 a.m. - 500 - Failed to serialize user into session
+2024-04-30, 1:01:44 a.m. - 500 - Unknown authentication strategy "google"
+2024-04-30, 1:03:47 a.m. - 500 - Unknown authentication strategy "google"
+2024-04-30, 11:52:05 a.m. - 500 - 
+Invalid `this._db.prisma.user.create()` invocation in
+c:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\src\areas\authentication\services\Authentication.service.ts:103:48
+
+  100   return user;
+  101 }
+  102 
+→ 103 const newUser = await this._db.prisma.user.create({
+        data: {
+          username: "107423868406258446730",
+          googleId: "107423868406258446730",
+      +   profilePicture: String
+        }
+      })
+
+Argument `profilePicture` is missing.
+2024-04-30, 11:52:52 a.m. - 500 - Bad Request
+2024-04-30, 11:53:03 a.m. - 500 - Bad Request
+2024-04-30, 11:53:03 a.m. - 500 - Bad Request
+2024-04-30, 11:53:06 a.m. - 500 - 
+Invalid `this._db.prisma.user.create()` invocation in
+c:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\src\areas\authentication\services\Authentication.service.ts:103:48
+
+  100   return user;
+  101 }
+  102 
+→ 103 const newUser = await this._db.prisma.user.create({
+        data: {
+          username: "107423868406258446730",
+          googleId: "107423868406258446730",
+      +   profilePicture: String
+        }
+      })
+
+Argument `profilePicture` is missing.
+2024-04-30, 11:54:09 a.m. - 500 - Bad Request
+2024-04-30, 11:54:11 a.m. - 500 - Failed to serialize user into session
+2024-04-30, 11:54:41 a.m. - 500 - Bad Request
+2024-04-30, 11:54:49 a.m. - 500 - Failed to serialize user into session
+2024-04-30, 11:54:55 a.m. - 500 - Bad Request
+2024-04-30, 11:54:59 a.m. - 500 - Failed to serialize user into session
+2024-04-30, 11:55:24 a.m. - 500 - Bad Request
+2024-04-30, 11:55:34 a.m. - 500 - Bad Request
+2024-04-30, 11:55:42 a.m. - 500 - Bad Request
+2024-04-30, 11:56:46 a.m. - 500 - Bad Request
+2024-04-30, 11:56:48 a.m. - 500 - Bad Request
+2024-04-30, 11:56:51 a.m. - 500 - Bad Request
+2024-04-30, 11:56:56 a.m. - 500 - Bad Request
+2024-04-30, 11:56:58 a.m. - 500 - Bad Request
+2024-04-30, 11:57:31 a.m. - 500 - Bad Request
+2024-04-30, 12:03:55 p.m. - 500 - Failed to serialize user into session
+2024-04-30, 12:03:58 p.m. - 500 - Failed to serialize user into session
+2024-04-30, 12:04:03 p.m. - 500 - Bad Request
+2024-04-30, 12:04:07 p.m. - 500 - Failed to serialize user into session
+2024-04-30, 12:04:45 p.m. - 500 - Bad Request
+2024-04-30, 12:06:21 p.m. - 500 - Failed to serialize user into session
+2024-04-30, 12:14:48 p.m. - 500 - Bad Request
+2024-04-30, 12:23:38 p.m. - 500 - Bad Request
+2024-04-30, 12:23:44 p.m. - 500 - Failed to serialize user into session
+2024-04-30, 12:24:20 p.m. - 500 - Failed to serialize user into session
+2024-04-30, 12:24:50 p.m. - 500 - Failed to serialize user into session
+2024-04-30, 12:36:31 p.m. - 500 - Failed to serialize user into session
+2024-04-30, 12:40:17 p.m. - 500 - Error: No email in our database
+2024-04-30, 12:41:32 p.m. - 500 - Error: No email in our database
+2024-04-30, 12:42:37 p.m. - 500 - Error: No email in our database
+2024-04-30, 12:42:51 p.m. - 500 - Error: No email in our database
+2024-04-30, 12:50:14 p.m. - 500 - Error: No email in our database
+2024-04-30, 1:24:57 p.m. - 500 - Failed to serialize user into session
+2024-04-30, 1:25:12 p.m. - 500 - Bad Request
