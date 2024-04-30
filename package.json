@@ -37,6 +37,7 @@
     "express-session": "^1.18.0",
     "livereload": "^0.9.3",
     "morgan": "^1.10.0",
-    "passport": "^0.7.0"
+    "passport": "^0.7.0",
+    "tsx": "^4.7.3"
   }
 }

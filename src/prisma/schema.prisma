@@ -20,17 +20,20 @@ model User {
   username       String       @unique
   email          String?      @unique
   profilePicture String
-  password       String       @unique
+  password       String?      @unique
   appleId        String?
   googleId       String?
   facebookId     String?
   Comment        Comment[]
   Like           Like[]
   UserCircle     UserCircle[]
+  Circle         Circle[]
 }
 
 model Circle {
   id         String       @id @default(cuid())
+  owner      User         @relation(fields: [ownerId], references: [username])
+  ownerId    String
   name       String
   picture    String
   UserCircle UserCircle[]
@@ -73,7 +76,7 @@ model Like {
 model UserCircle {
   user     User   @relation(fields: [userId], references: [id])
   userId   String
-  circle   Circle @relation(fields: [circleId], references: [id])
+  circle   Circle @relation(fields: [circleId], references: [id], onDelete: Cascade)
   circleId String
 
   @@id([userId, circleId])
