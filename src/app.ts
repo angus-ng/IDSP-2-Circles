@@ -2,8 +2,7 @@ import express from "express";
 import errorMiddleware from "./middleware/error.middleware";
 import Controller from "./interfaces/controller.interface";
 import dotenv from "dotenv";
-import livereload from "livereload";
-import path from "node:path";
+
 
 class App {
   private _app: express.Application;
@@ -12,7 +11,6 @@ class App {
   constructor(controllers: Controller[]) {
     dotenv.config();
 
-    this.initializeLiveReloadServer();
     this._app = express();
     this.initializeMiddlewares();
     this.initializeControllers(controllers);
@@ -38,16 +36,6 @@ class App {
   private initializeControllers(controllers: Controller[]) {
     controllers.forEach((controller) => {
       this._app.use("/", controller.router);
-    });
-  }
-
-  private initializeLiveReloadServer() {
-    const liveReloadServer = livereload.createServer();
-    liveReloadServer.watch(path.join(__dirname));
-    liveReloadServer.server.once("connection", () => {
-      setTimeout(() => {
-        liveReloadServer.refresh("/");
-      }, 100);
     });
   }
 }
