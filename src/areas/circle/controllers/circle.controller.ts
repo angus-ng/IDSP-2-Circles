@@ -17,7 +17,7 @@ class CircleController implements IController {
   private initializeRoutes() {
     this.router.get(`${this.path}/create`, ensureAuthenticated, this.showDashboard);
     this.router.post(`${this.path}/create`, ensureAuthenticated, this.createCircle); 
-    this.router.get(`${this.path}/:id`, ensureAuthenticated, this.showCircle);
+    this.router.get(`${this.path}/:id`, ensureAuthenticated,);
     this.router.get(`${this.path}/:id/delete`, ensureAuthenticated, this.deleteCircle);
   }
 
