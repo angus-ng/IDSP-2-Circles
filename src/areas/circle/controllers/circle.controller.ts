@@ -27,7 +27,10 @@ class CircleController implements IController {
 
   private createCircle = async (req:Request, res:Response) => {
     try {
-        const loggedInUser = "test" //temp -> replace with session user
+        let loggedInUser = "";
+        if (req.user) {
+          loggedInUser = req.user.username
+        }
 
         const { circleName, circlePicture } = req.body //MODIFY THIS SO IT USES THE PROPER ROUTE INSTEAD WHEN FILE UPLOADING WORKS WITH MULTER
 
@@ -49,7 +52,10 @@ class CircleController implements IController {
 
   private deleteCircle = async (req:Request, res:Response) => {
     try {
-        const loggedInUser = "test" //TEMP -> replace with session user
+      let loggedInUser = "";
+      if (req.user) {
+        loggedInUser = req.user.username
+      }
 
         const { id } = req.params
         await this._service.deleteCircle(id, loggedInUser)

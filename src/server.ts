@@ -14,7 +14,7 @@ import { AuthenticationService } from "./areas/authentication/services/Authentic
 
 const server = new App([
   new LandingController(),
-  new CircleController(new CircleService),
+  new CircleController(new CircleService()),
   // new PostController(new PostService()),
   new AuthenticationController(new AuthenticationService()),
   // new SearchController(new SearchService())
