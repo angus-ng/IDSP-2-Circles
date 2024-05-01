@@ -36,6 +36,9 @@ module.exports = {
       },
       boxShadow: {
         'background-shadow': 'inset 0 0 100px -30px rgba(0, 0, 0, 0.2)'
+      },
+      borderRadius: {
+        '20': '20px'
       }
     },
   },

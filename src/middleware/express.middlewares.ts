@@ -2,7 +2,6 @@ import express, { Application } from "express";
 import path from "path";
 import session, { MemoryStore } from "express-session";
 import morgan from "morgan";
-import connectLiveReload from "connect-livereload";
 import 'dotenv/config';
 
 // import  Redis  from "ioredis";
@@ -21,7 +20,6 @@ import 'dotenv/config';
 module.exports = (app : Application) => {
   app.set("views", path.join(__dirname, "..", "areas"));
   app.set('view engine', 'ejs');
-  app.use(connectLiveReload());
   app.use(express.static(path.join(__dirname, "..", "public")));
   app.use(express.urlencoded({ extended: true }));
   app.use(morgan("tiny"));
