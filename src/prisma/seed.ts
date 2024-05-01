@@ -12,8 +12,28 @@ async function main() {
       profilePicture: "https://i.chzbgr.com/full/9578395904/h8D57C6EF/isnt-it-cute",
     },
   })
+  const b = await prisma.user.upsert({
+    where: { email: 'b@b.com' },
+    update: {},
+    create: {
+      email: 'b@b.com',
+      username: "B_B",
+      password: await hash("b", 12),
+      profilePicture: "https://static.wikia.nocookie.net/character-catalogue/images/c/c2/Takoyaki_Cat.png/revision/latest?cb=20230810135739",
+    },
+  })
+  const c = await prisma.user.upsert({
+    where: { email: 'c@c.com' },
+    update: {},
+    create: {
+      email: 'c@c.com',
+      username: "C_C",
+      password: await hash("c", 12),
+      profilePicture: "https://i.pinimg.com/550x/0a/b8/6d/0ab86dfd4bc698ce4f57a8e06a6ca6d1.jpg",
+    },
+  })
 
-  console.log({ a })
+  console.log({ a, b, c })
 }
 main()
   .then(async () => {

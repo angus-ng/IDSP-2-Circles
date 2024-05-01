@@ -5,4 +5,6 @@ import { Circle } from '@prisma/client'
 export default interface ICircleService {
     createCircle(newCircleInput: any):any
     deleteCircle(id: string, currentUser: string): Promise<void>
+    checkMembership(id: string, currentUser: string): Promise<boolean>
+    getCircle(id: string): Promise<Circle | null>
 }

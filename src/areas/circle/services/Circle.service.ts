@@ -62,6 +62,31 @@ export class CircleService implements ICircleService {
       })
   }
 
-  
+  async checkMembership(id: string, currentUser:string): Promise<boolean> {
+    const user = await this._db.prisma.user.findUnique({
+        where: {
+            username : currentUser
+        }
+    })
 
+    const membership = await this._db.prisma.userCircle.findFirst({
+        where: {
+            userId: String(user!.id),
+            circleId: id
+        }
+    })
+
+    if (!membership) {
+        return false;
+    }
+    return true
+  }
+  async getCircle (id: string): Promise<Circle | null> {
+    const circle = await this._db.prisma.circle.findUnique({
+        where: {
+            id: id
+        }
+    })
+    return circle;
+  }
 }
