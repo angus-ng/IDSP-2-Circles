@@ -21,9 +21,9 @@ model User {
   email          String?      @unique
   profilePicture String
   password       String?      @unique
-  appleId        String?
-  googleId       String?
-  facebookId     String?
+  appleId        String?      @unique
+  googleId       String?      @unique
+  facebookId     String?      @unique
   Comment        Comment[]
   Like           Like[]
   UserCircle     UserCircle[]

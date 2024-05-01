@@ -13,3 +13,280 @@
 2024-04-29, 11:10:55 a.m. - 500 - Failed to lookup view "C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\dist\areas\landing\views\index" in views directory "C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\dist\areas"
 2024-04-30, 8:27:28 a.m. - 500 - Failed to lookup view "../views/dashboard" in views directory "C:\Users\angus\OneDrive\Desktop\idsp\src\areas"
 2024-04-30, 8:27:29 a.m. - 500 - Failed to lookup view "../views/dashboard" in views directory "C:\Users\angus\OneDrive\Desktop\idsp\src\areas"
+2024-04-29, 3:00:19 p.m. - 500 - Failed to lookup view "index" in views directory "C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\src\areas"
+2024-04-29, 3:00:20 p.m. - 500 - Failed to lookup view "index" in views directory "C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\src\areas"
+2024-04-29, 3:00:20 p.m. - 500 - Failed to lookup view "index" in views directory "C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\src\areas"
+2024-04-29, 3:00:20 p.m. - 500 - Failed to lookup view "index" in views directory "C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\src\areas"
+2024-04-29, 3:07:48 p.m. - 500 - 
+Invalid `this._db.prisma.user.create()` invocation in
+c:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\src\areas\authentication\services\Authentication.service.ts:53:47
+
+  50   ...user,
+  51 }
+  52   
+→ 53 const User = await this._db.prisma.user.create({
+       data: {
+         id: "4b66068a-dba0-46c6-be50-f7c66c556e9e",
+         username: "a",
+         firstName: "a",
+         ~~~~~~~~~
+         lastName: "a",
+         email: "a@a",
+         password: "$2b$12$6H/kUieXqEvcIrcHUCHMouG3vyioUc6C2oNt.HSKZOMk7NGs9ZSBO",
+     ?   name?: String | Null
+       }
+     })
+
+Unknown argument `firstName`. Available options are marked with ?.
+2024-04-29, 3:08:31 p.m. - 500 - 
+Invalid `this._db.prisma.user.create()` invocation in
+c:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\src\areas\authentication\services\Authentication.service.ts:53:47
+
+  50   ...user,
+  51 }
+  52   
+→ 53 const User = await this._db.prisma.user.create({
+       data: {
+         id: "c5acfdac-88d4-4eae-8653-ee7a79da4f48",
+         username: "a",
+         firstName: "a",
+         ~~~~~~~~~
+         lastName: "a",
+         email: "a@a",
+         password: "$2b$12$lx.O0634O6fSAgk8UJKjPOcHX6t1Y0jAOihol7vdRcXalU5OhiakW",
+     ?   name?: String | Null
+       }
+     })
+
+Unknown argument `firstName`. Available options are marked with ?.
+2024-04-29, 3:08:57 p.m. - 500 - Failed to serialize user into session
+2024-04-29, 5:46:25 p.m. - 500 - Failed to serialize user into session
+2024-04-29, 6:26:39 p.m. - 500 - Failed to serialize user into session
+2024-04-29, 7:05:26 p.m. - 500 - Failed to serialize user into session
+2024-04-29, 7:07:13 p.m. - 500 - This authorization code has been used.
+2024-04-29, 7:08:59 p.m. - 500 - Failed to serialize user into session
+2024-04-29, 7:09:54 p.m. - 500 - Failed to serialize user into session
+2024-04-29, 7:14:54 p.m. - 500 - This authorization code has expired.
+2024-04-29, 7:15:03 p.m. - 500 - Failed to serialize user into session
+2024-04-29, 8:04:07 p.m. - 500 - Failed to serialize user into session
+2024-04-29, 8:05:11 p.m. - 500 - This authorization code has been used.
+2024-04-29, 8:05:25 p.m. - 500 - Failed to serialize user into session
+2024-04-29, 8:06:06 p.m. - 500 - Failed to serialize user into session
+2024-04-29, 8:06:20 p.m. - 500 - This authorization code has been used.
+2024-04-29, 8:06:24 p.m. - 500 - This authorization code has been used.
+2024-04-29, 8:06:31 p.m. - 500 - Failed to serialize user into session
+2024-04-29, 9:43:28 p.m. - 500 - Failed to serialize user into session
+2024-04-29, 9:44:22 p.m. - 500 - This authorization code has been used.
+2024-04-29, 9:44:32 p.m. - 500 - Failed to serialize user into session
+2024-04-29, 9:45:29 p.m. - 500 - Failed to serialize user into session
+2024-04-29, 9:46:51 p.m. - 500 - This authorization code has been used.
+2024-04-29, 9:54:00 p.m. - 500 - Failed to serialize user into session
+2024-04-29, 10:03:20 p.m. - 500 - This authorization code has expired.
+2024-04-29, 10:03:27 p.m. - 500 - Failed to serialize user into session
+2024-04-29, 10:04:23 p.m. - 500 - This authorization code has been used.
+2024-04-29, 10:04:29 p.m. - 500 - Failed to serialize user into session
+2024-04-29, 10:04:52 p.m. - 500 - Failed to serialize user into session
+2024-04-29, 10:05:03 p.m. - 500 - This authorization code has been used.
+2024-04-29, 10:05:11 p.m. - 500 - Failed to serialize user into session
+2024-04-29, 10:05:59 p.m. - 500 - Failed to serialize user into session
+2024-04-29, 10:07:03 p.m. - 500 - Failed to serialize user into session
+2024-04-29, 10:09:33 p.m. - 500 - This authorization code has been used.
+2024-04-29, 10:09:41 p.m. - 500 - Syntax error "Field picture specified more than once. This is only possible before version 2.1" at character 30: id,picture,picture.type(large)
+2024-04-29, 10:10:25 p.m. - 500 - This authorization code has been used.
+2024-04-29, 10:10:32 p.m. - 500 - Failed to serialize user into session
+2024-04-29, 10:12:00 p.m. - 500 - This authorization code has been used.
+2024-04-29, 10:17:57 p.m. - 500 - Failed to serialize user into session
+2024-04-29, 10:19:20 p.m. - 500 - This authorization code has been used.
+2024-04-29, 10:19:38 p.m. - 500 - Failed to serialize user into session
+2024-04-29, 10:21:01 p.m. - 500 - This authorization code has been used.
+2024-04-29, 10:21:14 p.m. - 500 - Failed to serialize user into session
+2024-04-29, 10:22:56 p.m. - 500 - This authorization code has been used.
+2024-04-29, 10:22:59 p.m. - 500 - Failed to serialize user into session
+2024-04-29, 11:12:47 p.m. - 500 - Failed to serialize user into session
+2024-04-29, 11:15:21 p.m. - 500 - Failed to serialize user into session
+2024-04-29, 11:16:01 p.m. - 500 - Failed to serialize user into session
+2024-04-29, 11:17:28 p.m. - 500 - Failed to serialize user into session
+2024-04-29, 11:17:50 p.m. - 500 - 
+Invalid `this._db.prisma.user.create()` invocation in
+c:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\src\areas\authentication\services\Authentication.service.ts:60:47
+
+  57   ...user,
+  58 }
+  59   
+→ 60 const User = await this._db.prisma.user.create({
+       data: {
+         id: "f3e92af0-8c43-4dcf-9c30-442058884de7",
+         username: "a",
+         email: "a@a",
+         password: "$2b$12$UdyNzMoKHtDDKdY/uKLWKemu5NNdHAub0MNZDxgY/eiHuXuVWlhUG",
+     +   profilePicture: String
+       }
+     })
+
+Argument `profilePicture` is missing.
+2024-04-29, 11:18:15 p.m. - 500 - 
+Invalid `this._db.prisma.user.create()` invocation in
+c:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\src\areas\authentication\services\Authentication.service.ts:60:47
+
+  57   ...user,
+  58 }
+  59   
+→ 60 const User = await this._db.prisma.user.create({
+       data: {
+         id: "f17012ec-b431-4a5b-a9e7-86b31e667851",
+         username: "a",
+         email: "a@a",
+         password: "$2b$12$7V04B9JJ5xFrB41qTCbe5uPuLhLSgr7LgV8fjJwPdljBHLEhH3wPa",
+     +   profilePicture: String
+       }
+     })
+
+Argument `profilePicture` is missing.
+2024-04-29, 11:18:53 p.m. - 500 - Failed to serialize user into session
+2024-04-30, 12:17:33 a.m. - 500 - 
+Invalid `this._db.prisma.user.create()` invocation in
+c:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\src\areas\authentication\services\Authentication.service.ts:60:47
+
+  57   ...user,
+  58 }
+  59   
+→ 60 const User = await this._db.prisma.user.create({
+       data: {
+         id: "5594993f-282c-43ec-a2e0-3bd809357e0c",
+         username: "q",
+         email: "q@q",
+         password: "$2b$12$j3fSS1bxwL.JN9PaeoMVDuDa6MlnuHqgPdYCQ9v94JOyVI31Qb9/.",
+     +   profilePicture: String
+       }
+     })
+
+Argument `profilePicture` is missing.
+2024-04-30, 12:17:51 a.m. - 500 - Failed to serialize user into session
+2024-04-30, 1:01:44 a.m. - 500 - Unknown authentication strategy "google"
+2024-04-30, 1:03:47 a.m. - 500 - Unknown authentication strategy "google"
+2024-04-30, 11:52:05 a.m. - 500 - 
+Invalid `this._db.prisma.user.create()` invocation in
+c:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\src\areas\authentication\services\Authentication.service.ts:103:48
+
+  100   return user;
+  101 }
+  102 
+→ 103 const newUser = await this._db.prisma.user.create({
+        data: {
+          username: "107423868406258446730",
+          googleId: "107423868406258446730",
+      +   profilePicture: String
+        }
+      })
+
+Argument `profilePicture` is missing.
+2024-04-30, 11:52:52 a.m. - 500 - Bad Request
+2024-04-30, 11:53:03 a.m. - 500 - Bad Request
+2024-04-30, 11:53:03 a.m. - 500 - Bad Request
+2024-04-30, 11:53:06 a.m. - 500 - 
+Invalid `this._db.prisma.user.create()` invocation in
+c:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\src\areas\authentication\services\Authentication.service.ts:103:48
+
+  100   return user;
+  101 }
+  102 
+→ 103 const newUser = await this._db.prisma.user.create({
+        data: {
+          username: "107423868406258446730",
+          googleId: "107423868406258446730",
+      +   profilePicture: String
+        }
+      })
+
+Argument `profilePicture` is missing.
+2024-04-30, 11:54:09 a.m. - 500 - Bad Request
+2024-04-30, 11:54:11 a.m. - 500 - Failed to serialize user into session
+2024-04-30, 11:54:41 a.m. - 500 - Bad Request
+2024-04-30, 11:54:49 a.m. - 500 - Failed to serialize user into session
+2024-04-30, 11:54:55 a.m. - 500 - Bad Request
+2024-04-30, 11:54:59 a.m. - 500 - Failed to serialize user into session
+2024-04-30, 11:55:24 a.m. - 500 - Bad Request
+2024-04-30, 11:55:34 a.m. - 500 - Bad Request
+2024-04-30, 11:55:42 a.m. - 500 - Bad Request
+2024-04-30, 11:56:46 a.m. - 500 - Bad Request
+2024-04-30, 11:56:48 a.m. - 500 - Bad Request
+2024-04-30, 11:56:51 a.m. - 500 - Bad Request
+2024-04-30, 11:56:56 a.m. - 500 - Bad Request
+2024-04-30, 11:56:58 a.m. - 500 - Bad Request
+2024-04-30, 11:57:31 a.m. - 500 - Bad Request
+2024-04-30, 12:03:55 p.m. - 500 - Failed to serialize user into session
+2024-04-30, 12:03:58 p.m. - 500 - Failed to serialize user into session
+2024-04-30, 12:04:03 p.m. - 500 - Bad Request
+2024-04-30, 12:04:07 p.m. - 500 - Failed to serialize user into session
+2024-04-30, 12:04:45 p.m. - 500 - Bad Request
+2024-04-30, 12:06:21 p.m. - 500 - Failed to serialize user into session
+2024-04-30, 12:14:48 p.m. - 500 - Bad Request
+2024-04-30, 12:23:38 p.m. - 500 - Bad Request
+2024-04-30, 12:23:44 p.m. - 500 - Failed to serialize user into session
+2024-04-30, 12:24:20 p.m. - 500 - Failed to serialize user into session
+2024-04-30, 12:24:50 p.m. - 500 - Failed to serialize user into session
+2024-04-30, 12:36:31 p.m. - 500 - Failed to serialize user into session
+2024-04-30, 12:40:17 p.m. - 500 - Error: No email in our database
+2024-04-30, 12:41:32 p.m. - 500 - Error: No email in our database
+2024-04-30, 12:42:37 p.m. - 500 - Error: No email in our database
+2024-04-30, 12:42:51 p.m. - 500 - Error: No email in our database
+2024-04-30, 12:50:14 p.m. - 500 - Error: No email in our database
+2024-04-30, 1:24:57 p.m. - 500 - Failed to serialize user into session
+2024-04-30, 1:25:12 p.m. - 500 - Bad Request
+2024/4/30 14:48:49 - 500 - 
+Invalid `this._db.prisma.user.create()` invocation in
+c:\Users\angus\Desktop\idsp\src\areas\authentication\services\Authentication.service.ts:83:48
+
+  80   return user;
+  81 }
+  82 
+→ 83 const newUser = await this._db.prisma.user.create({
+       data: {
+         username: "7487839481284174",
+         facebookId: "7487839481284174",
+     +   profilePicture: String
+       }
+     })
+
+Argument `profilePicture` is missing.
+2024/4/30 14:52:03 - 500 - This authorization code has been used.
+2024/4/30 14:52:07 - 500 - 
+Invalid `this._db.prisma.user.create()` invocation in
+c:\Users\angus\Desktop\idsp\src\areas\authentication\services\Authentication.service.ts:83:48
+
+  80   return user;
+  81 }
+  82 
+→ 83 const newUser = await this._db.prisma.user.create({
+       data: {
+         username: "7487839481284174",
+         facebookId: "7487839481284174",
+     +   profilePicture: String
+       }
+     })
+
+Argument `profilePicture` is missing.
+2024/4/30 14:53:47 - 500 - This authorization code has been used.
+2024/4/30 14:53:54 - 500 - 
+Invalid `this._db.prisma.user.create()` invocation in
+c:\Users\angus\Desktop\idsp\src\areas\authentication\services\Authentication.service.ts:83:48
+
+  80   return user;
+  81 }
+  82 
+→ 83 const newUser = await this._db.prisma.user.create({
+       data: {
+         username: "7487839481284174",
+         facebookId: "7487839481284174",
+         profilePicture: {
+           height: 200,
+           is_silhouette: false,
+           url: "https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=7487839481284174&height=200&width=200&ext=1717106034&hash=AbZYH7zc_pAcBivmkjnDf57G",
+           width: 200
+         }
+         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+       }
+     })
+
+Argument `profilePicture`: Invalid value provided. Expected String, provided Object.
+2024/4/30 14:55:29 - 500 - This authorization code has been used.

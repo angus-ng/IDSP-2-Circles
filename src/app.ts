@@ -26,7 +26,7 @@ class App {
 
   private initializeMiddlewares() {
     require("./middleware/express.middlewares")(this._app);
-    // require("./middleware/passport.middlewares")(this._app);
+    require("./middleware/passport.middlewares")(this._app);
     // require("./middleware/authentication.middlewares")(this._app);
   }
 
