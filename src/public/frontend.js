@@ -15,6 +15,30 @@ function createNewCircle() {
     circleDiv.innerHTML = "";
 }
 
+const modal = document.querySelector("#modal");
+modal.addEventListener("click", function (event) {
+    event.preventDefault();
+    const closeModal = event.target.closest("#closeModalButton");
+    const createAlbumModalButton = event.target.closest("#createAlbumModalButton");
+    const createCircleModalButton = event.target.closest("#createCircleModalButton");
+
+    if (closeModal) {
+        if (modal.classList.contains("shown")) {
+            modal.classList.remove("shown");
+            modal.classList.add("hidden");
+        }
+    }
+
+    if (createAlbumModalButton) {
+        console.log("create album")
+    }
+
+    if (createCircleModalButton) {
+        console.log("create circle")
+    }
+
+})
+
 const navBar = document.querySelector("footer")
 navBar.addEventListener("click", function (event) {
     event.preventDefault();
@@ -31,20 +55,8 @@ navBar.addEventListener("click", function (event) {
         console.log("search")
     }
     if (newButton) {
-        const modal = document.querySelector("#modal");
         modal.classList.remove("hidden");
         modal.classList.add("shown");
-
-        if (modal.classList.contains("shown")) {
-            const closeModal = event.target.closest("#closeModalButton");
-
-            if (closeModal) {
-                modal.classList.remove("shown");
-                modal.classList.add("hidden");
-            }
-
-        }
-
     }
     if (activityButton) {
         console.log("activity")

@@ -13,7 +13,8 @@ module.exports = {
         'gradient-lighter-blue': 'rgba(0, 66, 200, 0.5)',
         'gradient-medium-blue': '#04318b',
         'gradient-darker-blue': 'rgba(12, 18, 28, 0.5)',
-        'grey': '#3A3A3A'
+        'grey': '#3A3A3A',
+        'overlay-bg': 'rgba(0, 0, 0, 0.6)'
       },
       fontSize: {
         'h1': '29px',
