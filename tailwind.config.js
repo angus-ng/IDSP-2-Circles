@@ -10,6 +10,7 @@ module.exports = {
     extend: {
       colors: {
         'light-mode-bg': 'rgba(248, 244, 234, 0.92)',
+        'light-mode': '#F8F4EA',
         'gradient-lighter-blue': 'rgba(0, 66, 200, 0.5)',
         'gradient-medium-blue': '#04318b',
         'gradient-darker-blue': 'rgba(12, 18, 28, 0.5)',
@@ -22,8 +23,10 @@ module.exports = {
         'body': '17px',
         'secondary': '12px',
         'tertiary': '10px',
+        '20': '20px',
         '15': '15px',
-        '13': '13px'
+        '14': '14px',
+        '13': '13px',
       },
       lineHeight: {
         'h1': '40px',
@@ -33,7 +36,10 @@ module.exports = {
         'tertiary': '14px'
       },
       width: {
-        '325': '325px'
+        '325': '325px',
+      },
+      height: {
+        '932': '932px'
       },
       boxShadow: {
         'background-shadow': 'inset 0 0 100px -30px rgba(0, 0, 0, 0.2)'
