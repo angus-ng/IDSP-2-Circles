@@ -53,23 +53,23 @@
                             type="text"
                             placeholder="add a title to your album..."
                             id="circleName"
-                            class="w-full bg-light-mode-bg text-20 items-end"
+                            class="w-full bg-light-mode-bg text-20 items-end border-none"
                             />
                         </div>
                         <div id="divider" class="my-4">
                             <img src="/divider_light.svg" alt="Divider">                          
                         </div>
-                        <div class="flex items-center justify-between">
+                        <div class="flex items-center justify-between mt-4">
                             <div>
                                 <p class="font-medium text-h2 leading-h2">Private or Public</p>
                                 <p class="text-14 leading-body">Make new circle private or public</p>
                             </div>
                             <div>
                                 <label class="inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" value="" class="sr-only peer">
-                                    <img src="/lock_icon_light.svg" alt="Lock icon" class="mr-4">
-                                    <span class="text-sm font-medium leading-body text-14 mr-4">Private</span>
-                                    <div class="peer relative h-5 w-10 rounded-full outline outline-1 outline-black after:absolute after:start-[2px] after:top-0.5 after:h-4 after:w-4 after:rounded-full after:border after:border-black after:bg-black after:transition-all after:content-[''] peer-checked:bg-gray-200 peer-checked:outline-gray-200 peer-checked:after:translate-x-5 peer-checked:after:border-white peer-checked:after:bg-white rtl:peer-checked:after:-translate-x-full"></div>
+                                    <input id="privacyCheckbox" type="checkbox" value="" class="sr-only peer">
+                                    <img id="privacyIcon" src="/lock_icon_light.svg" alt="Lock icon" class="mr-4">
+                                    <span id="privacyLabel" class="text-sm font-medium leading-body text-14 mr-4 w-12">Private</span>
+                                    <div class="peer relative h-5 w-10 rounded-full outline outline-1 outline-black after:absolute after:start-[2px] after:top-0 after:h-4 after:w-4 after:rounded-full after:border after:border-black after:bg-black after:transition-all after:content-[''] peer-checked:bg-cover peer-checked:bg-black border-2 peer-checked:outline-black peer-checked:after:translate-x-5 peer-checked:after:border-white peer-checked:after:border-opacity-80 peer-checked:after:border-2 peer-checked:after:bg-black rtl:peer-checked:after:-translate-x-full"></div>
                                   </label>
                             </div>
                         </div>
