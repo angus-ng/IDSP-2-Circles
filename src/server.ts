@@ -7,6 +7,7 @@ import AuthenticationController from "./areas/authentication/controllers/Authent
 // import { PostService } from "./areas/post/services";
 import LandingController from "./areas/landing/controllers/Landing.controller";
 import { CircleService } from "./areas/circle/services";
+import { CircleService } from "./areas/circle/services";
 // import SettingController from "./areas/settings/controllers/setting.controller";
 // import { SettingService } from "./areas/settings/services";
 import { AuthenticationService } from "./areas/authentication/services/Authentication.service";

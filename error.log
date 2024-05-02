@@ -11,6 +11,7 @@
 2024-04-29, 11:10:36 a.m. - 500 - Failed to lookup view "C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\dist\areas\landing\controllers\landing\views\index" in views directory "C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\dist\areas"
 2024-04-29, 11:10:51 a.m. - 500 - Failed to lookup view "C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\dist\areas\landing\landing\views\index" in views directory "C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\dist\areas"
 2024-04-29, 11:10:55 a.m. - 500 - Failed to lookup view "C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\dist\areas\landing\views\index" in views directory "C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\dist\areas"
+<<<<<<< HEAD
 2024-04-30, 8:27:28 a.m. - 500 - Failed to lookup view "../views/dashboard" in views directory "C:\Users\angus\OneDrive\Desktop\idsp\src\areas"
 2024-04-30, 8:27:29 a.m. - 500 - Failed to lookup view "../views/dashboard" in views directory "C:\Users\angus\OneDrive\Desktop\idsp\src\areas"
 2024-04-29, 3:00:19 p.m. - 500 - Failed to lookup view "index" in views directory "C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\src\areas"
@@ -305,3 +306,115 @@ Argument `profilePicture`: Invalid value provided. Expected String, provided Obj
 2024-05-01, 10:59:42 p.m. - 500 - Cannot set headers after they are sent to the client
 2024-05-01, 10:59:46 p.m. - 500 - Cannot set headers after they are sent to the client
 2024-05-02, 12:19:52 a.m. - 500 - Unexpected field
+=======
+2024-04-29, 12:44:52 p.m. - 500 - Failed to lookup view "C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\dist\areas\landing\views\index" in views directory "C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\dist\areas"
+2024-04-30, 12:44:43 a.m. - 500 - C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\areas\landing\views\index.ejs:10
+    8| </head>
+    9| <body class="flex justify-center items-center h-screen">
+ >> 10|     <%- include("header") %>
+    11| 
+    12|     <div class="absolute top-0 left-0 h-full w-full bg-light-mode-bg shadow-background-shadow -z-10">
+    13|     </div>
+
+Could not find the include file "header"
+2024-04-30, 12:45:04 a.m. - 500 - C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\areas\landing\views\index.ejs:10
+    8| </head>
+    9| <body class="flex justify-center items-center h-screen">
+ >> 10|     <%- include("header.ejs") %>
+    11| 
+    12|     <div class="absolute top-0 left-0 h-full w-full bg-light-mode-bg shadow-background-shadow -z-10">
+    13|     </div>
+
+Could not find the include file "header.ejs"
+2024-04-30, 12:45:26 a.m. - 500 - C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\areas\landing\views\index.ejs:10
+    8| </head>
+    9| <body class="flex justify-center items-center h-screen">
+ >> 10|     <%- include("../../../header.ejs") %>
+    11| 
+    12|     <div class="absolute top-0 left-0 h-full w-full bg-light-mode-bg shadow-background-shadow -z-10">
+    13|     </div>
+
+Could not find the include file "../../../header.ejs"
+2024-04-30, 12:45:53 a.m. - 500 - C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\areas\landing\views\index.ejs:10
+    8| </head>
+    9| <body class="flex justify-center items-center h-screen">
+ >> 10|     <%- include("./components/shared/header.ejs") %>
+    11| 
+    12|     <div class="absolute top-0 left-0 h-full w-full bg-light-mode-bg shadow-background-shadow -z-10">
+    13|     </div>
+
+Could not find the include file "./components/shared/header.ejs"
+2024-04-30, 12:47:41 a.m. - 500 - C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\areas\landing\views\index.ejs:10
+    8| </head>
+    9| <body class="flex justify-center items-center h-screen">
+ >> 10|     <%- include("header") %>
+    11| 
+    12|     <div class="absolute top-0 left-0 h-full w-full bg-light-mode-bg shadow-background-shadow -z-10">
+    13|     </div>
+
+Could not find the include file "header"
+2024-04-30, 12:49:12 a.m. - 500 - C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\areas\landing\views\index.ejs:10
+    8| </head>
+    9| <body class="flex justify-center items-center h-screen">
+ >> 10|     <%- include("./components/shared/header") %>
+    11| 
+    12|     <div class="absolute top-0 left-0 h-full w-full bg-light-mode-bg shadow-background-shadow -z-10">
+    13|     </div>
+
+Could not find the include file "./components/shared/header"
+2024-04-30, 12:41:09 p.m. - 500 - Failed to lookup view "C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\areas\landing\index" in views directory "C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\areas"
+2024-04-30, 12:41:10 p.m. - 500 - Failed to lookup view "C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\areas\landing\index" in views directory "C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\areas"
+2024-04-30, 12:41:36 p.m. - 500 - Cannot find module 'html'
+Require stack:
+- C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\node_modules\express\lib\view.js
+- C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\node_modules\express\lib\application.js
+- C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\node_modules\express\lib\express.js
+- C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\node_modules\express\index.js
+- C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\app.ts
+- C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\server.ts
+2024-04-30, 12:41:37 p.m. - 500 - Cannot find module 'html'
+Require stack:
+- C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\node_modules\express\lib\view.js
+- C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\node_modules\express\lib\application.js
+- C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\node_modules\express\lib\express.js
+- C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\node_modules\express\index.js
+- C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\app.ts
+- C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\server.ts
+2024-04-30, 12:41:49 p.m. - 500 - Failed to lookup view "../../../index" in views directory "C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\areas"
+2024-04-30, 12:41:57 p.m. - 500 - Failed to lookup view "C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\areas\landing\index" in views directory "C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\areas"
+2024-04-30, 12:42:08 p.m. - 500 - Failed to lookup view "C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\areas\index" in views directory "C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\areas"
+2024-04-30, 12:42:20 p.m. - 500 - Failed to lookup view "..\..\index" in views directory "C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\areas"
+2024-04-30, 12:42:29 p.m. - 500 - Cannot find module 'html'
+Require stack:
+- C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\node_modules\express\lib\view.js
+- C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\node_modules\express\lib\application.js
+- C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\node_modules\express\lib\express.js
+- C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\node_modules\express\index.js
+- C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\app.ts
+- C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\server.ts
+2024-04-30, 12:43:09 p.m. - 500 - Failed to lookup view "C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\areas\index" in views directory "C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\areas"
+2024-04-30, 12:44:07 p.m. - 500 - Cannot find module 'html'
+Require stack:
+- C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\node_modules\express\lib\view.js
+- C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\node_modules\express\lib\application.js
+- C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\node_modules\express\lib\express.js
+- C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\node_modules\express\index.js
+- C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\app.ts
+- C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\server.ts
+2024-04-30, 12:49:05 p.m. - 500 - Failed to lookup view "../../../../index" in views directory "C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\areas"
+2024-04-30, 12:49:14 p.m. - 500 - Failed to lookup view "../../../../../index" in views directory "C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\areas"
+2024-04-30, 12:49:43 p.m. - 500 - Failed to lookup view "../index" in views directory "C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\areas"
+2024-04-30, 12:49:45 p.m. - 500 - Failed to lookup view "../index" in views directory "C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\areas"
+2024-04-30, 12:49:45 p.m. - 500 - Failed to lookup view "../index" in views directory "C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\areas"
+2024-04-30, 12:49:45 p.m. - 500 - Failed to lookup view "../index" in views directory "C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\areas"
+2024-04-30, 12:49:45 p.m. - 500 - Failed to lookup view "../index" in views directory "C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\areas"
+2024-04-30, 12:49:46 p.m. - 500 - Failed to lookup view "../index" in views directory "C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\areas"
+2024-04-30, 12:50:26 p.m. - 500 - Failed to lookup view "../index" in views directory "C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\areas"
+2024-04-30, 12:50:26 p.m. - 500 - Failed to lookup view "../index" in views directory "C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\areas"
+2024-04-30, 12:54:59 p.m. - 500 - Failed to lookup view "../frontend/index" in views directory "C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\areas"
+2024-04-30, 12:56:40 p.m. - 500 - Failed to lookup view "../frontend/index" in views directory "C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\areas"
+2024-04-30, 12:57:14 p.m. - 500 - Failed to lookup view "../index" in views directory "C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\areas"
+2024-04-30, 12:57:27 p.m. - 500 - Failed to lookup view "../index" in views directory "C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\areas"
+2024-04-30, 12:57:28 p.m. - 500 - Failed to lookup view "../index" in views directory "C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\areas"
+2024-04-30, 1:13:03 p.m. - 500 - Failed to lookup view "../index" in views directory "C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\areas"
+>>>>>>> pages
