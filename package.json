@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "tsx watch ./src/server.ts",
-    "build": "tsc -p ."
+    "build": "npx tailwindcss -i ./src/input.css -o ./src/public/output.css --watch"
   },
   "prisma": {
     "schema": "./src/prisma/schema.prisma",
@@ -14,7 +14,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/bcrypt": "^5.0.2",
+    "@tailwindcss/forms": "^0.5.7",
     "@types/connect-livereload": "^0.6.3",
     "@types/ejs": "^3.1.5",
     "@types/express": "^4.17.21",
@@ -45,12 +45,7 @@
     "express": "^4.19.2",
     "express-session": "^1.18.0",
     "morgan": "^1.10.0",
-    "multer": "^1.4.5-lts.1",
     "passport": "^0.7.0",
-    "passport-apple": "^2.0.2",
-    "passport-facebook": "^3.0.0",
-    "passport-google-oauth20": "^2.0.0",
-    "passport-local": "^1.0.0",
     "tsx": "^4.7.3"
   }
 }
