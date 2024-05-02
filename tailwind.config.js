@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  mode: "jit",
   content: [
     "./src/**/*.ejs",
 ],
@@ -46,9 +47,17 @@ module.exports = {
       },
       borderRadius: {
         '20': '20px'
+      },
+      margin: {
+        '4': '4px'
+      },
+      outline: {
+        '1': '1px'
       }
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/forms'),
+  ],
 }
 
