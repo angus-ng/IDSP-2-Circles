@@ -15,6 +15,7 @@
   "license": "ISC",
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.7",
+    "@types/bcrypt": "^5.0.2",
     "@types/connect-livereload": "^0.6.3",
     "@types/ejs": "^3.1.5",
     "@types/express": "^4.17.21",
