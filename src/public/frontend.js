@@ -21,7 +21,6 @@ modal.addEventListener("click", function (event) {
     const closeModal = event.target.closest("#closeModalButton");
     const createAlbumModalButton = event.target.closest("#createAlbumModalButton");
     const createCircleModalButton = event.target.closest("#createCircleModalButton");
-    const pageContent = document.querySelector("#pageContent");
 
     if (closeModal) {
         if (modal.classList.contains("shown")) {
@@ -38,7 +37,7 @@ modal.addEventListener("click", function (event) {
 
         modal.classList.remove("shown");
         modal.classList.add("hidden");
-        
+        const pageContent = document.querySelector("#pageContent");
         pageContent.innerHTML = `
         <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full z-10">
             <div class="flex-shrink-0 mt-20 mb-10">
@@ -82,6 +81,19 @@ modal.addEventListener("click", function (event) {
         
         </div>
         `
+        //This needs to be implemented when SPA creates the html for the privacy toggle
+        const privacyCheckbox = document.querySelector("#privacyCheckbox");
+        privacyCheckbox.addEventListener("change", function(event) {
+            const privacyIcon = document.querySelector("#privacyIcon");
+            const privacyLabel = document.querySelector("#privacyLabel");
+            if (this.checked) {
+                privacyIcon.src = "/globe_icon_light.svg"
+                privacyLabel.innerHTML = "Public";
+                return;
+            }
+            privacyIcon.src = "/lock_icon_light.svg";
+            privacyLabel.innerHTML = "Private";
+        });
         return;
     }
 })
@@ -112,17 +124,3 @@ navBar.addEventListener("click", function (event) {
         console.log("profile")
     }
 })
-
-//This needs to be implemented when SPA creates the html for the privacy toggle
-const privacyCheckbox = document.querySelector("#privacyCheckbox");
-privacyCheckbox.addEventListener("change", function(event) {
-    const privacyIcon = document.querySelector("#privacyIcon");
-    const privacyLabel = document.querySelector("#privacyLabel");
-    if (this.checked) {
-        privacyIcon.src = "/globe_icon_light.svg"
-        privacyLabel.innerHTML = "Public";
-        return;
-    }
-    privacyIcon.src = "/lock_icon_light.svg";
-    privacyLabel.innerHTML = "Private";
-});
