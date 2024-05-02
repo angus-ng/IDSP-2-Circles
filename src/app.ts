@@ -2,8 +2,7 @@ import express from "express";
 import errorMiddleware from "./middleware/error.middleware";
 import Controller from "./interfaces/controller.interface";
 import dotenv from "dotenv";
-import livereload from "livereload";
-import path from "node:path";
+
 
 class App {
   private _app: express.Application;
@@ -39,7 +38,6 @@ class App {
       this._app.use("/", controller.router);
     });
   }
-
 }
 
 export default App;

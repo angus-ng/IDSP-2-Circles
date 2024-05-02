@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Circles</title>
-    <link href="./output.css" rel="stylesheet">
+    <link href="/output.css" rel="stylesheet">
 </head>
 <body class="m-2 bg-light-mode-bg shadow-inner shadow-black">
     <section class="h-screen flex flex-col justify-between">
@@ -14,15 +14,19 @@
                 class="h-60 mb-4"
             />
             <h1 class="text-3xl font-medium block mb-4">
-                <%= locals.currentUser.username %>'s Dashboard
+                Dashboard
             </h1>
 
             <div class="flex justify-between w-full pb-4">
-                <form action="/circle/create" method="post" enctype="multipart/form-data">
+                <form action="/circle/create" method="POST">
                     <input type="file" id="circlePicture" name="circlePicture" accept="image/*" required/>
                     <label>Name</label>
                     <input type="text" id="circleName" name="circleName" required/>
-                    <button type="submit">create circle</button>
+                    <button>create circle</button>
+                </form>
+            
+                <form action="">
+                    <button>NEXT</button>
                 </form>
             </div>
         </div>
