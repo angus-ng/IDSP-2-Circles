@@ -44,7 +44,7 @@
                 </div>
 
                 <div class="flex-1">
-                    <form action="" class="flex flex-col">
+                    <form action="/auth/login" method="POST" class="flex flex-col">
                         <div class="flex items-center mt-6 mb-6">
                             <label for="login" class=""></label>
                             <input type="text" placeholder="Phone number, email, or username" class="rounded-input-box w-input-box border-dark-grey border-2 text-17 items-end">
@@ -64,23 +64,31 @@
                                 </div>
                             </div>
                         </div>
-                            <button class="my-2 w-full">
+                            <button class="my-2 w-full" type="submit">
                                 <img src="/login_button_light.svg" alt="Login Button">
                             </button>
                         </div>
+                    </form>
                         <div id="divider" class="my-6">
                             <img src="/orDivider_light.svg" alt="Divider">
                         </div>
                         <div class="flex items-center justify-between mt-4">
                             <div class="grid grid-cols-2 gap-2.5">
-                                <img src="/google_icon_light.svg" alt="Google Icon">
-                                <img src="/facebook_icon_light.svg" alt="Facebook Icon">
+                                <form action="/auth/google">
+                                    <button>
+                                        <img src="/google_icon_light.svg" alt="Google Icon">
+                                    </button>
+                                </form>
+                                <form action="/auth/facebook">
+                                    <button>
+                                        <img src="/facebook_icon_light.svg" alt="Facebook Icon">
+                                    </button>
+                                </form>
                             </div>
                         </div>
-                    </form>
                     <div class="flex items-center justify-between mt-6 gap-1">
                         <p class="text-secondary leading-secondary">Don't have an account?</p>
-                        <p class="text-secondary leading-secondary text-light-mode-accent text-decoration-line: underline">Sign up</p>
+                        <a href="/auth/register" class="text-secondary leading-secondary text-light-mode-accent text-decoration-line: underline">Sign up</a>
                     </div>
                 </div>
             </div>
