@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import CircleController from "./areas/circle/controllers/circle.controller";
 import App from "./app";
 // import PostController from "./areas/post/controllers/post.controller";
@@ -11,6 +12,15 @@ import { CircleService } from "./areas/circle/services";
 import { AuthenticationService } from "./areas/authentication/services/Authentication.service";
 // import SearchController from "./areas/search/controllers/search.controller";
 // import { SearchService } from "./areas/search/services";
+
+
+const cloudinary = require("cloudinary").v2;
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_NAME!,
+  api_key:  process.env.CLOUDINARY_API_KEY!,
+  api_secret: process.env.CLOUDINARY_API_SECRET!,
+});
 
 const server = new App([
   new LandingController(),

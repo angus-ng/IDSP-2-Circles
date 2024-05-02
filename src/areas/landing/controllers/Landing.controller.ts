@@ -12,7 +12,7 @@ class LandingController implements IController {
   }
 
   private initializeRoutes() {
-    this.router.get(`${this.path}/`, forwardAuthenticated, this.showLandingPage);
+    this.router.get(`${this.path}/`, this.showLandingPage);
   }
  
   private showLandingPage = (_: express.Request, res: express.Response) => {

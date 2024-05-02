@@ -1,5 +1,4 @@
 import { AuthenticationService } from '../../services/Authentication.service';
-import { Request, Response, NextFunction } from 'express';
 import { IStrategy } from '../../../../interfaces/strategy.interface';
 import { Strategy as GoogleStrategy, Profile } from "passport-google-oauth20";
 import { VerifyCallback } from 'passport-oauth2';

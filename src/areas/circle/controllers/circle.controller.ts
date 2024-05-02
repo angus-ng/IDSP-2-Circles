@@ -3,6 +3,11 @@ import IController from "../../../interfaces/controller.interface";
 import ICircleService from "../services/ICircleService";
 import { Circle } from '@prisma/client'
 import { ensureAuthenticated } from "../../../middleware/authentication.middleware";
+import { handleUpload } from "../../../helper/HandleUpload";
+import multer from 'multer';
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 class CircleController implements IController {
   public path = "/circle";
@@ -16,7 +21,7 @@ class CircleController implements IController {
 
   private initializeRoutes() {
     this.router.get(`${this.path}/create`, ensureAuthenticated, this.showDashboard);
-    this.router.post(`${this.path}/create`, ensureAuthenticated, this.createCircle); 
+    this.router.post(`${this.path}/create`, ensureAuthenticated, upload.single("circlePicture"), this.createCircle); 
     this.router.get(`${this.path}/:id`, ensureAuthenticated, this.showCircle);
     this.router.get(`${this.path}/:id/delete`, ensureAuthenticated, this.deleteCircle);
     this.router.get(`${this.path}/:id/invite`, ensureAuthenticated, this.showInvite);
@@ -31,19 +36,21 @@ class CircleController implements IController {
     try {
         let loggedInUser = req.user!.username
 
-        const { circleName, circlePicture } = req.body //MODIFY THIS SO IT USES THE PROPER ROUTE INSTEAD WHEN FILE UPLOADING WORKS WITH MULTER
-
+        const { circleName } = req.body
+        const b64 = Buffer.from(req.file!.buffer).toString('base64');
+        const dataURI = `data:${req.file!.mimetype};base64,${b64}`;
+        const cldRes = await handleUpload(dataURI);
         const newCircleInput = {
-            creator: loggedInUser,
+            creator: loggedInUser, 
             name: circleName,
-            picturePath: circlePicture
+            picturePath: cldRes.url
         }
         
         //validate the input before passing it to our db
 
 
         this._service.createCircle(newCircleInput)
-        res.send("circle created")   
+        res.send(`<img src=${cldRes.url}>`)   
     } catch (err) {
         throw err;
     }
@@ -106,3 +113,9 @@ class CircleController implements IController {
 }
 
 export default CircleController;
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
