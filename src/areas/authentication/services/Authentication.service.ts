@@ -42,7 +42,7 @@ export class AuthenticationService implements IAuthenticationService {
     if (user.email) {
          checkEmail = await this._db.prisma.user.findUnique({where : {email: user.email}}) 
     }
-    const checkUsername =  null //await this._db.prisma.user.findUnique({where : {username : user.username}})
+    const checkUsername =  await this._db.prisma.user.findUnique({where : {username : user.username}})
       if (checkEmail) {
         throw new Error(`The email ${ user.email } existed ❌`);
       } else if (checkUsername) {
@@ -59,7 +59,6 @@ export class AuthenticationService implements IAuthenticationService {
           profilePicture: "",
         }
       })
-      console.log(User)
       return User
     } catch (error) {
       throw error 
@@ -87,7 +86,7 @@ export class AuthenticationService implements IAuthenticationService {
 
     const newUser = await this._db.prisma.user.create({
       data: {
-        username: profile.username,
+        username: profile.displayName,
         facebookId: profile.id,
         profilePicture
       }
@@ -108,7 +107,7 @@ export class AuthenticationService implements IAuthenticationService {
 
     const newUser = await this._db.prisma.user.create({
       data: {
-        username: profile.id,
+        username: profile.displayName,
         googleId: profile.id,
         profilePicture: profile._json.picture
       }

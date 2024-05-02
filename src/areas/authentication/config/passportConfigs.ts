@@ -14,7 +14,7 @@ export default class PassportConfig {
         });
         passport.serializeUser(function(user: Express.User, done: (err: any, id: string) => void) {
          console.log("the user is: ");
-         console.log(user);
+         console.log(user.username);
          done(null, user.id);
         });
      
