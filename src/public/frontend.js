@@ -15,6 +15,7 @@ function createNewCircle() {
     circleDiv.innerHTML = "";
 }
 
+// create Cirlcle/Album modal
 const modal = document.querySelector("#modal");
 modal.addEventListener("click", function (event) {
     event.preventDefault();
