@@ -979,6 +979,10 @@ select {
   border-radius: 0.5rem;
 }
 
+.border-2 {
+  border-width: 2px;
+}
+
 .bg-light-mode {
   --tw-bg-opacity: 1;
   background-color: rgb(248 244 234 / var(--tw-bg-opacity));
@@ -1140,11 +1144,6 @@ select {
   top: 0px;
 }
 
-.after\:top-0\.5::after {
-  content: var(--tw-content);
-  top: 0.125rem;
-}
-
 .after\:h-4::after {
   content: var(--tw-content);
   height: 1rem;
@@ -1189,13 +1188,17 @@ select {
   content: var(--tw-content);
 }
 
-.peer:checked ~ .peer-checked\:bg-gray-200 {
+.peer:checked ~ .peer-checked\:bg-black {
   --tw-bg-opacity: 1;
-  background-color: rgb(229 231 235 / var(--tw-bg-opacity));
+  background-color: rgb(0 0 0 / var(--tw-bg-opacity));
 }
 
-.peer:checked ~ .peer-checked\:outline-gray-200 {
-  outline-color: #e5e7eb;
+.peer:checked ~ .peer-checked\:bg-cover {
+  background-size: cover;
+}
+
+.peer:checked ~ .peer-checked\:outline-black {
+  outline-color: #000;
 }
 
 .peer:checked ~ .peer-checked\:after\:translate-x-5::after {
@@ -1204,16 +1207,26 @@ select {
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
+.peer:checked ~ .peer-checked\:after\:border-2::after {
+  content: var(--tw-content);
+  border-width: 2px;
+}
+
 .peer:checked ~ .peer-checked\:after\:border-white::after {
   content: var(--tw-content);
   --tw-border-opacity: 1;
   border-color: rgb(255 255 255 / var(--tw-border-opacity));
 }
 
-.peer:checked ~ .peer-checked\:after\:bg-white::after {
+.peer:checked ~ .peer-checked\:after\:border-opacity-80::after {
+  content: var(--tw-content);
+  --tw-border-opacity: 0.8;
+}
+
+.peer:checked ~ .peer-checked\:after\:bg-black::after {
   content: var(--tw-content);
   --tw-bg-opacity: 1;
-  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+  background-color: rgb(0 0 0 / var(--tw-bg-opacity));
 }
 
 .peer:checked ~ .rtl\:peer-checked\:after\:-translate-x-full:where([dir="rtl"], [dir="rtl"] *)::after {

@@ -65,3 +65,17 @@ navBar.addEventListener("click", function (event) {
         console.log("profile")
     }
 })
+
+//This needs to be implemented when SPA creates the html for the privacy toggle
+const privacyCheckbox = document.querySelector("#privacyCheckbox");
+privacyCheckbox.addEventListener("change", function(event) {
+    const privacyIcon = document.querySelector("#privacyIcon");
+    const privacyLabel = document.querySelector("#privacyLabel");
+    if (this.checked) {
+        privacyIcon.src = "/globe_icon_light.svg"
+        privacyLabel.innerHTML = "Public";
+        return;
+    }
+    privacyIcon.src = "/lock_icon_light.svg";
+    privacyLabel.innerHTML = "Private";
+})

@@ -66,14 +66,11 @@
                             </div>
                             <div>
                                 <label class="inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" value="" class="sr-only peer">
-                                    <img src="/lock_icon_light.svg" alt="Lock icon" class="mr-4">
-                                    <span class="text-sm font-medium leading-body text-14 mr-4">Private</span>
-                                    <div class="peer relative h-5 w-10 rounded-full outline outline-1 outline-black after:absolute after:start-[2px] after:top-0.5 after:h-4 after:w-4 after:rounded-full after:border after:border-black after:bg-black after:transition-all after:content-[''] peer-checked:bg-gray-200 peer-checked:outline-gray-200 peer-checked:after:translate-x-5 peer-checked:after:border-white peer-checked:after:bg-white rtl:peer-checked:after:-translate-x-full"></div>
+                                    <input id="privacyCheckbox" type="checkbox" value="" class="sr-only peer">
+                                    <img id="privacyIcon" src="/lock_icon_light.svg" alt="Lock icon" class="mr-4">
+                                    <span id="privacyLabel" class="text-sm font-medium leading-body text-14 mr-4">Private</span>
+                                    <div class="peer relative h-5 w-10 rounded-full outline outline-1 outline-black after:absolute after:start-[2px] after:top-0 after:h-4 after:w-4 after:rounded-full after:border after:border-black after:bg-black after:transition-all after:content-[''] peer-checked:bg-cover peer-checked:bg-black border-2 peer-checked:outline-black peer-checked:after:translate-x-5 peer-checked:after:border-white peer-checked:after:border-opacity-80 peer-checked:after:border-2 peer-checked:after:bg-black rtl:peer-checked:after:-translate-x-full"></div>
                                   </label>
-                                <!-- <button>
-                                    <img src="/toggle_lightmode.svg" alt="Toggle">
-                                </button> -->
                             </div>
                         </div>
                         <button id="addPicture" class="my-6 w-full">
