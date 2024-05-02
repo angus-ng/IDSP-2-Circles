@@ -3,7 +3,7 @@ import IController from "../../../interfaces/controller.interface";
 import ICircleService from "../services/ICircleService";
 import { Circle } from '@prisma/client'
 import { ensureAuthenticated } from "../../../middleware/authentication.middleware";
-import { handleUpload } from "../../../helper/HandleUpload";
+import { handleUpload } from "../../../helper/HandleSingleUpload";
 import multer from 'multer';
 
 const storage = multer.memoryStorage();

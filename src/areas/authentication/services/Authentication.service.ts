@@ -55,8 +55,8 @@ export class AuthenticationService implements IAuthenticationService {
       const User = await this._db.prisma.user.create({
         data: { 
           id: randomUUID(),
-          profilePicture: "",
           ...user,
+          profilePicture: "",
         }
       })
       console.log(User)
