@@ -12,19 +12,15 @@
 <body class="h-screen">
     <header class="flex justify-between items-center p-4">
         <div class="flex-1 flex justify-start">
-            <button id="leftButton">
-                
-            </button>
+            <button id="leftButton"></button>
         </div>
 
         <div class="flex-1 flex justify-center">
-            <h1 class="font-bold text-h2 leading-h2">Page Name</h1>
+            <h1 id="pageName" class="font-bold text-h2 leading-h2"></h1>
         </div>
 
         <div class="flex-1 flex justify-end"> 
-            <button id="rightButton">
-                
-            </button>
+            <button id="rightButton"></button>
         </div>
     </header>
 
@@ -40,8 +36,53 @@
     <div class="flex-1 flex justify-center items-center">
         <section class="flex flex-col justify-between w-full h-full items-center">
 
-            <div id="pageContent">
+            <div id="pageContent"></div>
 
+            <div id="loginPage" class="flex flex-col items-center p-4 rounded-lg mt-10 w-full z-10">
+                <div class="flex-shrink-0 mt-2 mb-6">
+                    <img src="/logo_with_wordmark_light.svg" alt="Logo with Wordmark">  
+                </div>
+
+                <div class="flex-1">
+                    <form action="" class="flex flex-col">
+                        <div class="flex items-center mt-6 mb-6">
+                            <label for="login" class=""></label>
+                            <input type="text" placeholder="Phone number, email, or username" class="rounded-input-box w-input-box border-dark-grey border-2 text-17 items-end">
+                        </div>
+                        <div class="flex items-center mt-4 mb-6">
+                            <label for="password" class=""></label>
+                            <input type="text" placeholder="Password" class="rounded-input-box w-input-box text-17 border-dark-grey border-2 items-end">
+                        </div>
+                        <div class="flex items-center mt-4 mb-6">
+                            <div class="grid grid-cols-2 w-full">
+                                <div class="col-start-0">
+                                    <input type="checkbox" name="rememberMe" id="rememberMe" class="size-5">
+                                    <label for="rememberMe" class="ml-2 text-secondary">Remember Me</label>
+                                </div>
+                                <div class="justify-self-end">
+                                    <a href="" class="text-secondary leading-secondary text-light-mode-accent text-decoration-line: underline">Forgot Password?</a>
+                                </div>
+                            </div>
+                        </div>
+                            <button class="my-2 w-full">
+                                <img src="/login_button_light.svg" alt="Login Button">
+                            </button>
+                        </div>
+                        <div id="divider" class="my-6">
+                            <img src="/orDivider_light.svg" alt="Divider">
+                        </div>
+                        <div class="flex items-center justify-between mt-4">
+                            <div class="grid grid-cols-2 gap-2.5">
+                                <img src="/google_icon_light.svg" alt="Google Icon">
+                                <img src="/facebook_icon_light.svg" alt="Facebook Icon">
+                            </div>
+                        </div>
+                    </form>
+                    <div class="flex items-center justify-between mt-6 gap-1">
+                        <p class="text-secondary leading-secondary">Don't have an account?</p>
+                        <p class="text-secondary leading-secondary text-light-mode-accent text-decoration-line: underline">Sign up</p>
+                    </div>
+                </div>
             </div>
     
         </section>
@@ -76,27 +117,6 @@
     </div>
 
 
-    <div class="absolute bottom-0 w-full">
-        <div class="border-b border-divider-grey"></div>
-
-        <footer class="w-full flex justify-between items-center pt-4 pb-8 px-6 mt-2">
-            
-            <a href="" id="explore" class="flex flex-col items-center">        
-                <img src="/explore_icon_light.svg" alt="Explore Icon">             
-            </a>
-            <a href="" id="search" class="flex flex-col items-center">
-                <img src="/search_icon_light.svg" alt="Search Icon">   
-            </a>
-            <a href="" id="new" class="flex flex-col items-center">
-                <img src="/new_icon_light.svg" alt="New Icon">   
-            </a>
-            <a href="" id="activity" class="flex flex-col items-center">
-                <img src="/activity_icon_light.svg" alt="Activity Icon">           
-            </a>
-            <a href="" id="profile" class="flex flex-col items-center">
-                <img src="/profile_icon_light.svg" alt="Profile Icon">
-            </a>
-        </footer>
-    </div>
+    <div id="id" class="absolute bottom-0 w-full"></div>
 </body>
 </html>

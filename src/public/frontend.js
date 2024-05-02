@@ -1,19 +1,6 @@
-const headerLeftButton = document.querySelector("#leftButton");
-const headerRightButton = document.querySelector("#rightButton");
-
-
-function createNewCircle() {
-
-    headerLeftButton.innerHTML = `
-    <i class="fa-solid fa-arrow-left-long"></i>
-    `;
-    headerRightButton.innerHTML = `
-    <p class="mb-4 font-normal text-15 leading-body">Next</p>
-    `;
-
-    let circleDiv = document.createElement("div");
-    circleDiv.innerHTML = "";
-}
+const pageName = document.querySelector("#pageName");
+const leftHeaderButton = document.querySelector("#leftButton");
+const rightHeaderButton = document.querySelector("#rightButton");
 
 // create Cirlcle/Album modal
 const modal = document.querySelector("#modal");
@@ -38,6 +25,15 @@ modal.addEventListener("click", function (event) {
 
         modal.classList.remove("shown");
         modal.classList.add("hidden");
+        pageName.innerHTML = `New Circle`;
+
+        leftHeaderButton.innerHTML = `
+        <img src="/back_button_icon_light.svg" alt="Back Button"></img>
+        `
+        rightHeaderButton.innerHTML = `
+        <img src="/next_button_light.svg" alt="Back Button"></img>
+        `
+
         const pageContent = document.querySelector("#pageContent");
         pageContent.innerHTML = `
         <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full z-10">
@@ -77,9 +73,7 @@ modal.addEventListener("click", function (event) {
                         <img src="/add_picture.svg" alt="Add Picture Button" class="w-full">
                     </button>
                 </form>
-
             </div>
-        
         </div>
         `
         //This needs to be implemented when SPA creates the html for the privacy toggle
@@ -125,3 +119,32 @@ navBar.addEventListener("click", function (event) {
         console.log("profile")
     }
 })
+
+
+// navbar
+
+/*
+
+<div class="border-b border-dark-grey"></div>
+
+        <footer class="w-full flex justify-between items-center pt-4 pb-8 px-6 mt-2">
+            
+            <a href="" id="explore" class="flex flex-col items-center">        
+                <img src="/explore_icon_light.svg" alt="Explore Icon">             
+            </a>
+            <a href="" id="search" class="flex flex-col items-center">
+                <img src="/search_icon_light.svg" alt="Search Icon">   
+            </a>
+            <a href="" id="new" class="flex flex-col items-center">
+                <img src="/new_icon_light.svg" alt="New Icon">   
+            </a>
+            <a href="" id="activity" class="flex flex-col items-center">
+                <img src="/activity_icon_light.svg" alt="Activity Icon">           
+            </a>
+            <a href="" id="profile" class="flex flex-col items-center">
+                <img src="/profile_icon_light.svg" alt="Profile Icon">
+            </a>
+        </footer>
+
+
+*/
