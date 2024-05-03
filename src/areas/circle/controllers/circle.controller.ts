@@ -21,7 +21,8 @@ class CircleController implements IController {
 
   private initializeRoutes() {
     this.router.get(`${this.path}/create`, ensureAuthenticated, this.showDashboard);
-    this.router.post(`${this.path}/create`, ensureAuthenticated, upload.single("circlePicture"), this.createCircle); 
+    this.router.post(`${this.path}/create`, ensureAuthenticated,  this.createCircle); 
+    this.router.post(`${this.path}/upload`, ensureAuthenticated, upload.single("file"), this.uploadImage); 
     this.router.get(`${this.path}/:id`, ensureAuthenticated, this.showCircle);
     this.router.get(`${this.path}/:id/delete`, ensureAuthenticated, this.deleteCircle);
     this.router.get(`${this.path}/:id/invite`, ensureAuthenticated, this.showInvite);
@@ -32,25 +33,30 @@ class CircleController implements IController {
     res.render('circle/views/dashboard')
   }
 
+  private uploadImage = async (req: Request, res: Response) => {
+    const b64 = Buffer.from(req.file!.buffer).toString('base64');
+    const dataURI = `data:${req.file!.mimetype};base64,${b64}`;
+    const cldRes = await handleUpload(dataURI);
+    console.log(cldRes.url)
+    
+    res.json({ message: 'File uploaded successfully', data:cldRes.url });
+  }
+
   private createCircle = async (req:Request, res:Response) => {
     try {
         let loggedInUser = req.user!.username
-
-        const { circleName } = req.body
-        const b64 = Buffer.from(req.file!.buffer).toString('base64');
-        const dataURI = `data:${req.file!.mimetype};base64,${b64}`;
-        const cldRes = await handleUpload(dataURI);
-        const newCircleInput = {
-            creator: loggedInUser, 
-            name: circleName,
-            picturePath: cldRes.url
-        }
+        console.log(loggedInUser)
         
-        //validate the input before passing it to our db
-
-
+        const { circleName, picturePath } = req.body
+        const newCircleInput = {
+          creator: loggedInUser, 
+          name: circleName,
+            picturePath: picturePath
+          }
+          //validate the input before passing it to our db
+          
         this._service.createCircle(newCircleInput)
-        res.send(`<img src=${cldRes.url}>`)   
+        res.json({ message: 'File uploaded successfully', data:newCircleInput });
     } catch (err) {
         throw err;
     }

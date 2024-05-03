@@ -18,7 +18,6 @@ export class AuthenticationService implements IAuthenticationService {
   }
   async getUserByEmailAndPassword(email: string, password: string): Promise<User | undefined> {
     try {
-      console.log(email, password)
       const user = await this._db.prisma.user.findUnique({
         where: {
           email : email,
@@ -87,7 +86,7 @@ export class AuthenticationService implements IAuthenticationService {
 
     const newUser = await this._db.prisma.user.create({
       data: {
-        username: profile.id,
+        username: profile.displayName,
         facebookId: profile.id,
         profilePicture
       }

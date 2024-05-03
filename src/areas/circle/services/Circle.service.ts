@@ -20,7 +20,7 @@ export class CircleService implements ICircleService {
             data: {
                 name: newCircleInput.name,
                 picture: newCircleInput.picturePath,
-                ownerId: creator.username
+                ownerId: creator.username,
             }
         })
 

@@ -41,14 +41,10 @@ class AuthenticationController implements IController {
       if (err || !user) {
         return res.status(200).json({success: true, data:null })
       }
-      console.log("this", user)
-      console.log(req.user)
       req.logIn(user, async function(err) {
         if (err) {
           return res.status(200).json({success: true, data:null})
         }
-        console.log(req.session)
-        console.log(req.sessionID)
         res.status(200).json({success: true, data:req.user!.username})
       })
     })(req, res, next)
