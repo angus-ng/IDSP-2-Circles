@@ -120,6 +120,7 @@ header.addEventListener("click", async (event) => {
 
   if (circleBackButton) {
     const circleName = document.querySelector("#circleName");
+    console.log(circleName.value)
     isPrivacyPublic = document.querySelector("#privacyCheckbox").checked;
     let circleImgSrc = document.querySelector("#circleImage").src;
     newCircleNameInput = circleName.value;
@@ -289,6 +290,11 @@ async function displayCreateCircle() {
   const nextButton = document.querySelector("#nextButton");
   const circlePhoto = document.querySelector("#circleImage");
 
+  circlePhoto.addEventListener("click", async function(event) {
+    event.preventDefault();
+    await fileInput.click();
+  })
+
   addPictureButton.addEventListener("click", async function (event) {
     console.log("clicked add picture button");
     event.preventDefault();
@@ -302,20 +308,12 @@ async function displayCreateCircle() {
     document.querySelector("#addPicture img").src = "/change_picture_light.svg";
   });
 
-  // nextButton.addEventListener("click", async function (event) {
-  //   console.log("clicked next button");
-  //   event.preventDefault();
-  //   await handleCreateCircle();
-  // });
-
-  //This needs to be implemented when SPA creates the html for the privacy toggle
-
   privacyCheckbox.addEventListener("change", async function () {
     const privacyIcon = document.querySelector("#privacyIcon");
     const privacyLabel = document.querySelector("#privacyLabel");
-    updateCheckbox();
     privacyIcon.src = "/lock_icon_light.svg";
     privacyLabel.innerHTML = "Private";
+    updateCheckbox();
   });
   return;
 }
@@ -354,6 +352,7 @@ async function displayCreateCirclePreview() {
                     <div id="divider" class="mb-5">
                         <img src="/divider_light.svg" alt="Divider">                          
                     </div>
+                    <input id="myInput" type="file" style="visibility:hidden" multiple=false/>
                     <div class="flex items-center justify-between mt-4 w-full">
                         <div>
                             <p class="font-medium text-h2 leading-h2">Private or Public</p>
@@ -373,14 +372,25 @@ async function displayCreateCirclePreview() {
             </div>
         </div>
     `;
+  const fileInput = document.querySelector("#myInput");
+  const circlePhoto = document.querySelector("#circleImage");
+  document.querySelector("#circleImage").addEventListener("click", async function(event) {
+      event.preventDefault();
+      await fileInput.click();
+    })
+    fileInput.addEventListener("input", async function (event) {
+    event.preventDefault();
+    const res = await handleSelectFile();
+    circlePhoto.src = await res.data;
+  });
   //This needs to be implemented when SPA creates the html for the privacy toggle
 
   privacyCheckbox.addEventListener("change", async function () {
     const privacyIcon = document.querySelector("#privacyIcon");
     const privacyLabel = document.querySelector("#privacyLabel");
-    await updateCheckbox();
     privacyIcon.src = "/lock_icon_light.svg";
     privacyLabel.innerHTML = "Private";
+    await updateCheckbox();
   });
 
   const circleNameInput = document.querySelector("#circleName");
@@ -428,25 +438,30 @@ async function displayNavBar() {
       pageName.innerHTML = "Explore";
       pageContent.innerHTML = "";
       rightHeaderButton.innerHTML = `<img src="/map_icon_light.svg" alt="Map Icon"</img>`;
+      newCircleNameInput = "";
     }
     if (searchButton) {
       pageName.innerHTML = "Search";
       pageContent.innerHTML = "";
       rightHeaderButton.innerHTML = "";
+      newCircleNameInput = "";
     }
     if (newButton) {
       modal.classList.remove("hidden");
       modal.classList.add("shown");
+      newCircleNameInput = "";
     }
     if (activityButton) {
       pageName.innerHTML = "Activity";
       pageContent.innerHTML = "";
       leftHeaderButton.innerHTML = "";
       rightHeaderButton.innerHTML = "";
+      newCircleNameInput = "";
     }
     if (profileButton) {
       pageName.innerHTML = currentLocalUser;
       rightHeaderButton.innerHTML = "";
+      newCircleNameInput = "";
       const { success, data } = await getListOfCircles();
       if (success && data) {
         await renderListOfCircles(data);
