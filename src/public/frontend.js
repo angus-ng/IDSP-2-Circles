@@ -25,6 +25,8 @@ header.addEventListener("click", async (event) => {
     if (backButton) {
         pageName.innerHTML = "Explore";
         pageContent.innerHTML = "";
+        leftHeaderButton.innerHTML = "";
+        rightHeaderButton.innerHTML = `<img src="/map_icon_light.svg" alt="Map Icon"</img>`;
     }
 
     if (circleBackButton) {
@@ -316,10 +318,12 @@ async function displayNavBar () {
         if (exploreButton) {
             pageName.innerHTML = "Explore";
             pageContent.innerHTML = "";
+            rightHeaderButton.innerHTML = `<img src="/map_icon_light.svg" alt="Map Icon"</img>`;
         }
         if (searchButton) {
             pageName.innerHTML = "Search";
             pageContent.innerHTML = "";
+            rightHeaderButton.innerHTML = "";
         }
         if (newButton) {
             modal.classList.remove("hidden");
@@ -328,10 +332,13 @@ async function displayNavBar () {
         if (activityButton) {
             pageName.innerHTML = "Activity";
             pageContent.innerHTML = "";
+            leftHeaderButton.innerHTML = "";
+            rightHeaderButton.innerHTML = "";
         }
         if (profileButton) {
             pageName.innerHTML = "Profile";
             pageContent.innerHTML = "";
+            rightHeaderButton.innerHTML = "";
         }
     });
 }
