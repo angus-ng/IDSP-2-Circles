@@ -10,6 +10,7 @@ let isEditable = false;
 const header = document.querySelector("header");
 header.addEventListener("click", async (event) => {
     const nextButton = event.target.closest("#nextButton");
+    const backButton = event.target.closest("#backButton");
     const circleBackButton = event.target.closest("#circleBackButton");
 
     if (nextButton) {
@@ -19,6 +20,11 @@ header.addEventListener("click", async (event) => {
         await displayCreateCirclePreview();
         document.querySelector("#privacyCheckbox").checked = isPrivacyPublic;
         circleName.value = newCircleNameInput;
+    }
+
+    if (backButton) {
+        pageName.innerHTML = "Explore";
+        pageContent.innerHTML = "";
     }
 
     if (circleBackButton) {
@@ -152,7 +158,7 @@ async function displayCreateCircle () {
     const pageContent = document.querySelector("#pageContent");
     pageContent.innerHTML = `
     <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full z-10">
-        <div class="flex-shrink-0 mt-20 mb-10">
+        <div class="flex-shrink-0 mt-10 mb-10">
             <img src="/placeholder_image.svg" alt="Placeholder Image">                     
         </div>
     
@@ -280,7 +286,7 @@ async function displayCreateCircle () {
         const nav = document.querySelector("#nav");
         nav.innerHTML = `<div class="border-b border-dark-grey"></div>
     
-        <footer class="w-full flex justify-between items-center pt-4 pb-8 px-6 mt-2">
+        <footer class="w-full flex justify-between items-center pt-4 pb-8 px-6">
             
             <a href="" id="explore" class="flex flex-col items-center">        
                 <img src="/explore_icon_light.svg" alt="Explore Icon">             
@@ -308,20 +314,24 @@ async function displayCreateCircle () {
             const profileButton = event.target.closest("#profile");
     
             if (exploreButton) {
-                console.log("explore")
+                pageName.innerHTML = "Explore";
+                pageContent.innerHTML = "";
             }
             if (searchButton) {
-                console.log("search")
+                pageName.innerHTML = "Search";
+                pageContent.innerHTML = "";
             }
             if (newButton) {
                 modal.classList.remove("hidden");
                 modal.classList.add("shown");
             }
             if (activityButton) {
-                console.log("activity")
+                pageName.innerHTML = "Activity";
+                pageContent.innerHTML = "";
             }
             if (profileButton) {
-                console.log("profile")
+                pageName.innerHTML = "Profile";
+                pageContent.innerHTML = "";
             }
         })
     }
