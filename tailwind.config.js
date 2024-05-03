@@ -42,10 +42,12 @@ theme: {
     },
     width: {
       '325': '325px',
+      '234':'234px',
       'input-box': '377px'
     },
     height: {
-      '932': '932px'
+      '932': '932px',
+      '230':'230px'
     },
     boxShadow: {
       'background-shadow': 'inset 0 0 100px -30px rgba(0, 0, 0, 0.2)'

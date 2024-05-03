@@ -14,11 +14,13 @@ header.addEventListener("click", async (event) => {
     const circleBackButton = event.target.closest("#circleBackButton");
 
     if (nextButton) {
+        let circleImgSrc = document.querySelector("#circleImage").src;
         isPrivacyPublic = document.querySelector("#privacyCheckbox").checked;
         const circleName = document.querySelector("#circleName");
         newCircleNameInput = circleName.value;
         await displayCreateCirclePreview();
         document.querySelector("#privacyCheckbox").checked = isPrivacyPublic;
+        document.querySelector("#circleImage").src = circleImgSrc;
         circleName.value = newCircleNameInput;
     }
 
@@ -31,10 +33,12 @@ header.addEventListener("click", async (event) => {
 
     if (circleBackButton) {
         const circleName = document.querySelector("#circleName");
-        isPrivacyPublic = document.querySelector("#privacyCheckbox");
+        isPrivacyPublic = document.querySelector("#privacyCheckbox").checked;
+        let circleImgSrc = document.querySelector("#circleImage").src;
         newCircleNameInput = circleName.value;
         await displayCreateCircle();
         document.querySelector("#privacyCheckbox").checked = isPrivacyPublic;
+        document.querySelector("#circleImage").src = circleImgSrc;
         circleName.value = newCircleNameInput;
     }
 });
@@ -129,6 +133,27 @@ async function localAuth() {
   return jsonResponse;
 }
 
+function toggleEdit () {
+  isEditable = !isEditable;
+
+  if (isEditable) {
+      circleName.removeAttribute("readonly");
+      circleName.focus();
+  }
+
+  circleName.setAttribute("readonly", true);
+}
+
+pageContent.addEventListener("click", (event) => {
+  const editButton = event.target.closest("#editButton");
+
+  if (editButton) {
+      event.preventDefault();
+      toggleEdit();
+  }
+
+})
+
 async function displayCreateCircle () {
     pageName.innerHTML = `New Circle`;
 
@@ -143,7 +168,7 @@ async function displayCreateCircle () {
   pageContent.innerHTML = `
     <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full z-10">
         <div class="flex-shrink-0 mt-10 mb-10">
-            <img id="circleImage" src="/placeholder_image.svg" alt="Placeholder Image">                     
+            <img id="circleImage" src="/placeholder_image.svg" alt="Placeholder Image" class="object-cover w-234 h-230 rounded-full">                     
         </div>
     
         <div class="flex-1">
@@ -202,11 +227,11 @@ async function displayCreateCircle () {
     circlePhoto.src = await res.data;
   });
 
-  nextButton.addEventListener("click", async function (event) {
-    console.log("clicked next button");
-    event.preventDefault();
-    await handleCreateCircle();
-  });
+  // nextButton.addEventListener("click", async function (event) {
+  //   console.log("clicked next button");
+  //   event.preventDefault();
+  //   await handleCreateCircle();
+  // });
 
     //This needs to be implemented when SPA creates the html for the privacy toggle
 
@@ -231,7 +256,7 @@ async function displayCreateCirclePreview () {
     pageContent.innerHTML = `
     <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full z-10">
             <div class="flex-shrink-0 mt-20 mb-4">
-                <img src="/placeholder_image.svg" alt="Placeholder Image">                     
+                <img id="circleImage" src="/placeholder_image.svg" alt="Placeholder Image" class="object-cover w-234 h-230 rounded-full">                     
             </div>
         
             <div class="flex-1">
@@ -270,6 +295,19 @@ async function displayCreateCirclePreview () {
             </div>
         </div>
     `;
+        //This needs to be implemented when SPA creates the html for the privacy toggle
+
+    privacyCheckbox.addEventListener("change", function() {
+        const privacyIcon = document.querySelector("#privacyIcon");
+        const privacyLabel = document.querySelector("#privacyLabel");
+        if (this.checked) {
+            privacyIcon.src = "/globe_icon_light.svg"
+            privacyLabel.innerHTML = "Public";
+            return;
+        }
+        privacyIcon.src = "/lock_icon_light.svg";
+        privacyLabel.innerHTML = "Private";
+    });
 
     const circleNameInput = document.querySelector("#circleName");
     circleNameInput.value = newCircleNameInput;

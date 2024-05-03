@@ -916,6 +916,10 @@ select {
   height: 1.25rem;
 }
 
+.h-230 {
+  height: 230px;
+}
+
 .h-5 {
   height: 1.25rem;
 }
@@ -938,6 +942,10 @@ select {
 
 .w-12 {
   width: 3rem;
+}
+
+.w-234 {
+  width: 234px;
 }
 
 .w-full {
@@ -1086,6 +1094,11 @@ select {
 
 .to-gradient-darker-blue {
   --tw-gradient-to: rgba(12, 18, 28, 0.5) var(--tw-gradient-to-position);
+}
+
+.object-cover {
+  -o-object-fit: cover;
+     object-fit: cover;
 }
 
 .p-4 {
