@@ -557,12 +557,21 @@ async function displayCreateAlbum () {
 
   const pageContent = document.querySelector("#pageContent");
   pageContent.innerHTML = `
-    <div id="createNewAlbum" class="flex flex-col items-center py-10 my-48 bg-light-mode rounded-lg w-full z-10">
-        <div class="flex-shrink-0 mt-10 mb-10">
-            <img id="uploadIcon" src="/upload_photo_light.svg" alt="Upload Icon">                     
+  <a href="">
+    <div id="createNewAlbum" class="flex justify-center py-10 my-48 rounded-lg w-full z-10">
+        <div class="flex-shrink-0 items-center mt-10 mb-10">
+          <div class="flex justify-center">
+            <img id="uploadIcon" src="/upload_photo_light.svg" alt="Upload Icon">
+          </div>
+          <div class="flex justify-between">
+            <p class="text-base">drag and drop to&nbsp</p><p class="text-base text-decoration-line: underline">upload</p>
+          </div>
+          <div class="flex justify-center">
+            <p>PNG, JPEG, JPG</p>
+          </div>              
         </div>
     </div>
-    `;
+  </a>`;
 }
 
 async function displayCreateAlbumPreview () {
