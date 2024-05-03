@@ -1,10 +1,11 @@
 const pageName = document.querySelector("#pageName");
+const pageContent = document.querySelector("#pageContent");
 const leftHeaderButton = document.querySelector("#leftButton");
 const rightHeaderButton = document.querySelector("#rightButton");
 
 // create Cirlcle/Album modal
 const modal = document.querySelector("#modal");
-modal.addEventListener("click", function (event) {
+modal.addEventListener("click", async function (event) {
     event.preventDefault();
     const closeModal = event.target.closest("#closeModalButton");
     const createAlbumModalButton = event.target.closest("#createAlbumModalButton");
@@ -25,7 +26,71 @@ modal.addEventListener("click", function (event) {
 
         modal.classList.remove("shown");
         modal.classList.add("hidden");
-        pageName.innerHTML = `New Circle`;
+        await displayCreateCircle();
+    }
+})
+
+// const facebookAuthButton = document.querySelector("#facebookAuth");
+// facebookAuthButton.addEventListener("click", async function (event) {
+//     event.preventDefault();
+//     let { success, data, error } = await facebookAuth();
+//     if (success) {
+//         await displayExplore()
+//     }
+// })
+
+// async function facebookAuth () {
+//     const response = await fetch("/auth/facebook");
+//     const jsonResponse = await response.json() 
+
+//     if (!response.ok) {
+//         return { success: false, error: "Error with facebook OAuth"};
+//     }
+
+//     return jsonResponse;
+// }
+
+const localAuthButton = document.querySelector("#localAuth");
+localAuthButton.addEventListener("click", async function (event) {
+    let { success, data, error } = await localAuth();
+    if (success && data) {
+        await displayExplore()
+    }
+})
+
+async function localAuth () {
+    let emailInput = document.querySelector('#emailInput')
+    let passwordInput = document.querySelector('#passwordInput')
+    let inputObj = {
+        email: emailInput.value,
+        password: passwordInput.value
+    }
+
+    let response = await fetch("/auth/local",
+    {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(inputObj)
+    });
+
+    inputObj = {};
+    emailInput.value = "";
+    passwordInput.value= "";
+
+    const jsonResponse = await response.json() 
+    console.log(jsonResponse)
+
+    if (!response.ok) {
+        return { success: false, error: "Error with local auth"};
+    }
+
+    return jsonResponse;
+}
+
+async function displayCreateCircle () {
+    pageName.innerHTML = `New Circle`;
 
         leftHeaderButton.innerHTML = `
         <img src="/back_button_icon_light.svg" alt="Back Button" id="backButton"></img>
@@ -141,49 +206,21 @@ navBar.addEventListener("click", function (event) {
     const activityButton = event.target.closest("#activity");
     const profileButton = event.target.closest("#profile");
 
-    if (exploreButton) {
-        console.log("explore")
-    }
-    if (searchButton) {
-        console.log("search")
-    }
-    if (newButton) {
-        modal.classList.remove("hidden");
-        modal.classList.add("shown");
-    }
-    if (activityButton) {
-        console.log("activity")
-    }
-    if (profileButton) {
-        console.log("profile")
-    }
-})
-
-
-// navbar
-
-/*
-
-<div class="border-b border-dark-grey"></div>
-
-        <footer class="w-full flex justify-between items-center pt-4 pb-8 px-6 mt-2">
-            
-            <a href="" id="explore" class="flex flex-col items-center">        
-                <img src="/explore_icon_light.svg" alt="Explore Icon">             
-            </a>
-            <a href="" id="search" class="flex flex-col items-center">
-                <img src="/search_icon_light.svg" alt="Search Icon">   
-            </a>
-            <a href="" id="new" class="flex flex-col items-center">
-                <img src="/new_icon_light.svg" alt="New Icon">   
-            </a>
-            <a href="" id="activity" class="flex flex-col items-center">
-                <img src="/activity_icon_light.svg" alt="Activity Icon">           
-            </a>
-            <a href="" id="profile" class="flex flex-col items-center">
-                <img src="/profile_icon_light.svg" alt="Profile Icon">
-            </a>
-        </footer>
-
-
-*/
+        if (exploreButton) {
+            console.log("explore")
+        }
+        if (searchButton) {
+            console.log("search")
+        }
+        if (newButton) {
+            modal.classList.remove("hidden");
+            modal.classList.add("shown");
+        }
+        if (activityButton) {
+            console.log("activity")
+        }
+        if (profileButton) {
+            console.log("profile")
+        }
+    })
+}
