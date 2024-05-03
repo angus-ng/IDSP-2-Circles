@@ -13,6 +13,7 @@ export class CircleService implements ICircleService {
             username: newCircleInput.creator
         }
     })
+    console.log(newCircleInput)
 
     if (creator){
         //make the circle
@@ -23,7 +24,6 @@ export class CircleService implements ICircleService {
                 ownerId: creator.username,
             }
         })
-
 
         //make the explicit circle user relationship
         if (createdCircle) {

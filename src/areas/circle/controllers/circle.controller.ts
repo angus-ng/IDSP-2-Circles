@@ -21,7 +21,7 @@ class CircleController implements IController {
 
   private initializeRoutes() {
     this.router.get(`${this.path}/create`, ensureAuthenticated, this.showDashboard);
-    this.router.post(`${this.path}/create`, ensureAuthenticated,  this.createCircle); 
+    this.router.post(`${this.path}/create`, ensureAuthenticated, upload.none(),  this.createCircle); 
     this.router.post(`${this.path}/upload`, ensureAuthenticated, upload.single("file"), this.uploadImage); 
     this.router.get(`${this.path}/:id`, ensureAuthenticated, this.showCircle);
     this.router.get(`${this.path}/:id/delete`, ensureAuthenticated, this.deleteCircle);
@@ -37,7 +37,6 @@ class CircleController implements IController {
     const b64 = Buffer.from(req.file!.buffer).toString('base64');
     const dataURI = `data:${req.file!.mimetype};base64,${b64}`;
     const cldRes = await handleUpload(dataURI);
-    console.log(cldRes.url)
     
     res.json({ message: 'File uploaded successfully', data:cldRes.url });
   }
@@ -45,9 +44,9 @@ class CircleController implements IController {
   private createCircle = async (req:Request, res:Response) => {
     try {
         let loggedInUser = req.user!.username
-        console.log(loggedInUser)
         
         const { circleName, picturePath } = req.body
+        console.log(req.body,"logged")
         const newCircleInput = {
           creator: loggedInUser, 
           name: circleName,
@@ -58,7 +57,7 @@ class CircleController implements IController {
         this._service.createCircle(newCircleInput)
         res.json({ message: 'File uploaded successfully', data:newCircleInput });
     } catch (err) {
-        throw err;
+        //throw err;
     }
   }
 

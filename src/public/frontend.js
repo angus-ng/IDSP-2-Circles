@@ -159,11 +159,8 @@ async function displayCreateCircle() {
 
   fileInput.addEventListener("input", async function (event) {
     event.preventDefault();
-    //console.log("change image");
     const res = await handleSelectFile();
-    //console.log(res, "helppppp");
-    console.log(res, "frontend");
-    circlePhoto.src = res.data;
+    circlePhoto.src = await res.data;
   });
 
   nextButton.addEventListener("click", async function (event) {

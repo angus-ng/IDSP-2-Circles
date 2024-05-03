@@ -435,3 +435,6 @@ c:\Users\angus\Desktop\idsp\src\areas\authentication\services\Authentication.ser
 
 Argument `username` is missing.
 2024/5/2 17:14:45 - 500 - This authorization code has been used.
+2024-05-02, 11:28:40 p.m. - 500 - Multipart: Boundary not found
+2024-05-02, 11:28:46 p.m. - 500 - Multipart: Boundary not found
+2024-05-02, 11:31:57 p.m. - 500 - Multipart: Boundary not found
