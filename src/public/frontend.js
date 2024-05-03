@@ -2,7 +2,6 @@ const pageName = document.querySelector("#pageName");
 const pageContent = document.querySelector("#pageContent");
 const leftHeaderButton = document.querySelector("#leftButton");
 const rightHeaderButton = document.querySelector("#rightButton");
-const circleName = document.querySelector("#circleName");
 
 let isPrivacyPublic = false;
 let newCircleNameInput = "";
@@ -14,17 +13,18 @@ header.addEventListener("click", async (event) => {
     const circleBackButton = event.target.closest("#circleBackButton");
 
     if (nextButton) {
-        isPrivacyPublic = document.querySelector("#privacyCheckbox");
+        isPrivacyPublic = document.querySelector("#privacyCheckbox").checked;
         const circleName = document.querySelector("#circleName");
         newCircleNameInput = circleName.value;
         await displayCreateCirclePreview();
         document.querySelector("#privacyCheckbox").checked = isPrivacyPublic;
-        circleName = newCircleNameInput;
+        circleName.value = newCircleNameInput;
     }
 
     if (circleBackButton) {
+        const circleName = document.querySelector("#circleName");
         isPrivacyPublic = document.querySelector("#privacyCheckbox");
-        newCircleNameInput = newCircleName.value;
+        newCircleNameInput = circleName.value;
         await displayCreateCircle();
         document.querySelector("#privacyCheckbox").checked = isPrivacyPublic;
         circleName.value = newCircleNameInput;
@@ -48,11 +48,10 @@ modal.addEventListener("click", async function (event) {
     }
 
     if (createAlbumModalButton) {
-        console.log("create album")
+        console.log("create album");
     }
 
     if (createCircleModalButton) {
-
         modal.classList.remove("shown");
         modal.classList.add("hidden");
         await displayCreateCircle();
@@ -80,7 +79,7 @@ modal.addEventListener("click", async function (event) {
 // }
 
 const localAuthButton = document.querySelector("#localAuth");
-localAuthButton.addEventListener("click", async function (event) {
+localAuthButton.addEventListener("click", async function () {
     let { success, data, error } = await localAuth();
     if (success && data) {
         await displayExplore();
