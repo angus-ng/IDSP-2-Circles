@@ -88,6 +88,7 @@ header.addEventListener("click", async (event) => {
   const backButton = event.target.closest("#backButton");
   const circleBackButton = event.target.closest("#circleBackButton");
   const createCircleButton = event.target.closest("#createCircleButton");
+  const closeButton = event.target.closest("#closeButton");
 
   if (nextButton) {
     let circleImgSrc = document.querySelector("#circleImage").src;
@@ -132,6 +133,15 @@ header.addEventListener("click", async (event) => {
     await updateCheckbox();
     return;
   }
+
+  if (closeButton) {
+    newCircleNameInput = "";
+    pageName.innerHTML = "Explore";
+    pageContent.innerHTML = "";
+    leftHeaderButton.innerHTML = "";
+    rightHeaderButton.innerHTML = `<img src="/map_icon_light.svg" alt="Map Icon"</img>`;
+    return;
+  }
 });
 
 // create Cirlcle/Album modal
@@ -154,7 +164,9 @@ modal.addEventListener("click", async function (event) {
   }
 
   if (createAlbumModalButton) {
-    console.log("create album");
+    modal.classList.remove("shown");
+    modal.classList.add("hidden");
+    await displayCreateAlbum();
   }
 
   if (createCircleModalButton) {
@@ -533,4 +545,48 @@ async function renderListOfCircles(data) {
   ${newArr.join("")}
   </div>`;
   pageContent.innerHTML = render;
+}
+
+async function displayCreateAlbum () {
+  pageName.innerHTML = `New Album`;
+
+  leftHeaderButton.innerHTML = `
+    <img src="/close_icon_light.svg" alt="Close Button" id="closeButton"></img>
+    `;
+  rightHeaderButton.innerHTML = "";
+
+  const pageContent = document.querySelector("#pageContent");
+  pageContent.innerHTML = `
+    <div id="createNewAlbum" class="flex flex-col items-center py-10 my-48 bg-light-mode rounded-lg w-full z-10">
+        <div class="flex-shrink-0 mt-10 mb-10">
+            <img id="uploadIcon" src="/upload_photo_light.svg" alt="Upload Icon">                     
+        </div>
+    </div>
+    `;
+}
+
+async function displayCreateAlbumPreview () {
+  pageName.innerHTML = `New Album`;
+
+  leftHeaderButton.innerHTML = `<img src="/close_icon_light.svg" alt="Close Button" id="closeButton"></img>`;
+  rightHeaderButton.innerHTML = `<img src="/next_button_light.svg" alt="Next Button" id="nextButton"></img>`;
+
+  const pageContent = document.querySelector("#pageContent");
+  pageContent.innerHTML = `
+    <div id="createNewAlbum" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full z-10">
+    <div class="flex-shrink-0 mt-20 mb-4">
+        <img id="albumImage" src="/placeholder_image.svg" alt="Placeholder Image" class="object-cover w-234 h-230 rounded-full">                     
+    </div>
+
+    <div class="flex justify-center my-5 relative w-full">
+            </div>
+            <div id="divider" class="mb-5">
+                <img src="/divider_light.svg" alt="Divider">                          
+            </div>
+            <div class="flex items-center justify-between mt-4 w-full">
+                <h1>Upload more files</h1>
+            </div>  
+    </div>
+  </div>
+  `;
 }

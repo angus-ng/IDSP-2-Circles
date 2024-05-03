@@ -843,6 +843,11 @@ select {
   margin-bottom: auto;
 }
 
+.my-48 {
+  margin-top: 12rem;
+  margin-bottom: 12rem;
+}
+
 .mb-10 {
   margin-bottom: 2.5rem;
 }
@@ -1176,6 +1181,11 @@ select {
 .px-6 {
   padding-left: 1.5rem;
   padding-right: 1.5rem;
+}
+
+.py-10 {
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
 }
 
 .pb-4 {
