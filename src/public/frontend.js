@@ -123,7 +123,7 @@ async function displayCreateCircle () {
                     <label for="circleName" class="font-medium text-h2 mr-6">Name</label>
                     <input
                     type="text"
-                    placeholder="add a title to your album..."
+                    placeholder="add a title to your circle..."
                     id="circleName"
                     class="w-full bg-light-mode-bg text-20 items-end border-none"
                     />
