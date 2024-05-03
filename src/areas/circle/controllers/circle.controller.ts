@@ -27,6 +27,7 @@ class CircleController implements IController {
     this.router.get(`${this.path}/:id/delete`, ensureAuthenticated, this.deleteCircle);
     this.router.get(`${this.path}/:id/invite`, ensureAuthenticated, this.showInvite);
     this.router.post(`${this.path}/:id/invite`, ensureAuthenticated, this.circleInvite);
+    this.router.post(`${this.path}/list`, ensureAuthenticated, this.getCircleList);
   }
 
   private showDashboard = async (req:Request, res:Response) => {
@@ -55,7 +56,7 @@ class CircleController implements IController {
           //validate the input before passing it to our db
           
         this._service.createCircle(newCircleInput)
-        res.json({ message: 'File uploaded successfully', data:newCircleInput });
+        res.status(200).json({ success: true, data:newCircleInput });
     } catch (err) {
         //throw err;
     }
@@ -114,6 +115,14 @@ class CircleController implements IController {
     
 
     res.redirect("/")
+  }
+
+  private getCircleList = async (req:Request, res:Response) => {
+    let loggedInUser = req.user!.username
+    console.log (loggedInUser)
+    const circles = await this._service.listCircles(loggedInUser)
+
+    res.json({success: true, data: circles})
   }
 }
 

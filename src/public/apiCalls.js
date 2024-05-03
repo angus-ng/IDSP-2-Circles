@@ -14,7 +14,7 @@ async function handleCreateCircle() {
 
       });
       console.log("Circle created successfully:", await res.json());
-      return res;
+      return await res.json();
     } catch (error) {
       //throw new Error(error);
     }
@@ -40,4 +40,34 @@ async function handleSelectFile() {
   } catch (error) {
     throw new Error(error);
   }
+}
+
+async function localAuth() {
+  let emailInput = document.querySelector("#emailInput");
+  let passwordInput = document.querySelector("#passwordInput");
+  let inputObj = {
+    email: emailInput.value,
+    password: passwordInput.value,
+  };
+
+  let response = await fetch("/auth/local", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(inputObj),
+  });
+
+  inputObj = {};
+  emailInput.value = "";
+  passwordInput.value = "";
+
+  const jsonResponse = await response.json();
+  console.log(jsonResponse);
+
+  if (!response.ok) {
+    return { success: false, error: "Error with local auth" };
+  }
+
+  return jsonResponse;
 }

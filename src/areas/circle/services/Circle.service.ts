@@ -89,4 +89,23 @@ export class CircleService implements ICircleService {
     })
     return circle;
   }
+
+  async listCircles (currentUser:string): Promise<{circle: Circle}[]> {
+    const user = await this._db.prisma.user.findUnique({
+        where: {
+            username: currentUser
+        }
+    })
+    const circleArr = await this._db.prisma.userCircle.findMany({
+        select: {
+            circle: true
+        },
+        where: {
+            userId: user!.id
+        }
+    })
+    console.log(circleArr)
+
+    return circleArr;
+  }
 }

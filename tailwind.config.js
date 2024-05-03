@@ -38,16 +38,22 @@ theme: {
       'h2': '31px',
       'body': '24px',
       'secondary': '18px',
-      'tertiary': '14px'
+      'tertiary': '14px',
     },
     width: {
       '325': '325px',
-      '234':'234px',
-      'input-box': '377px'
+      '234': '234px',
+      'input-box': '377px',
+      '100': '100px',
+      '110': '110px',
+      '180': '180px'
     },
     height: {
       '932': '932px',
-      '230':'230px'
+      '230': '230px',
+      '100': '100px',
+      '110': '110px',
+      '27': '27px'
     },
     boxShadow: {
       'background-shadow': 'inset 0 0 100px -30px rgba(0, 0, 0, 0.2)'

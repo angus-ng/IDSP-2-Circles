@@ -3,18 +3,22 @@ const pageContent = document.querySelector("#pageContent");
 const leftHeaderButton = document.querySelector("#leftButton");
 const rightHeaderButton = document.querySelector("#rightButton");
 
+let currentLocalUser;
 let isPrivacyPublic = false;
 let newCircleNameInput = "";
 let isEditable = false;
+let addPictureSrc;
 
 const header = document.querySelector("header");
 header.addEventListener("click", async (event) => {
     const nextButton = event.target.closest("#nextButton");
     const backButton = event.target.closest("#backButton");
     const circleBackButton = event.target.closest("#circleBackButton");
+    const createCircleButton = event.target.closest("#createCircleButton");
 
     if (nextButton) {
         let circleImgSrc = document.querySelector("#circleImage").src;
+        addPictureSrc = document.querySelector("#addPicture img").src;
         isPrivacyPublic = document.querySelector("#privacyCheckbox").checked;
         const circleName = document.querySelector("#circleName");
         newCircleNameInput = circleName.value;
@@ -22,13 +26,23 @@ header.addEventListener("click", async (event) => {
         document.querySelector("#privacyCheckbox").checked = isPrivacyPublic;
         document.querySelector("#circleImage").src = circleImgSrc;
         circleName.value = newCircleNameInput;
+        await updateCheckbox()
+        return;
+    }
+
+    if (createCircleButton) {
+      console.log("yes")
+      handleCreateCircle();
+      return;
     }
 
     if (backButton) {
+        newCircleNameInput = "";
         pageName.innerHTML = "Explore";
         pageContent.innerHTML = "";
         leftHeaderButton.innerHTML = "";
         rightHeaderButton.innerHTML = `<img src="/map_icon_light.svg" alt="Map Icon"</img>`;
+        return;
     }
 
     if (circleBackButton) {
@@ -39,7 +53,10 @@ header.addEventListener("click", async (event) => {
         await displayCreateCircle();
         document.querySelector("#privacyCheckbox").checked = isPrivacyPublic;
         document.querySelector("#circleImage").src = circleImgSrc;
+        document.querySelector("#addPicture img").src = addPictureSrc;
         circleName.value = newCircleNameInput;
+        await updateCheckbox();
+        return;
     }
 });
 
@@ -99,49 +116,21 @@ const localAuthButton = document.querySelector("#localAuth");
 localAuthButton.addEventListener("click", async function () {
     let { success, data, error } = await localAuth();
     if (success && data) {
+        console.log(data)
+        currentLocalUser = data;
         await displayExplore();
     }
 })
-
-async function localAuth() {
-  let emailInput = document.querySelector("#emailInput");
-  let passwordInput = document.querySelector("#passwordInput");
-  let inputObj = {
-    email: emailInput.value,
-    password: passwordInput.value,
-  };
-
-  let response = await fetch("/auth/local", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(inputObj),
-  });
-
-  inputObj = {};
-  emailInput.value = "";
-  passwordInput.value = "";
-
-  const jsonResponse = await response.json();
-  console.log(jsonResponse);
-
-  if (!response.ok) {
-    return { success: false, error: "Error with local auth" };
-  }
-
-  return jsonResponse;
-}
 
 function toggleEdit () {
   isEditable = !isEditable;
 
   if (isEditable) {
       circleName.removeAttribute("readonly");
-      circleName.focus();
+      return circleName.focus();
   }
 
-  circleName.setAttribute("readonly", true);
+  circleName.addAttribute("readonly");
 }
 
 pageContent.addEventListener("click", (event) => {
@@ -225,6 +214,7 @@ async function displayCreateCircle () {
     event.preventDefault();
     const res = await handleSelectFile();
     circlePhoto.src = await res.data;
+    document.querySelector("#addPicture img").src = "/change_picture_light.svg"
   });
 
   // nextButton.addEventListener("click", async function (event) {
@@ -235,14 +225,10 @@ async function displayCreateCircle () {
 
     //This needs to be implemented when SPA creates the html for the privacy toggle
 
-    privacyCheckbox.addEventListener("change", function() {
+    privacyCheckbox.addEventListener("change", async function() {
         const privacyIcon = document.querySelector("#privacyIcon");
         const privacyLabel = document.querySelector("#privacyLabel");
-        if (this.checked) {
-            privacyIcon.src = "/globe_icon_light.svg"
-            privacyLabel.innerHTML = "Public";
-            return;
-        }
+        updateCheckbox();
         privacyIcon.src = "/lock_icon_light.svg";
         privacyLabel.innerHTML = "Private";
     });
@@ -253,30 +239,37 @@ async function displayCreateCirclePreview () {
     leftHeaderButton.innerHTML = `
     <img src="/back_button_icon_light.svg" alt="Back Button" id="circleBackButton"></img>
     `
+    const next = document.querySelector("#nextButton")
+    next.id = "createCircleButton"
+    next.src = "/create_button_light.svg"
+
     pageContent.innerHTML = `
     <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full z-10">
             <div class="flex-shrink-0 mt-20 mb-4">
                 <img id="circleImage" src="/placeholder_image.svg" alt="Placeholder Image" class="object-cover w-234 h-230 rounded-full">                     
             </div>
         
-            <div class="flex-1">
-                <form action="" class="flex flex-col">
-                    <div class="flex justify-center my-5">
-                        <input
-                            type="text"
-                            value = ""
-                            readonly
-                            id="circleName"
-                            class="w-full bg-light-mode-bg text-20 items-end border-none"
-                        />
-                        <button id="editButton">
-                            <img src="/edit_icon_light.svg" alt="Edit Icon" />
-                        </button>
+            <div class="flex justify-center my-5 relative w-full">
+            <div class="flex justify-center items-center">
+                <input
+                    type="text"
+                    value="Sample Text"
+                    readonly
+                    id="circleName"
+                    class="bg-light-mode-bg text-lg border-none text-center p-1 min-w-[50px] w-auto"
+                />
+            </div>
+            <button
+                id="editButton"
+                class="absolute right-0 top-0 mt-2 mr-1"
+            >
+                <img src="/edit_icon_light.svg" alt="Edit Icon" />
+            </button>
                     </div>
                     <div id="divider" class="mb-5">
                         <img src="/divider_light.svg" alt="Divider">                          
                     </div>
-                    <div class="flex items-center justify-between mt-4">
+                    <div class="flex items-center justify-between mt-4 w-full">
                         <div>
                             <p class="font-medium text-h2 leading-h2">Private or Public</p>
                             <p class="text-14 leading-body text-dark-grey">Make new circle private or public</p>
@@ -297,14 +290,10 @@ async function displayCreateCirclePreview () {
     `;
         //This needs to be implemented when SPA creates the html for the privacy toggle
 
-    privacyCheckbox.addEventListener("change", function() {
+    privacyCheckbox.addEventListener("change", async function() {
         const privacyIcon = document.querySelector("#privacyIcon");
         const privacyLabel = document.querySelector("#privacyLabel");
-        if (this.checked) {
-            privacyIcon.src = "/globe_icon_light.svg"
-            privacyLabel.innerHTML = "Public";
-            return;
-        }
+        await updateCheckbox
         privacyIcon.src = "/lock_icon_light.svg";
         privacyLabel.innerHTML = "Private";
     });
@@ -324,7 +313,7 @@ async function displayNavBar () {
     const nav = document.querySelector("#nav");
     nav.innerHTML = `<div class="border-b border-dark-grey"></div>
 
-    <footer class="w-full flex justify-between items-center pt-4 pb-8 px-6">
+    <footer class="w-full flex justify-between items-center pt-4 pb-8 px-6 bg-light-mode-bg">
         
         <a href="" id="explore" class="flex flex-col items-center">        
             <img src="/explore_icon_light.svg" alt="Explore Icon">             
@@ -343,7 +332,7 @@ async function displayNavBar () {
         </a>
     </footer>`;
   const navBar = document.querySelector("footer");
-  navBar.addEventListener("click", function (event) {
+  navBar.addEventListener("click", async function (event) {
     event.preventDefault();
     const exploreButton = event.target.closest("#explore");
     const searchButton = event.target.closest("#search");
@@ -372,9 +361,77 @@ async function displayNavBar () {
             rightHeaderButton.innerHTML = "";
         }
         if (profileButton) {
-            pageName.innerHTML = "Profile";
-            pageContent.innerHTML = "";
+            pageName.innerHTML = currentLocalUser;
             rightHeaderButton.innerHTML = "";
+            const { success, data } = await getListOfCircles();
+            if (success && data) {
+              await renderListOfCircles(data);
+              
+              //update friendCounter here via id when implemented
+              //update profilePicture when implemented
+
+              return;
+            }
+            pageContent.innerHTML = "";
         }
     });
+}
+async function updateCheckbox () {
+  if (document.querySelector("#privacyCheckbox").checked) {
+    privacyIcon.src = "/globe_icon_light.svg"
+    privacyLabel.innerHTML = "Public";
+    return;
+  }
+}
+
+async function getListOfCircles () {
+  const response = await fetch("/circle/list", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    }
+  })
+  return await response.json()
+}
+
+async function renderListOfCircles(data) {
+  // console.log(data)
+  let newArr = data.map((obj) => {
+    return `
+      <div>
+        <img src="${obj.circle.picture}" class="rounded-full w-100 h-100 object-cover"/></img>
+        <p class="text-center text-secondary">${obj.circle.name}</p>
+      </div>`
+  })
+  const render = `<div class="flex justify-center mt-6 mb-4">
+    <img id="profilePicture" src="/placeholder_image.svg" class="w-110 h-110 object-cover rounded-full"></img>
+  </div>
+  <div class="flex justify-center">
+    <h2 class="text-base text-center">@${currentLocalUser}</h2>
+  </div>
+  <div class="mt-6 mb-6 m-auto grid grid-cols-2 gap-4">
+    <div class="grid grid-rows-2 gap-0 justify-center">
+      <h2 class="text-base font-bold text-center">${data.length}</h2>
+      <h2 class="text-secondary text-center">Circles</h2>
+    </div>
+
+    <div class="grid grid-rows-2 gap-0 justify-center">
+    <h2 class="text-base font-bold text-center" id="friendCounter">0</h2>
+    <h2 class="text-secondary text-center">Friends</h2>
+    </div>
+  </div>
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <img id="albumTab" src="/albumTab_deselected_light.svg" class="w-180 h-27 object-cover"></img>
+    </div>
+    <div>
+      <img id="circleTab" src="/circlesTab_selected_light.svg" class="w-180 h-27 object-cover"></img>
+    </div>
+  </div>
+  <div id="albumList" class="m-auto grid grid-cols-3 gap-4 mt-6 mb-6 hidden">
+  </div>
+  <div id="circleList" class="m-auto grid grid-cols-3 gap-4 mt-6 mb-6">
+  ${newArr.join("")}
+  </div>`
+  pageContent.innerHTML = render
 }
