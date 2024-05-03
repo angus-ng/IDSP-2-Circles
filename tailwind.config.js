@@ -27,6 +27,7 @@ theme: {
       'body': '17px',
       'secondary': '12px',
       'tertiary': '10px',
+      '24': '24px',
       '20': '20px',
       '15': '15px',
       '14': '14px',

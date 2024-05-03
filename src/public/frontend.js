@@ -3,6 +3,43 @@ const pageContent = document.querySelector("#pageContent");
 const leftHeaderButton = document.querySelector("#leftButton");
 const rightHeaderButton = document.querySelector("#rightButton");
 
+let isPrivacyPublic = false;
+let newCircleNameInput = "";
+let isEditable = false;
+
+const header = document.querySelector("header");
+header.addEventListener("click", async (event) => {
+    const nextButton = event.target.closest("#nextButton");
+    const backButton = event.target.closest("#backButton");
+    const circleBackButton = event.target.closest("#circleBackButton");
+
+    if (nextButton) {
+        isPrivacyPublic = document.querySelector("#privacyCheckbox").checked;
+        const circleName = document.querySelector("#circleName");
+        newCircleNameInput = circleName.value;
+        await displayCreateCirclePreview();
+        document.querySelector("#privacyCheckbox").checked = isPrivacyPublic;
+        circleName.value = newCircleNameInput;
+    }
+
+    if (backButton) {
+        pageName.innerHTML = "Explore";
+        pageContent.innerHTML = "";
+        leftHeaderButton.innerHTML = "";
+        rightHeaderButton.innerHTML = `<img src="/map_icon_light.svg" alt="Map Icon"</img>`;
+    }
+
+    if (circleBackButton) {
+        const circleName = document.querySelector("#circleName");
+        isPrivacyPublic = document.querySelector("#privacyCheckbox");
+        newCircleNameInput = circleName.value;
+        await displayCreateCircle();
+        document.querySelector("#privacyCheckbox").checked = isPrivacyPublic;
+        circleName.value = newCircleNameInput;
+    }
+});
+
+
 // create Cirlcle/Album modal
 const modal = document.querySelector("#modal");
 modal.addEventListener("click", async function (event) {
@@ -22,15 +59,15 @@ modal.addEventListener("click", async function (event) {
     }
   }
 
-  if (createAlbumModalButton) {
-    console.log("create album");
-  }
+    if (createAlbumModalButton) {
+        console.log("create album");
+    }
 
-  if (createCircleModalButton) {
-    modal.classList.remove("shown");
-    modal.classList.add("hidden");
-    await displayCreateCircle();
-  }
+    if (createCircleModalButton) {
+        modal.classList.remove("shown");
+        modal.classList.add("hidden");
+        await displayCreateCircle();
+    }
 });
 
 // const facebookAuthButton = document.querySelector("#facebookAuth");
@@ -55,12 +92,12 @@ modal.addEventListener("click", async function (event) {
 
 // delagate event
 const localAuthButton = document.querySelector("#localAuth");
-localAuthButton.addEventListener("click", async function (event) {
-  let { success, data, error } = await localAuth();
-  if (success && data) {
-    await displayExplore();
-  }
-});
+localAuthButton.addEventListener("click", async function () {
+    let { success, data, error } = await localAuth();
+    if (success && data) {
+        await displayExplore();
+    }
+})
 
 async function localAuth() {
   let emailInput = document.querySelector("#emailInput");
@@ -92,8 +129,8 @@ async function localAuth() {
   return jsonResponse;
 }
 
-async function displayCreateCircle() {
-  pageName.innerHTML = `New Circle`;
+async function displayCreateCircle () {
+    pageName.innerHTML = `New Circle`;
 
   leftHeaderButton.innerHTML = `
     <img src="/back_button_icon_light.svg" alt="Back Button" id="backButton"></img>
@@ -105,7 +142,7 @@ async function displayCreateCircle() {
   const pageContent = document.querySelector("#pageContent");
   pageContent.innerHTML = `
     <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full z-10">
-        <div class="flex-shrink-0 mt-20 mb-10">
+        <div class="flex-shrink-0 mt-10 mb-10">
             <img id="circleImage" src="/placeholder_image.svg" alt="Placeholder Image">                     
         </div>
     
@@ -136,7 +173,7 @@ async function displayCreateCircle() {
                             <img id="privacyIcon" src="/lock_icon_light.svg" alt="Lock icon" class="mr-4">
                             <span id="privacyLabel" class="text-sm font-medium leading-body text-14 mr-4 w-12">Private</span>
                             <div class="peer relative h-5 w-10 rounded-full outline outline-1 outline-black after:absolute after:start-[2px] after:top-0 after:h-4 after:w-4 after:rounded-full after:border after:border-black after:bg-black after:transition-all after:content-[''] peer-checked:bg-cover peer-checked:bg-black border-2 peer-checked:outline-black peer-checked:after:translate-x-5 peer-checked:after:border-white peer-checked:after:border-opacity-80 peer-checked:after:border-2 peer-checked:after:bg-black rtl:peer-checked:after:-translate-x-full"></div>
-                            </label>
+                        </label>
                     </div>
                 </div>
                 <button id="addPicture" class="my-5 w-full">
@@ -146,6 +183,8 @@ async function displayCreateCircle() {
         </div>
     </div>
     `;
+  const circleNameInput = document.querySelector("#circleName");
+  circleNameInput.value = newCircleNameInput;
   const addPictureButton = document.querySelector("#addPicture");
   const fileInput = document.querySelector("#myInput");
   const nextButton = document.querySelector("#nextButton");
@@ -169,24 +208,27 @@ async function displayCreateCircle() {
     await handleCreateCircle();
   });
 
-  //This needs to be implemented when SPA creates the html for the privacy toggle
-  const privacyCheckbox = document.querySelector("#privacyCheckbox");
-  privacyCheckbox.addEventListener("change", function (event) {
-    const privacyIcon = document.querySelector("#privacyIcon");
-    const privacyLabel = document.querySelector("#privacyLabel");
-    if (this.checked) {
-      privacyIcon.src = "/globe_icon_light.svg";
-      privacyLabel.innerHTML = "Public";
-      return;
-    }
-    privacyIcon.src = "/lock_icon_light.svg";
-    privacyLabel.innerHTML = "Private";
-  });
-  return;
+    //This needs to be implemented when SPA creates the html for the privacy toggle
+
+    privacyCheckbox.addEventListener("change", function() {
+        const privacyIcon = document.querySelector("#privacyIcon");
+        const privacyLabel = document.querySelector("#privacyLabel");
+        if (this.checked) {
+            privacyIcon.src = "/globe_icon_light.svg"
+            privacyLabel.innerHTML = "Public";
+            return;
+        }
+        privacyIcon.src = "/lock_icon_light.svg";
+        privacyLabel.innerHTML = "Private";
+    });
+    return;
 }
 
-async function displayCreateCirclePreview() {
-  pageContent.innerHTML = `
+async function displayCreateCirclePreview () {
+    leftHeaderButton.innerHTML = `
+    <img src="/back_button_icon_light.svg" alt="Back Button" id="circleBackButton"></img>
+    `
+    pageContent.innerHTML = `
     <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full z-10">
             <div class="flex-shrink-0 mt-20 mb-4">
                 <img src="/placeholder_image.svg" alt="Placeholder Image">                     
@@ -195,8 +237,16 @@ async function displayCreateCirclePreview() {
             <div class="flex-1">
                 <form action="" class="flex flex-col">
                     <div class="flex justify-center my-5">
-                        <h1 class="font-bold text-24 mr-2.5">Name</h1>
-                        <img src="/edit_icon_light.svg" alt="Edit Icon">
+                        <input
+                            type="text"
+                            value = ""
+                            readonly
+                            id="circleName"
+                            class="w-full bg-light-mode-bg text-20 items-end border-none"
+                        />
+                        <button id="editButton">
+                            <img src="/edit_icon_light.svg" alt="Edit Icon" />
+                        </button>
                     </div>
                     <div id="divider" class="mb-5">
                         <img src="/divider_light.svg" alt="Divider">                          
@@ -220,19 +270,23 @@ async function displayCreateCirclePreview() {
             </div>
         </div>
     `;
+
+    const circleNameInput = document.querySelector("#circleName");
+    circleNameInput.value = newCircleNameInput;
 }
 
-async function displayExplore() {
-  pageName.innerHTML = "Explore";
-  pageContent.innerHTML = "";
-  await displayNavBar();
+async function displayExplore () {
+    pageName.innerHTML = "Explore"
+    pageContent.innerHTML = "";
+    await displayNavBar();
 }
 
-async function displayNavBar() {
-  const nav = document.querySelector("#nav");
-  nav.innerHTML = `<div class="border-b border-dark-grey"></div>
 
-    <footer class="w-full flex justify-between items-center pt-4 pb-8 px-6 mt-2">
+async function displayNavBar () {
+    const nav = document.querySelector("#nav");
+    nav.innerHTML = `<div class="border-b border-dark-grey"></div>
+
+    <footer class="w-full flex justify-between items-center pt-4 pb-8 px-6">
         
         <a href="" id="explore" class="flex flex-col items-center">        
             <img src="/explore_icon_light.svg" alt="Explore Icon">             
@@ -259,21 +313,30 @@ async function displayNavBar() {
     const activityButton = event.target.closest("#activity");
     const profileButton = event.target.closest("#profile");
 
-    if (exploreButton) {
-      console.log("explore");
-    }
-    if (searchButton) {
-      console.log("search");
-    }
-    if (newButton) {
-      modal.classList.remove("hidden");
-      modal.classList.add("shown");
-    }
-    if (activityButton) {
-      console.log("activity");
-    }
-    if (profileButton) {
-      console.log("profile");
-    }
-  });
+        if (exploreButton) {
+            pageName.innerHTML = "Explore";
+            pageContent.innerHTML = "";
+            rightHeaderButton.innerHTML = `<img src="/map_icon_light.svg" alt="Map Icon"</img>`;
+        }
+        if (searchButton) {
+            pageName.innerHTML = "Search";
+            pageContent.innerHTML = "";
+            rightHeaderButton.innerHTML = "";
+        }
+        if (newButton) {
+            modal.classList.remove("hidden");
+            modal.classList.add("shown");
+        }
+        if (activityButton) {
+            pageName.innerHTML = "Activity";
+            pageContent.innerHTML = "";
+            leftHeaderButton.innerHTML = "";
+            rightHeaderButton.innerHTML = "";
+        }
+        if (profileButton) {
+            pageName.innerHTML = "Profile";
+            pageContent.innerHTML = "";
+            rightHeaderButton.innerHTML = "";
+        }
+    });
 }
