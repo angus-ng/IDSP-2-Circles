@@ -16,6 +16,7 @@ class AuthenticationController implements IController {
     this._service = service;
   }
   private initializeRoutes() {
+    this.router.get(`${this.path}/getSession`, this.getSession)
     this.router.get(`${this.path}/register`, this.showRegistrationPage);
     this.router.post(`${this.path}/register`, this.registration);
     this.router.get(`${this.path}/login`, this.showLoginPage);
@@ -25,6 +26,15 @@ class AuthenticationController implements IController {
     this.router.get(`${this.path}/facebook/callback`, this.facebookCb);
     this.router.get(`${this.path}/google`, this.google);
     this.router.get(`${this.path}/google/callback`, this.googleCb)
+  }
+
+  private getSession = (req:Request, res:Response) => {
+    if(req.user) {  
+      res.json({success: true, username: req.user!.username})
+      return
+    } 
+    res.json({success: false, errorMessage: "Not logged in"})
+
   }
 
   private showLoginPage = (_: express.Request, res: express.Response) => {

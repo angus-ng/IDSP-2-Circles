@@ -438,3 +438,6 @@ Argument `username` is missing.
 2024-05-02, 11:28:40 p.m. - 500 - Multipart: Boundary not found
 2024-05-02, 11:28:46 p.m. - 500 - Multipart: Boundary not found
 2024-05-02, 11:31:57 p.m. - 500 - Multipart: Boundary not found
+2024-05-03, 11:00:57 a.m. - 500 - Cannot read properties of undefined (reading 'username')
+2024-05-03, 11:00:58 a.m. - 500 - Cannot read properties of undefined (reading 'username')
+2024-05-03, 11:05:14 a.m. - 500 - Cannot read properties of undefined (reading 'username')

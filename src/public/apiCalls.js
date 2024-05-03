@@ -8,13 +8,12 @@ async function handleCreateCircle() {
     formData.append("circleName", circleName);
     console.log("formdata", formData);
     try {
-      const res = await fetch("/circle/create", {
+      const response = await fetch("/circle/create", {
         method: "POST",
         body: formData,
-
       });
-      console.log("Circle created successfully:", await res.json());
-      return await res.json();
+      console.log("Circle created successfully:", await response.json());
+      return await response.json();
     } catch (error) {
       //throw new Error(error);
     }
@@ -30,13 +29,13 @@ async function handleSelectFile() {
   const formData = new FormData();
   formData.append("file", file);
   try {
-    const res = await (
+    const response = await (
       await fetch("/circle/upload", {
         method: "POST",
         body: formData,
       })
     ).json();
-    return await res;
+    return await response;
   } catch (error) {
     throw new Error(error);
   }
@@ -70,4 +69,12 @@ async function localAuth() {
   }
 
   return jsonResponse;
+}
+
+async function getSessionFromBackend() {
+  try {
+    const response = await fetch("/auth/getSession");
+    const jsonResponse = await response.json();
+    return jsonResponse.username;
+  } catch (error) {}
 }
