@@ -19,13 +19,12 @@ class AuthenticationController implements IController {
     this.router.get(`${this.path}/register`, this.showRegistrationPage);
     this.router.post(`${this.path}/register`, this.registration);
     this.router.get(`${this.path}/login`, this.showLoginPage);
-    this.router.post(`${this.path}/login`, this.localCb, (req:express.Request, res:express.Response) => {});
+    this.router.post(`${this.path}/local`, this.local)
     this.router.get(`${this.path}/logout`, this.logout);
-    this.router.get(`${this.path}/facebook`, this.facebook), (req:express.Request, res:express.Response) => {};
-    this.router.get(`${this.path}/facebook/callback`, this.facebookCb), (req:express.Request, res:express.Response) => {};
-    this.router.get(`${this.path}/google`, this.google), (req:express.Request, res:express.Response) => {};
-    this.router.get(`${this.path}/google/callback`, this.googleCb), (req:express.Request, res:express.Response) => { 
-      res.redirect('/');};
+    this.router.get(`${this.path}/facebook`, this.facebook)
+    this.router.get(`${this.path}/facebook/callback`, this.facebookCb);
+    this.router.get(`${this.path}/google`, this.google);
+    this.router.get(`${this.path}/google/callback`, this.googleCb)
   }
 
   private showLoginPage = (_: express.Request, res: express.Response) => {
@@ -37,10 +36,23 @@ class AuthenticationController implements IController {
     res.render(path.join(__dirname, "../views/login"));
   };
 
-  private localCb = passport.authenticate("local", {
-    successRedirect: "/", // post
-    failureRedirect: '/auth/login'
-  })
+  private local = (req: express.Request, res:express.Response, next:express.NextFunction) => {
+    passport.authenticate('local', function(err:any, user:any, info:any) {
+      if (err || !user) {
+        return res.status(200).json({success: true, data:null })
+      }
+      console.log("this", user)
+      console.log(req.user)
+      req.logIn(user, async function(err) {
+        if (err) {
+          return res.status(200).json({success: true, data:null})
+        }
+        console.log(req.session)
+        console.log(req.sessionID)
+        res.status(200).json({success: true, data:req.user!.username})
+      })
+    })(req, res, next)
+  }
 
   private showRegistrationPage = (_: express.Request, res: express.Response) => {
     if(res.locals.currentUser) {  
@@ -58,7 +70,7 @@ class AuthenticationController implements IController {
       if(!user) {
       
         await this._service.createUser(userProfile);
-        res.redirect("/auth/login")
+        res.redirect("/")
       
       } else {
         const error = new EmailAlreadyExistsException(userProfile.email)
@@ -75,15 +87,20 @@ class AuthenticationController implements IController {
     req.logout((err) => {
       if (err) console.log(err);
     });
-    res.redirect("/auth/login")
+    res.redirect("/")
   };
 
   private facebook = passport.authenticate("facebook")
 
-  private facebookCb = passport.authenticate('facebook', { 
-    successRedirect: "/",
-    failureRedirect: '/auth/login'
-   })
+  private facebookCb = (req: express.Request, res:express.Response, next:express.NextFunction) => {
+    passport.authenticate('facebook', function(err:any, user:any, info:any) {
+      if (err || !user) {
+        return res.status(200).json({success: true, data:null })
+      }
+      console.log("this", user)
+      res.status(200).json({success: true, data:user.username})
+    })(req, res, next)
+  }
    
   private google = passport.authenticate("google")
 

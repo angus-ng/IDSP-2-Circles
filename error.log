@@ -418,3 +418,20 @@ Require stack:
 2024-04-30, 12:57:28 p.m. - 500 - Failed to lookup view "../index" in views directory "C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\areas"
 2024-04-30, 1:13:03 p.m. - 500 - Failed to lookup view "../index" in views directory "C:\Users\annab\OneDrive\Desktop\BCIT\IDSP1\IDSP-2-Circles\src\areas"
 >>>>>>> 860c74d89b7b955cdbeb60b4da00dac588f1df6e
+2024/5/2 17:13:38 - 500 - 
+Invalid `this._db.prisma.user.create()` invocation in
+c:\Users\angus\Desktop\idsp\src\areas\authentication\services\Authentication.service.ts:87:48
+
+  84   profilePicture = profile.photos[0].value
+  85 }
+  86 
+→ 87 const newUser = await this._db.prisma.user.create({
+       data: {
+         facebookId: "7487839481284174",
+         profilePicture: "https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=7487839481284174&height=200&width=200&ext=1717287219&hash=Abbh44VowV-fx4XcMeioGIvy",
+     +   username: String
+       }
+     })
+
+Argument `username` is missing.
+2024/5/2 17:14:45 - 500 - This authorization code has been used.

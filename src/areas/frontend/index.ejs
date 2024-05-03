@@ -43,14 +43,13 @@
                     </div>
     
                     <div class="flex-1">
-                        <form action="/auth/login" method="POST" class="flex flex-col">
                             <div class="flex items-center mt-6 mb-6">
                                 <label for="login" class=""></label>
-                                <input type="text" placeholder="Phone number, email, or username" class="rounded-input-box w-input-box border-dark-grey border-2 text-17 items-end">
+                                <input type="text" placeholder="Phone number, email, or username" id="emailInput" name="emailInput" class="rounded-input-box w-input-box border-dark-grey border-2 text-17 items-end">
                             </div>
                             <div class="flex items-center mt-4 mb-6">
                                 <label for="password" class=""></label>
-                                <input type="text" placeholder="Password" class="rounded-input-box w-input-box text-17 border-dark-grey border-2 items-end">
+                                <input type="text" placeholder="Password" id="passwordInput" name="passwordInput" class="rounded-input-box w-input-box text-17 border-dark-grey border-2 items-end">
                             </div>
                             <div class="flex items-center mt-4 mb-6">
                                 <div class="grid grid-cols-2 w-full">
@@ -63,11 +62,10 @@
                                     </div>
                                 </div>
                             </div>
-                                <button class="my-2 w-full" type="submit">
+                                <button id="localAuth" class="my-2 w-full">
                                     <img src="/login_button_light.svg" alt="Login Button">
                                 </button>
                             </div>
-                        </form>
                             <div id="divider" class="my-6">
                                 <img src="/orDivider_light.svg" alt="Divider">
                             </div>
@@ -79,7 +77,7 @@
                                         </button>
                                     </form>
                                     <form action="/auth/facebook">
-                                        <button>
+                                        <button id="facebookAuth">
                                             <img src="/facebook_icon_light.svg" alt="Facebook Icon">
                                         </button>
                                     </form>
@@ -125,6 +123,6 @@
     </div>
 
 
-    <div id="id" class="absolute bottom-0 w-full"></div>
+    <div id="nav" class="absolute bottom-0 w-full"></div>
 </body>
 </html>

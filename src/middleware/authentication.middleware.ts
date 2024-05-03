@@ -4,13 +4,13 @@ export const ensureAuthenticated = (req:Request, res:Response, next:NextFunction
   if (req.isAuthenticated()) {
     return next();
   }
-  res.redirect("/auth/login");
+  res.redirect("/");
   return
 };
 
 export const forwardAuthenticated = (req:Request, res:Response, next:NextFunction) => {
   if (!req.isAuthenticated()) {
-    res.redirect("/auth/login");
+    res.redirect("/");
   }
   return next();
 };
