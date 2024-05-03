@@ -118,19 +118,24 @@ async function localAuth () {
     return jsonResponse;
 }
 
+
+function toggleEdit () {
+    isEditable = !isEditable;
+
+    if (isEditable) {
+        circleName.removeAttribute("readonly");
+        circleName.focus();
+    }
+
+    circleName.setAttribute("readonly", true);
+}
+
 pageContent.addEventListener("click", (event) => {
     const editButton = event.target.closest("#editButton");
 
     if (editButton) {
         event.preventDefault();
-        isEditable = !isEditable;
-    
-        if (isEditable) {
-            circleName.removeAttribute("readonly");
-            circleName.focus();
-        }
-    
-        circleName.setAttribute("readonly", true);
+        toggleEdit();
     }
 
 })
