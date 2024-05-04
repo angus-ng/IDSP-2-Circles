@@ -828,6 +828,11 @@ select {
   margin-bottom: 4px;
 }
 
+.my-48 {
+  margin-top: 12rem;
+  margin-bottom: 12rem;
+}
+
 .my-5 {
   margin-top: 1.25rem;
   margin-bottom: 1.25rem;
@@ -841,11 +846,6 @@ select {
 .my-auto {
   margin-top: auto;
   margin-bottom: auto;
-}
-
-.my-48 {
-  margin-top: 12rem;
-  margin-bottom: 12rem;
 }
 
 .mb-10 {

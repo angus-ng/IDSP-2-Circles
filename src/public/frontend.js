@@ -316,7 +316,9 @@ async function displayCreateCircle() {
   fileInput.addEventListener("input", async function (event) {
     event.preventDefault();
     const res = await handleSelectFile();
-    circlePhoto.src = await res.data;
+    if (res) {
+      circlePhoto.src = await res.data;
+    }
     document.querySelector("#addPicture img").src = "/change_picture_light.svg";
   });
 
@@ -393,7 +395,9 @@ async function displayCreateCirclePreview() {
     fileInput.addEventListener("input", async function (event) {
     event.preventDefault();
     const res = await handleSelectFile();
-    circlePhoto.src = await res.data;
+    if (res) {
+      circlePhoto.src = await res.data;
+    }
   });
   //This needs to be implemented when SPA creates the html for the privacy toggle
 

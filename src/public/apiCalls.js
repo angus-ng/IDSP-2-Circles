@@ -25,6 +25,9 @@ async function handleCreateCircle() {
 async function handleSelectFile() {
   const fileInput = document.querySelector("#myInput");
   const file = fileInput.files[0];
+  if (!file) {
+    return;
+  }
 
   const formData = new FormData();
   formData.append("file", file);
