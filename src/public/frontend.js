@@ -233,12 +233,17 @@ pageContent.addEventListener("click", (event) => {
   const localAuthButton = document.querySelector("#localAuth");
   const editButton = event.target.closest("#editButton");
   const parentId = event.target.parentElement.id;
+  const uploadPhotoSection = event.target.closest("#createNewAlbum");
 
   if (parentId === "editButton") {
     toggleEdit();
   } else if (parentId === "localAuth") {
     handleLocalAuth();
   }
+
+  // if (uploadPhotoSection) {
+  //   displayCreateAlbumPreview();
+  // }
 });
 
 async function displayCreateCircle() {
@@ -561,21 +566,30 @@ async function displayCreateAlbum () {
 
   const pageContent = document.querySelector("#pageContent");
   pageContent.innerHTML = `
-  <a href="">
-    <div id="createNewAlbum" class="flex justify-center py-10 my-48 rounded-lg w-full z-10">
-        <div class="flex-shrink-0 items-center mt-10 mb-10">
-          <div class="flex justify-center">
-            <img id="uploadIcon" src="/upload_photo_light.svg" alt="Upload Icon">
-          </div>
-          <div class="flex justify-between">
-            <p class="text-base">drag and drop to&nbsp</p><p class="text-base text-decoration-line: underline">upload</p>
-          </div>
-          <div class="flex justify-center">
-            <p>PNG, JPEG, JPG</p>
-          </div>              
+  <div id="createNewAlbum" class="flex justify-center py-10 my-48 rounded-lg w-full z-10">
+      <div class="flex-shrink-0 items-center mt-8 mb-8">
+        <div class="flex justify-center mb-6">
+          <img id="uploadIcon" src="/upload_photo_light.svg" alt="Upload Icon">
         </div>
-    </div>
-  </a>`;
+        <div class="flex justify-between">
+          <p class="text-base text-grey leading-body">drag and drop to&nbsp</p><p class="text-base text-decoration-line: underline text-grey leading-body">upload</p>
+        </div>
+        <div class="flex justify-center">
+          <p class="text-grey text-secondary leading-secondary">PNG, JPEG, JPG</p>
+        </div>              
+      </div>
+  </div>`;
+
+  const uploadSection = document.querySelector("section > div#createNewAlbum");
+  const fileInput = document.querySelector("#myInput");
+
+  if (uploadSection) {
+    uploadSection.addEventListener("click", async (event) => {
+      event.preventDefault();
+      await fileInput.click();
+    });
+  }
+
 }
 
 async function displayCreateAlbumPreview () {
@@ -586,20 +600,49 @@ async function displayCreateAlbumPreview () {
 
   const pageContent = document.querySelector("#pageContent");
   pageContent.innerHTML = `
-    <div id="createNewAlbum" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full z-10">
+  <div id="createNewCircle" class="flex flex-col items-center p-4 rounded-lg w-full z-10">
     <div class="flex-shrink-0 mt-20 mb-4">
-        <img id="albumImage" src="/placeholder_image.svg" alt="Placeholder Image" class="object-cover w-234 h-230 rounded-full">                     
+      <div id="image-carousel" class="relative w-full h-full rounded-12.75">
+        <div class="relative h-56 overflow-hidden rounded-lg md:h-32">
+          <div id="carousel-images" class="w-full h-full">
+            <div class="w-full h-full flex-shrink-0" data-carousel-item>
+              <img src="/placeholder_image.svg" class="w-full h-full object-cover" alt="Slide 1">
+            </div>
+          </div>
+        </div>
+        <div class="flex justify-center mt-8">
+          <button class="mx-1 w-3 h-3 bg-medium-grey rounded-full" data-index="0"></button>
+        </div>
+      </div>
     </div>
+  </div>`;
 
-    <div class="flex justify-center my-5 relative w-full">
-            </div>
-            <div id="divider" class="mb-5">
-                <img src="/divider_light.svg" alt="Divider">                          
-            </div>
-            <div class="flex items-center justify-between mt-4 w-full">
-                <h1>Upload more files</h1>
-            </div>  
-    </div>
-  </div>
-  `;
+  const carouselImages = document.querySelector("#image-carousel");
+  const imageCount = carouselImages.children.length;
+  const dots = Array.from(document.querySelectorAll("button[data-index"));
+  let currentIndex = 0;
+  
+  function updateCarousel() {
+    const translateClass = `-translate-x-[$currentIndex * 100}%]`;
+  
+    carouselImages.classList.add(translateClass);
+    updateDots();
+  }
+  
+  function updateDots() {
+    dots.forEach((dot, index) => {
+      dot.className = `mx-1 w-3 h-3 rounded-full cursor-pointer`;
+      dot.classList.add(index === currentIndex ? "bg-grey" : "bg-medium-grey");
+    });
+  }
+  
+  dots.forEach((dot, index) => {
+    dot.addEventListener("click", () => {
+      currentIndex = index;
+      updateCarousel();
+    });
+  });
+  
+  updateCarousel();
+
 }

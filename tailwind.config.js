@@ -19,6 +19,7 @@ theme: {
       'gradient-darker-blue': 'rgba(12, 18, 28, 0.5)',
       'grey': '#3A3A3A',
       'overlay-bg': 'rgba(0, 0, 0, 0.6)',
+      'medium-grey': '#565656',
       'dark-grey': '#737373',
     },
     fontSize: {
@@ -62,6 +63,7 @@ theme: {
       '20': '20px',
       'input-box': '28px',
       'checkbox': '3px',
+      '12.75': '12.75px'
     },
     margin: {
       '4': '4px'
