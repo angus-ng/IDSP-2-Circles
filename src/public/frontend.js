@@ -564,12 +564,14 @@ async function displayCreateAlbum () {
     `;
   rightHeaderButton.innerHTML = "";
 
-  const pageContent = document.querySelector("#pageContent");
   pageContent.innerHTML = `
   <div id="createNewAlbum" class="flex justify-center py-10 my-48 rounded-lg w-full z-10">
       <div class="flex-shrink-0 items-center mt-8 mb-8">
         <div class="flex justify-center mb-6">
+        <form>
+                            <input id="myInput" type="file" style="visibility:hidden" multiple=false/>
           <img id="uploadIcon" src="/upload_photo_light.svg" alt="Upload Icon">
+          </form>
         </div>
         <div class="flex justify-between">
           <p class="text-base text-grey leading-body">drag and drop to&nbsp</p><p class="text-base text-decoration-line: underline text-grey leading-body">upload</p>
@@ -580,15 +582,27 @@ async function displayCreateAlbum () {
       </div>
   </div>`;
 
-  const uploadSection = document.querySelector("section > div#createNewAlbum");
-  const fileInput = document.querySelector("#myInput");
+  const section = document.querySelector("section")
+  section.classList.add("imageUploadSection")
+  console.log(section.classList)
+  const uploadSection = document.querySelector(".imageUploadSection")
 
-  if (uploadSection) {
-    uploadSection.addEventListener("click", async (event) => {
+  const fileInput = document.querySelector("#myInput");
+    uploadSection.addEventListener("click", async function(event) {
+        event.preventDefault();
+        event.stopImmediatePropagation()
+        console.log(fileInput)
+        await fileInput.click();
+      });
+
+    fileInput.addEventListener("input", async function (event) {
       event.preventDefault();
-      await fileInput.click();
+      const res = await handleSelectFile();
+      if (res) {
+        circlePhoto.src = await res.data;
+      }
     });
-  }
+  section.classList.remove("imageUploadSection")
 
 }
 
