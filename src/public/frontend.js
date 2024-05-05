@@ -564,21 +564,25 @@ async function displayCreateAlbum () {
     `;
   rightHeaderButton.innerHTML = "";
 
-  const pageContent = document.querySelector("#pageContent");
   pageContent.innerHTML = `
-  <div id="createNewAlbum" class="flex justify-center py-10 my-48 rounded-lg w-full z-10">
-      <div class="flex-shrink-0 items-center mt-8 mb-8">
-        <div class="flex justify-center mb-6">
-          <img id="uploadIcon" src="/upload_photo_light.svg" alt="Upload Icon">
-        </div>
-        <div class="flex justify-between">
-          <p class="text-base text-grey leading-body">drag and drop to&nbsp</p><p class="text-base text-decoration-line: underline text-grey leading-body">upload</p>
-        </div>
-        <div class="flex justify-center">
-          <p class="text-grey text-secondary leading-secondary">PNG, JPEG, JPG</p>
-        </div>              
+  <div id="createNewAlbum" class="flex flex-col justify-center py-10 my-48 rounded-lg w-full z-10">
+    <div class="flex flex-col items-center">
+      <form>
+        <input id="myInput" type="file" style="visibility: hidden" multiple="false" />
+      </form>
+      <div class="flex justify-center mb-6">
+        <img id="uploadIcon" src="/upload_photo_light.svg" alt="Upload Icon"/>
       </div>
-  </div>`;
+      <div class="flex justify-center">
+        <p class="text-base text-grey leading-body">drag and drop to&nbsp;</p>
+        <p class="text-base underline text-grey leading-body">upload</p>
+      </div>
+      <div class="flex justify-center mt-4">
+        <p class="text-grey text-secondary leading-secondary">PNG, JPEG, JPG</p>
+      </div>
+    </div>
+  </div>
+  `;
 
   const section = document.querySelector("section")
   section.classList.add("imageUploadSection")
@@ -589,7 +593,6 @@ async function displayCreateAlbum () {
     uploadSection.addEventListener("mousedown", async function(event) {
         event.preventDefault();
         event.stopImmediatePropagation()
-        console.log("BRO")
         console.log(fileInput)
         await fileInput.click();
       });
@@ -602,6 +605,7 @@ async function displayCreateAlbum () {
       }
     });
   section.classList.remove("imageUploadSection");
+
 }
 
 async function displayCreateAlbumPreview () {
