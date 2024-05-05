@@ -580,16 +580,28 @@ async function displayCreateAlbum () {
       </div>
   </div>`;
 
-  const uploadSection = document.querySelector("section > div#createNewAlbum");
+  const section = document.querySelector("section")
+  section.classList.add("imageUploadSection")
+  console.log(section.classList)
+  const uploadSection = document.querySelector(".imageUploadSection")
+
   const fileInput = document.querySelector("#myInput");
+    uploadSection.addEventListener("mousedown", async function(event) {
+        event.preventDefault();
+        event.stopImmediatePropagation()
+        console.log("BRO")
+        console.log(fileInput)
+        await fileInput.click();
+      });
 
-  if (uploadSection) {
-    uploadSection.addEventListener("click", async (event) => {
+    fileInput.addEventListener("input", async function (event) {
       event.preventDefault();
-      await fileInput.click();
+      const res = await handleSelectFile();
+      if (res) {
+        circlePhoto.src = await res.data;
+      }
     });
-  }
-
+  section.classList.remove("imageUploadSection");
 }
 
 async function displayCreateAlbumPreview () {
