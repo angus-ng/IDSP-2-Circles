@@ -873,10 +873,6 @@ select {
   margin-bottom: 1.5rem;
 }
 
-.mb-8 {
-  margin-bottom: 2rem;
-}
-
 .ml-2 {
   margin-left: 0.5rem;
 }
@@ -1120,6 +1116,10 @@ select {
   overflow: hidden;
 }
 
+.rounded-12\.75 {
+  border-radius: 12.75px;
+}
+
 .rounded-full {
   border-radius: 9999px;
 }
@@ -1130,10 +1130,6 @@ select {
 
 .rounded-lg {
   border-radius: 0.5rem;
-}
-
-.rounded-12\.75 {
-  border-radius: 12.75px;
 }
 
 .rounded-t-20 {
@@ -1158,6 +1154,11 @@ select {
   border-color: rgb(115 115 115 / var(--tw-border-opacity));
 }
 
+.bg-grey {
+  --tw-bg-opacity: 1;
+  background-color: rgb(58 58 58 / var(--tw-bg-opacity));
+}
+
 .bg-light-mode {
   --tw-bg-opacity: 1;
   background-color: rgb(248 244 234 / var(--tw-bg-opacity));
@@ -1174,11 +1175,6 @@ select {
 
 .bg-overlay-bg {
   background-color: rgba(0, 0, 0, 0.6);
-}
-
-.bg-grey {
-  --tw-bg-opacity: 1;
-  background-color: rgb(58 58 58 / var(--tw-bg-opacity));
 }
 
 .bg-gradient-to-b {

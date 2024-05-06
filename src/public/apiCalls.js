@@ -29,6 +29,11 @@ async function handleSelectFile() {
     return;
   }
 
+  return await uploadFile(file);
+}
+
+async function uploadFile(file) {
+  // console.log(file);
   const formData = new FormData();
   formData.append("file", file);
   try {

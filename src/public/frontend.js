@@ -590,6 +590,8 @@ async function displayCreateAlbum () {
   const uploadSection = document.querySelector(".imageUploadSection")
 
   const fileInput = document.querySelector("#myInput");
+  
+
     uploadSection.addEventListener("mousedown", async function(event) {
         event.preventDefault();
         event.stopImmediatePropagation()
@@ -597,18 +599,45 @@ async function displayCreateAlbum () {
         await fileInput.click();
       });
 
-    fileInput.addEventListener("input", async function (event) {
-      event.preventDefault();
+    fileInput.addEventListener("input", async function(event) {
       const res = await handleSelectFile();
-      if (res) {
-        circlePhoto.src = await res.data;
+
+      const files = event.target.files;
+      if (files.length > 0) {
+        await displayCreateAlbumPreview();
       }
     });
+
+    uploadSection.addEventListener("dragover", async(event) => {
+        event.preventDefault();
+        console.log("File(s) in drop zone");
+    });
+
+    uploadSection.addEventListener("drop", async(event) => {
+        event.preventDefault();
+        dropHandler(event);
+        const files = event.dataTransfer.files;
+        if (files.length > 0) {
+          await displayCreateAlbumPreview(files);
+        }
+    });
+
+    async function dropHandler(event) {
+      event.preventDefault();
+      const fileList = [];
+      const files = event.dataTransfer.files;
+      for (let i = 0; i < files.length; i++) {
+        const file = await uploadFile(files[i]);
+        fileList.push(file);
+      }
+      console.log(fileList);
+    }
+
   section.classList.remove("imageUploadSection");
 
 }
 
-async function displayCreateAlbumPreview () {
+async function displayCreateAlbumPreview() {
   pageName.innerHTML = `New Album`;
 
   leftHeaderButton.innerHTML = `<img src="/close_icon_light.svg" alt="Close Button" id="closeButton"></img>`;
