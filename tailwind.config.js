@@ -19,6 +19,7 @@ theme: {
       'gradient-darker-blue': 'rgba(12, 18, 28, 0.5)',
       'grey': '#3A3A3A',
       'overlay-bg': 'rgba(0, 0, 0, 0.6)',
+      'light-grey': '#D9D9D9',
       'medium-grey': '#565656',
       'dark-grey': '#737373',
     },
@@ -42,18 +43,21 @@ theme: {
       'tertiary': '14px',
     },
     width: {
+      '932': '932px',
+      '430': '430px',
       '325': '325px',
       '234': '234px',
       'input-box': '377px',
       '100': '100px',
       '110': '110px',
-      '180': '180px'
+      '180': '180px',
     },
     height: {
       '932': '932px',
       '230': '230px',
       '100': '100px',
       '110': '110px',
+      'navbar': '85px',
       '27': '27px'
     },
     boxShadow: {
@@ -73,6 +77,9 @@ theme: {
     },
     spacing: {
       '22': '22px'
+    },
+    padding: {
+      '20': '20px'
     }
   },
 },
