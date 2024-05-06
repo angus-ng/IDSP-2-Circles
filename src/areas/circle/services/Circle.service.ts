@@ -108,4 +108,21 @@ export class CircleService implements ICircleService {
 
     return circleArr;
   }
+
+  async getMembers (circleId: string) {
+    const members = await this._db.prisma.userCircle.findMany({
+        select: {
+            user: {
+                select: {
+                    username: true,
+                    profilePicture: true
+                }
+            }
+        },
+        where: {
+            circleId: circleId
+        }
+    })
+    return members;
+  }
 }

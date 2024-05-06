@@ -80,14 +80,15 @@ class CircleController implements IController {
       //ensure user is a member of the circle
       let loggedInUser = req.user!.username
       const member = await this._service.checkMembership(id, loggedInUser)
-      if (!member){
-        return res.redirect("/")
+      if (!member) {
+        return res.status(200).json({success: true, data: null});
       }
       
       const circle = await this._service.getCircle(id)
       console.log(circle)
-      res.render('circle/views/circle');
+      const members = await this._service.getMembers(id)
 
+      return res.status(200).json({success: true, data: { circle, members }})
     } catch (err) {
       throw err;
     }

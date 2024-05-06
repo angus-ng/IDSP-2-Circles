@@ -1,5 +1,5 @@
 import ICircle from "../../../interfaces/circle.interface";
-import { Circle } from '@prisma/client'
+import { User, Circle } from '@prisma/client'
 
 // ⭐️ Feel free to change this interface in any way you like. It is simply an example...
 export default interface ICircleService {
@@ -8,4 +8,5 @@ export default interface ICircleService {
     checkMembership(id: string, currentUser: string): Promise<boolean>
     getCircle(id: string): Promise<Circle | null>
     listCircles(currentUser: string): Promise<{circle: Circle}[]>
+    getMembers(id: string): Promise<{user: {username: string, profilePicture: string}}[] | null>
 }

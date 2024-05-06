@@ -518,7 +518,7 @@ async function renderListOfCircles(data) {
   // console.log(data)
   let newArr = data.map((obj) => {
     return `
-      <div>
+      <div id="${obj.circle.id}">
         <img src="${obj.circle.picture}" class="rounded-full w-100 h-100 object-cover"/></img>
         <p class="text-center text-secondary">${obj.circle.name}</p>
       </div>`;
