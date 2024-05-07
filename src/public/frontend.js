@@ -93,15 +93,16 @@ header.addEventListener("click", async (event) => {
 
   if (nextButtonInviteFriends) {
     await displayInviteFriends();
+    return;
   }
 
   if (nextButton) {
+    await displayCreateCirclePreview();
     let circleImgSrc = document.querySelector("#circleImage").src;
     addPictureSrc = document.querySelector("#addPicture img").src;
     isPrivacyPublic = document.querySelector("#privacyCheckbox").checked;
     const circleName = document.querySelector("#circleName");
     newCircleNameInput = circleName.value;
-    await displayCreateCirclePreview();
     document.querySelector("#privacyCheckbox").checked = isPrivacyPublic;
     document.querySelector("#circleImage").src = circleImgSrc;
     circleName.value = newCircleNameInput;
