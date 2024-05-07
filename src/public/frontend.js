@@ -91,6 +91,7 @@ header.addEventListener("click", async (event) => {
   const circleBackButton = event.target.closest("#circleBackButton");
   const createCircleButton = event.target.closest("#createCircleButton");
   const closeButton = event.target.closest("#closeButton");
+  const albumNextButton = event.target.closest("#albumNext")
 
   if (nextButtonInviteFriends) {
     const circleName = document.querySelector("#circleName");
@@ -150,6 +151,16 @@ header.addEventListener("click", async (event) => {
     leftHeaderButton.innerHTML = "";
     rightHeaderButton.innerHTML = `<img src="/map_icon_light.svg" alt="Map Icon"</img>`;
     return;
+  }
+
+  if (albumNextButton) {
+    const { success, data } = await getListOfCircles();
+    if (success && data) {
+      const circleRender = await renderListOfCircles(data);
+      console.log(circleRender)
+      showCreateOrAddToCircle(circleRender)
+      return;
+    }
   }
 });
 
@@ -546,8 +557,8 @@ async function displayNavBar() {
       newCircleNameInput = "";
       const { success, data } = await getListOfCircles();
       if (success && data) {
-        await renderListOfCircles(data);
-
+        const circleRender = await renderListOfCircles(data);
+        await displayProfile(circleRender);
         //update friendCounter here via id when implemented
         //update profilePicture when implemented
 
@@ -576,15 +587,7 @@ async function getListOfCircles() {
   return await response.json();
 }
 
-async function renderListOfCircles(data) {
-  // console.log(data)
-  let newArr = data.map((obj) => {
-    return `
-      <div id="${obj.circle.id}" class="circle">
-        <img src="${obj.circle.picture}" class="rounded-full w-100 h-100 object-cover"/></img>
-        <p class="text-center text-secondary">${obj.circle.name}</p>
-      </div>`;
-  });
+async function displayProfile(circleRender, albumRender){
   pageContent.innerHTML = `
   <div id="profilePage" class="py-10 mb-4 w-full z-10">
     <div class="flex justify-center mb-4">
@@ -595,7 +598,7 @@ async function renderListOfCircles(data) {
     </div>
     <div class="mt-6 mb-6 m-auto grid grid-cols-2 gap-4">
       <div class="grid grid-rows-2 gap-0 justify-center">
-        <h2 class="text-base font-bold text-center">${data.length}</h2>
+        <h2 class="text-base font-bold text-center">${circleRender.length}</h2>
         <h2 class="text-secondary text-center">Circles</h2>
       </div>
 
@@ -615,12 +618,10 @@ async function renderListOfCircles(data) {
     <div id="albumList" class="m-auto grid grid-cols-3 gap-4 mt-6 mb-6 hidden">
     </div>
     <div id="circleList" class="m-auto grid grid-cols-3 gap-4 mt-6 mb-6 place-items-center">
-    ${newArr.join("")}
+    ${circleRender.join("")}
     </div>
     <div class="h-100"></div>
   </div>`;
-  pageContent.innerHTML = render;
-
   document.querySelector("#circleList").addEventListener("click", async function (event){
     const circleDiv = event.target.closest("div.circle")
     if (circleDiv) {
@@ -643,49 +644,7 @@ async function renderListOfCircles(data) {
         <p class="text-center text-secondary">${obj.circle.name}</p>
       </div>`;
   });
-  const render = `<div class="flex justify-center mt-6 mb-4">
-    <img id="profilePicture" src="/placeholder_image.svg" class="w-110 h-110 object-cover rounded-full"></img>
-  </div>
-  <div class="flex justify-center">
-    <h2 class="text-base text-center">@${currentLocalUser}</h2>
-  </div>
-  <div class="mt-6 mb-6 m-auto grid grid-cols-2 gap-4">
-    <div class="grid grid-rows-2 gap-0 justify-center">
-      <h2 class="text-base font-bold text-center">${data.length}</h2>
-      <h2 class="text-secondary text-center">Circles</h2>
-    </div>
-
-    <div class="grid grid-rows-2 gap-0 justify-center">
-    <h2 class="text-base font-bold text-center" id="friendCounter">0</h2>
-    <h2 class="text-secondary text-center">Friends</h2>
-    </div>
-  </div>
-  <div class="grid grid-cols-2 gap-4">
-    <div>
-      <img id="albumTab" src="/albumTab_deselected_light.svg" class="w-180 h-27 object-cover"></img>
-    </div>
-    <div>
-      <img id="circleTab" src="/circlesTab_selected_light.svg" class="w-180 h-27 object-cover"></img>
-    </div>
-  </div>
-  <div id="albumList" class="m-auto grid grid-cols-3 gap-4 mt-6 mb-6 hidden">
-  </div>
-  <div id="circleList" class="m-auto grid grid-cols-3 gap-4 mt-6 mb-6">
-  ${newArr.join("")}
-  </div>`;
-  pageContent.innerHTML = render;
-
-  document.querySelector("#circleList").addEventListener("click", async function (event){
-    const circleDiv = event.target.closest("div.circle")
-    if (circleDiv) {
-      if (circleDiv.hasAttribute("id")){
-        let { success, data, error } = await getCircle(circleDiv.id)
-        if (success && data) {
-          await displayCircle(data)
-        }
-      }
-    }
-  })
+  return newArr
 }
 
 async function displayCreateAlbum () {
@@ -752,7 +711,7 @@ async function displayCreateAlbumPreview() {
   pageName.innerHTML = `New Album`;
 
   leftHeaderButton.innerHTML = `<img src="/close_icon_light.svg" alt="Close Button" id="closeButton"></img>`;
-  rightHeaderButton.innerHTML = `<img src="/next_button_light.svg" alt="Next Button" id="nextButton"></img>`;
+  rightHeaderButton.innerHTML = `<img src="/next_button_light.svg" alt="Next Button" id="albumNext"></img>`;
 
   const pageContent = document.querySelector("#pageContent");
   pageContent.innerHTML = `
@@ -939,4 +898,41 @@ async function dropHandler(event) {
   if (files.length > 0) {
     await displayCreateAlbumPreview(files);
   }
+}
+
+async function showCreateOrAddToCircle(circleRender) {
+  pageName.innerHTML = `Add to a Circle`;
+  leftHeaderButton.innerHTML = `
+    <img src="/back_button_icon_light.svg" alt="Back Button" id="backButton"></img>
+    `;
+  rightHeaderButton.innerHTML = "";
+
+  pageContent.innerHTML = `
+  <div class="font-light text-dark-grey">Choose which circle you want your album to be added to.</div>
+  <div id="createNewCircle" class="grid place-items-center">
+    <img src="/create_new_circle.svg" class="rounded-full w-100 h-100 object-cover"/></img>
+  <p class="text-center text-secondary">create new circle</p>
+  </div>
+  <div id="circleList" class="m-auto grid grid-cols-3 gap-4 mt-6 mb-6 place-items-center">
+    ${circleRender.join("")}
+  </div>`
+
+  await cleanUpSectionEventListener()
+  document.querySelector("#circleList").addEventListener("click", async function (event){
+    const circleDiv = event.target.closest("div.circle")
+    if (circleDiv) {
+      if (circleDiv.hasAttribute("id")){
+        console.log("clicked", circleDiv.id)
+        //MODIFY THIS TO SELECT CIRCLE TO BE USED FOR POST CONFIRMATION & POST
+
+        // let { success, data, error } = await getCircle(circleDiv.id)
+        // if (success && data) {
+        //   await displayCircle(data)
+        // }
+      }
+    }
+  })
+  document.querySelector("#createNewCircle").addEventListener("click", async function (event) {
+    console.log("MAKE A NEW CIRCLE PROCESS")
+  })
 }
