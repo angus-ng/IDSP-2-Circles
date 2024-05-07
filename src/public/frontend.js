@@ -632,6 +632,60 @@ async function renderListOfCircles(data) {
   })
 }
 
+async function renderListOfCircles(data) {
+  // console.log(data)
+  let newArr = data.map((obj) => {
+    return `
+      <div id="${obj.circle.id}" class="circle">
+        <img src="${obj.circle.picture}" class="rounded-full w-100 h-100 object-cover"/></img>
+        <p class="text-center text-secondary">${obj.circle.name}</p>
+      </div>`;
+  });
+  const render = `<div class="flex justify-center mt-6 mb-4">
+    <img id="profilePicture" src="/placeholder_image.svg" class="w-110 h-110 object-cover rounded-full"></img>
+  </div>
+  <div class="flex justify-center">
+    <h2 class="text-base text-center">@${currentLocalUser}</h2>
+  </div>
+  <div class="mt-6 mb-6 m-auto grid grid-cols-2 gap-4">
+    <div class="grid grid-rows-2 gap-0 justify-center">
+      <h2 class="text-base font-bold text-center">${data.length}</h2>
+      <h2 class="text-secondary text-center">Circles</h2>
+    </div>
+
+    <div class="grid grid-rows-2 gap-0 justify-center">
+    <h2 class="text-base font-bold text-center" id="friendCounter">0</h2>
+    <h2 class="text-secondary text-center">Friends</h2>
+    </div>
+  </div>
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <img id="albumTab" src="/albumTab_deselected_light.svg" class="w-180 h-27 object-cover"></img>
+    </div>
+    <div>
+      <img id="circleTab" src="/circlesTab_selected_light.svg" class="w-180 h-27 object-cover"></img>
+    </div>
+  </div>
+  <div id="albumList" class="m-auto grid grid-cols-3 gap-4 mt-6 mb-6 hidden">
+  </div>
+  <div id="circleList" class="m-auto grid grid-cols-3 gap-4 mt-6 mb-6">
+  ${newArr.join("")}
+  </div>`;
+  pageContent.innerHTML = render;
+
+  document.querySelector("#circleList").addEventListener("click", async function (event){
+    const circleDiv = event.target.closest("div.circle")
+    if (circleDiv) {
+      if (circleDiv.hasAttribute("id")){
+        let { success, data, error } = await getCircle(circleDiv.id)
+        if (success && data) {
+          await displayCircle(data)
+        }
+      }
+    }
+  })
+}
+
 async function displayCreateAlbum () {
   pageName.innerHTML = `New Album`;
 
