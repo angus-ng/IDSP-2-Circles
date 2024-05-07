@@ -8,6 +8,7 @@ let isPrivacyPublic = false;
 let newCircleNameInput = "";
 let isEditable = false;
 let addPictureSrc;
+let circleImgSrc;
 
 async function initiatePage() {
   const username = await getSessionFromBackend();
@@ -92,19 +93,19 @@ header.addEventListener("click", async (event) => {
   const closeButton = event.target.closest("#closeButton");
 
   if (nextButtonInviteFriends) {
+    const circleName = document.querySelector("#circleName");
+    newCircleNameInput = circleName.value;
+    circleImgSrc = document.querySelector("#circleImage").src;
+    addPictureSrc = document.querySelector("#addPicture img").src;
+    isPrivacyPublic = document.querySelector("#privacyCheckbox").checked;
     await displayInviteFriends();
   }
 
   if (nextButton) {
-    let circleImgSrc = document.querySelector("#circleImage").src;
-    addPictureSrc = document.querySelector("#addPicture img").src;
-    isPrivacyPublic = document.querySelector("#privacyCheckbox").checked;
-    const circleName = document.querySelector("#circleName");
-    newCircleNameInput = circleName.value;
     await displayCreateCirclePreview();
+    circleName.value = newCircleNameInput;
     document.querySelector("#privacyCheckbox").checked = isPrivacyPublic;
     document.querySelector("#circleImage").src = circleImgSrc;
-    circleName.value = newCircleNameInput;
     await updateCheckbox();
     return;
   }
