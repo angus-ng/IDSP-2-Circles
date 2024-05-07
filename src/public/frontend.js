@@ -84,11 +84,16 @@ function displayLoginPage() {
 
 const header = document.querySelector("header");
 header.addEventListener("click", async (event) => {
+  const nextButtonInviteFriends = event.target.closest("#nextInviteFriends");
   const nextButton = event.target.closest("#nextButton");
   const backButton = event.target.closest("#backButton");
   const circleBackButton = event.target.closest("#circleBackButton");
   const createCircleButton = event.target.closest("#createCircleButton");
   const closeButton = event.target.closest("#closeButton");
+
+  if (nextButtonInviteFriends) {
+    await displayInviteFriends();
+  }
 
   if (nextButton) {
     let circleImgSrc = document.querySelector("#circleImage").src;
@@ -253,7 +258,7 @@ async function displayCreateCircle() {
     <img src="/back_button_icon_light.svg" alt="Back Button" id="backButton"></img>
     `;
   rightHeaderButton.innerHTML = `
-    <img src="/next_button_light.svg" alt="Next Button" id="nextButton"></img>
+    <img src="/next_button_light.svg" alt="Next Button" id="nextInviteFriends"></img>
     `;
 
   const pageContent = document.querySelector("#pageContent");
@@ -337,10 +342,22 @@ async function displayCreateCircle() {
   return;
 }
 
+async function displayInviteFriends() {
+  pageName.innerHTML = "Invite Friends";
+  leftHeaderButton.innerHTML = `<img src="/back_button_icon_light.svg" alt="Back Button" id="backButton"></img>`;
+  rightHeaderButton.innerHTML = `<img src="/next_button_light.svg" alt="Next Button" id="nextButton"></img>`;
+  
+    pageContent.innerHTML = `
+    `;
+}
+
 async function displayCreateCirclePreview() {
   leftHeaderButton.innerHTML = `
     <img src="/back_button_icon_light.svg" alt="Back Button" id="circleBackButton"></img>
     `;
+  
+  pageName.innerHTML = "New Circle";
+
   const next = document.querySelector("#nextButton");
   next.id = "createCircleButton";
   next.src = "/create_button_light.svg";
