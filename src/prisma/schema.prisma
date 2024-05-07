@@ -1,0 +1,92 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id             String       @id @default(cuid())
+  firstName      String?
+  lastName       String?
+  username       String       @unique
+  email          String?      @unique
+  profilePicture String
+  password       String?      @unique
+  appleId        String?      @unique
+  googleId       String?      @unique
+  facebookId     String?      @unique
+  Comment        Comment[]
+  Like           Like[]
+  UserCircle     UserCircle[]
+  Circle         Circle[]
+  Photos         Photo[]
+}
+
+model Circle {
+  id         String       @id @default(cuid())
+  owner      User         @relation(fields: [ownerId], references: [username])
+  ownerId    String
+  name       String
+  picture    String
+  UserCircle UserCircle[]
+  albums     Album[]
+}
+
+model Album {
+  id       String  @id @default(cuid())
+  name     String
+  likes    Like[]
+  photos   Photo[]
+  circle   Circle  @relation(fields: [circleId], references: [id])
+  circleId String
+}
+
+model Photo {
+  id       String    @id @default(cuid())
+  src      String
+  comments Comment[]
+  album    Album     @relation(fields: [albumId], references: [id])
+  albumId  String
+  poster   User      @relation(fields: [userId], references: [username])
+  userId   String
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [username])
+  userId    String
+  likeCount Int      @default(0)
+  likes     Like[]
+  photo     Photo    @relation(fields: [photoId], references: [id])
+  photoId   String
+}
+
+model Like {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [username])
+  userId    String
+  Comment   Comment? @relation(fields: [commentId], references: [id])
+  commentId String?
+  album     Album?   @relation(fields: [albumId], references: [id])
+  albumId   String?
+}
+
+model UserCircle {
+  user     User   @relation(fields: [userId], references: [id])
+  userId   String
+  circle   Circle @relation(fields: [circleId], references: [id], onDelete: Cascade)
+  circleId String
+
+  @@id([userId, circleId])
+}

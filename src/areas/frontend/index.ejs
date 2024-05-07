@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circles</title>
+    <link href="/output.css" rel="stylesheet">
+    <link rel="stylesheet" href="/scrollbar.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+    <script defer src="/apiCalls.js"></script>
+    <script defer src="/frontend.js"></script>
+</head>
+<body class="max-h-screen bg-light-mode">
+    <div class="flex flex-col min-h-screen">
+    <header id="header" class="sticky top-0 w-full h-header flex justify-between items-center bg-light-mode px-6 pt-6 pb-0">
+        <div class="flex-1 flex justify-start">
+            <button id="leftButton"></button>
+        </div>
+
+        <div class="flex-auto flex justify-center">
+            <h1 id="pageName" class="font-bold text-h2 leading-h2"></h1>
+        </div>
+
+        <div class="flex-1 flex justify-end"> 
+            <button id="rightButton"></button>
+        </div>
+    </header>
+
+    <div class="absolute top-0 left-0 h-screen w-full bg-light-mode-bg shadow-background-shadow -z-10 hidden">
+    </div>
+    
+    <div class="absolute top-0 left-0 h-screen w-full bg-light-mode -z-10">
+    </div>
+
+    <div class="absolute top-0 left-0 h-screen w-full bg-gradient-to-b from-gradient-lighter-blue via-gradient-medium-blue to-gradient-darker-blue -z-20 hidden">
+    </div>
+
+    <div class="flex-1 flex justify-center h-screen w-full">
+        <section class="flex flex-col justify-between w-full h-full items-center">
+
+            <div id="pageContent" class="max-h-screen px-4 pb-4">
+                
+            </div>
+    
+        </section>
+    </div>
+
+
+<div id="modal" class="fixed inset-x-0 bottom-0 bg-overlay-bg h-screen w-screen flex items-center justify-center z-50 hidden">
+    <div class="bg-light-mode p-6 rounded-t-20 shadow-lg w-full max-w-screen-2xl absolute bottom-0">
+        <div class="flex justify-between mb-6">
+
+            <div class="w-1/8"></div>
+
+            <button id="closeModal">
+                <img src="/close_swipe_icon_light.svg" alt="Close Swipe Icon">
+            </button>
+            <button id="closeModalButton">
+                <img src="/close_icon_light.svg" alt="Close Icon">                       
+            </button>
+        </div>
+
+        <div class="flex space-x-6 justify-center">
+            <button id="createAlbumModalButton">
+                <img src="/newalbum_icon_light.svg" alt="New Album Icon">
+            </button>
+                                    
+            <button id="createCircleModalButton">
+                <img src="/newcircle_icon_light.svg" alt="New Circle Icon">
+            </button>
+                                          
+            </div>
+        </div>
+    </div>
+
+
+    <div id="nav" class="fixed bottom-0 left-0 w-full h-navbar bg-light-mode"></div>
+</div>
+</body>
+</html>
