@@ -359,14 +359,30 @@ async function displayInviteFriends() {
       <p>your circle</p>
     </div>
     <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full z-10">
-      <div class="relative w-full h-9">
+      <div class="relative w-full h-9 mt-8">
         <form>
           <input class="w-380 px-14 py-2 border-grey border-2 rounded-input-box" placeholder="search friends"/>
           <img src="/search_icon_light_no_text.svg" alt="search icon" class="absolute left-4 top-2.5 w-6 h-6"/>
         </form>
       </div>
-      <div class="shrink-0 mt-14 mb-6 justify-center w-full">
+      <div class="shrink-0 mt-10 mb-6 justify-center w-full">
         <h1 class="font-bold text-20 leading-body">Suggested Friends</h1>
+        <div id="suggestedFriends">
+          <div class="flex items-center my-5">
+            <div class="flex-none w-58">
+              <img class="rounded w-58 h-58" src="/placeholder_image.svg" alt="friend profile picture"></img>
+            </div>
+            <div class="ml-8 flex-none w-207">
+              <h2 class="font-medium text-14 leading-tertiary">username</h2>
+              <h2 class="font-light text-14 text-dark-grey">display name</h2>
+            </div>
+            <div class="flex-none w-58">
+              <form>
+                <input type="checkbox" id="add" name="add">
+              </form>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     `;
