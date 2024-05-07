@@ -23,6 +23,7 @@ theme: {
       'light-grey': '#D9D9D9',
       'medium-grey': '#565656',
       'dark-grey': '#737373',
+      'text-grey': '#484848'
     },
     fontSize: {
       'h1': '29px',
@@ -30,11 +31,13 @@ theme: {
       'body': '17px',
       'secondary': '12px',
       'tertiary': '10px',
+      '26': '26px',
       '24': '24px',
       '20': '20px',
       '15': '15px',
       '14': '14px',
       '13': '13px',
+      '11': '11px'
     },
     lineHeight: {
       'h1': '40px',
@@ -46,6 +49,7 @@ theme: {
     width: {
       '932': '932px',
       '430': '430px',
+      '380': '380px',
       '325': '325px',
       '234': '234px',
       'input-box': '377px',
@@ -57,6 +61,7 @@ theme: {
       '932': '932px',
       '230': '230px',
       '100': '100px',
+      'header': '105px',
       '110': '110px',
       'navbar': '85px',
       '27': '27px'
@@ -71,7 +76,7 @@ theme: {
       '12.75': '12.75px'
     },
     margin: {
-      '4': '4px'
+      '4': '4px',
     },
     outline: {
       '1': '1px'

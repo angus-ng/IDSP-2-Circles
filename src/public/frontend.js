@@ -8,6 +8,7 @@ let isPrivacyPublic = false;
 let newCircleNameInput = "";
 let isEditable = false;
 let addPictureSrc;
+let circleImgSrc;
 
 async function initiatePage() {
   const username = await getSessionFromBackend();
@@ -92,20 +93,20 @@ header.addEventListener("click", async (event) => {
   const closeButton = event.target.closest("#closeButton");
 
   if (nextButtonInviteFriends) {
+    const circleName = document.querySelector("#circleName");
+    newCircleNameInput = circleName.value;
+    circleImgSrc = document.querySelector("#circleImage").src;
+    addPictureSrc = document.querySelector("#addPicture img").src;
+    isPrivacyPublic = document.querySelector("#privacyCheckbox").checked;
     await displayInviteFriends();
     return;
   }
 
   if (nextButton) {
     await displayCreateCirclePreview();
-    let circleImgSrc = document.querySelector("#circleImage").src;
-    addPictureSrc = document.querySelector("#addPicture img").src;
-    isPrivacyPublic = document.querySelector("#privacyCheckbox").checked;
-    const circleName = document.querySelector("#circleName");
-    newCircleNameInput = circleName.value;
+    circleName.value = newCircleNameInput;
     document.querySelector("#privacyCheckbox").checked = isPrivacyPublic;
     document.querySelector("#circleImage").src = circleImgSrc;
-    circleName.value = newCircleNameInput;
     await updateCheckbox();
     return;
   }
@@ -113,10 +114,12 @@ header.addEventListener("click", async (event) => {
   if (createCircleButton) {
     console.log("yes");
     handleCreateCircle();
+    nav.classList.remove("hidden");
     return;
   }
 
   if (backButton) {
+    nav.classList.remove("hidden");
     newCircleNameInput = "";
     pageName.innerHTML = "Explore";
     pageContent.innerHTML = "";
@@ -253,6 +256,7 @@ pageContent.addEventListener("click", (event) => {
 });
 
 async function displayCreateCircle() {
+  nav.classList.add("hidden");
   pageName.innerHTML = `New Circle`;
 
   leftHeaderButton.innerHTML = `
@@ -265,27 +269,27 @@ async function displayCreateCircle() {
   const pageContent = document.querySelector("#pageContent");
   pageContent.innerHTML = `
     <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full z-10">
-        <div class="shrink-0 mt-6 mb-6 justify-center">
+        <div class="shrink-0 mt-14 mb-6 justify-center">
             <img id="circleImage" src="/placeholder_image.svg" alt="Placeholder Image" class="object-cover w-234 h-230 rounded-full">                     
         </div>
     
-        <div class="flex-1">
+        <div class="flex-1 fixed bottom-10 px-4">
             <form class="flex flex-col">
-                <div class="flex items-center mt-8 mb-14">
+                <div class="flex items-center mb-28">
                     <label for="circleName" class="font-medium text-h2 mr-6">Name</label>
                     <input
                     type="text"
                     placeholder="add a title to your circle..."
                     id="circleName"
-                    class="w-full bg-light-mode-bg text-20 items-end border-none"
+                    class="w-full bg-transparent text-h2 text-text-grey font-light items-end border-none"
                     required
                     />
                 </div>
                 <div id="divider" class="my-4">
                     <img src="/divider_light.svg" alt="Divider">                          
                 </div>
-                <input id="myInput" type="file" style="visibility:hidden" multiple=false/>
-                <div class="flex items-center justify-between mt-4">
+                <input id="myInput" type="file" class="hidden" multiple=false/>
+                <div class="flex items-center justify-between mt-2 mb-2">
                     <div>
                         <p class="font-medium text-h2 leading-h2">Private or Public</p>
                         <p class="text-14 leading-body">Make new circle private or public</p>
@@ -344,15 +348,32 @@ async function displayCreateCircle() {
 }
 
 async function displayInviteFriends() {
+  nav.classList.add("hidden");
   pageName.innerHTML = "Invite Friends";
   leftHeaderButton.innerHTML = `<img src="/back_button_icon_light.svg" alt="Back Button" id="backButton"></img>`;
   rightHeaderButton.innerHTML = `<img src="/next_button_light.svg" alt="Next Button" id="nextButton"></img>`;
   
     pageContent.innerHTML = `
+    <div class="font-light text-11 justify-center text-center text-dark-grey w-full">
+      <p>search or add friends to collaborate with in</p>
+      <p>your circle</p>
+    </div>
+    <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full z-10">
+      <div class="relative w-full h-9">
+        <form>
+          <input class="w-380 px-14 py-2 border-grey border-2 rounded-input-box" placeholder="search friends"/>
+          <img src="/search_icon_light_no_text.svg" alt="search icon" class="absolute left-4 top-2.5 w-6 h-6"/>
+        </form>
+      </div>
+      <div class="shrink-0 mt-14 mb-6 justify-center w-full">
+        <h1 class="font-bold text-20 leading-body">Suggested Friends</h1>
+      </div>
+    </div>
     `;
 }
 
 async function displayCreateCirclePreview() {
+  nav.classList.add("hidden");
   leftHeaderButton.innerHTML = `
     <img src="/back_button_icon_light.svg" alt="Back Button" id="circleBackButton"></img>
     `;
@@ -365,50 +386,55 @@ async function displayCreateCirclePreview() {
 
   pageContent.innerHTML = `
     <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full z-10">
-            <div class="flex-shrink-0 mt-20 mb-4">
-                <img id="circleImage" src="/placeholder_image.svg" alt="Placeholder Image" class="object-cover w-234 h-230 rounded-full">                     
-            </div>
-        
-            <div class="flex justify-center my-5 relative w-full">
+          <div class="flex-shrink-0 mt-20 mb-4">
+              <img id="circleImage" src="/placeholder_image.svg" alt="Placeholder Image" class="object-cover w-234 h-230 rounded-full">                     
+          </div>
+          <div class="flex justify-center my-5 relative w-full">
             <div class="flex justify-center items-center">
                 <input
                     type="text"
                     value="Sample Text"
                     readonly
                     id="circleName"
-                    class="bg-light-mode-bg text-lg border-none text-center p-1 min-w-[50px] w-auto"
+                    class="bg-transparent text-2xl font-bold border-none text-center p-1 min-w-[50px] w-auto"
                 />
             </div>
-            <button
-                id="editButton"
-                class="absolute right-0 top-0 mt-2 mr-1"
-            >
+            <button id="editButton" class="absolute right-0 top-0 mt-2 mr-1">
                 <img src="/edit_icon_light.svg" alt="Edit Icon" />
             </button>
-                    </div>
-                    <div id="divider" class="mb-5">
-                        <img src="/divider_light.svg" alt="Divider">                          
-                    </div>
-                    <input id="myInput" type="file" style="visibility:hidden" multiple=false/>
-                    <div class="flex items-center justify-between mt-4 w-full">
-                        <div>
-                            <p class="font-medium text-h2 leading-h2">Private or Public</p>
-                            <p class="text-14 leading-body text-dark-grey">Make new circle private or public</p>
-                        </div>
-                        <div>
-                            <label class="inline-flex items-center cursor-pointer">
-                                <input id="privacyCheckbox" type="checkbox" value="" class="sr-only peer">
-                                <img id="privacyIcon" src="/lock_icon_light.svg" alt="Lock icon" class="mr-4">
-                                <span id="privacyLabel" class="text-sm font-medium leading-body text-14 mr-4 w-12">Private</span>
-                                <div class="peer relative h-5 w-10 rounded-full outline outline-1 outline-black after:absolute after:start-[2px] after:top-0 after:h-4 after:w-4 after:rounded-full after:border after:border-black after:bg-black after:transition-all after:content-[''] peer-checked:bg-cover peer-checked:bg-black border-2 peer-checked:outline-black peer-checked:after:translate-x-5 peer-checked:after:border-white peer-checked:after:border-opacity-80 peer-checked:after:border-2 peer-checked:after:bg-black rtl:peer-checked:after:-translate-x-full"></div>
-                                </label>
-                        </div>
-                    </div>
-                    <!-- need to add added friends section later -->
-                </form>
+          </div>
+          <div id="divider" class="mb-2">
+              <img src="/divider_light.svg" alt="Divider">                          
+          </div>
+          <input id="myInput" type="file" class="hidden" multiple=false/>
+          <div class="flex items-center justify-between w-full">
+              <div>
+                  <p class="font-medium text-h2 leading-h2">Private or Public</p>
+                  <p class="text-body leading-tertiary text-dark-grey">Make new circle private or public</p>
+              </div>
+              <div>
+                  <label class="inline-flex items-center cursor-pointer">
+                      <input id="privacyCheckbox" type="checkbox" value="" class="sr-only peer">
+                      <img id="privacyIcon" src="/lock_icon_light.svg" alt="Lock icon" class="mr-4">
+                      <span id="privacyLabel" class="text-sm font-medium leading-body text-14 mr-4 w-12">Private</span>
+                      <div class="peer relative h-5 w-10 rounded-full outline outline-1 outline-black after:absolute after:start-[2px] after:top-0 after:h-4 after:w-4 after:rounded-full after:border after:border-black after:bg-black after:transition-all after:content-[''] peer-checked:bg-cover peer-checked:bg-black border-2 peer-checked:outline-black peer-checked:after:translate-x-5 peer-checked:after:border-white peer-checked:after:border-opacity-80 peer-checked:after:border-2 peer-checked:after:bg-black rtl:peer-checked:after:-translate-x-full"></div>
+                      </label>
+              </div>
+          </div>
+          <div class="flex items-center justify-between w-full">
+            <div class="mt-10">
+              <p class="font-bold text-26 leading-h2">added friends</p>
             </div>
+          </div>
+          <div class="flex items-center justify-between w-full">
+            <div class="mt-10">
+              <p class="text-body leading-tertiary">Most Recent Activity with:</p>
+            </div>
+          </div>
+          </form>
         </div>
-    `;
+    </div>`;
+
   const fileInput = document.querySelector("#myInput");
   const circlePhoto = document.querySelector("#circleImage");
   document.querySelector("#circleImage").addEventListener("click", async function(event) {
@@ -586,6 +612,7 @@ async function displayCreateAlbum () {
   rightHeaderButton.innerHTML = "";
 
   pageContent.innerHTML = `
+  <div class="font-light text-dark-grey">select which photos you want to add to your album</div>
   <div id="createNewAlbum" class="flex flex-col justify-center py-10 my-48 w-full z-10">
     <div class="flex flex-col items-center">
       <form>
@@ -665,6 +692,7 @@ async function displayCreateAlbumPreview() {
 
   const pageContent = document.querySelector("#pageContent");
   pageContent.innerHTML = `
+  <div class="font-light text-dark-grey">select which photos you want to add to your album</div>
   <div id="createNewAlbum" class="flex flex-col items-center bg-light-mode w-430 z-10">
     <div class="flex-shrink-0 w-full items-center mt-20 mb-4">
       <div id="indicators-carousel" class="relative w-full" data-carousel="static">
