@@ -182,6 +182,7 @@ modal.addEventListener("click", async function (event) {
     modal.classList.remove("shown");
     modal.classList.add("hidden");
     await displayCreateCircle();
+    await cleanUpSectionEventListener()
   }
 });
 
@@ -553,6 +554,7 @@ async function displayNavBar() {
         return;
       }
       pageContent.innerHTML = "";
+      await cleanUpSectionEventListener()
     }
   });
 }
@@ -722,47 +724,26 @@ async function displayCreateAlbum () {
 
   const fileInput = document.querySelector("#myInput");
   
-    uploadSection.addEventListener("mousedown", async function(event) {
-        event.preventDefault();
-        event.stopImmediatePropagation()
-        console.log(fileInput)
-        await fileInput.click();
-      });
+  if (uploadSection.getAttribute('listener') !== true){
+    uploadSection.addEventListener("mousedown", sectionUploadClick, true);
+  }
 
-    fileInput.addEventListener("input", async function(event) {
+  if (fileInput.getAttribute('listener') !== true) {
+    fileInput.addEventListener("input", async function (event) {
       const res = await handleSelectFile();
-
+    
       const files = event.target.files;
       console.log(files)
       if (files.length > 0) {
         await displayCreateAlbumPreview();
       }
     });
+  }
 
-    uploadSection.addEventListener("dragover", async(event) => {
-        event.preventDefault();
-        console.log("File(s) in drop zone");
-    });
-
-    uploadSection.addEventListener("drop", async(event) => {
-        event.preventDefault();
-        dropHandler(event);
-        const files = event.dataTransfer.files;
-        if (files.length > 0) {
-          await displayCreateAlbumPreview(files);
-        }
-    });
-
-    async function dropHandler(event) {
-      event.preventDefault();
-      const fileList = [];
-      const files = event.dataTransfer.files;
-      for (let i = 0; i < files.length; i++) {
-        const file = await uploadFile(files[i]);
-        fileList.push(file);
-      }
-      console.log(fileList);
-    }
+  if (uploadSection.getAttribute('listener') !== true){
+    uploadSection.addEventListener("dragover", sectionDrag, true);
+    uploadSection.addEventListener("drop", sectionDrop, true);
+  }
 
   section.classList.remove("imageUploadSection");
 }
@@ -918,4 +899,44 @@ async function displayCircle(circleData) {
   <div class="columns-2 gap-4 space-y-4 grid-flow-row">
     ${albumList.join("")}
   </div>`
+}
+
+async function cleanUpSectionEventListener() {
+  const section = document.querySelector("section")
+  section.removeEventListener("mousedown", sectionUploadClick, true)
+  section.removeEventListener("dragover", sectionDrag, true)
+  section.removeEventListener("drop", sectionDrop, true)
+}
+
+async function sectionUploadClick(event) {
+  const fileInput = document.querySelector("#myInput");
+  event.preventDefault();
+  event.stopImmediatePropagation()
+  console.log(fileInput)
+  await fileInput.click();
+}
+
+sectionDrag = async(event) => {
+  event.preventDefault();
+  console.log("File(s) in drop zone");
+}
+
+sectionDrop = async(event) => {
+  event.preventDefault();
+  await dropHandler(event);
+}
+
+async function dropHandler(event) {
+  event.preventDefault();
+  const fileList = [];
+  const files = event.dataTransfer.files;
+  for (let i = 0; i < files.length; i++) {
+    const file = await uploadFile(files[i]);
+    fileList.push(file);
+  }
+  console.log(fileList);
+  console.log(files.length)
+  if (files.length > 0) {
+    await displayCreateAlbumPreview(files);
+  }
 }
