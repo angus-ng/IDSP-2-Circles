@@ -706,10 +706,20 @@ async function displayCreateAlbumPreview() {
 
 async function displayCircle(circleData) { 
   pageName.innerHTML = ""
-  console.log(circleData.members)
   const memberList = circleData.members.map((obj) => {
     return `<img src="${obj.user.profilePicture}" class="w-42 h-42 rounded-full object-cover"></img>`
   })
+  console.log(circleData.circle.albums)
+  const albumList = circleData.circle.albums.map((obj) => {
+    return `
+  <div class="w-180 h-min relative" id="${obj.id}">
+    <img class="w-180 max-h-56 h-min rounded-xl object-cover" src="${obj.photos[0].src}"/>
+    <div class="m-2 text-secondary font-semibold absolute inset-0 flex items-end justify-start">
+      <p class="text-light-mode-bg">${obj.name}</p>
+    </div>
+  </div>`
+  })
+  console.log(albumList)
 
   pageContent.innerHTML = `
   <div class="flex justify-center mt-6 mb-4">
@@ -730,7 +740,10 @@ async function displayCircle(circleData) {
   <div class="flex gap-2">
     ${memberList.join("")}
   </div>
-  <div>
+  <div class="mt-6">
     <p class="text-24 font-medium">Albums</p>
+  </div>
+  <div class="columns-2 gap-4 space-y-4 grid-flow-row">
+    ${albumList.join("")}
   </div>`
 }

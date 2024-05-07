@@ -773,6 +773,10 @@ select {
   position: relative;
 }
 
+.inset-0 {
+  inset: 0px;
+}
+
 .inset-x-0 {
   left: 0px;
   right: 0px;
@@ -851,6 +855,11 @@ select {
 .my-auto {
   margin-top: auto;
   margin-bottom: auto;
+}
+
+.mx-2 {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
 }
 
 .mb-10 {
@@ -966,6 +975,10 @@ select {
   height: 0.75rem;
 }
 
+.h-42 {
+  height: 42px;
+}
+
 .h-5 {
   height: 1.25rem;
 }
@@ -982,12 +995,17 @@ select {
   height: 100%;
 }
 
+.h-min {
+  height: -moz-min-content;
+  height: min-content;
+}
+
 .h-screen {
   height: 100vh;
 }
 
-.h-42 {
-  height: 42px;
+.max-h-56 {
+  max-height: 14rem;
 }
 
 .w-10 {
@@ -1018,6 +1036,10 @@ select {
   width: 0.75rem;
 }
 
+.w-42 {
+  width: 42px;
+}
+
 .w-auto {
   width: auto;
 }
@@ -1032,10 +1054,6 @@ select {
 
 .w-screen {
   width: 100vw;
-}
-
-.w-42 {
-  width: 42px;
 }
 
 .min-w-\[50px\] {
@@ -1056,6 +1074,15 @@ select {
 
 .cursor-pointer {
   cursor: pointer;
+}
+
+.columns-2 {
+  -moz-columns: 2;
+       columns: 2;
+}
+
+.grid-flow-row {
+  grid-auto-flow: row;
 }
 
 .grid-cols-1 {
@@ -1130,14 +1157,16 @@ select {
   gap: 1rem;
 }
 
-.gap-3 {
-  gap: 0.75rem;
-}
-
 .space-x-6 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-x-reverse: 0;
   margin-right: calc(1.5rem * var(--tw-space-x-reverse));
   margin-left: calc(1.5rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+.space-y-4 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(1rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(1rem * var(--tw-space-y-reverse));
 }
 
 .justify-self-end {
@@ -1162,6 +1191,10 @@ select {
 
 .rounded-lg {
   border-radius: 0.5rem;
+}
+
+.rounded-xl {
+  border-radius: 0.75rem;
 }
 
 .rounded-t-20 {
@@ -1228,6 +1261,11 @@ select {
   --tw-gradient-to: rgba(12, 18, 28, 0.5) var(--tw-gradient-to-position);
 }
 
+.object-contain {
+  -o-object-fit: contain;
+     object-fit: contain;
+}
+
 .object-cover {
   -o-object-fit: cover;
      object-fit: cover;
@@ -1279,6 +1317,10 @@ select {
   font-size: 20px;
 }
 
+.text-24 {
+  font-size: 24px;
+}
+
 .text-3xl {
   font-size: 1.875rem;
   line-height: 2.25rem;
@@ -1307,8 +1349,9 @@ select {
   line-height: 1.25rem;
 }
 
-.text-24 {
-  font-size: 24px;
+.text-xs {
+  font-size: 0.75rem;
+  line-height: 1rem;
 }
 
 .font-bold {
@@ -1317,6 +1360,10 @@ select {
 
 .font-medium {
   font-weight: 500;
+}
+
+.font-semibold {
+  font-weight: 600;
 }
 
 .leading-body {
@@ -1344,6 +1391,10 @@ select {
 .text-light-mode-accent {
   --tw-text-opacity: 1;
   color: rgb(0 68 204 / var(--tw-text-opacity));
+}
+
+.text-light-mode-bg {
+  color: rgba(248, 244, 234, 0.86);
 }
 
 .underline {

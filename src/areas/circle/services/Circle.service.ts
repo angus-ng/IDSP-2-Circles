@@ -83,6 +83,17 @@ export class CircleService implements ICircleService {
   }
   async getCircle (id: string): Promise<Circle | null> {
     const circle = await this._db.prisma.circle.findUnique({
+        include: {
+            albums: {
+                select: {
+                    id: true,
+                    name: true,
+                    photos: {
+                        take: 1
+                    }
+                }
+            }
+        },
         where: {
             id: id
         }

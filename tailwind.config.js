@@ -57,7 +57,8 @@ theme: {
       '110': '110px',
       '27': '27px',
       '180': '180px',
-      '42': '42px'
+      '42': '42px',
+      '228':'228px'
     },
     boxShadow: {
       'background-shadow': 'inset 0 0 100px -30px rgba(0, 0, 0, 0.2)'

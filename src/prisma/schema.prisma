@@ -28,6 +28,7 @@ model User {
   Like           Like[]
   UserCircle     UserCircle[]
   Circle         Circle[]
+  Photos         Photo[]
 }
 
 model Circle {
@@ -37,18 +38,26 @@ model Circle {
   name       String
   picture    String
   UserCircle UserCircle[]
+  albums     Album[]
 }
 
 model Album {
-  id    String @id @default(cuid())
-  name  String
-  likes Like[]
+  id       String  @id @default(cuid())
+  name     String
+  likes    Like[]
+  photos   Photo[]
+  circle   Circle  @relation(fields: [circleId], references: [id])
+  circleId String
 }
 
 model Photo {
   id       String    @id @default(cuid())
   src      String
   comments Comment[]
+  album    Album     @relation(fields: [albumId], references: [id])
+  albumId  String
+  poster   User      @relation(fields: [userId], references: [username])
+  userId   String
 }
 
 model Comment {
