@@ -518,7 +518,7 @@ async function renderListOfCircles(data) {
   // console.log(data)
   let newArr = data.map((obj) => {
     return `
-      <div id="${obj.circle.id}">
+      <div id="${obj.circle.id}" class="circle">
         <img src="${obj.circle.picture}" class="rounded-full w-100 h-100 object-cover"/></img>
         <p class="text-center text-secondary">${obj.circle.name}</p>
       </div>`;
@@ -554,6 +554,18 @@ async function renderListOfCircles(data) {
   ${newArr.join("")}
   </div>`;
   pageContent.innerHTML = render;
+
+  document.querySelector("#circleList").addEventListener("click", async function (event){
+    const circleDiv = event.target.closest("div.circle")
+    if (circleDiv) {
+      if (circleDiv.hasAttribute("id")){
+        let { success, data, error } = await getCircle(circleDiv.id)
+        if (success && data) {
+          await displayCircle(data)
+        }
+      }
+    }
+  })
 }
 
 async function displayCreateAlbum () {
@@ -690,4 +702,35 @@ async function displayCreateAlbumPreview() {
   
   updateCarousel();
 
+}
+
+async function displayCircle(circleData) { 
+  pageName.innerHTML = ""
+  console.log(circleData.members)
+  const memberList = circleData.members.map((obj) => {
+    return `<img src="${obj.user.profilePicture}" class="w-42 h-42 rounded-full object-cover"></img>`
+  })
+
+  pageContent.innerHTML = `
+  <div class="flex justify-center mt-6 mb-4">
+    <img src="${circleData.circle.picture}" class="rounded-full w-180 h-180 object-cover"/></img>
+  </div>
+  <div>
+    <p class="text-center text-20 text-bold">${circleData.circle.name}</p>
+  </div>
+  <div class="grid grid-cols-1 place-items-center">
+    <label class="inline-flex items-center cursor-pointer">
+        <img id="privacyIcon" src="/lock_icon_light.svg" alt="Lock icon" class="mr-4">
+        <span id="privacyLabel" class="text-sm font-medium leading-body text-14 mr-4 w-12">Private</span>
+    </label>
+  </div>
+  <div class="grid grid-cols-5 place-items-center mt-16 mb-4">
+    <p class="grid-span-1 text-base font-medium">${circleData.members.length} Friends</p>
+  </div>
+  <div class="flex gap-2">
+    ${memberList.join("")}
+  </div>
+  <div>
+    <p class="text-24 font-medium">Albums</p>
+  </div>`
 }

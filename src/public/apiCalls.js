@@ -86,3 +86,16 @@ async function getSessionFromBackend() {
     return jsonResponse.username;
   } catch (error) {}
 }
+
+async function getCircle(circleId) {
+  try{
+    const response = await fetch(`/circle/${circleId}`)
+    responseJson = await response.json()
+
+    console.log(responseJson)
+    return responseJson
+    
+  } catch (err) {
+
+  }
+}
