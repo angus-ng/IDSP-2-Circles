@@ -258,14 +258,14 @@ async function displayCreateCircle() {
 
   const pageContent = document.querySelector("#pageContent");
   pageContent.innerHTML = `
-    <div id="createNewCircle" class="md:flex flex-col items-center p-4 bg-light-mode rounded-lg w-full z-10">
-        <div class="md:shrink-0 mt-10 mb-10">
+    <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full z-10">
+        <div class="shrink-0 mt-6 mb-6 justify-center">
             <img id="circleImage" src="/placeholder_image.svg" alt="Placeholder Image" class="object-cover w-234 h-230 rounded-full">                     
         </div>
     
-        <div class="md:flex-1">
-            <form class="md:flex flex-col">
-                <div class="md:flex items-center mt-8 mb-14">
+        <div class="flex-1">
+            <form class="flex flex-col">
+                <div class="flex items-center mt-8 mb-14">
                     <label for="circleName" class="font-medium text-h2 mr-6">Name</label>
                     <input
                     type="text"
@@ -279,7 +279,7 @@ async function displayCreateCircle() {
                     <img src="/divider_light.svg" alt="Divider">                          
                 </div>
                 <input id="myInput" type="file" style="visibility:hidden" multiple=false/>
-                <div class="md:flex items-center justify-between mt-4">
+                <div class="flex items-center justify-between mt-4">
                     <div>
                         <p class="font-medium text-h2 leading-h2">Private or Public</p>
                         <p class="text-14 leading-body">Make new circle private or public</p>
@@ -346,13 +346,13 @@ async function displayCreateCirclePreview() {
   next.src = "/create_button_light.svg";
 
   pageContent.innerHTML = `
-    <div id="createNewCircle" class="md:flex flex-col items-center p-4 bg-light-mode rounded-lg w-full z-10">
-            <div class="md:flex-shrink-0 mt-20 mb-4">
+    <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full z-10">
+            <div class="flex-shrink-0 mt-20 mb-4">
                 <img id="circleImage" src="/placeholder_image.svg" alt="Placeholder Image" class="object-cover w-234 h-230 rounded-full">                     
             </div>
         
-            <div class="md:flex justify-center my-5 relative w-full">
-            <div class="md:flex justify-center items-center">
+            <div class="flex justify-center my-5 relative w-full">
+            <div class="flex justify-center items-center">
                 <input
                     type="text"
                     value="Sample Text"
@@ -568,7 +568,7 @@ async function displayCreateAlbum () {
   rightHeaderButton.innerHTML = "";
 
   pageContent.innerHTML = `
-  <div id="createNewAlbum" class="flex flex-col justify-center py-10 mt-14 mb-20 w-full z-10">
+  <div id="createNewAlbum" class="flex flex-col justify-center py-10 my-48 w-full z-10">
     <div class="flex flex-col items-center">
       <form>
         <input id="myInput" type="file" style="visibility: hidden" multiple="false" />
@@ -587,14 +587,13 @@ async function displayCreateAlbum () {
   </div>
   `;
 
-  const section = document.querySelector("section")
-  section.classList.add("imageUploadSection")
-  console.log(section.classList)
-  const uploadSection = document.querySelector(".imageUploadSection")
+  const section = document.querySelector("section");
+  section.classList.add("imageUploadSection");
+  console.log(section.classList);
+  const uploadSection = document.querySelector(".imageUploadSection");
 
   const fileInput = document.querySelector("#myInput");
   
-
     uploadSection.addEventListener("mousedown", async function(event) {
         event.preventDefault();
         event.stopImmediatePropagation()
@@ -648,24 +647,58 @@ async function displayCreateAlbumPreview() {
 
   const pageContent = document.querySelector("#pageContent");
   pageContent.innerHTML = `
-  <div id="createNewAlbum" class="flex flex-col items-center bg-light-mode w-full z-10">
+  <div id="createNewAlbum" class="flex flex-col items-center bg-light-mode w-430 z-10">
     <div class="flex-shrink-0 w-full items-center mt-20 mb-4">
-      <div id="image-carousel" class="relative w-full h-full rounded-12.75" data-carousel="static">
-        <div class="relative h-56 overflow-hidden rounded-lg md:h-32">
+      <div id="indicators-carousel" class="relative w-full" data-carousel="static">
+      <!-- Carousel wrapper -->
+      <div class="relative h-56 overflow-hidden rounded-lg md:h-96">
+          <!-- Item 1 -->
           <div class="hidden duration-700 ease-in-out" data-carousel-item="active">
-            <img src="/placeholder_image.svg" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
+              <img src="/hi.jpg" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
           </div>
+          <!-- Item 2 -->
           <div class="hidden duration-700 ease-in-out" data-carousel-item>
-            <img src="/placeholder_image.svg" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
+              <img src="/hi.jpg" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
           </div>
-        </div>
-        <div class="flex justify-center mt-8">
-          <button class="mx-1 w-3 h-3 bg-medium-grey rounded-full" data-index="0"></button>
-        </div>
-        <div class="mx-2">
-          <h1 class="text-h2 leading-h2">Upload more files</h1>
-        </div>
+          <!-- Item 3 -->
+          <div class="hidden duration-700 ease-in-out" data-carousel-item>
+              <img src="/hi.jpg" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
+          </div>
+          <!-- Item 4 -->
+          <div class="hidden duration-700 ease-in-out" data-carousel-item>
+              <img src="/hi.jpg" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
+          </div>
+          <!-- Item 5 -->
+          <div class="hidden duration-700 ease-in-out" data-carousel-item>
+              <img src="/hi.jpg" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
+          </div>
       </div>
+      <!-- Slider indicators -->
+      <div class="absolute z-30 flex -translate-x-1/2 space-x-3 rtl:space-x-reverse bottom-5 left-1/2">
+          <button type="button" class="w-3 h-3 rounded-full" aria-current="true" aria-label="Slide 1" data-carousel-slide-to="0"></button>
+          <button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 2" data-carousel-slide-to="1"></button>
+          <button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 3" data-carousel-slide-to="2"></button>
+          <button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 4" data-carousel-slide-to="3"></button>
+          <button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 5" data-carousel-slide-to="4"></button>
+      </div>
+      <!-- Slider controls -->
+      <button type="button" class="absolute top-0 start-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-prev>
+          <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+              <svg class="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
+              </svg>
+              <span class="sr-only">Previous</span>
+          </span>
+      </button>
+      <button type="button" class="absolute top-0 end-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-next>
+          <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+              <svg class="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+              </svg>
+              <span class="sr-only">Next</span>
+          </span>
+      </button>
+  </div>
     </div>
     <div class="flex flex-col items-center w-full bg-light-grey mt-2">
       <form>
@@ -683,33 +716,4 @@ async function displayCreateAlbumPreview() {
       </div>
     </div>
   </div>`;
-
-  const carouselImages = document.querySelector("#image-carousel");
-  const imageCount = carouselImages.children.length;
-  const dots = Array.from(document.querySelectorAll("button[data-index"));
-  let currentIndex = 0;
-  
-  function updateCarousel() {
-    const translateClass = `-translate-x-[$currentIndex * 100}%]`;
-  
-    carouselImages.classList.add(translateClass);
-    updateDots();
-  }
-  
-  function updateDots() {
-    dots.forEach((dot, index) => {
-      dot.className = `mx-1 w-3 h-3 rounded-full cursor-pointer`;
-      dot.classList.add(index === currentIndex ? "bg-grey" : "bg-medium-grey");
-    });
-  }
-  
-  dots.forEach((dot, index) => {
-    dot.addEventListener("click", () => {
-      currentIndex = index;
-      updateCarousel();
-    });
-  });
-  
-  updateCarousel();
-
 }

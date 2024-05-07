@@ -6,19 +6,19 @@
     <title>Circles</title>
     <link href="/output.css" rel="stylesheet">
     <link rel="stylesheet" href="/scrollbar.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
     <script defer src="/apiCalls.js"></script>
     <script defer src="/frontend.js"></script>
-
-
 </head>
-<body class="h-screen bg-light-mode">
+<body class="max-h-screen bg-light-mode">
     <div class="flex flex-col min-h-screen">
     <header id="header" class="sticky top-0 w-full flex justify-between items-center bg-light-mode p-6">
         <div class="flex-1 flex justify-start">
             <button id="leftButton"></button>
         </div>
 
-        <div class="flex-1 flex justify-center">
+        <div class="flex-auto flex justify-center">
             <h1 id="pageName" class="font-bold text-h2 leading-h2"></h1>
         </div>
 
@@ -36,10 +36,10 @@
     <div class="absolute top-0 left-0 h-screen w-full bg-gradient-to-b from-gradient-lighter-blue via-gradient-medium-blue to-gradient-darker-blue -z-20 hidden">
     </div>
 
-    <div class="flex-1 flex justify-center items-center h-full">
+    <div class="flex-1 flex justify-center h-screen w-full">
         <section class="flex flex-col justify-between w-full h-full items-center">
 
-            <div id="pageContent" class="max-h-screen">
+            <div id="pageContent" class="max-h-screen p-2">
                 
             </div>
     

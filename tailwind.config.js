@@ -3,7 +3,8 @@ module.exports = {
   mode: "jit",
   content: [
     "./src/**/*.ejs",
-    "./src/public/*.js"
+    "./src/public/*.js",
+    "./node_modules/flowbite/**/*.js"
 ],
 theme: {
   fontFamily: {
@@ -85,5 +86,6 @@ theme: {
 },
 plugins: [
   require('@tailwindcss/forms'),
+  require('flowbite/plugin')
 ],
 }
