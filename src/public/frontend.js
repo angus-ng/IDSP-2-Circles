@@ -717,103 +717,66 @@ async function displayCreateAlbumPreview() {
   pageContent.innerHTML = `
   <div class="font-light text-dark-grey">select which photos you want to add to your album</div>
   <div id="createNewAlbum" class="flex flex-col items-center bg-light-mode w-430 z-10">
-    <div class="flex-shrink-0 w-full items-center mt-20 mb-4">
-      <div id="indicators-carousel" class="relative w-full" data-carousel="static">
-      <!-- Carousel wrapper -->
-      <div class="relative h-56 overflow-hidden rounded-lg md:h-96">
-          <!-- Item 1 -->
-          <div class="hidden duration-700 ease-in-out" data-carousel-item="active">
-              <img src="/hi.jpg" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-          </div>
-          <!-- Item 2 -->
-          <div class="hidden duration-700 ease-in-out" data-carousel-item>
-              <img src="/hi.jpg" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-          </div>
-          <!-- Item 3 -->
-          <div class="hidden duration-700 ease-in-out" data-carousel-item>
-              <img src="/hi.jpg" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-          </div>
-          <!-- Item 4 -->
-          <div class="hidden duration-700 ease-in-out" data-carousel-item>
-              <img src="/hi.jpg" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-          </div>
-          <!-- Item 5 -->
-          <div class="hidden duration-700 ease-in-out" data-carousel-item>
-              <img src="/hi.jpg" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-          </div>
+    <div class="embla__viewport">
+      <div class="embla__container">
+        <div class="embla__slide">
+          <div class="embla__slide__number">1</div>
+        </div>
+        <div class="embla__slide">
+          <div class="embla__slide__number">2</div>
+        </div>
+        <div class="embla__slide">
+          <div class="embla__slide__number">3</div>
+        </div>
+        <div class="embla__slide">
+          <div class="embla__slide__number">4</div>
+        </div>
+        <div class="embla__slide">
+          <div class="embla__slide__number">5</div>
+        </div>
+        <div class="embla__slide">
+          <div class="embla__slide__number">6</div>
+        </div>
+        <div class="embla__slide">
+          <div class="embla__slide__number">7</div>
+        </div>
+        <div class="embla__slide">
+          <div class="embla__slide__number">8</div>
+        </div>
+        <div class="embla__slide">
+          <div class="embla__slide__number">9</div>
+        </div>
+        <div class="embla__slide">
+          <div class="embla__slide__number">10</div>
+        </div>
       </div>
-      <!-- Slider indicators -->
-      <div class="absolute z-30 flex -translate-x-1/2 space-x-3 rtl:space-x-reverse bottom-5 left-1/2">
-          <button type="button" class="w-3 h-3 rounded-full" aria-current="true" aria-label="Slide 1" data-carousel-slide-to="0"></button>
-          <button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 2" data-carousel-slide-to="1"></button>
-          <button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 3" data-carousel-slide-to="2"></button>
-          <button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 4" data-carousel-slide-to="3"></button>
-          <button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 5" data-carousel-slide-to="4"></button>
+    </div>
+
+    <div class="embla__controls">
+      <div class="embla__buttons">
+        <button class="embla__button embla__button--prev" type="button">
+          <svg class="embla__button__svg" viewBox="0 0 532 532">
+            <path
+              fill="currentColor"
+              d="M355.66 11.354c13.793-13.805 36.208-13.805 50.001 0 13.785 13.804 13.785 36.238 0 50.034L201.22 266l204.442 204.61c13.785 13.805 13.785 36.239 0 50.044-13.793 13.796-36.208 13.796-50.002 0a5994246.277 5994246.277 0 0 0-229.332-229.454 35.065 35.065 0 0 1-10.326-25.126c0-9.2 3.393-18.26 10.326-25.2C172.192 194.973 332.731 34.31 355.66 11.354Z"
+            ></path>
+          </svg>
+        </button>
+
+        <button class="embla__button embla__button--next" type="button">
+          <svg class="embla__button__svg" viewBox="0 0 532 532">
+            <path
+              fill="currentColor"
+              d="M176.34 520.646c-13.793 13.805-36.208 13.805-50.001 0-13.785-13.804-13.785-36.238 0-50.034L330.78 266 126.34 61.391c-13.785-13.805-13.785-36.239 0-50.044 13.793-13.796 36.208-13.796 50.002 0 22.928 22.947 206.395 206.507 229.332 229.454a35.065 35.065 0 0 1 10.326 25.126c0 9.2-3.393 18.26-10.326 25.2-45.865 45.901-206.404 206.564-229.332 229.52Z"
+            ></path>
+          </svg>
+        </button>
       </div>
-      <!-- Slider controls -->
-      <button type="button" class="absolute top-0 start-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-prev>
-          <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
-              <svg class="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
-              </svg>
-              <span class="sr-only">Previous</span>
-          </span>
-      </button>
-      <button type="button" class="absolute top-0 end-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-next>
-          <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
-              <svg class="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
-              </svg>
-              <span class="sr-only">Next</span>
-          </span>
-      </button>
+
+      <div class="embla__dots"></div>
+    </div>
   </div>
-    </div>
-    <div class="flex flex-col items-center w-full bg-light-grey mt-2">
-      <form>
-        <input id="myInput" type="file" style="visibility: hidden" multiple="false" />
-      </form>
-      <div class="flex justify-center mb-6">
-        <img id="uploadIcon" src="/upload_photo_grey_light.svg" alt="Upload Icon"/>
-      </div>
-      <div class="flex justify-center">
-        <p class="text-base text-dark-grey leading-body">drag and drop to&nbsp;</p>
-        <p class="text-base underline text-dark-grey leading-body">upload</p>
-      </div>
-      <div class="flex justify-center mt-4">
-        <p class="text-dark-grey text-secondary leading-secondary">PNG, JPEG, JPG</p>
-      </div>
-    </div>
   </div>`;
-
-  const carouselImages = document.querySelector("#image-carousel");
-  const imageCount = carouselImages.children.length;
-  const dots = Array.from(document.querySelectorAll("button[data-index"));
-  let currentIndex = 0;
-  
-  function updateCarousel() {
-    const translateClass = `-translate-x-[$currentIndex * 100}%]`;
-  
-    carouselImages.classList.add(translateClass);
-    updateDots();
-  }
-  
-  function updateDots() {
-    dots.forEach((dot, index) => {
-      dot.className = `mx-1 w-3 h-3 rounded-full cursor-pointer`;
-      dot.classList.add(index === currentIndex ? "bg-grey" : "bg-medium-grey");
-    });
-  }
-  
-  dots.forEach((dot, index) => {
-    dot.addEventListener("click", () => {
-      currentIndex = index;
-      updateCarousel();
-    });
-  });
-  
-  updateCarousel();
-
 }
 
 async function displayCircle(circleData) { 
