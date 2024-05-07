@@ -3,7 +3,8 @@ module.exports = {
   mode: "jit",
   content: [
     "./src/**/*.ejs",
-    "./src/public/*.js"
+    "./src/public/*.js",
+    "./node_modules/flowbite/**/*.js"
 ],
 theme: {
   fontFamily: {
@@ -19,8 +20,10 @@ theme: {
       'gradient-darker-blue': 'rgba(12, 18, 28, 0.5)',
       'grey': '#3A3A3A',
       'overlay-bg': 'rgba(0, 0, 0, 0.6)',
+      'light-grey': '#D9D9D9',
       'medium-grey': '#565656',
       'dark-grey': '#737373',
+      'text-grey': '#484848'
     },
     fontSize: {
       'h1': '29px',
@@ -28,11 +31,13 @@ theme: {
       'body': '17px',
       'secondary': '12px',
       'tertiary': '10px',
+      '26': '26px',
       '24': '24px',
       '20': '20px',
       '15': '15px',
       '14': '14px',
       '13': '13px',
+      '11': '11px'
     },
     lineHeight: {
       'h1': '40px',
@@ -42,23 +47,30 @@ theme: {
       'tertiary': '14px',
     },
     width: {
+      '932': '932px',
+      '430': '430px',
+      '380': '380px',
       '325': '325px',
       '234': '234px',
+      '207': '207px',
       'input-box': '377px',
       '100': '100px',
       '110': '110px',
       '180': '180px',
-      '42': '42px'
+      '42': '42px',
+      '58': '58px'
     },
     height: {
       '932': '932px',
       '230': '230px',
       '100': '100px',
+      'header': '105px',
       '110': '110px',
       '27': '27px',
       '180': '180px',
       '42': '42px',
-      '228':'228px'
+      '228':'228px',
+      'navbar': '85px',
     },
     boxShadow: {
       'background-shadow': 'inset 0 0 100px -30px rgba(0, 0, 0, 0.2)'
@@ -70,17 +82,21 @@ theme: {
       '12.75': '12.75px'
     },
     margin: {
-      '4': '4px'
+      '4': '4px',
     },
     outline: {
       '1': '1px'
     },
     spacing: {
       '22': '22px'
+    },
+    padding: {
+      '20': '20px'
     }
   },
 },
 plugins: [
   require('@tailwindcss/forms'),
+  require('flowbite/plugin')
 ],
 }
