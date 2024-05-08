@@ -1,0 +1,19 @@
+.dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+  
+.dot {
+    width: 10px;
+    height: 10px;
+    background: gray;
+    border-radius: 50%;
+    cursor: pointer;
+    margin: 0 5px;
+}
+  
+.dot--active {
+    background: black;
+}

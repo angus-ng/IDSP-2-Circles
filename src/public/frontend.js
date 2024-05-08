@@ -707,77 +707,80 @@ async function displayCreateAlbum () {
   section.classList.remove("imageUploadSection");
 }
 
-async function displayCreateAlbumPreview() {
-  pageName.innerHTML = `New Album`;
+function displayCreateAlbumPreview() {
+  pageName.textContent = "New Album";
 
-  leftHeaderButton.innerHTML = `<img src="/close_icon_light.svg" alt="Close Button" id="closeButton"></img>`;
-  rightHeaderButton.innerHTML = `<img src="/next_button_light.svg" alt="Next Button" id="albumNext"></img>`;
+  leftHeaderButton.innerHTML = `<img src="/close_icon_light.svg" alt="Close Button" id="closeButton">`;
+  rightHeaderButton.innerHTML = `<img src="/next_button_light.svg" alt="Next Button" id="albumNext">`;
 
   const pageContent = document.querySelector("#pageContent");
   pageContent.innerHTML = `
-  <div class="font-light text-dark-grey">select which photos you want to add to your album</div>
-  <div id="createNewAlbum" class="flex flex-col items-center bg-light-mode w-430 z-10">
-    <div class="embla__viewport">
-      <div class="embla__container">
-        <div class="embla__slide">
-          <div class="embla__slide__number">1</div>
+    <div class="font-light text-dark-grey">Select which photos you want to add to your album</div>
+    <div id="createNewAlbum" class="flex flex-col items-center bg-light-mode w-430 z-10">
+      <div id="my-keen-slider" class="keen-slider overflow-hidden">
+        <div class="keen-slider__slide">
+          <img src="/hi.jpg" alt="image1">
         </div>
-        <div class="embla__slide">
-          <div class="embla__slide__number">2</div>
+        <div class="keen-slider__slide">
+          <img src="/hi.jpg" alt="image2">
         </div>
-        <div class="embla__slide">
-          <div class="embla__slide__number">3</div>
+        <div class="keen-slider__slide">
+          <img src="/hi.jpg" alt="image3">
         </div>
-        <div class="embla__slide">
-          <div class="embla__slide__number">4</div>
-        </div>
-        <div class="embla__slide">
-          <div class="embla__slide__number">5</div>
-        </div>
-        <div class="embla__slide">
-          <div class="embla__slide__number">6</div>
-        </div>
-        <div class="embla__slide">
-          <div class="embla__slide__number">7</div>
-        </div>
-        <div class="embla__slide">
-          <div class="embla__slide__number">8</div>
-        </div>
-        <div class="embla__slide">
-          <div class="embla__slide__number">9</div>
-        </div>
-        <div class="embla__slide">
-          <div class="embla__slide__number">10</div>
+        <div class="keen-slider__slide">
+          <img src="/hi.jpg" alt="image4">
         </div>
       </div>
-    </div>
+    </div>`;
 
-    <div class="embla__controls">
-      <div class="embla__buttons">
-        <button class="embla__button embla__button--prev" type="button">
-          <svg class="embla__button__svg" viewBox="0 0 532 532">
-            <path
-              fill="currentColor"
-              d="M355.66 11.354c13.793-13.805 36.208-13.805 50.001 0 13.785 13.804 13.785 36.238 0 50.034L201.22 266l204.442 204.61c13.785 13.805 13.785 36.239 0 50.044-13.793 13.796-36.208 13.796-50.002 0a5994246.277 5994246.277 0 0 0-229.332-229.454 35.065 35.065 0 0 1-10.326-25.126c0-9.2 3.393-18.26 10.326-25.2C172.192 194.973 332.731 34.31 355.66 11.354Z"
-            ></path>
-          </svg>
-        </button>
+    function navigation(slider) {
+      let wrapper, dots;
+    
+      function createDiv(className) {
+        const div = document.createElement("div");
+        className.split(" ").forEach((name) => div.classList.add(name));
+        return div;
+      }
 
-        <button class="embla__button embla__button--next" type="button">
-          <svg class="embla__button__svg" viewBox="0 0 532 532">
-            <path
-              fill="currentColor"
-              d="M176.34 520.646c-13.793 13.805-36.208 13.805-50.001 0-13.785-13.804-13.785-36.238 0-50.034L330.78 266 126.34 61.391c-13.785-13.805-13.785-36.239 0-50.044 13.793-13.796 36.208-13.796 50.002 0 22.928 22.947 206.395 206.507 229.332 229.454a35.065 35.065 0 0 1 10.326 25.126c0 9.2-3.393 18.26-10.326 25.2-45.865 45.901-206.404 206.564-229.332 229.52Z"
-            ></path>
-          </svg>
-        </button>
-      </div>
-
-      <div class="embla__dots"></div>
-    </div>
-  </div>
-  </div>`;
+      function setupWrapper() {
+        wrapper = createDiv("navigation-wrapper");
+        slider.container.parentNode.appendChild(wrapper);
+        wrapper.appendChild(slider.container);
+      }
+    
+      function setupDots() {
+        dots = createDiv("dots");
+        slider.track.details.slides.forEach((_e, idx) => {
+          const dot = createDiv("dot");
+          dot.addEventListener("click", () => slider.moveToIdx(idx));
+          dots.appendChild(dot);
+        });
+        wrapper.appendChild(dots);
+      }
+    
+      slider.on("created", () => {
+        setupWrapper();
+        setupDots();
+      });
+    
+      slider.on("slideChanged", () => {
+        if (dots && dots.children) {
+          const currentIndex = slider.track.details.rel;
+          Array.from(dots.children).forEach((dot, idx) => {
+            dot.classList.toggle("dot--active", idx === currentIndex);
+          });
+        }
+      });
+    }
+    
+    const slider = new KeenSlider("#my-keen-slider", {
+      loop: false,
+      slidesPerView: 1,
+      spacing: 10,
+      initial: 0
+    }, [navigation]);
 }
+
 
 async function displayCircle(circleData) { 
   pageName.innerHTML = ""
