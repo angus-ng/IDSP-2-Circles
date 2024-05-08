@@ -1,7 +1,7 @@
 import DBClient from "../../../PrismaClient";
 import ICircle from "../../../interfaces/circle.interface";
 import ICircleService from "./ICircleService";
-import { Circle } from '@prisma/client'
+import { Circle, User } from '@prisma/client'
 
 export class CircleService implements ICircleService {
   readonly _db: DBClient = DBClient.getInstance();
@@ -119,21 +119,9 @@ export class CircleService implements ICircleService {
 
     return circleArr;
   }
+  async getMembers(id: string): Promise<User[] | null> {
+      const users = await this._db.prisma.user.findMany()
 
-  async getMembers (circleId: string) {
-    const members = await this._db.prisma.userCircle.findMany({
-        select: {
-            user: {
-                select: {
-                    username: true,
-                    profilePicture: true
-                }
-            }
-        },
-        where: {
-            circleId: circleId
-        }
-    })
-    return members;
+      return users
   }
 }

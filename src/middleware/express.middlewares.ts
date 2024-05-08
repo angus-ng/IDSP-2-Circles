@@ -1,40 +1,57 @@
 import express, { Application } from "express";
 import path from "path";
-import session, { MemoryStore } from "express-session";
+import session from "express-session";
 import morgan from "morgan";
-import 'dotenv/config';
-
-// import  Redis  from "ioredis";
-// import connectRedis from "connect-redis";
-
-// const RedisStore = connectRedis(session);
-// const redisClient = new Redis({
-//   host: process.env.REDIS_HOST,
-//   port: process.env.REDIS_PORT,
-//   username: "default", // optional
-//   password: process.env.REDIS_PASSWORD, // optional
-//   db: 0, //optional
-   
-// });
+import Redis from "ioredis";
+const RedisStore = require("connect-redis").default
 
 module.exports = (app : Application) => {
-  app.set("views", path.join(__dirname, "..", "areas"));
-  app.set('view engine', 'ejs');
-  app.use(express.static(path.join(__dirname, "..", "public")));
+  app.use(express.static("public"));
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
   app.use(morgan("tiny"));
-  app.use(
-    session({
-      secret: "secret",
-      resave: false,
-      saveUninitialized: false,
-      // store: new RedisStore({client: redisClient}),
-      cookie: {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production" ? true : false,
-        maxAge: 24 * 60 * 60 * 1000,
-      },
+
+  if (process.env.NODE_ENV === "production") {
+    const redisClient = new Redis({
+      port: Number(process.env.REDIS_PORT),
+      host: process.env.REDIS_HOST,
+      username: process.env.REDIS_USERNAME,
+      password: process.env.REDIS_PASSWORD
+    });
+
+    redisClient.on("connect", () => console.log("Redis Connected"))
+
+    let redisStore = new RedisStore({
+      client: redisClient,
+      prefix: "myapp:",
     })
-  );
+
+    app.use(
+      session({
+        secret: process.env.SESSION_SECRET!,
+        resave: false,
+        saveUninitialized: false,
+        store: redisStore,
+        cookie: {
+          httpOnly: true,
+          secure: true,
+          maxAge: 24 * 60 * 60 * 1000,
+        },
+      })
+    );
+  } else {
+    console.log("using memory store")
+    app.use(
+      session({
+        secret: "keyboard cat",
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+          httpOnly: true,
+          secure: false,
+          maxAge: 24 * 60 * 60 * 1000,
+        },
+      })
+    );
+  }
 };

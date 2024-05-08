@@ -441,3 +441,24 @@ Argument `username` is missing.
 2024-05-03, 11:00:57 a.m. - 500 - Cannot read properties of undefined (reading 'username')
 2024-05-03, 11:00:58 a.m. - 500 - Cannot read properties of undefined (reading 'username')
 2024-05-03, 11:05:14 a.m. - 500 - Cannot read properties of undefined (reading 'username')
+2024-05-06, 1:33:51 p.m. - 500 - Failed to lookup view "C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\dist\areas\frontend\index" in views directory "C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\dist\areas"
+2024-05-06, 2:20:21 p.m. - 500 - Failed to lookup view "C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\dist\areas\frontend\index" in views directory "C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\dist\areas"
+2024-05-06, 2:26:29 p.m. - 500 - Failed to lookup view "C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\src\frontend\index" in views directory "C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\src\areas"
+2024-05-06, 2:35:15 p.m. - 500 - Cannot find module 'html'
+Require stack:
+- C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\node_modules\express\lib\view.js
+- C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\node_modules\express\lib\application.js
+- C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\node_modules\express\lib\express.js
+- C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\node_modules\express\index.js
+- C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\src\areas\circle\controllers\circle.controller.ts
+- C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\src\server.ts
+2024-05-06, 2:42:16 p.m. - 500 - Cannot find module 'html'
+Require stack:
+- C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\node_modules\express\lib\view.js
+- C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\node_modules\express\lib\application.js
+- C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\node_modules\express\lib\express.js
+- C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\node_modules\express\index.js
+- C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\src\areas\circle\controllers\circle.controller.ts
+- C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\src\server.ts
+2024-05-06, 2:58:55 p.m. - 500 - Failed to lookup view "circle/views/dashboard" in views directory "C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\dist\areas"
+2024-05-06, 3:12:50 p.m. - 500 - Failed to lookup view "C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\dist\areas\frontend\index" in views directory "C:\Users\maxli\Downloads\BCIT\Term 2\IDSP Circles\IDSP-2-Circles\dist\areas"

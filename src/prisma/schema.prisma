@@ -5,7 +5,8 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
@@ -34,12 +35,12 @@ model User {
 }
 
 model Follows {
-  follower      User   @relation("follower", fields: [followerName], references: [username])
-  followerName  String
-  following     User   @relation("following", fields: [followingName], references: [username])
-  followingName String
+  follower    User   @relation("follower", fields: [followerId], references: [id])
+  followerId  String
+  following   User   @relation("following", fields: [followingId], references: [id])
+  followingId String
 
-  @@id([followerName, followingName])
+  @@id([followerId, followingId])
 }
 
 model Circle {

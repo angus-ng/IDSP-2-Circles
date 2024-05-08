@@ -33,7 +33,7 @@ async function handleSelectFile() {
 }
 
 async function uploadFile(file) {
-  // console.log(file);
+  console.log(file);
   const formData = new FormData();
   formData.append("file", file);
   try {
@@ -88,14 +88,10 @@ async function getSessionFromBackend() {
 }
 
 async function getCircle(circleId) {
-  try{
-    const response = await fetch(`/circle/${circleId}`)
-    responseJson = await response.json()
+  try {
+    const response = await fetch(`/circle/${circleId}`);
+    const responseJson = await response.json();
 
-    console.log(responseJson)
-    return responseJson
-    
-  } catch (err) {
-
-  }
+    return responseJson;
+  } catch (err) {}
 }

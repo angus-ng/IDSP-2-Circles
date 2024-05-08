@@ -8,5 +8,5 @@ export default interface ICircleService {
     checkMembership(id: string, currentUser: string): Promise<boolean>
     getCircle(id: string): Promise<Circle | null>
     listCircles(currentUser: string): Promise<{circle: Circle}[]>
-    getMembers(id: string): Promise<{user: {username: string, profilePicture: string}}[] | null>
+    getMembers(id: string): Promise<User[] | null>
 }

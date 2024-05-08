@@ -27,10 +27,10 @@ class UserController implements IController {
   async unfollow(req: Request, res: Response) {
   }
   async getFollowers(req: Request, res: Response) {
-    
+    await this._service.getFollowers("A_A")
   }
   async getFollowing(req: Request, res: Response) {
-
+    await this._service.getFollowing("A_A")
   }
 
 }
