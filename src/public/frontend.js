@@ -15,8 +15,12 @@ async function initiatePage() {
   currentLocalUser = username;
   console.log(username);
   if (!currentLocalUser) {
+    header.classList.add("hidden");
+    nav.classList.add("hidden");
     await displayLoginPage();
   } else {
+    header.classList.remove("hidden");
+    nav.classList.remove("hidden");
     await displayExplore();
   }
 }
@@ -28,8 +32,8 @@ async function main() {
 main();
 
 function displayLoginPage() {
-  pageName.innerHTML = "Login";
-  pageContent.innerHTML = `<div id="loginPage" class="flex flex-col items-center rounded-lg mt-10 w-full z-10">
+  pageContent.innerHTML = `
+  <div id="loginPage" class="flex flex-col items-center rounded-lg mt-20 w-full z-10">
     <div class="flex-shrink-0 mt-2 mb-6">
         <img src="/logo_with_wordmark_light.svg" alt="Logo with Wordmark">  
     </div>
@@ -156,7 +160,7 @@ header.addEventListener("click", async (event) => {
   if (albumNextButton) {
     const { success, data } = await getListOfCircles();
     if (success && data) {
-      const circleRender = await renderListOfCircles(data);
+      const circleRender = await displayListOfCircles(data);
       console.log(circleRender)
       showCreateOrAddToCircle(circleRender)
       return;
@@ -280,9 +284,9 @@ async function displayCreateCircle() {
 
   const pageContent = document.querySelector("#pageContent");
   pageContent.innerHTML = `
-    <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full z-10">
+    <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full">
         <div class="shrink-0 mt-14 mb-6 justify-center">
-            <img id="circleImage" src="/placeholder_image.svg" alt="Placeholder Image" class="object-cover w-234 h-230 rounded-full">                     
+            <img id="circleImage" src="/placeholder_image.svg" alt="Placeholder Image" class="object-cover w-234 h-230 rounded-full cursor-pointer">                     
         </div>
     
         <div class="flex-1 fixed bottom-10 px-4">
@@ -370,7 +374,7 @@ async function displayInviteFriends() {
       <p>search or add friends to collaborate with in</p>
       <p>your circle</p>
     </div>
-    <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full z-10">
+    <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full">
       <div class="relative w-full h-9 mt-8">
         <form>
           <input class="w-380 px-14 py-2 border-grey border-2 rounded-input-box" placeholder="search friends"/>
@@ -390,7 +394,7 @@ async function displayInviteFriends() {
             </div>
             <div class="flex-none w-58">
               <form>
-                <input type="checkbox" id="add" name="add">
+                <input type="checkbox" id="add" name="add" class="cursor-pointer">
               </form>
             </div>
           </div>
@@ -413,9 +417,9 @@ async function displayCreateCirclePreview() {
   next.src = "/create_button_light.svg";
 
   pageContent.innerHTML = `
-    <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full z-10">
+    <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full">
           <div class="flex-shrink-0 mt-20 mb-4">
-              <img id="circleImage" src="/placeholder_image.svg" alt="Placeholder Image" class="object-cover w-234 h-230 rounded-full">                     
+              <img id="circleImage" src="/placeholder_image.svg" alt="Placeholder Image" class="object-cover w-234 h-230 rounded-full cursor-pointer">                     
           </div>
           <div class="flex justify-center my-5 relative w-full">
             <div class="flex justify-center items-center">
@@ -557,7 +561,7 @@ async function displayNavBar() {
       newCircleNameInput = "";
       const { success, data } = await getListOfCircles();
       if (success && data) {
-        const circleRender = await renderListOfCircles(data);
+        const circleRender = await displayListOfCircles(data);
         await displayProfile(circleRender);
         //update friendCounter here via id when implemented
         //update profilePicture when implemented
@@ -589,7 +593,7 @@ async function getListOfCircles() {
 
 async function displayProfile(circleRender, albumRender){
   pageContent.innerHTML = `
-  <div id="profilePage" class="py-10 mb-4 w-full z-10">
+  <div id="profilePage" class="py-10 mb-4 w-full">
     <div class="flex justify-center mb-4">
       <img id="profilePicture" src="/placeholder_image.svg" class="w-110 h-110 object-cover rounded-full"></img>
     </div>
@@ -635,12 +639,12 @@ async function displayProfile(circleRender, albumRender){
   })
 }
 
-async function renderListOfCircles(data) {
+async function displayListOfCircles(data) {
   // console.log(data)
   let newArr = data.map((obj) => {
     return `
       <div id="${obj.circle.id}" class="circle">
-        <img src="${obj.circle.picture}" class="rounded-full w-100 h-100 object-cover"/></img>
+        <img src="${obj.circle.picture}" class="rounded-full w-100 h-100 object-cover cursor-pointer"/></img>
         <p class="text-center text-secondary">${obj.circle.name}</p>
       </div>`;
   });
@@ -656,18 +660,21 @@ async function displayCreateAlbum () {
   rightHeaderButton.innerHTML = "";
 
   pageContent.innerHTML = `
-  <div class="font-light text-dark-grey">select which photos you want to add to your album</div>
-  <div id="createNewAlbum" class="flex flex-col justify-center py-10 my-48 w-full z-10">
+  <div class="font-light text-11 justify-center text-center text-dark-grey w-full">
+      <p>select which photos you want to add to</p>
+      <p class="">your album</p>
+  </div>
+  <div id="createNewAlbum" class="flex flex-col justify-center py-10 my-24 w-full">
     <div class="flex flex-col items-center">
       <form>
-        <input id="myInput" type="file" style="visibility: hidden" multiple="false" />
+        <input id="myInput" type="file" class="hidden" multiple="false" />
       </form>
       <div class="flex justify-center mb-6">
         <img id="uploadIcon" src="/upload_photo_light.svg" alt="Upload Icon"/>
       </div>
       <div class="flex justify-center">
         <p class="text-base text-grey leading-body">drag and drop to&nbsp;</p>
-        <p class="text-base underline text-grey leading-body">upload</p>
+        <p class="text-base underline text-grey leading-body cursor-pointer">upload</p>
       </div>
       <div class="flex justify-center mt-4">
         <p class="text-grey text-secondary leading-secondary">PNG, JPEG, JPG</p>
@@ -718,23 +725,41 @@ function displayCreateAlbumPreview() {
   pageContent.innerHTML = `
     <div class="font-light text-11 justify-center text-center text-dark-grey w-full">
       <p>select which photos you want to add to</p>
-      <p>your album</p>
+      <p class="">your album</p>
     </div>
-    <div id="createNewAlbum" class="flex flex-col items-center bg-light-mode w-430 z-10">
-      <div class="w-full">
+    <div id="createNewAlbum" class="flex flex-col items-center bg-light-mode w-430 p-2">
+      <div class="w-full mt-10">
         <div id="my-keen-slider" class="keen-slider overflow-hidden">
           <div class="keen-slider__slide">
-            <img src="/hi.jpg" alt="image1">
+            <img class="rounded-12.75" src="/hi.jpg" alt="image1">
           </div>
           <div class="keen-slider__slide">
-            <img src="/hi.jpg" alt="image2">
+            <img class="rounded-12.75" src="/hi.jpg" alt="image2">
           </div>
           <div class="keen-slider__slide">
-            <img src="/hi.jpg" alt="image3">
+            <img class="rounded-12.75" src="/hi.jpg" alt="image3">
           </div>
           <div class="keen-slider__slide">
-            <img src="/hi.jpg" alt="image4">
+            <img class="rounded-12.75" src="/hi.jpg" alt="image4">
           </div>
+        </div>
+      </div>
+      <div class="w-full mt-3">
+        <h1 class="text-h2 leading-h2 font-medium">Upload more files<h1>
+      </div>
+      <div class="flex flex-col items-center bg-light-grey w-full h-230 mt-3 p-5 border-t border-spacing-2 border-dashed border-grey">
+        <form class="hidden">
+          <input id="myInput" type="file" class="hidden" multiple="false" />
+        </form>
+        <div class="flex justify-center mt-8 mb-5">
+          <img id="uploadIcon" src="/upload_photo_grey_light.svg" alt="Upload Icon"/>
+        </div>
+        <div class="flex justify-center">
+          <p class="text-base text-dark-grey leading-body">drag and drop to&nbsp;</p>
+          <p class="text-base underline text-dark-grey leading-body cursor-pointer">upload</p>
+        </div>
+        <div class="flex justify-center mt-4">
+          <p class="text-dark-grey text-secondary leading-secondary">PNG, JPEG, JPG</p>
         </div>
       </div>
     </div>`;

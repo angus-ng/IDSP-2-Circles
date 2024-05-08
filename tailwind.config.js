@@ -73,6 +73,7 @@ theme: {
       '228':'228px',
       'image': '215px',
       'navbar': '85px',
+      '400': '400px'
     },
     boxShadow: {
       'background-shadow': 'inset 0 0 100px -30px rgba(0, 0, 0, 0.2)'
