@@ -15,12 +15,8 @@ async function initiatePage() {
   currentLocalUser = username;
   console.log(username);
   if (!currentLocalUser) {
-    header.classList.add("hidden");
-    nav.classList.add("hidden");
     await displayLoginPage();
   } else {
-    header.classList.remove("hidden");
-    nav.classList.remove("hidden");
     await displayExplore();
   }
 }
@@ -497,11 +493,14 @@ async function displayCreateCirclePreview() {
 async function displayExplore() {
   pageName.innerHTML = "Explore";
   pageContent.innerHTML = "";
+  rightHeaderButton.innerHTML = `<img src="/map_icon_light.svg" alt="Map Icon"</img>`;
+  header.classList.remove("hidden");
   await displayNavBar();
 }
 
 async function displayNavBar() {
   const nav = document.querySelector("#nav");
+  nav.classList.remove("hidden");
   nav.innerHTML = `<div class="border-b border-dark-grey"></div>
 
     <footer class="w-full flex justify-between items-center pt-4 pb-5 px-6 bg-light-mode-bg">
