@@ -695,6 +695,7 @@ async function displayCreateAlbum () {
       console.log(files)
       if (files.length > 0) {
         await displayCreateAlbumPreview();
+        await cleanUpSectionEventListener();
       }
     });
   }
@@ -715,24 +716,27 @@ function displayCreateAlbumPreview() {
 
   const pageContent = document.querySelector("#pageContent");
   pageContent.innerHTML = `
-    <div class="font-light text-dark-grey">Select which photos you want to add to your album</div>
+    <div class="font-light text-11 justify-center text-center text-dark-grey w-full">
+      <p>select which photos you want to add to</p>
+      <p>your album</p>
+    </div>
     <div id="createNewAlbum" class="flex flex-col items-center bg-light-mode w-430 z-10">
-    <div class="w-screen block">
-      <div id="my-keen-slider" class="keen-slider overflow-hidden">
-        <div class="keen-slider__slide">
-          <img src="/hi.jpg" alt="image1">
-        </div>
-        <div class="keen-slider__slide">
-          <img src="/hi.jpg" alt="image2">
-        </div>
-        <div class="keen-slider__slide">
-          <img src="/hi.jpg" alt="image3">
-        </div>
-        <div class="keen-slider__slide">
-          <img src="/hi.jpg" alt="image4">
+      <div class="w-full">
+        <div id="my-keen-slider" class="keen-slider overflow-hidden">
+          <div class="keen-slider__slide">
+            <img src="/hi.jpg" alt="image1">
+          </div>
+          <div class="keen-slider__slide">
+            <img src="/hi.jpg" alt="image2">
+          </div>
+          <div class="keen-slider__slide">
+            <img src="/hi.jpg" alt="image3">
+          </div>
+          <div class="keen-slider__slide">
+            <img src="/hi.jpg" alt="image4">
+          </div>
         </div>
       </div>
-    </div>
     </div>`;
 
     function navigation(slider) {
@@ -779,7 +783,9 @@ function displayCreateAlbumPreview() {
       loop: false,
       slidesPerView: 1,
       spacing: 10,
-      initial: 0
+      initial: 0,
+      drag: true,
+      dragStartThreshold: 10
     }, [navigation]);
 }
 

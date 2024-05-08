@@ -17,3 +17,13 @@
 .dot--active {
     background: black;
 }
+
+.keen-slider {
+    overflow: hidden;
+    cursor: grab;
+  }
+  
+  .keen-slider__slide {
+    flex: 0 0 100%;
+    height: auto;
+  }
