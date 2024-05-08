@@ -92,6 +92,7 @@ header.addEventListener("click", async (event) => {
   const createCircleButton = event.target.closest("#createCircleButton");
   const closeButton = event.target.closest("#closeButton");
   const albumNextButton = event.target.closest("#albumNext")
+  const backButtonAlbum = event.target.closest("#backButtonAlbum")
 
   if (nextButtonInviteFriends) {
     const circleName = document.querySelector("#circleName");
@@ -161,6 +162,10 @@ header.addEventListener("click", async (event) => {
       showCreateOrAddToCircle(circleRender)
       return;
     }
+  }
+
+  if (backButtonAlbum) {
+    displayCircle()
   }
 });
 
