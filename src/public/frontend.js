@@ -717,6 +717,7 @@ function displayCreateAlbumPreview() {
   pageContent.innerHTML = `
     <div class="font-light text-dark-grey">Select which photos you want to add to your album</div>
     <div id="createNewAlbum" class="flex flex-col items-center bg-light-mode w-430 z-10">
+    <div class="w-screen block">
       <div id="my-keen-slider" class="keen-slider overflow-hidden">
         <div class="keen-slider__slide">
           <img src="/hi.jpg" alt="image1">
@@ -731,6 +732,7 @@ function displayCreateAlbumPreview() {
           <img src="/hi.jpg" alt="image4">
         </div>
       </div>
+    </div>
     </div>`;
 
     function navigation(slider) {
