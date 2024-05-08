@@ -824,7 +824,7 @@ async function displayCircle(circleData) {
   console.log(circleData.circle.albums)
   const albumList = circleData.circle.albums.map((obj) => {
     return `
-  <div class="w-180 h-min relative" id="${obj.id}">
+  <div class="w-180 h-min relative album" id="${obj.id}">
     <img class="w-180 max-h-56 h-min rounded-xl object-cover" src="${obj.photos[0].src}"/>
     <div class="m-2 text-secondary font-semibold absolute inset-0 flex items-end justify-start">
       <p class="text-light-mode-bg">${obj.name}</p>
@@ -866,6 +866,20 @@ async function displayCircle(circleData) {
       </div>
     </div>
   </div>`
+
+  const albumListTarget = document.querySelector("#albumList")
+  albumListTarget.addEventListener("click", async function (event) {
+    event.preventDefault()
+    const albumDiv = event.target.closest(".album")
+    if (albumDiv){
+      if(albumDiv.hasAttribute("id")) {
+        let { success, data, error } = await getAlbum(albumDiv.id)
+        if (success && data) {
+          await displayAlbum(data)
+        }
+      }
+    }
+  })
 }
 
 async function cleanUpSectionEventListener() {
@@ -943,4 +957,42 @@ async function showCreateOrAddToCircle(circleRender) {
   document.querySelector("#createNewCircle").addEventListener("click", async function (event) {
     console.log("MAKE A NEW CIRCLE PROCESS")
   })
+}
+
+async function displayAlbum(albumData){
+  console.log(albumData)
+  leftHeaderButton.innerHTML = `
+  <img src="/back_button_icon_light.svg" alt="Back Button" id="backButtonAlbum"></img>
+  `;
+
+  pageName.innerHTML = `${albumData.name}`
+  
+  const memberList = albumData.circle.UserCircle.map((obj) => {
+    return `<img src="${obj.user.profilePicture}" class="w-16 h-16 rounded-full object-cover"></img>`
+  })
+  const photoList = albumData.photos.map((obj) => {
+    return `<div class="w-180 h-min relative photo" id="${obj.id}">
+    <img class="w-180 max-h-56 h-min rounded-xl object-cover" src="${obj.src}"/>
+  </div>`
+  })
+
+
+  console.log(albumList)
+
+  pageContent.innerHTML = `<div>
+    <div id="memberList" class="flex mt-8 justify-center">
+      ${memberList.join("")}
+    </div>
+    <div class="mt-4">
+      <p class="flex justify-center font-medium text-lg">${albumData.circle.name}</p>
+    </div>
+    <div class="grid grid-cols-5 place-items-center mt-12 mb-2">
+      <p class="grid-span-1 text-base font-medium">${albumData.photos.length} Photos</p>
+    </div>
+    <div id="photoList" class="pb-28">
+      <div class="columns-2 gap-4 space-y-4 grid-flow-row">
+        ${photoList.join("")}
+      </div>
+    </div>
+  </div>`
 }

@@ -5,34 +5,26 @@ import { Album } from '@prisma/client'
 import { ensureAuthenticated } from "../../../middleware/authentication.middleware";
 import { handleUpload } from "../../../helper/HandleSingleUpload";
 import multer from 'multer';
-import { handleMultipleUpload } from "../../../helper/HandleMultipleUploads";
+import { handleMultipleUpload } from "../../../helper/HandleMultiplePhotos";
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 class AlbumController implements IController {
-  public path = "/circle";
+  public path = "/album";
   public router = Router();
   private _service: IAlbumService;
 
-  constructor(circleService: IAlbumService) {
+  constructor(albumService: IAlbumService) {
     this.initializeRoutes();
-    this._service = circleService;
+    this._service = albumService;
   }
 
   private initializeRoutes() {
-    this.router.get(`${this.path}/create`, ensureAuthenticated, this.showDashboard);
-    this.router.post(`${this.path}/create`, ensureAuthenticated, upload.none(),  this.createAlbum); 
+    this.router.post(`${this.path}/create`, ensureAuthenticated, upload.none(), this.createAlbum); 
     this.router.post(`${this.path}/upload`, ensureAuthenticated, upload.single("file"), this.uploadImages); 
     this.router.get(`${this.path}/:id`, ensureAuthenticated, this.showAlbum);
-    //this.router.get(`${this.path}/:id/delete`, ensureAuthenticated, this.deleteCircle);
-    //this.router.get(`${this.path}/:id/invite`, ensureAuthenticated, this.showInvite);
-    //this.router.post(`${this.path}/:id/invite`, ensureAuthenticated, this.circleInvite);
     this.router.post(`${this.path}/list`, ensureAuthenticated, this.getAlbumList);
-  }
-
-  private showDashboard = async (req:Request, res:Response) => {
-    res.render('circle/views/dashboard')
   }
 
   private uploadImages = async (req: Request, res: Response) => {
@@ -62,68 +54,33 @@ class AlbumController implements IController {
         //throw err;
     }
   }
-
-//   private deleteCircle = async (req:Request, res:Response) => {
-//     try {
-//       let loggedInUser = req.user!.username
-
-//         const { id } = req.params
-//         await this._service.deleteCircle(id, loggedInUser) //this method also checks if its the owner of the circle, maybe a check should be done separately
-//         res.redirect("/");
-//     } catch (err) {
-//         throw err;
-//     }
-//   }
+  
   private showAlbum = async (req:Request, res:Response) => {
     try {
       const { id } = req.params
-
+      console.log(id)
       //ensure user is a member of the circle
       let loggedInUser = req.user!.username
       const member = await this._service.checkMembership(id, loggedInUser)
       if (!member){
-        return res.redirect("/")
+        return res.status(200).json({ success: true, data:null });
       }
-      
-      const circle = await this._service.getAlbum(id)
-      console.log(circle)
-      res.render('circle/views/circle');
+
+      const album = await this._service.getAlbum(id)
+      // console.log(album)
+      res.status(200).json({success: true, data:album});
 
     } catch (err) {
       throw err;
     }
   }
-//   private showInvite = async (req:Request, res:Response) => {
-//     const { id } = req.params
-//     //ensure user is a member of the circle
-//     let loggedInUser = req.user!.username
-//     const member = await this._service.checkMembership(id, loggedInUser)
-//     if (!member){
-//       return res.redirect("/")
-//     }
-//     res.render('circle/views/invite')
-//   }
-  
-//   private circleInvite = async (req:Request, res:Response) => {
-//     let loggedInUser = req.user!.username
-
-//     console.log(req.body)
-    
-//     //change to verify selected are friends of current user
-
-
-    
-    
-
-//     res.redirect("/")
-//   }
 
   private getAlbumList = async (req:Request, res:Response) => {
     let loggedInUser = req.user!.username
     console.log (loggedInUser)
-    const circles = await this._service.listAlbums(loggedInUser)
+    const albums = await this._service.listAlbums(loggedInUser)
 
-    res.json({success: true, data: circles})
+    res.json({success: true, data: albums})
   }
 }
 

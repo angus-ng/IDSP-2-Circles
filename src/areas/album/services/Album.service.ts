@@ -1,3 +1,4 @@
+import { name } from "ejs";
 import DBClient from "../../../PrismaClient";
 import IAlbumService from "./IAlbumService";
 import { Album } from '@prisma/client'
@@ -68,25 +69,66 @@ export class AlbumService implements IAlbumService {
         }
     })
 
+    const albumCircleId = await this._db.prisma.album.findUnique({
+        select: {
+            circleId: true
+        },
+        where: {
+            id: id
+        }
+    })
+
+    if (!albumCircleId || !user) {
+        return false;
+    } 
+
     const membership = await this._db.prisma.userCircle.findFirst({
         where: {
-            userId: String(user!.id),
-            circleId: id
+            userId: user.id,
+            circleId: albumCircleId.circleId
         }
     })
 
     if (!membership) {
         return false;
     }
+
     return true
   }
-  async getAlbum (id: string): Promise<Album | null> {
-    const circle = await this._db.prisma.circle.findUnique({
+
+  async getAlbum (id: string): Promise<any> {
+    const album = await this._db.prisma.album.findUnique({
+        select: {
+                name: true,
+                id: true,
+            photos: {
+                select: {
+                    id: true,
+                    src: true,
+                }
+            },
+            circle: {
+                select: {
+                    id: true,
+                    name: true,
+                    UserCircle: {
+                        select: {
+                            user: {
+                                select: {
+                                    username: true,
+                                    profilePicture: true
+                                }
+                            }
+                        }
+                    }
+                },
+            },
+        },
         where: {
             id: id
         }
     })
-    return circle;
+    return album;
   }
 
   async listAlbums (currentUser:string): Promise<{album: Album}[] | void> { // remove this void when implemented

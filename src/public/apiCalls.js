@@ -99,3 +99,16 @@ async function getCircle(circleId) {
 
   }
 }
+
+async function getAlbum(albumId) {
+  try{
+    const response = await fetch(`/album/${albumId}`)
+    responseJson = await response.json()
+
+    console.log(responseJson)
+    return responseJson
+    
+  } catch (err) {
+
+  }
+}

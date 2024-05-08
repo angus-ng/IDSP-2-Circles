@@ -12,6 +12,8 @@ import { CircleService } from "./areas/circle/services";
 import { AuthenticationService } from "./areas/authentication/services/Authentication.service";
 // import SearchController from "./areas/search/controllers/search.controller";
 // import { SearchService } from "./areas/search/services";
+import AlbumController from './areas/album/controllers/album.controller';
+import { AlbumService } from './areas/album/services';
 
 
 const cloudinary = require("cloudinary").v2;
@@ -25,6 +27,7 @@ cloudinary.config({
 const server = new App([
   new LandingController(),
   new CircleController(new CircleService()),
+  new AlbumController(new AlbumService()),
   // new PostController(new PostService()),
   new AuthenticationController(new AuthenticationService()),
   // new SearchController(new SearchService())
