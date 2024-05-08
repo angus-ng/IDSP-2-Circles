@@ -115,7 +115,14 @@ header.addEventListener("click", async (event) => {
 
   if (createCircleButton) {
     console.log("yes");
-    handleCreateCircle();
+    const { success, data } = await handleCreateCircle();
+    const circleId = data;
+    if (success && data) {
+      const { success, data, error } = await getCircle(circleId)
+      if (success && data) {
+        await displayCircle(data)
+      }
+    }
     nav.classList.remove("hidden");
     return;
   }
@@ -165,7 +172,15 @@ header.addEventListener("click", async (event) => {
   }
 
   if (backButtonAlbum) {
-    displayCircle()
+    const span = event.target.closest("span")
+    if (span) {
+      if (span.hasAttribute("id")){
+        let { success, data, error } = await getCircle(span.id)
+        if (success && data) {
+          await displayCircle(data)
+        }
+      }
+    }
   }
 });
 
@@ -822,6 +837,10 @@ async function displayCreateAlbumPreview() {
 }
 
 async function displayCircle(circleData) { 
+  leftHeaderButton.innerHTML = `
+  <img src="/back_button_icon_light.svg" alt="Back Button" id="backButton"></img>
+  `;
+  rightHeaderButton.innerHTML = "";
   pageName.innerHTML = ""
   const memberList = circleData.members.map((obj) => {
     return `<img src="${obj.user.profilePicture}" class="w-42 h-42 rounded-full object-cover"></img>`
@@ -967,7 +986,9 @@ async function showCreateOrAddToCircle(circleRender) {
 async function displayAlbum(albumData){
   console.log(albumData)
   leftHeaderButton.innerHTML = `
+  <span id="${albumData.circle.id}">
   <img src="/back_button_icon_light.svg" alt="Back Button" id="backButtonAlbum"></img>
+  </span
   `;
 
   pageName.innerHTML = `${albumData.name}`

@@ -55,8 +55,13 @@ class CircleController implements IController {
           }
           //validate the input before passing it to our db
           
-        this._service.createCircle(newCircleInput)
-        res.status(200).json({ success: true, data:newCircleInput });
+        const newCircle = await this._service.createCircle(newCircleInput)
+
+        if (!newCircle){
+          return res.status(200).json({ success: true, data:null});
+        }
+
+        res.status(200).json({ success: true, data: newCircle.id });
     } catch (err) {
         //throw err;
     }

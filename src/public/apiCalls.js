@@ -1,24 +1,27 @@
 async function handleCreateCircle() {
-  const circlePhoto = document.querySelector("#circleImage");
-  const circleName = document.querySelector("#circleName").value;
+  try {
+    const circlePhoto = document.querySelector("#circleImage");
+    const circleName = document.querySelector("#circleName").value;
 
-  if (circleName) {
+    if (!circleName) {
+      return {success: true, data: null};
+    }
+
     const formData = new FormData();
     formData.append("picturePath", circlePhoto.src);
     formData.append("circleName", circleName);
-    console.log("formdata", formData);
-    try {
+    // console.log("formdata", formData);
       const response = await fetch("/circle/create", {
         method: "POST",
         body: formData,
       });
-      console.log("Circle created successfully:", await response.json());
-      return await response.json();
-    } catch (error) {
+      // console.log("Circle created successfully:", await response.json());
+      const jsonResponse = await response.json();
+      return jsonResponse;
       //throw new Error(error);
-    }
-  } else {
-    //throw new Error("Please put a name for your circle");
+
+  } catch (error) {
+    return {success: true, data: null, error}
   }
 }
 
