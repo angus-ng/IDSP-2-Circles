@@ -1375,20 +1375,12 @@ input:checked + .toggle-bg {
   z-index: 1;
 }
 
-.m-10 {
-  margin: 2.5rem;
-}
-
 .m-2 {
   margin: 0.5rem;
 }
 
 .m-auto {
   margin: auto;
-}
-
-.m-20 {
-  margin: 5rem;
 }
 
 .mx-4 {
@@ -1574,6 +1566,10 @@ input:checked + .toggle-bg {
   height: 110px;
 }
 
+.h-16 {
+  height: 4rem;
+}
+
 .h-180 {
   height: 180px;
 }
@@ -1661,6 +1657,10 @@ input:checked + .toggle-bg {
 
 .w-12 {
   width: 3rem;
+}
+
+.w-16 {
+  width: 4rem;
 }
 
 .w-180 {
