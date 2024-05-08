@@ -28,8 +28,8 @@ async function main() {
 main();
 
 function displayLoginPage() {
-  pageName.innerHTML = "Login";
-  pageContent.innerHTML = `<div id="loginPage" class="flex flex-col items-center rounded-lg mt-10 w-full z-10">
+  pageContent.innerHTML = `
+  <div id="loginPage" class="flex flex-col items-center rounded-lg mt-20 w-full z-10">
     <div class="flex-shrink-0 mt-2 mb-6">
         <img src="/logo_with_wordmark_light.svg" alt="Logo with Wordmark">  
     </div>
@@ -164,7 +164,7 @@ header.addEventListener("click", async (event) => {
   if (albumNextButton) {
     const { success, data } = await getListOfCircles();
     if (success && data) {
-      const circleRender = await renderListOfCircles(data);
+      const circleRender = await displayListOfCircles(data);
       console.log(circleRender)
       showCreateOrAddToCircle(circleRender)
       return;
@@ -300,9 +300,9 @@ async function displayCreateCircle() {
 
   const pageContent = document.querySelector("#pageContent");
   pageContent.innerHTML = `
-    <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full z-10">
+    <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full">
         <div class="shrink-0 mt-14 mb-6 justify-center">
-            <img id="circleImage" src="/placeholder_image.svg" alt="Placeholder Image" class="object-cover w-234 h-230 rounded-full">                     
+            <img id="circleImage" src="/placeholder_image.svg" alt="Placeholder Image" class="object-cover w-234 h-230 rounded-full cursor-pointer">                     
         </div>
     
         <div class="flex-1 fixed bottom-10 px-4">
@@ -390,7 +390,7 @@ async function displayInviteFriends() {
       <p>search or add friends to collaborate with in</p>
       <p>your circle</p>
     </div>
-    <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full z-10">
+    <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full">
       <div class="relative w-full h-9 mt-8">
         <form>
           <input class="w-380 px-14 py-2 border-grey border-2 rounded-input-box" placeholder="search friends"/>
@@ -410,7 +410,7 @@ async function displayInviteFriends() {
             </div>
             <div class="flex-none w-58">
               <form>
-                <input type="checkbox" id="add" name="add">
+                <input type="checkbox" id="add" name="add" class="cursor-pointer">
               </form>
             </div>
           </div>
@@ -433,9 +433,9 @@ async function displayCreateCirclePreview() {
   next.src = "/create_button_light.svg";
 
   pageContent.innerHTML = `
-    <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full z-10">
+    <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full">
           <div class="flex-shrink-0 mt-20 mb-4">
-              <img id="circleImage" src="/placeholder_image.svg" alt="Placeholder Image" class="object-cover w-234 h-230 rounded-full">                     
+              <img id="circleImage" src="/placeholder_image.svg" alt="Placeholder Image" class="object-cover w-234 h-230 rounded-full cursor-pointer">                     
           </div>
           <div class="flex justify-center my-5 relative w-full">
             <div class="flex justify-center items-center">
@@ -513,11 +513,14 @@ async function displayCreateCirclePreview() {
 async function displayExplore() {
   pageName.innerHTML = "Explore";
   pageContent.innerHTML = "";
+  rightHeaderButton.innerHTML = `<img src="/map_icon_light.svg" alt="Map Icon"</img>`;
+  header.classList.remove("hidden");
   await displayNavBar();
 }
 
 async function displayNavBar() {
   const nav = document.querySelector("#nav");
+  nav.classList.remove("hidden");
   nav.innerHTML = `<div class="border-b border-dark-grey"></div>
 
     <footer class="w-full flex justify-between items-center pt-4 pb-5 px-6 bg-light-mode-bg">
@@ -577,7 +580,7 @@ async function displayNavBar() {
       newCircleNameInput = "";
       const { success, data } = await getListOfCircles();
       if (success && data) {
-        const circleRender = await renderListOfCircles(data);
+        const circleRender = await displayListOfCircles(data);
         await displayProfile(circleRender);
         //update friendCounter here via id when implemented
         //update profilePicture when implemented
@@ -607,7 +610,7 @@ async function getListOfCircles() {
 
 async function displayProfile(circleRender, albumRender){
   pageContent.innerHTML = `
-  <div id="profilePage" class="py-10 mb-4 w-full z-10">
+  <div id="profilePage" class="py-10 mb-4 w-full">
     <div class="flex justify-center mb-4">
       <img id="profilePicture" src="/placeholder_image.svg" class="w-110 h-110 object-cover rounded-full"></img>
     </div>
@@ -654,12 +657,12 @@ async function displayProfile(circleRender, albumRender){
   await cleanUpSectionEventListener()
 }
 
-async function renderListOfCircles(data) {
+async function displayListOfCircles(data) {
   // console.log(data)
   let newArr = data.map((obj) => {
     return `
       <div id="${obj.circle.id}" class="circle">
-        <img src="${obj.circle.picture}" class="rounded-full w-100 h-100 object-cover"/></img>
+        <img src="${obj.circle.picture}" class="rounded-full w-100 h-100 object-cover cursor-pointer"/></img>
         <p class="text-center text-secondary">${obj.circle.name}</p>
       </div>`;
   });
@@ -675,18 +678,21 @@ async function displayCreateAlbum () {
   rightHeaderButton.innerHTML = "";
 
   pageContent.innerHTML = `
-  <div class="font-light text-dark-grey">select which photos you want to add to your album</div>
-  <div id="createNewAlbum" class="flex flex-col justify-center py-10 my-48 w-full z-10">
+  <div class="font-light text-11 justify-center text-center text-dark-grey w-full">
+      <p>select which photos you want to add to</p>
+      <p class="">your album</p>
+  </div>
+  <div id="createNewAlbum" class="flex flex-col justify-center py-10 my-24 w-full">
     <div class="flex flex-col items-center">
       <form>
-        <input id="myInput" type="file" style="visibility: hidden" multiple="false" />
+        <input id="myInput" type="file" class="hidden" multiple="false" />
       </form>
       <div class="flex justify-center mb-6">
         <img id="uploadIcon" src="/upload_photo_light.svg" alt="Upload Icon"/>
       </div>
       <div class="flex justify-center">
         <p class="text-base text-grey leading-body">drag and drop to&nbsp;</p>
-        <p class="text-base underline text-grey leading-body">upload</p>
+        <p class="text-base underline text-grey leading-body cursor-pointer">upload</p>
       </div>
       <div class="flex justify-center mt-4">
         <p class="text-grey text-secondary leading-secondary">PNG, JPEG, JPG</p>
@@ -714,6 +720,7 @@ async function displayCreateAlbum () {
       console.log(files)
       if (files.length > 0) {
         await displayCreateAlbumPreview();
+        await cleanUpSectionEventListener();
       }
     });
   }
@@ -726,114 +733,105 @@ async function displayCreateAlbum () {
   section.classList.remove("imageUploadSection");
 }
 
-async function displayCreateAlbumPreview() {
-  pageName.innerHTML = `New Album`;
+function displayCreateAlbumPreview() {
+  pageName.textContent = "New Album";
 
-  leftHeaderButton.innerHTML = `<img src="/close_icon_light.svg" alt="Close Button" id="closeButton"></img>`;
-  rightHeaderButton.innerHTML = `<img src="/next_button_light.svg" alt="Next Button" id="albumNext"></img>`;
+  leftHeaderButton.innerHTML = `<img src="/close_icon_light.svg" alt="Close Button" id="closeButton">`;
+  rightHeaderButton.innerHTML = `<img src="/next_button_light.svg" alt="Next Button" id="albumNext">`;
 
   const pageContent = document.querySelector("#pageContent");
   pageContent.innerHTML = `
-  <div class="font-light text-dark-grey">select which photos you want to add to your album</div>
-  <div id="createNewAlbum" class="flex flex-col items-center bg-light-mode w-430 z-10">
-    <div class="flex-shrink-0 w-full items-center mt-20 mb-4">
-      <div id="indicators-carousel" class="relative w-full" data-carousel="static">
-      <!-- Carousel wrapper -->
-      <div class="relative h-56 overflow-hidden rounded-lg md:h-96">
-          <!-- Item 1 -->
-          <div class="hidden duration-700 ease-in-out" data-carousel-item="active">
-              <img src="/hi.jpg" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-          </div>
-          <!-- Item 2 -->
-          <div class="hidden duration-700 ease-in-out" data-carousel-item>
-              <img src="/hi.jpg" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-          </div>
-          <!-- Item 3 -->
-          <div class="hidden duration-700 ease-in-out" data-carousel-item>
-              <img src="/hi.jpg" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-          </div>
-          <!-- Item 4 -->
-          <div class="hidden duration-700 ease-in-out" data-carousel-item>
-              <img src="/hi.jpg" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-          </div>
-          <!-- Item 5 -->
-          <div class="hidden duration-700 ease-in-out" data-carousel-item>
-              <img src="/hi.jpg" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-          </div>
-      </div>
-      <!-- Slider indicators -->
-      <div class="absolute z-30 flex -translate-x-1/2 space-x-3 rtl:space-x-reverse bottom-5 left-1/2">
-          <button type="button" class="w-3 h-3 rounded-full" aria-current="true" aria-label="Slide 1" data-carousel-slide-to="0"></button>
-          <button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 2" data-carousel-slide-to="1"></button>
-          <button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 3" data-carousel-slide-to="2"></button>
-          <button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 4" data-carousel-slide-to="3"></button>
-          <button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 5" data-carousel-slide-to="4"></button>
-      </div>
-      <!-- Slider controls -->
-      <button type="button" class="absolute top-0 start-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-prev>
-          <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
-              <svg class="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
-              </svg>
-              <span class="sr-only">Previous</span>
-          </span>
-      </button>
-      <button type="button" class="absolute top-0 end-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-next>
-          <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
-              <svg class="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
-              </svg>
-              <span class="sr-only">Next</span>
-          </span>
-      </button>
-  </div>
+    <div class="font-light text-11 justify-center text-center text-dark-grey w-full">
+      <p>select which photos you want to add to</p>
+      <p class="">your album</p>
     </div>
-    <div class="flex flex-col items-center w-full bg-light-grey mt-2">
-      <form>
-        <input id="myInput" type="file" style="visibility: hidden" multiple="false" />
-      </form>
-      <div class="flex justify-center mb-6">
-        <img id="uploadIcon" src="/upload_photo_grey_light.svg" alt="Upload Icon"/>
+    <div id="createNewAlbum" class="flex flex-col items-center bg-light-mode w-430 p-2">
+      <div class="w-full mt-10">
+        <div id="my-keen-slider" class="keen-slider overflow-hidden">
+          <div class="keen-slider__slide">
+            <img class="rounded-12.75" src="/hi.jpg" alt="image1">
+          </div>
+          <div class="keen-slider__slide">
+            <img class="rounded-12.75" src="/hi.jpg" alt="image2">
+          </div>
+          <div class="keen-slider__slide">
+            <img class="rounded-12.75" src="/hi.jpg" alt="image3">
+          </div>
+          <div class="keen-slider__slide">
+            <img class="rounded-12.75" src="/hi.jpg" alt="image4">
+          </div>
+        </div>
       </div>
-      <div class="flex justify-center">
-        <p class="text-base text-dark-grey leading-body">drag and drop to&nbsp;</p>
-        <p class="text-base underline text-dark-grey leading-body">upload</p>
+      <div class="w-full mt-3">
+        <h1 class="text-h2 leading-h2 font-medium">Upload more files<h1>
       </div>
-      <div class="flex justify-center mt-4">
-        <p class="text-dark-grey text-secondary leading-secondary">PNG, JPEG, JPG</p>
+      <div class="flex flex-col items-center bg-light-grey w-full h-230 mt-3 p-5 border-t border-spacing-2 border-dashed border-grey">
+        <form class="hidden">
+          <input id="myInput" type="file" class="hidden" multiple="false" />
+        </form>
+        <div class="flex justify-center mt-8 mb-5">
+          <img id="uploadIcon" src="/upload_photo_grey_light.svg" alt="Upload Icon"/>
+        </div>
+        <div class="flex justify-center">
+          <p class="text-base text-dark-grey leading-body">drag and drop to&nbsp;</p>
+          <p class="text-base underline text-dark-grey leading-body cursor-pointer">upload</p>
+        </div>
+        <div class="flex justify-center mt-4">
+          <p class="text-dark-grey text-secondary leading-secondary">PNG, JPEG, JPG</p>
+        </div>
       </div>
-    </div>
-  </div>`;
+    </div>`;
 
-  const carouselImages = document.querySelector("#image-carousel");
-  const imageCount = carouselImages.children.length;
-  const dots = Array.from(document.querySelectorAll("button[data-index"));
-  let currentIndex = 0;
-  
-  function updateCarousel() {
-    const translateClass = `-translate-x-[$currentIndex * 100}%]`;
-  
-    carouselImages.classList.add(translateClass);
-    updateDots();
-  }
-  
-  function updateDots() {
-    dots.forEach((dot, index) => {
-      dot.className = `mx-1 w-3 h-3 rounded-full cursor-pointer`;
-      dot.classList.add(index === currentIndex ? "bg-grey" : "bg-medium-grey");
-    });
-  }
-  
-  dots.forEach((dot, index) => {
-    dot.addEventListener("click", () => {
-      currentIndex = index;
-      updateCarousel();
-    });
-  });
-  
-  updateCarousel();
+    function navigation(slider) {
+      let wrapper, dots;
+    
+      function createDiv(className) {
+        const div = document.createElement("div");
+        className.split(" ").forEach((name) => div.classList.add(name));
+        return div;
+      }
 
+      function setupWrapper() {
+        wrapper = createDiv("navigation-wrapper");
+        slider.container.parentNode.appendChild(wrapper);
+        wrapper.appendChild(slider.container);
+      }
+    
+      function setupDots() {
+        dots = createDiv("dots");
+        slider.track.details.slides.forEach((_e, idx) => {
+          const dot = createDiv("dot");
+          dot.addEventListener("click", () => slider.moveToIdx(idx));
+          dots.appendChild(dot);
+        });
+        wrapper.appendChild(dots);
+      }
+    
+      slider.on("created", () => {
+        setupWrapper();
+        setupDots();
+      });
+    
+      slider.on("slideChanged", () => {
+        if (dots && dots.children) {
+          const currentIndex = slider.track.details.rel;
+          Array.from(dots.children).forEach((dot, idx) => {
+            dot.classList.toggle("dot--active", idx === currentIndex);
+          });
+        }
+      });
+    }
+    
+    const slider = new KeenSlider("#my-keen-slider", {
+      loop: false,
+      slidesPerView: 1,
+      spacing: 10,
+      initial: 0,
+      drag: true,
+      dragStartThreshold: 10
+    }, [navigation]);
 }
+
 
 async function displayCircle(circleData) { 
   leftHeaderButton.innerHTML = `

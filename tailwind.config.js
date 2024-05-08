@@ -53,6 +53,7 @@ theme: {
       '325': '325px',
       '234': '234px',
       '207': '207px',
+      'image': '178px',
       'input-box': '377px',
       '100': '100px',
       '110': '110px',
@@ -70,7 +71,9 @@ theme: {
       '180': '180px',
       '42': '42px',
       '228':'228px',
+      'image': '215px',
       'navbar': '85px',
+      '400': '400px'
     },
     boxShadow: {
       'background-shadow': 'inset 0 0 100px -30px rgba(0, 0, 0, 0.2)'
