@@ -584,8 +584,6 @@ async function displayNavBar() {
 
         return;
       }
-      pageContent.innerHTML = "";
-      await cleanUpSectionEventListener()
     }
   });
 }
@@ -653,6 +651,7 @@ async function displayProfile(circleRender, albumRender){
       }
     }
   })
+  await cleanUpSectionEventListener()
 }
 
 async function renderListOfCircles(data) {
@@ -911,6 +910,7 @@ async function cleanUpSectionEventListener() {
   section.removeEventListener("mousedown", sectionUploadClick, true)
   section.removeEventListener("dragover", sectionDrag, true)
   section.removeEventListener("drop", sectionDrop, true)
+  console.log("CLEANED")
 }
 
 async function sectionUploadClick(event) {
