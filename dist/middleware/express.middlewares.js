@@ -4,15 +4,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const path_1 = __importDefault(require("path"));
 const express_session_1 = __importDefault(require("express-session"));
 const morgan_1 = __importDefault(require("morgan"));
 const ioredis_1 = __importDefault(require("ioredis"));
 const RedisStore = require("connect-redis").default;
 module.exports = (app) => {
-    app.set("views", path_1.default.join(__dirname, "..", "areas"));
-    app.set('view engine', 'ejs');
-    app.use(express_1.default.static(path_1.default.join(__dirname, "..", "public")));
+    app.use(express_1.default.static("public"));
     app.use(express_1.default.urlencoded({ extended: true }));
     app.use(express_1.default.json());
     app.use((0, morgan_1.default)("tiny"));
