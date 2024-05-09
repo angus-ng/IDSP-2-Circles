@@ -84,8 +84,12 @@ theme: {
       'checkbox': '3px',
       '12.75': '12.75px'
     },
+    borderWidth: {
+      'circle': '0.75px',
+    },
     margin: {
       '4': '4px',
+      'header': '105px'
     },
     outline: {
       '1': '1px'
