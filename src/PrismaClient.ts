@@ -5,18 +5,21 @@ import { Client, createClient } from "@libsql/client";
 
 class DBClient {
   public prisma: PrismaClient;
-  public libSQL: Client;
+  public libSQL!: Client;
+  
   private static instance: DBClient;
   private constructor() {
+    if(process.env.NODE_ENV ==="production") {
+      const libsql = createClient({
+        url: `${process.env.TURSO_DATABASE_URL}`,
+        authToken: `${process.env.TURSO_AUTH_TOKEN}`
+      });
 
-    const libsql = createClient({
-      url: `${process.env.TURSO_DATABASE_URL}`,
-      authToken: `${process.env.TURSO_AUTH_TOKEN}`
-    });
-    const adapter = new PrismaLibSQL(libsql)
-    // @ts-ignore
-    this.prisma = new PrismaClient({ adapter });
-    this.libSQL = libsql;
+      this.prisma = new PrismaClient({ adapter });
+      this.libSQL = libsql;
+    } else {
+      this.prisma = new PrismaClient()
+    }
   }
 
   // Use singleton to avoid creating unnecesary connections
