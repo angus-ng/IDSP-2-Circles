@@ -1,36 +1,42 @@
 import { Request, Response, NextFunction, Router } from "express";
 import IController from "../../../interfaces/controller.interface";
 import IUserService from "../services/IUserService";
-import { Circle } from '@prisma/client'
 import { ensureAuthenticated } from "../../../middleware/authentication.middleware";
-import { handleUpload } from "../../../helper/HandleSingleUpload";
-import multer from 'multer';
+import { UserService } from "../services";
 
 class UserController implements IController {
   public path = "/user";
   public router = Router();
   private _service: IUserService;
 
-  constructor(circleService: IUserService) {
+  constructor(userService: IUserService) {
     this.initializeRoutes();
-    this._service = circleService;
+    this._service = userService;
   }
 
   private initializeRoutes() {
     this.router.post(`${this.path}/follow`, ensureAuthenticated, this.follow);
     this.router.post(`${this.path}/unfollow`, ensureAuthenticated, this.unfollow);
-    this.router.get(`${this.path}/getFollowers`, ensureAuthenticated, this.getFollowers)
-    this.router.get(`${this.path}/getFollowing`, ensureAuthenticated, this.getFollowing)
+    this.router.get(`${this.path}/getFollowers/:followingName`, ensureAuthenticated, this.getFollowers)
+    this.router.get(`${this.path}/getFollowing/:followerName`, ensureAuthenticated, this.getFollowing)
   }
   async follow(req: Request, res: Response) {
   }
   async unfollow(req: Request, res: Response) {
   }
   async getFollowers(req: Request, res: Response) {
-    await this._service.getFollowers("A_A")
+    const followerName = req.params.followerName
+    console.log(req.params.followerName,"getFollowers")
+    await this._service.getFollowers(followerName)
   }
   async getFollowing(req: Request, res: Response) {
-    await this._service.getFollowing("A_A")
+    const followingName = req.params.followingName
+
+    console.log(req.query, req.params,"getFollowing")
+    const userservice = new UserService()
+    //console.log(this._service,"hello")
+    await userservice getFollowing(followingName)
+    //await this._service.getFollowing("A_A")
   }
 
 }

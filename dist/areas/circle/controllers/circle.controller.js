@@ -61,18 +61,20 @@ class CircleController {
                 throw err;
             }
         });
-        this.showCircle = (req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.getCircle = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const { id } = req.params;
                 //ensure user is a member of the circle
                 let loggedInUser = req.user.username;
                 const member = yield this._service.checkMembership(id, loggedInUser);
                 if (!member) {
-                    return res.redirect("/");
+                    return res.status(200).json({ success: true, data: null });
                 }
                 const circle = yield this._service.getCircle(id);
                 console.log(circle);
-                res.render('circle/views/circle');
+                const members = yield this._service.getMembers(id);
+                console.log(members);
+                return res.status(200).json({ success: true, data: { circle, members } });
             }
             catch (err) {
                 throw err;
@@ -107,7 +109,7 @@ class CircleController {
         this.router.get(`${this.path}/create`, authentication_middleware_1.ensureAuthenticated, this.showDashboard);
         this.router.post(`${this.path}/create`, authentication_middleware_1.ensureAuthenticated, upload.none(), this.createCircle);
         this.router.post(`${this.path}/upload`, authentication_middleware_1.ensureAuthenticated, upload.single("file"), this.uploadImage);
-        this.router.get(`${this.path}/:id`, authentication_middleware_1.ensureAuthenticated, this.showCircle);
+        this.router.get(`${this.path}/:id`, authentication_middleware_1.ensureAuthenticated, this.getCircle);
         this.router.get(`${this.path}/:id/delete`, authentication_middleware_1.ensureAuthenticated, this.deleteCircle);
         this.router.get(`${this.path}/:id/invite`, authentication_middleware_1.ensureAuthenticated, this.showInvite);
         this.router.post(`${this.path}/:id/invite`, authentication_middleware_1.ensureAuthenticated, this.circleInvite);

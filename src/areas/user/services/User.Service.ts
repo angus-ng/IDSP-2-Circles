@@ -1,7 +1,6 @@
+import { User } from "@prisma/client";
 import DBClient from "../../../PrismaClient";
-import ICircle from "../../../interfaces/circle.interface";
 import IUserService from "./IUserService";
-import { Circle, User } from '@prisma/client'
 
 export class UserService implements IUserService {
   readonly _db: DBClient = DBClient.getInstance();
@@ -31,16 +30,55 @@ export class UserService implements IUserService {
         throw new Error(error)
     }
   }
-  async getFollowers(followingName: string): Promise<void | User[]> {
-      this._db.prisma.follows.findMany({
-        where:{
-            followingName:followingName
-        }, include: {
-            follower:{}
+  async getFollowers(followingName: string): Promise<void | string[]> {
+    if (!followingName) {
+        return
+      }
+      try {
+        const listOfFollowings = []
+        const user = await this._db.prisma.user.findUnique({
+          where: {
+            username: followingName
+          },
+          include: {
+            following: {}
+          }
+        })
+        if (!user) {
+            return 
         }
-      })
+        for (let follower of user.following) {
+          listOfFollowings.push(follower.followerId)
+        }
+        return listOfFollowings
+      } catch (error) {
+        throw new Error("Unable to find followings")
+      }
   }
-  async getFollowing(followerName: string): Promise<void | User[]> {
-      
+  async getFollowing(followerName: string): Promise<void | string[]> {
+    if (!followerName) {
+        return
+      }
+      try {
+        const listOfFollowings = []
+        const user = await this._db.prisma.user.findUnique({
+          where: {
+            username: followerName
+          },
+          include: {
+            followers: {}
+          }
+        })
+        if (!user) {
+            return 
+        }
+        for (let following of user.followers) {
+          listOfFollowings.push(following.followingId)
+        }
+        return listOfFollowings
+      } catch (error) {
+        throw new Error("Unable to find followings")
+  
+      }
   }
 }

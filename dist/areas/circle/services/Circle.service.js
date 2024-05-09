@@ -93,6 +93,17 @@ class CircleService {
     getCircle(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const circle = yield this._db.prisma.circle.findUnique({
+                include: {
+                    albums: {
+                        select: {
+                            id: true,
+                            name: true,
+                            photos: {
+                                take: 1
+                            }
+                        }
+                    }
+                },
                 where: {
                     id: id
                 }
@@ -117,6 +128,12 @@ class CircleService {
             });
             console.log(circleArr);
             return circleArr;
+        });
+    }
+    getMembers(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const users = yield this._db.prisma.user.findMany();
+            return users;
         });
     }
 }

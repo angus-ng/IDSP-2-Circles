@@ -95,3 +95,11 @@ async function getCircle(circleId) {
     return responseJson;
   } catch (err) {}
 }
+
+async function getFollowing(followerName) {
+  console.log(followerName);
+  const response = await fetch(`/user/getFollowing/${followerName}`);
+  const responseJson = await response.json();
+
+  return responseJson;
+}

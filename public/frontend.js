@@ -12,10 +12,11 @@ let addPictureSrc;
 async function initiatePage() {
   const username = await getSessionFromBackend();
   currentLocalUser = username;
-  console.log(username);
   if (!currentLocalUser) {
     await displayLoginPage();
   } else {
+    console.log("hello");
+    await getFollowing("A_A");
     await displayExplore();
   }
 }
@@ -201,6 +202,7 @@ async function handleLocalAuth() {
   if (success && data) {
     currentLocalUser = data;
     await displayExplore();
+    await getFollowing("A_A");
   }
 }
 
@@ -219,7 +221,6 @@ pageContent.addEventListener("click", async (event) => {
   const localAuthButton = document.querySelector("#localAuth");
   const editButton = event.target.closest("#editButton");
   const parentId = event.target.parentElement.id;
-  console.log(parentId);
 
   if (parentId === "editButton") {
     await toggleEdit();

@@ -4,6 +4,6 @@ import { User } from "@prisma/client"
 export default interface IUserService {
     follow(followerName: string, followingName: string): Promise<void>
     unfollow(followerName: string, followingName: string): Promise<void>
-    getFollowers(followingName: string): Promise<User[] | void>
-    getFollowing(followerName: string): Promise<User[] | void>
+    getFollowers(followingName: string): Promise<string[] | void>
+    getFollowing(followerName: string): Promise<string[] | void>
 }

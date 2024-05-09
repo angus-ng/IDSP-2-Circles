@@ -9,6 +9,8 @@ import { CircleService } from "./areas/circle/services";
 // import { SettingService } from "./areas/settings/services";
 import { AlbumService } from './areas/album/services';
 import AlbumController from './areas/album/controllers/album.controller';
+import UserController from './areas/user/controller/user.controller';
+import { UserService } from './areas/user/services';
 // import SearchController from "./areas/search/controllers/search.controller";
 // import { SearchService } from "./areas/search/services";
 
@@ -26,8 +28,10 @@ const server = new App([
   new AuthenticationController(new AuthenticationService()),
   new CircleController(new CircleService()),
   new AlbumController(new AlbumService()),
+  new UserController(new UserService()),
   // new SearchController(new SearchService())
   // new SettingController(new SettingService()),
 ]);
+console.log(new UserController(new UserService()), new UserService())
 
 server.start();
