@@ -901,7 +901,7 @@ async function displayCircle(circleData) {
       <div class="mt-6 mb-2">
         <p class="text-24 font-medium">Albums</p>
       </div>
-      <div class="m-auto grid grid-cols-2 gap-4 gap-y-4">
+      <div class="columns-2 gap-4 space-y-4 grid-flow-row">
         ${albumList.join("")}
       </div>
     </div>
@@ -1020,8 +1020,8 @@ async function displayAlbum(albumData){
     return `<img src="${obj.user.profilePicture}" class="w-16 h-16 rounded-full object-cover"></img>`
   })
   const photoList = albumData.photos.map((obj) => {
-    return `<div class="w-180 h-min relative photo" id="${obj.id}">
-    <img class="w-180 max-h-56 h-min rounded-xl object-cover" src="${obj.src}"/>
+    return `<div class="w-full h-min relative photo" id="${obj.id}">
+    <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.src}"/>
   </div>`
   })
 
