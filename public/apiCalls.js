@@ -4,33 +4,46 @@ async function handleCreateCircle() {
     const circleName = document.querySelector("#circleName").value;
 
     if (!circleName) {
-      return {success: true, data: null};
+      return { success: true, data: null };
     }
 
     const formData = new FormData();
     formData.append("picturePath", circlePhoto.src);
     formData.append("circleName", circleName);
-    // console.log("formdata", formData);
-      const response = await fetch("/circle/create", {
-        method: "POST",
-        body: formData,
-      });
-      // console.log("Circle created successfully:", await response.json());
-      const jsonResponse = await response.json();
-      return jsonResponse;
-      //throw new Error(error);
-
+    const response = await fetch("/circle/create", {
+      method: "POST",
+      body: formData,
+    });
+    const jsonResponse = await response.json();
+    return jsonResponse;
   } catch (error) {
-    return {success: true, data: null, error}
+    return { success: true, data: null, error };
+  }
+}
+
+async function handleSendCircleRequest(requestee) {
+  try {
+    const circleName = document.querySelector("#circleName").value;
+    if (!circleName) {
+      return { success: true, data: null };
+    }
+    const formData = new FormData();
+    formData.append("requestee", requestee);
+    formData.append("circleName", circleName);
+    const response = await fetch("/circle/invite", {
+      method: "POST",
+      body: formData,
+    });
+    const jsonResponse = await response.json();
+    return jsonResponse;
+  } catch (error) {
+    return { success: true, data: null, error };
   }
 }
 
 async function handleCreateAlbum() {
   try {
-    
-  } catch (error) {
-
-  }
+  } catch (error) {}
 }
 
 async function handleSelectFile() {
@@ -99,37 +112,30 @@ async function getSessionFromBackend() {
 }
 
 async function getCircle(circleId) {
-  try{
-    const response = await fetch(`/circle/${circleId}`)
-    responseJson = await response.json()
+  try {
+    const response = await fetch(`/circle/${circleId}`);
+    responseJson = await response.json();
 
-    console.log(responseJson)
-    return responseJson
-    
-  } catch (err) {
-
-  }
+    console.log(responseJson);
+    return responseJson;
+  } catch (err) {}
 }
 
 async function getAlbum(albumId) {
-  try{
-    const response = await fetch(`/album/${albumId}`)
-    responseJson = await response.json()
+  try {
+    const response = await fetch(`/album/${albumId}`);
+    const responseJson = await response.json();
 
-    console.log(responseJson)
-    return responseJson
-    
-  } catch (err) {
-
-  }
+    return responseJson;
+  } catch (err) {}
 }
 
-async function handleCreateAlbum(albumObj){
+async function handleCreateAlbum(albumObj) {
   try {
     if (!albumObj.name) {
-      return {success: true, data:null}
+      return { success: true, data: null };
     }
-    console.log(albumObj)
+    console.log(albumObj);
     let response = await fetch("/album/create", {
       method: "POST",
       headers: {
@@ -139,20 +145,15 @@ async function handleCreateAlbum(albumObj){
     });
 
     const jsonResponse = await response.json();
-    console.log(jsonResponse);
 
     return jsonResponse;
-
   } catch (err) {
-    return {success: true, data:null, error: err}
+    return { success: true, data: null, error: err };
   }
 }
 
-async function getFollowing(followerName) {
-  console.log(followerName);
-  const response = await fetch(`/user/getFollowing/${followerName}`);
+async function getFriends(username) {
+  const response = await fetch(`/user/getFriends/${username}`);
   const responseJson = await response.json();
-  const response2 = await fetch(`/user/getFollowers/${followerName}`);
-  const response2Json = await response2.json();
-  return responseJson;
+  return responseJson.data;
 }

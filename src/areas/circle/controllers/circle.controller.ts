@@ -20,18 +20,12 @@ class CircleController implements IController {
   }
 
   private initializeRoutes() {
-    this.router.get(`${this.path}/create`, ensureAuthenticated, this.showDashboard);
     this.router.post(`${this.path}/create`, ensureAuthenticated, upload.none(),  this.createCircle); 
     this.router.post(`${this.path}/upload`, ensureAuthenticated, upload.single("file"), this.uploadImage); 
     this.router.get(`${this.path}/:id`, ensureAuthenticated, this.getCircle);
     this.router.get(`${this.path}/:id/delete`, ensureAuthenticated, this.deleteCircle);
-    this.router.get(`${this.path}/:id/invite`, ensureAuthenticated, this.showInvite);
-    this.router.post(`${this.path}/:id/invite`, ensureAuthenticated, this.circleInvite);
+    this.router.post(`${this.path}/invite`, ensureAuthenticated, this.circleInvite);
     this.router.post(`${this.path}/list`, ensureAuthenticated, this.getCircleList);
-  }
-
-  private showDashboard = async (req:Request, res:Response) => {
-    res.render('circle/views/dashboard')
   }
 
   private uploadImage = async (req: Request, res: Response) => {
@@ -47,7 +41,6 @@ class CircleController implements IController {
         let loggedInUser = req.user!.username
         
         const { circleName, picturePath } = req.body
-        console.log(req.body,"logged")
         const newCircleInput = {
           creator: loggedInUser, 
           name: circleName,
@@ -99,29 +92,16 @@ class CircleController implements IController {
       throw err;
     }
   }
-  private showInvite = async (req:Request, res:Response) => {
-    const { id } = req.params
-    //ensure user is a member of the circle
-    let loggedInUser = req.user!.username
-    const member = await this._service.checkMembership(id, loggedInUser)
-    if (!member){
-      return res.redirect("/")
-    }
-    res.render('circle/views/invite')
-  }
   
   private circleInvite = async (req:Request, res:Response) => {
-    let loggedInUser = req.user!.username
+    const { requestee, circleName } = req.body
 
+    console.log("inviting ",requestee, " to ", circleName)
     console.log(req.body)
     
     //change to verify selected are friends of current user
 
-
-    
-    
-
-    res.redirect("/")
+    return res.status(200).json({success: true, data: null});
   }
 
   private getCircleList = async (req:Request, res:Response) => {
@@ -134,9 +114,3 @@ class CircleController implements IController {
 }
 
 export default CircleController;
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};

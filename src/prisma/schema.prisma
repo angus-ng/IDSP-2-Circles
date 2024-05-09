@@ -5,7 +5,7 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["driverAdapters"]
 }
 
@@ -15,32 +15,44 @@ datasource db {
 }
 
 model User {
-  id             String       @id @default(cuid())
-  firstName      String?
-  lastName       String?
-  username       String       @unique
-  email          String?      @unique
-  profilePicture String
-  password       String?      @unique
-  appleId        String?      @unique
-  googleId       String?      @unique
-  facebookId     String?      @unique
-  Comment        Comment[]
-  Like           Like[]
-  UserCircle     UserCircle[]
-  Circle         Circle[]
-  Photos         Photo[]
-  followers      Follows[]    @relation("following")
-  following      Follows[]    @relation("follower")
+  id              String          @id @default(cuid())
+  firstName       String?
+  lastName        String?
+  username        String          @unique
+  email           String?         @unique
+  profilePicture  String
+  password        String?         @unique
+  appleId         String?         @unique
+  googleId        String?         @unique
+  facebookId      String?         @unique
+  Comment         Comment[]
+  Like            Like[]
+  UserCircle      UserCircle[]
+  Circle          Circle[]
+  Photos          Photo[]
+  requestsSent    FriendRequest[] @relation("requester")
+  requestReceived FriendRequest[] @relation("requestee")
+  friends         Friend[]        @relation("friend_1")
+  friendOf        Friend[]        @relation("friend_2")
 }
 
-model Follows {
-  follower    User   @relation("follower", fields: [followerId], references: [id])
-  followerId  String
-  following   User   @relation("following", fields: [followingId], references: [id])
-  followingId String
+model Friend {
+  friend_1      User   @relation("friend_1", fields: [friend_1_name], references: [username])
+  friend_1_name String
+  friend_2      User   @relation("friend_2", fields: [friend_2_name], references: [username])
+  friend_2_name String
 
-  @@id([followerId, followingId])
+  @@id([friend_1_name, friend_2_name])
+}
+
+model FriendRequest {
+  requester     User    @relation("requester", fields: [requesterName], references: [username])
+  requesterName String
+  requestee     User    @relation("requestee", fields: [requesteeName], references: [username])
+  requesteeName String
+  status        Boolean
+
+  @@id([requesterName, requesteeName])
 }
 
 model Circle {

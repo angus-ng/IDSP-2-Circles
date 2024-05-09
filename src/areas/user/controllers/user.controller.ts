@@ -14,33 +14,18 @@ class UserController implements IController {
   }
 
   private initializeRoutes() {
-    this.router.post(`${this.path}/follow`, ensureAuthenticated, this.follow);
-    this.router.post(`${this.path}/unfollow`, ensureAuthenticated, this.unfollow);
-    this.router.get(`${this.path}/getFollowers/:followingName`, ensureAuthenticated, this.getFollowers)
-    this.router.get(`${this.path}/getFollowing/:followerName`, ensureAuthenticated, this.getFollowing)
+    this.router.post(`${this.path}/follow`, ensureAuthenticated, this.friend);
+    this.router.post(`${this.path}/unfollow`, ensureAuthenticated, this.unfriend);
+    this.router.get(`${this.path}/getFriends/:username`, ensureAuthenticated, this.getFriends)
   }
-  private follow = async (req: Request, res: Response) => {
+  private friend = async (req: Request, res: Response) => {
   }
-  private unfollow = async (req: Request, res: Response) => {
+  private unfriend = async (req: Request, res: Response) => {
   }
-  private getFollowers = async (req: Request, res: Response) => {
-    const followingName = req.params.followingName
-    console.log(req.params.followingName,"getFollowers")
-    const d = await this._service.getFollowers(followingName)
-    console.log(d)
-    res.status(200).json({success: true, data: null})
-  }
-  private getFollowing = async (req: Request, res: Response) => {
-    const followerName = req.params.followerName
-    console.log(followerName , "THIS")
-
-    console.log(req.query, req.params,"getFollowing")
-    //console.log(this._service,"hello")
-    // console.log(this._service)
-    const d = await this._service.getFollowing(followerName)
-    console.log(d)
-    //await this._service.getFollowing("A_A")
-    res.status(200).json({success: true, data: null})
+  private getFriends = async (req: Request, res: Response) => {
+    const username = req.params.username
+    const friends = await this._service.getFriends(username)
+    res.status(200).json({success: true, data: friends})
   }
 
 }

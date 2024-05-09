@@ -5,13 +5,12 @@ import IUserService from "./IUserService";
 export class UserService implements IUserService {
   readonly _db: DBClient = DBClient.getInstance();
 
-  async follow(followerName:string, followingName:string) {
+  async friend(friend_1_name:string, friend_2_name:string) {
     try {
-        await this._db.prisma.follows.create({
+        await this._db.prisma.friend.create({
             data: {
-              //@ts-ignore
-                followerName: followerName,
-                followingName: followingName
+                friend_1_name: friend_1_name,
+                friend_2_name: friend_2_name
             }
         })
     } catch (error: any) {
@@ -19,75 +18,56 @@ export class UserService implements IUserService {
     }
   }
 
-  async unfollow(followerName: string, followingName: string) {
+  async unfriend(friend_1_name: string, friend_2_name: string) {
     try {
-        await this._db.prisma.follows.deleteMany({
+        await this._db.prisma.friend.deleteMany({
             where: {
-                //@ts-ignore
-                followerName: followerName,
-                followingName: followingName
+              friend_1_name: friend_1_name,
+              friend_2_name: friend_2_name
             }
         })
     } catch (error: any) {
         throw new Error(error)
     }
   }
-  async getFollowers(followingName: string): Promise<void | string[]> {
-    if (!followingName) {
+  async getFriends(username: string): Promise<void | User[]> {
+    if (!username) {
         return
       }
       try {
-        const listOfFollowers = []
+        const listOfFriendName = []
         const user = await this._db.prisma.user.findUnique({
           where: {
-            username: followingName
+            username: username
           },
           include: {
-            followers: {
-              include: {
-                follower: true
-              }
-            }
+            friends: {},
+            friendOf: {}
           }
         })
         if (!user) {
             return 
         }
-        for (let follower of user.followers) {
-          listOfFollowers.push(follower.follower.username)
+        for (let friend of user.friends) {
+          listOfFriendName.push(friend.friend_2_name)
         }
-        return listOfFollowers
-      } catch (error) {
-        throw new Error("Unable to find followings")
-      }
-  }
-  async getFollowing(followerName: string): Promise<void | string[]> {
-    if (!followerName) {
-        return
-      }
-      try {
-        const listOfFollowings = []
-        const user = await this._db.prisma.user.findUnique({
-          where: {
-            username: followerName
-          },
-          include: {
-            following: {
-              include: {
-                following: true
-              }
+        for (let friend of user.friendOf) {
+          listOfFriendName.push(friend.friend_1_name)
+        }
+
+        const listOfFriends = []
+        for (let username of listOfFriendName) {
+          const user = await this._db.prisma.user.findUnique({
+            where: {
+              username: username
             }
-          }
-        })
-        if (!user) {
-            return 
+          })
+          listOfFriends.push(user)
         }
-        for (let following of user.following) {
-          listOfFollowings.push(following.following.username)
-        }
-        return listOfFollowings
+        //@ts-ignore
+        return listOfFriends
       } catch (error) {
-        throw new Error("Unable to find followings")
+        throw new Error("Unable to find friends")
   
       }
   }

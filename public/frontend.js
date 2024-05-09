@@ -11,6 +11,7 @@ let addPictureSrc;
 let circleImgSrc;
 let albumPhotos = [];
 let albumObj = {};
+let checkedFriends = [];
 
 async function initiatePage() {
   const username = await getSessionFromBackend();
@@ -19,7 +20,6 @@ async function initiatePage() {
   if (!currentLocalUser) {
     await displayLoginPage();
   } else {
-    await getFollowing("A_A")
     await displayExplore();
   }
 }
@@ -92,13 +92,17 @@ header.addEventListener("click", async (event) => {
   const nextButton = event.target.closest("#nextButton");
   const backButton = event.target.closest("#backButton");
   const circleBackButton = event.target.closest("#circleBackButton");
-  const circlePreviewBackButton = event.target.closest("#circlePreviewBackButton");
+  const circlePreviewBackButton = event.target.closest(
+    "#circlePreviewBackButton"
+  );
   const createCircleButton = event.target.closest("#createCircleButton");
   const closeButton = event.target.closest("#closeButton");
   const albumNextButton = event.target.closest("#albumNext");
   const backButtonAlbum = event.target.closest("#backButtonAlbum");
   const createAlbumButton = event.target.closest("#createAlbum");
-  const albumConfirmationBackButton = event.target.closest("#albumConfirmationBackButton");
+  const albumConfirmationBackButton = event.target.closest(
+    "#albumConfirmationBackButton"
+  );
   const addCircleBackButton = event.target.closest("#addCircleBackButton");
 
   if (nextButtonInviteFriends) {
@@ -112,6 +116,7 @@ header.addEventListener("click", async (event) => {
   }
 
   if (nextButton) {
+    saveCheckedFriends();
     await displayCreateCirclePreview();
     circleName.value = newCircleNameInput;
     document.querySelector("#privacyCheckbox").checked = isPrivacyPublic;
@@ -121,13 +126,16 @@ header.addEventListener("click", async (event) => {
   }
 
   if (createCircleButton) {
-    console.log("yes");
+    for (let friend of checkedFriends) {
+      console.log(friend);
+      const { success, data } = await handleSendCircleRequest(friend);
+    }
     const { success, data } = await handleCreateCircle();
     const circleId = data;
     if (success && data) {
-      const { success, data, error } = await getCircle(circleId)
+      const { success, data, error } = await getCircle(circleId);
       if (success && data) {
-        await displayCircle(data)
+        await displayCircle(data);
       }
     }
     nav.classList.remove("hidden");
@@ -165,7 +173,7 @@ header.addEventListener("click", async (event) => {
     const { success, data } = await getListOfCircles();
     if (success && data) {
       const circleRender = await displayListOfCircles(data);
-      console.log(circleRender)
+      console.log(circleRender);
       showCreateOrAddToCircle(circleRender);
       return;
     }
@@ -176,12 +184,12 @@ header.addEventListener("click", async (event) => {
   }
 
   if (backButtonAlbum) {
-    const span = event.target.closest("span")
+    const span = event.target.closest("span");
     if (span) {
-      if (span.hasAttribute("id")){
-        let { success, data, error } = await getCircle(span.id)
+      if (span.hasAttribute("id")) {
+        let { success, data, error } = await getCircle(span.id);
         if (success && data) {
-          await displayCircle(data)
+          await displayCircle(data);
         }
       }
     }
@@ -201,7 +209,7 @@ header.addEventListener("click", async (event) => {
     if (success && data) {
       nav.classList.remove("hidden");
       const circleRender = await displayListOfCircles(data);
-      console.log(circleRender)
+      console.log(circleRender);
       showCreateOrAddToCircle(circleRender);
       return;
     }
@@ -216,7 +224,7 @@ header.addEventListener("click", async (event) => {
     if (success && data) {
       const { success, data, error } = await getAlbum(albumId);
       if (success && data) {
-        console.log(data)
+        console.log(data);
         await displayAlbum(data);
       }
     }
@@ -245,14 +253,14 @@ modal.addEventListener("click", async function (event) {
   }
 
   if (createAlbumModalButton) {
-    clearNewAlbum()
+    clearNewAlbum();
     modal.classList.remove("shown");
     modal.classList.add("hidden");
     await displayCreateAlbum();
   }
 
   if (createCircleModalButton) {
-    clearNewAlbum()
+    clearNewAlbum();
     modal.classList.remove("shown");
     modal.classList.add("hidden");
     await displayCreateCircle();
@@ -392,10 +400,10 @@ async function displayCreateCircle() {
   const nextButton = document.querySelector("#nextButton");
   const circlePhoto = document.querySelector("#circleImage");
 
-  circlePhoto.addEventListener("click", async function(event) {
+  circlePhoto.addEventListener("click", async function (event) {
     event.preventDefault();
     await fileInput.click();
-  })
+  });
 
   addPictureButton.addEventListener("click", async function (event) {
     console.log("clicked add picture button");
@@ -422,13 +430,35 @@ async function displayCreateCircle() {
   return;
 }
 
+async function displayListOfFriends(friends) {
+  let newArr = friends.map((friend) => {
+    return `<div class="flex items-center my-5">
+    <div class="flex-none w-58">
+      <img class="rounded w-58 h-58" src="${friend.profilePicture}" alt="${friend.username}'s profile picture"></img>
+    </div>
+    <div class="ml-8 flex-none w-207">
+      <h2 class="font-medium text-14 leading-tertiary">${friend.username}</h2>
+      <h2 class="font-light text-14 text-dark-grey">${friend.username}</h2>
+    </div>
+    <div class="flex-none w-58">
+      <form>
+        <input type="checkbox" id="add" name="add" class="cursor-pointer" value="${friend.username}">
+      </form>
+    </div>
+  </div>`;
+  });
+  return newArr;
+}
+
 async function displayInviteFriends() {
   nav.classList.add("hidden");
+  const friends = await getFriends(currentLocalUser);
+  const friendsList = await displayListOfFriends(friends);
   pageName.innerHTML = "Invite Friends";
   leftHeaderButton.innerHTML = `<img src="/back_button_icon_light.svg" alt="Back Button" id="circleBackButton"></img>`;
   rightHeaderButton.innerHTML = `<img src="/next_button_light.svg" alt="Next Button" id="nextButton"></img>`;
-  
-    pageContent.innerHTML = `
+
+  pageContent.innerHTML = `
     <div class="font-light text-11 justify-center text-center text-dark-grey w-full">
       <p>search or add friends to collaborate with in</p>
       <p>your circle</p>
@@ -442,25 +472,22 @@ async function displayInviteFriends() {
       </div>
       <div class="shrink-0 mt-10 mb-6 justify-center w-full">
         <h1 class="font-bold text-20 leading-body">Suggested Friends</h1>
-        <div id="suggestedFriends">
-          <div class="flex items-center my-5">
-            <div class="flex-none w-58">
-              <img class="rounded w-58 h-58" src="/placeholder_image.svg" alt="friend profile picture"></img>
-            </div>
-            <div class="ml-8 flex-none w-207">
-              <h2 class="font-medium text-14 leading-tertiary">username</h2>
-              <h2 class="font-light text-14 text-dark-grey">display name</h2>
-            </div>
-            <div class="flex-none w-58">
-              <form>
-                <input type="checkbox" id="add" name="add" class="cursor-pointer">
-              </form>
-            </div>
-          </div>
-        </div>
+        <div id="suggestedFriends"></div>
       </div>
     </div>
     `;
+  const suggestedFriends = document.querySelector("#suggestedFriends");
+
+  suggestedFriends.innerHTML = friendsList.join("");
+}
+
+function saveCheckedFriends() {
+  const addCheckboxes = document.querySelectorAll("#add");
+  addCheckboxes.forEach((checkbox) => {
+    if (checkbox.checked) {
+      checkedFriends.push(checkbox.value);
+    }
+  });
 }
 
 async function displayCreateCirclePreview() {
@@ -468,7 +495,7 @@ async function displayCreateCirclePreview() {
   leftHeaderButton.innerHTML = `
     <img src="/back_button_icon_light.svg" alt="Back Button" id="circlePreviewBackButton"></img>
     `;
-  
+
   pageName.innerHTML = "New Circle";
 
   const next = document.querySelector("#nextButton");
@@ -528,11 +555,13 @@ async function displayCreateCirclePreview() {
 
   const fileInput = document.querySelector("#myInput");
   const circlePhoto = document.querySelector("#circleImage");
-  document.querySelector("#circleImage").addEventListener("click", async function(event) {
+  document
+    .querySelector("#circleImage")
+    .addEventListener("click", async function (event) {
       event.preventDefault();
       await fileInput.click();
-    })
-    fileInput.addEventListener("input", async function (event) {
+    });
+  fileInput.addEventListener("input", async function (event) {
     event.preventDefault();
     const res = await handleSelectFile();
     if (res) {
@@ -670,7 +699,7 @@ async function getListOfCircles() {
   return await response.json();
 }
 
-async function displayProfile(circleRender, albumRender){
+async function displayProfile(circleRender, albumRender) {
   pageContent.innerHTML = `
   <div id="profilePage" class="container pt-8 pb-16 mb-4 w-full">
     <div class="flex justify-center mb-4">
@@ -705,22 +734,23 @@ async function displayProfile(circleRender, albumRender){
     </div>
     <div class="h-100"></div>
   </div>`;
-  document.querySelector("#circleList").addEventListener("click", async function (event){
-    const circleDiv = event.target.closest("div.circle")
-    if (circleDiv) {
-      if (circleDiv.hasAttribute("id")){
-        let { success, data, error } = await getCircle(circleDiv.id)
-        if (success && data) {
-          await displayCircle(data)
+  document
+    .querySelector("#circleList")
+    .addEventListener("click", async function (event) {
+      const circleDiv = event.target.closest("div.circle");
+      if (circleDiv) {
+        if (circleDiv.hasAttribute("id")) {
+          let { success, data, error } = await getCircle(circleDiv.id);
+          if (success && data) {
+            await displayCircle(data);
+          }
         }
       }
-    }
-  })
-  await cleanUpSectionEventListener()
+    });
+  await cleanUpSectionEventListener();
 }
 
 async function displayListOfCircles(data) {
-  // console.log(data)
   let newArr = data.map((obj) => {
     return `
       <div id="${obj.circle.id}" class="circle">
@@ -728,10 +758,10 @@ async function displayListOfCircles(data) {
         <p class="text-center text-secondary">${obj.circle.name}</p>
       </div>`;
   });
-  return newArr
+  return newArr;
 }
 
-async function displayCreateAlbum () {
+async function displayCreateAlbum() {
   pageName.innerHTML = `New Album`;
 
   leftHeaderButton.innerHTML = `
@@ -768,14 +798,13 @@ async function displayCreateAlbum () {
   const uploadSection = document.querySelector("#createNewAlbum");
 
   const fileInput = document.querySelector("#myInput");
-  
-  if (uploadSection.getAttribute('listener') !== true){
+
+  if (uploadSection.getAttribute("listener") !== true) {
     uploadSection.addEventListener("mousedown", sectionUploadClick, true);
   }
 
-  if (fileInput.getAttribute('listener') !== true) {
+  if (fileInput.getAttribute("listener") !== true) {
     fileInput.addEventListener("input", async function (event) {
-    
       const files = event.target.files;
       for (let i = 0; i < files.length; i++) {
         const file = await uploadFile(files[i]);
@@ -790,7 +819,7 @@ async function displayCreateAlbum () {
     });
   }
 
-  if (uploadSection.getAttribute('listener') !== true){
+  if (uploadSection.getAttribute("listener") !== true) {
     uploadSection.addEventListener("dragover", sectionDrag, true);
     uploadSection.addEventListener("drop", sectionDrop, true);
   }
@@ -812,7 +841,7 @@ function displayCreateAlbumPreview(albumPhotos) {
 
   const mappedPhotos = albumPhotos.map((obj) => {
     return {
-      photoSrc: obj.data
+      photoSrc: obj.data,
     };
   });
   console.log("Mapped photos:", mappedPhotos);
@@ -820,7 +849,9 @@ function displayCreateAlbumPreview(albumPhotos) {
   albumObj.photos = mappedPhotos;
 
   mappedPhotos.forEach((photo, index) => {
-    console.log(`Creating slide ${index + 1} for photo with src: ${photo.photoSrc}`);
+    console.log(
+      `Creating slide ${index + 1} for photo with src: ${photo.photoSrc}`
+    );
 
     const slideDiv = document.createElement("div");
     slideDiv.className = "keen-slider__slide";
@@ -867,50 +898,52 @@ function displayCreateAlbumPreview(albumPhotos) {
       </div>
     </div>`;
 
-    const createNewAlbum = document.querySelector("#createNewAlbum div.w-full");
-    createNewAlbum.appendChild(carouselDiv);
+  const createNewAlbum = document.querySelector("#createNewAlbum div.w-full");
+  createNewAlbum.appendChild(carouselDiv);
 
-    function navigation(slider) {
-      let wrapper, dots;
-    
-      function createDiv(className) {
-        const div = document.createElement("div");
-        className.split(" ").forEach((name) => div.classList.add(name));
-        return div;
-      }
+  function navigation(slider) {
+    let wrapper, dots;
 
-      function setupWrapper() {
-        wrapper = createDiv("navigation-wrapper");
-        slider.container.parentNode.appendChild(wrapper);
-        wrapper.appendChild(slider.container);
-      }
-    
-      function setupDots() {
-        dots = createDiv("dots");
-        slider.track.details.slides.forEach((_e, idx) => {
-          const dot = createDiv("dot");
-          dot.addEventListener("click", () => slider.moveToIdx(idx));
-          dots.appendChild(dot);
-        });
-        wrapper.appendChild(dots);
-      }
-    
-      slider.on("created", () => {
-        setupWrapper();
-        setupDots();
-      });
-    
-      slider.on("slideChanged", () => {
-        if (dots && dots.children) {
-          const currentIndex = slider.track.details.rel;
-          Array.from(dots.children).forEach((dot, idx) => {
-            dot.classList.toggle("dot--active", idx === currentIndex);
-          });
-        }
-      });
+    function createDiv(className) {
+      const div = document.createElement("div");
+      className.split(" ").forEach((name) => div.classList.add(name));
+      return div;
     }
-    
-    const slider = new KeenSlider("#carousel", {
+
+    function setupWrapper() {
+      wrapper = createDiv("navigation-wrapper");
+      slider.container.parentNode.appendChild(wrapper);
+      wrapper.appendChild(slider.container);
+    }
+
+    function setupDots() {
+      dots = createDiv("dots");
+      slider.track.details.slides.forEach((_e, idx) => {
+        const dot = createDiv("dot");
+        dot.addEventListener("click", () => slider.moveToIdx(idx));
+        dots.appendChild(dot);
+      });
+      wrapper.appendChild(dots);
+    }
+
+    slider.on("created", () => {
+      setupWrapper();
+      setupDots();
+    });
+
+    slider.on("slideChanged", () => {
+      if (dots && dots.children) {
+        const currentIndex = slider.track.details.rel;
+        Array.from(dots.children).forEach((dot, idx) => {
+          dot.classList.toggle("dot--active", idx === currentIndex);
+        });
+      }
+    });
+  }
+
+  const slider = new KeenSlider(
+    "#carousel",
+    {
       loop: true,
       mode: "free-snap",
       slides: {
@@ -921,39 +954,39 @@ function displayCreateAlbumPreview(albumPhotos) {
       loop: false,
       initial: 0,
       drag: true,
-      dragStartThreshold: 10
-    }, [navigation]);
+      dragStartThreshold: 10,
+    },
+    [navigation]
+  );
 
-    const uploadSection = document.querySelector("#dropMore")
-    const fileInput = document.querySelector("#myInput");
-    if (uploadSection.getAttribute('listener') !== true){
-      uploadSection.addEventListener("mousedown", sectionUploadClick, true);
-    }
-  
-    if (fileInput.getAttribute('listener') !== true) {
-      fileInput.addEventListener("input", async function (event) {
-      
-        const files = event.target.files;
-        for (let i = 0; i < files.length; i++) {
-          const file = await uploadFile(files[i]);
-          albumPhotos.push(file);
-        }
-        console.log("Files uploaded:", albumPhotos);
-        console.log(files.length);
-        if (files.length > 0) {
-          await displayCreateAlbumPreview(albumPhotos);
-          await cleanUpSectionEventListener();
-        }
-      });
-    }
-  
-    if (uploadSection.getAttribute('listener') !== true){
-      uploadSection.addEventListener("dragover", sectionDrag, true);
-      uploadSection.addEventListener("drop", sectionDrop, true);
-    }
-  
-    uploadSection.classList.remove("imageUploadSection");
+  const uploadSection = document.querySelector("#dropMore");
+  const fileInput = document.querySelector("#myInput");
+  if (uploadSection.getAttribute("listener") !== true) {
+    uploadSection.addEventListener("mousedown", sectionUploadClick, true);
+  }
 
+  if (fileInput.getAttribute("listener") !== true) {
+    fileInput.addEventListener("input", async function (event) {
+      const files = event.target.files;
+      for (let i = 0; i < files.length; i++) {
+        const file = await uploadFile(files[i]);
+        albumPhotos.push(file);
+      }
+      console.log("Files uploaded:", albumPhotos);
+      console.log(files.length);
+      if (files.length > 0) {
+        await displayCreateAlbumPreview(albumPhotos);
+        await cleanUpSectionEventListener();
+      }
+    });
+  }
+
+  if (uploadSection.getAttribute("listener") !== true) {
+    uploadSection.addEventListener("dragover", sectionDrag, true);
+    uploadSection.addEventListener("drop", sectionDrop, true);
+  }
+
+  uploadSection.classList.remove("imageUploadSection");
 }
 
 async function displayAlbumConfirmation() {
@@ -961,7 +994,7 @@ async function displayAlbumConfirmation() {
   console.log(albumObj);
 
   leftHeaderButton.innerHTML = `<img src="/back_button_icon_light.svg" alt="Back Button" id="albumConfirmationBackButton"></img>`;
-  
+
   pageName.innerHTML = "Post";
 
   rightHeaderButton.innerHTML = `<img src="/create_button_light.svg" alt="Create Button" id="createAlbum"></img>`;
@@ -971,7 +1004,9 @@ async function displayAlbumConfirmation() {
   carouselDiv.className = "keen-slider overflow-hidden";
 
   albumObj.photos.forEach((photo, index) => {
-    console.log(`Creating slide ${index + 1} for photo with src: ${photo.photoSrc}`);
+    console.log(
+      `Creating slide ${index + 1} for photo with src: ${photo.photoSrc}`
+    );
 
     const slideDiv = document.createElement("div");
     slideDiv.className = "keen-slider__slide";
@@ -1024,56 +1059,58 @@ async function displayAlbumConfirmation() {
       </div>
     </div>`;
 
-    const circleImage = document.querySelector("#circleImage");
-    console.log(albumObj.circleSrc);
+  const circleImage = document.querySelector("#circleImage");
+  console.log(albumObj.circleSrc);
 
-    circleImage.src = albumObj.circleSrc;
-    circleName.textContent = albumObj.circleName;
+  circleImage.src = albumObj.circleSrc;
+  circleName.textContent = albumObj.circleName;
 
-    const createNewAlbum = document.querySelector("#albumCarousel div.w-full");
-    createNewAlbum.appendChild(carouselDiv);
+  const createNewAlbum = document.querySelector("#albumCarousel div.w-full");
+  createNewAlbum.appendChild(carouselDiv);
 
-    function navigation(slider) {
-      let wrapper, dots;
-    
-      function createDiv(className) {
-        const div = document.createElement("div");
-        className.split(" ").forEach((name) => div.classList.add(name));
-        return div;
-      }
+  function navigation(slider) {
+    let wrapper, dots;
 
-      function setupWrapper() {
-        wrapper = createDiv("navigation-wrapper");
-        slider.container.parentNode.appendChild(wrapper);
-        wrapper.appendChild(slider.container);
-      }
-    
-      function setupDots() {
-        dots = createDiv("dots");
-        slider.track.details.slides.forEach((_e, idx) => {
-          const dot = createDiv("dot");
-          dot.addEventListener("click", () => slider.moveToIdx(idx));
-          dots.appendChild(dot);
-        });
-        wrapper.appendChild(dots);
-      }
-    
-      slider.on("created", () => {
-        setupWrapper();
-        setupDots();
-      });
-    
-      slider.on("slideChanged", () => {
-        if (dots && dots.children) {
-          const currentIndex = slider.track.details.rel;
-          Array.from(dots.children).forEach((dot, idx) => {
-            dot.classList.toggle("dot--active", idx === currentIndex);
-          });
-        }
-      });
+    function createDiv(className) {
+      const div = document.createElement("div");
+      className.split(" ").forEach((name) => div.classList.add(name));
+      return div;
     }
-    
-    const slider = new KeenSlider("#carousel", {
+
+    function setupWrapper() {
+      wrapper = createDiv("navigation-wrapper");
+      slider.container.parentNode.appendChild(wrapper);
+      wrapper.appendChild(slider.container);
+    }
+
+    function setupDots() {
+      dots = createDiv("dots");
+      slider.track.details.slides.forEach((_e, idx) => {
+        const dot = createDiv("dot");
+        dot.addEventListener("click", () => slider.moveToIdx(idx));
+        dots.appendChild(dot);
+      });
+      wrapper.appendChild(dots);
+    }
+
+    slider.on("created", () => {
+      setupWrapper();
+      setupDots();
+    });
+
+    slider.on("slideChanged", () => {
+      if (dots && dots.children) {
+        const currentIndex = slider.track.details.rel;
+        Array.from(dots.children).forEach((dot, idx) => {
+          dot.classList.toggle("dot--active", idx === currentIndex);
+        });
+      }
+    });
+  }
+
+  const slider = new KeenSlider(
+    "#carousel",
+    {
       loop: true,
       mode: "free-snap",
       slides: {
@@ -1084,8 +1121,10 @@ async function displayAlbumConfirmation() {
       loop: false,
       initial: 0,
       drag: true,
-      dragStartThreshold: 10
-    }, [navigation]);
+      dragStartThreshold: 10,
+    },
+    [navigation]
+  );
 }
 
 async function getAlbumName() {
@@ -1100,16 +1139,16 @@ async function getAlbumName() {
   }
 }
 
-async function displayCircle(circleData) { 
+async function displayCircle(circleData) {
   leftHeaderButton.innerHTML = `
   <img src="/back_button_icon_light.svg" alt="Back Button" id="backButton"></img>
   `;
   rightHeaderButton.innerHTML = "";
-  pageName.innerHTML = ""
+  pageName.innerHTML = "";
   const memberList = circleData.members.map((obj) => {
-    return `<img src="${obj.user.profilePicture}" class="w-42 h-42 rounded-full object-cover"></img>`
-  })
-  console.log(circleData.circle.albums)
+    return `<img src="${obj.user.profilePicture}" class="w-42 h-42 rounded-full object-cover"></img>`;
+  });
+  console.log(circleData.circle.albums);
   const albumList = circleData.circle.albums.map((obj) => {
     return `
     <div class="w-full h-min relative album" id="${obj.id}">
@@ -1121,14 +1160,16 @@ async function displayCircle(circleData) {
         <img src="/like_icon.svg" alt="Like Icon"></img>
         <img src="/comment_icon.svg" alt="Comment Icon"></img>
       </div>
-    </div>`
-  })
-  console.log(albumList)
+    </div>`;
+  });
+  console.log(albumList);
 
   pageContent.innerHTML = `
   <div class="w-full px-0 mx-0">
     <div class="flex justify-center mt-6 mb-1.5">
-      <img src="${circleData.circle.picture}" class="rounded-full w-180 h-180 object-cover"/></img>
+      <img src="${
+        circleData.circle.picture
+      }" class="rounded-full w-180 h-180 object-cover"/></img>
     </div>
     <div class="mb-3">
       <p class="text-center text-20 font-bold">${circleData.circle.name}</p>
@@ -1140,7 +1181,9 @@ async function displayCircle(circleData) {
       </label>
     </div>
     <div class="grid grid-cols-5 place-items-center mt-12 mb-2">
-      <p class="grid-span-1 text-base font-medium">${circleData.members.length} Friends</p>
+      <p class="grid-span-1 text-base font-medium">${
+        circleData.members.length
+      } Friends</p>
     </div>
     <div class="flex gap-2">
       ${memberList.join("")}
@@ -1153,48 +1196,48 @@ async function displayCircle(circleData) {
         ${albumList.join("")}
       </div>
     </div>
-  </div>`
+  </div>`;
 
-  const albumListTarget = document.querySelector("#albumList")
+  const albumListTarget = document.querySelector("#albumList");
   albumListTarget.addEventListener("click", async function (event) {
-    event.preventDefault()
-    const albumDiv = event.target.closest(".album")
-    if (albumDiv){
-      if(albumDiv.hasAttribute("id")) {
-        let { success, data, error } = await getAlbum(albumDiv.id)
+    event.preventDefault();
+    const albumDiv = event.target.closest(".album");
+    if (albumDiv) {
+      if (albumDiv.hasAttribute("id")) {
+        let { success, data, error } = await getAlbum(albumDiv.id);
         if (success && data) {
-          await displayAlbum(data)
+          await displayAlbum(data);
         }
       }
     }
-  })
+  });
 }
 
 async function cleanUpSectionEventListener() {
-  const section = document.querySelector("section")
-  section.removeEventListener("mousedown", sectionUploadClick, true)
-  section.removeEventListener("dragover", sectionDrag, true)
-  section.removeEventListener("drop", sectionDrop, true)
-  console.log("CLEANED")
+  const section = document.querySelector("section");
+  section.removeEventListener("mousedown", sectionUploadClick, true);
+  section.removeEventListener("dragover", sectionDrag, true);
+  section.removeEventListener("drop", sectionDrop, true);
+  console.log("CLEANED");
 }
 
 async function sectionUploadClick(event) {
   const fileInput = document.querySelector("#myInput");
   event.preventDefault();
-  event.stopImmediatePropagation()
-  console.log(fileInput)
+  event.stopImmediatePropagation();
+  console.log(fileInput);
   await fileInput.click();
 }
 
-sectionDrag = async(event) => {
+sectionDrag = async (event) => {
   event.preventDefault();
   console.log("File(s) in drop zone");
-}
+};
 
-sectionDrop = async(event) => {
+sectionDrop = async (event) => {
   event.preventDefault();
   await dropHandler(event);
-}
+};
 
 async function dropHandler(event) {
   event.preventDefault();
@@ -1232,55 +1275,59 @@ async function showCreateOrAddToCircle(circleRender) {
       ${circleRender.join("")}
     </div>
     <div class="h-100"></div>
-  </div>`
+  </div>`;
 
   await cleanUpSectionEventListener();
-  document.querySelector("#circleList").addEventListener("click", async function (event){
-    const circleDiv = event.target.closest("div.circle")
-    if (circleDiv) {
-      if (circleDiv.hasAttribute("id")){
-        console.log("clicked", circleDiv.id)
-        //MODIFY THIS TO SELECT CIRCLE TO BE USED FOR POST CONFIRMATION & POST
+  document
+    .querySelector("#circleList")
+    .addEventListener("click", async function (event) {
+      const circleDiv = event.target.closest("div.circle");
+      if (circleDiv) {
+        if (circleDiv.hasAttribute("id")) {
+          console.log("clicked", circleDiv.id);
+          //MODIFY THIS TO SELECT CIRCLE TO BE USED FOR POST CONFIRMATION & POST
 
-        albumObj.isCircle = true;
-        albumObj.id = circleDiv.id;
+          albumObj.isCircle = true;
+          albumObj.id = circleDiv.id;
 
-        console.log("Selected circle object:", albumObj);
-        
-        let { success, data, error } = await getCircle(circleDiv.id)
-        if (success && data) {
-          console.log(data);
-          albumObj.circleSrc = data.circle.picture;
-          albumObj.circleName = data.circle.name;
-          console.log(albumObj);
+          console.log("Selected circle object:", albumObj);
+
+          let { success, data, error } = await getCircle(circleDiv.id);
+          if (success && data) {
+            console.log(data);
+            albumObj.circleSrc = data.circle.picture;
+            albumObj.circleName = data.circle.name;
+            console.log(albumObj);
+          }
+          await displayAlbumConfirmation();
         }
-        await displayAlbumConfirmation();
       }
-    }
-  })
-  document.querySelector("#createNewCircle").addEventListener("click", async function (event) {
-    console.log("MAKE A NEW CIRCLE PROCESS")
-  })
+    });
+  document
+    .querySelector("#createNewCircle")
+    .addEventListener("click", async function (event) {
+      console.log("MAKE A NEW CIRCLE PROCESS");
+    });
 }
 
-async function displayAlbum(albumData){
-  console.log(albumData)
+async function displayAlbum(albumData) {
+  console.log(albumData);
   leftHeaderButton.innerHTML = `
   <span id="${albumData.circle.id}">
   <img src="/back_button_icon_light.svg" alt="Back Button" id="backButtonAlbum"></img>
   </span
   `;
 
-  pageName.innerHTML = `${albumData.name}`
-  
+  pageName.innerHTML = `${albumData.name}`;
+
   const memberList = albumData.circle.UserCircle.map((obj) => {
-    return `<img src="${obj.user.profilePicture}" class="w-16 h-16 rounded-full object-cover"></img>`
-  })
+    return `<img src="${obj.user.profilePicture}" class="w-16 h-16 rounded-full object-cover"></img>`;
+  });
   const photoList = albumData.photos.map((obj) => {
     return `<div class="w-full h-min relative photo" id="${obj.id}">
     <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.src}"/>
-  </div>`
-  })
+  </div>`;
+  });
 
   pageContent.innerHTML = `
     <div id="albumPhotos">
@@ -1288,20 +1335,24 @@ async function displayAlbum(albumData){
         ${memberList.join("")}
       </div>
       <div class="mt-4">
-        <p class="flex justify-center font-medium text-lg">${albumData.circle.name}</p>
+        <p class="flex justify-center font-medium text-lg">${
+          albumData.circle.name
+        }</p>
       </div>
       <div class="grid grid-cols-5 place-items-center mt-12 mb-2 mr-0">
-        <p class="grid-span-1 text-base font-medium">${albumData.photos.length} Photos</p>
+        <p class="grid-span-1 text-base font-medium">${
+          albumData.photos.length
+        } Photos</p>
       </div>
       <div id="photoList" class="pb-28 w-full">
         <div class="columns-2 gap-4 space-y-4 grid-flow-row">
           ${photoList.join("")}
         </div>
       </div>
-  </div>`
+  </div>`;
 }
 
 const clearNewAlbum = () => {
   albumObj = {};
   albumPhotos = [];
-}
+};
