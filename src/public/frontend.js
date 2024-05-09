@@ -901,7 +901,7 @@ async function displayCircle(circleData) {
       <div class="mt-6 mb-2">
         <p class="text-24 font-medium">Albums</p>
       </div>
-      <div class="m-auto grid grid-cols-2 gap-4">
+      <div class="m-auto grid grid-cols-2 gap-4 gap-y-4">
         ${albumList.join("")}
       </div>
     </div>
