@@ -209,10 +209,12 @@ header.addEventListener("click", async (event) => {
     console.log("album created");
     const albumName = await getAlbumName();
     albumObj.name = albumName;
-    // const { success, data } = await handleCreateAlbum(albumObj);
+    const { success, data } = await handleCreateAlbum(albumObj);
+    const albumId = data;
     if (success && data) {
       const { success, data, error } = await getAlbum(albumId);
       if (success && data) {
+        console.log(data)
         await displayAlbum(data);
       }
     }
@@ -241,12 +243,14 @@ modal.addEventListener("click", async function (event) {
   }
 
   if (createAlbumModalButton) {
+    clearNewAlbum()
     modal.classList.remove("shown");
     modal.classList.add("hidden");
     await displayCreateAlbum();
   }
 
   if (createCircleModalButton) {
+    clearNewAlbum()
     modal.classList.remove("shown");
     modal.classList.add("hidden");
     await displayCreateCircle();
@@ -340,7 +344,7 @@ async function displayCreateCircle() {
     
         <div class="flex-1 flex flex-col justify-between w-full px-4">
           <div>
-            <form class="flex flex-col">
+            <form class="flex flex-col" onkeydown="return event.key != 'Enter';">
               <div class="flex items-center mt-4 mb-28">
                   <label for="circleName" class="font-medium text-h2 mr-6">Name</label>
                   <input
@@ -367,7 +371,7 @@ async function displayCreateCircle() {
                 <label class="inline-flex items-center cursor-pointer">
                   <input id="privacyCheckbox" type="checkbox" value="" class="sr-only peer">
                   <img id="privacyIcon" src="/lock_icon_light.svg" alt="Lock icon" class="mr-4">
-                  <span class="text-sm font-medium leading-body text-14 mr-4 w-12">Private</span>
+                  <span id="privacyLabel" class="text-sm font-medium leading-body text-14 mr-4 w-12">Private</span>
                   <div class="peer relative h-5 w-10 rounded-full outline outline-1 outline-black after:absolute after:start-[2px] after:top-0 after:h-4 after:w-4 after:rounded-full after:bg-black after:border after:border-black after:transition-all after:content-[''] peer-checked:bg-cover peer-checked:bg-black border-2 peer-checked:outline-black peer-checked:after:translate-x-5 peer-checked:after:border-white peer-checked:after:border-opacity-80 peer-checked:after:border-2 peer-checked:after:bg-black rtl:peer-checked:after:-translate-x-full"></div>
                 </label>
               </div>
@@ -429,7 +433,7 @@ async function displayInviteFriends() {
     </div>
     <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full">
       <div class="relative w-full h-9 mt-8">
-        <form>
+        <form onkeydown="return event.key != 'Enter';">
           <input class="w-380 px-14 py-2 border-grey border-2 rounded-input-box" placeholder="search friends"/>
           <img src="/search_icon_light_no_text.svg" alt="search icon" class="absolute left-4 top-2.5 w-6 h-6"/>
         </form>
@@ -610,6 +614,8 @@ async function displayNavBar() {
     const newButton = event.target.closest("#new");
     const activityButton = event.target.closest("#activity");
     const profileButton = event.target.closest("#profile");
+
+    clearNewAlbum();
 
     if (exploreButton) {
       await displayExplore();
@@ -964,7 +970,7 @@ async function displayAlbumConfirmation() {
         </div>
       </div>
       <div class="flex-1 flex flex-col justify-between w-full px-4 mt-40">
-        <form class="flex flex-col">
+        <form class="flex flex-col" onkeydown="return event.key != 'Enter';">
           <div class="flex items-center mt-4 mb-28">
               <label for="albumName" class="font-medium text-h2 mr-6">Title</label>
               <input
@@ -1243,9 +1249,6 @@ async function displayAlbum(albumData){
   </div>`
   })
 
-
-  console.log(albumList)
-
   pageContent.innerHTML = `
     <div id="albumPhotos">
       <div id="memberList" class="flex mt-8 justify-center">
@@ -1263,4 +1266,9 @@ async function displayAlbum(albumData){
         </div>
       </div>
   </div>`
+}
+
+const clearNewAlbum = () => {
+  albumObj = {};
+  albumPhotos = [];
 }

@@ -46,7 +46,7 @@ model Album {
   name     String
   likes    Like[]
   photos   Photo[]
-  circle   Circle  @relation(fields: [circleId], references: [id])
+  circle   Circle  @relation(fields: [circleId], references: [id], onDelete: Cascade)
   circleId String
 }
 
@@ -54,7 +54,7 @@ model Photo {
   id       String    @id @default(cuid())
   src      String
   comments Comment[]
-  album    Album     @relation(fields: [albumId], references: [id])
+  album    Album     @relation(fields: [albumId], references: [id], onDelete: Cascade)
   albumId  String
   poster   User      @relation(fields: [userId], references: [username])
   userId   String

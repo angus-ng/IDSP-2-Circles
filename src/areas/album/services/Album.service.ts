@@ -13,29 +13,31 @@ export class AlbumService implements IAlbumService {
             username: newAlbumInput.creator
         }
     })
-    console.log(newAlbumInput)
 
     if (creator){
         //make the album
         const createdAlbum = await this._db.prisma.album.create({
             data: {
-                name: newAlbumInput.name,
-                pictureList: newAlbumInput.picturePath,
-                ownerId: creator.username,
+                name: newAlbumInput.albumName,
+                circleId: newAlbumInput.circleId,
             }
         })
 
         //make the explicit album user relationship
         if (createdAlbum) {
-            await this._db.prisma.userCircle.create({
-                data: {
-                    userId: creator.id,
-                    circleId: createdAlbum.id
-                }
-            })
+            for (let i=0; i < newAlbumInput.photos.length; i++){
+                const file = await this._db.prisma.photo.create({
+                    data: {
+                        src: newAlbumInput.photos[i].photoSrc,
+                        userId: creator.username,
+                        albumId: createdAlbum.id
+                    }
+                })
+            }
+            return createdAlbum;
         }
     }
-
+    return null;
   }
 
 //   async deleteAlbum(id: string, currentUser:string): Promise<void> {

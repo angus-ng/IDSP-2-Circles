@@ -39,17 +39,27 @@ class AlbumController implements IController {
     try {
         let loggedInUser = req.user!.username
         
-        const { albumName, pictureList } = req.body
+        const { photos, isCircle, name }  = req.body
         console.log(req.body,"logged")
-        const newAlbumInput = {
-          creator: loggedInUser, 
-          name: albumName,
-            pictureList: pictureList
+        console.log(isCircle)
+        if (isCircle) {
+          const { id } = req.body;
+          console.log(id)
+          const albumObj = {
+            photos,
+            albumName: name,
+            circleId: id,
+            creator: loggedInUser
           }
-          //validate the input before passing it to our db
-          
-        this._service.createAlbum(newAlbumInput)
-        res.status(200).json({ success: true, data:newAlbumInput });
+          const newAlbum = await this._service.createAlbum(albumObj)
+          console.log(newAlbum.id)
+
+          return res.status(200).json({ success: true, data: newAlbum.id})
+        }
+        //validate the input before passing it to our db
+        
+        // this._service.createAlbum(newAlbumInput)
+        res.status(200).json({ success: true, data:null });
     } catch (err) {
         //throw err;
     }

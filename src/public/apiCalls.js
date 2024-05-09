@@ -123,3 +123,27 @@ async function getAlbum(albumId) {
 
   }
 }
+
+async function handleCreateAlbum(albumObj){
+  try {
+    if (!albumObj.name) {
+      return {success: true, data:null}
+    }
+    console.log(albumObj)
+    let response = await fetch("/album/create", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(albumObj),
+    });
+
+    const jsonResponse = await response.json();
+    console.log(jsonResponse);
+
+    return jsonResponse;
+
+  } catch (err) {
+    return {success: true, data:null, error: err}
+  }
+}
