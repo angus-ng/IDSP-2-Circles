@@ -25,6 +25,14 @@ async function handleCreateCircle() {
   }
 }
 
+async function handleCreateAlbum() {
+  try {
+    
+  } catch (error) {
+
+  }
+}
+
 async function handleSelectFile() {
   const fileInput = document.querySelector("#myInput");
   const file = fileInput.files[0];

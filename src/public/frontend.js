@@ -9,6 +9,8 @@ let newCircleNameInput = "";
 let isEditable = false;
 let addPictureSrc;
 let circleImgSrc;
+let albumPhotos = [];
+let albumObj = {};
 
 async function initiatePage() {
   const username = await getSessionFromBackend();
@@ -89,10 +91,14 @@ header.addEventListener("click", async (event) => {
   const nextButton = event.target.closest("#nextButton");
   const backButton = event.target.closest("#backButton");
   const circleBackButton = event.target.closest("#circleBackButton");
+  const circlePreviewBackButton = event.target.closest("#circlePreviewBackButton");
   const createCircleButton = event.target.closest("#createCircleButton");
   const closeButton = event.target.closest("#closeButton");
-  const albumNextButton = event.target.closest("#albumNext")
-  const backButtonAlbum = event.target.closest("#backButtonAlbum")
+  const albumNextButton = event.target.closest("#albumNext");
+  const backButtonAlbum = event.target.closest("#backButtonAlbum");
+  const createAlbumButton = event.target.closest("#createAlbum");
+  const albumConfirmationBackButton = event.target.closest("#albumConfirmationBackButton");
+  const addCircleBackButton = event.target.closest("#addCircleBackButton");
 
   if (nextButtonInviteFriends) {
     const circleName = document.querySelector("#circleName");
@@ -159,9 +165,13 @@ header.addEventListener("click", async (event) => {
     if (success && data) {
       const circleRender = await displayListOfCircles(data);
       console.log(circleRender)
-      showCreateOrAddToCircle(circleRender)
+      showCreateOrAddToCircle(circleRender);
       return;
     }
+  }
+
+  if (addCircleBackButton) {
+    await displayCreateAlbumPreview(albumPhotos);
   }
 
   if (backButtonAlbum) {
@@ -182,6 +192,31 @@ header.addEventListener("click", async (event) => {
     isPrivacyPublic = document.querySelector("#privacyCheckbox").checked;
     newCircleNameInput = circleName.value;
     await displayInviteFriends();
+    return;
+  }
+
+  if (albumConfirmationBackButton) {
+    const { success, data } = await getListOfCircles();
+    if (success && data) {
+      const circleRender = await displayListOfCircles(data);
+      console.log(circleRender)
+      showCreateOrAddToCircle(circleRender);
+      return;
+    }
+  }
+
+  if (createAlbumButton) {
+    console.log("album created");
+    const albumName = await getAlbumName();
+    albumObj.name = albumName;
+    // const { success, data } = await handleCreateAlbum(albumObj);
+    if (success && data) {
+      const { success, data, error } = await getAlbum(albumId);
+      if (success && data) {
+        await displayAlbum(data);
+      }
+    }
+    nav.classList.remove("hidden");
     return;
   }
 });
@@ -215,7 +250,7 @@ modal.addEventListener("click", async function (event) {
     modal.classList.remove("shown");
     modal.classList.add("hidden");
     await displayCreateCircle();
-    await cleanUpSectionEventListener()
+    await cleanUpSectionEventListener();
   }
 });
 
@@ -293,12 +328,8 @@ async function displayCreateCircle() {
   nav.classList.add("hidden");
   pageName.innerHTML = `New Circle`;
 
-  leftHeaderButton.innerHTML = `
-    <img src="/back_button_icon_light.svg" alt="Back Button" id="backButton"></img>
-    `;
-  rightHeaderButton.innerHTML = `
-    <img src="/next_button_light.svg" alt="Next Button" id="nextInviteFriends"></img>
-    `;
+  leftHeaderButton.innerHTML = `<img src="/back_button_icon_light.svg" alt="Back Button" id="backButton"></img>`;
+  rightHeaderButton.innerHTML = `<img src="/next_button_light.svg" alt="Next Button" id="nextInviteFriends"></img>`;
 
   const pageContent = document.querySelector("#pageContent");
   pageContent.innerHTML = `
@@ -736,17 +767,16 @@ async function displayCreateAlbum () {
 
   if (fileInput.getAttribute('listener') !== true) {
     fileInput.addEventListener("input", async function (event) {
-      const fileList = [];
     
       const files = event.target.files;
       for (let i = 0; i < files.length; i++) {
         const file = await uploadFile(files[i]);
-        fileList.push(file);
+        albumPhotos.push(file);
       }
-      console.log(fileList);
-      console.log(files.length)
+      console.log("Files uploaded:", albumPhotos);
+      console.log(files.length);
       if (files.length > 0) {
-        await displayCreateAlbumPreview(files);
+        await displayCreateAlbumPreview(albumPhotos);
         await cleanUpSectionEventListener();
       }
     });
@@ -760,11 +790,42 @@ async function displayCreateAlbum () {
   uploadSection.classList.remove("imageUploadSection");
 }
 
-function displayCreateAlbumPreview() {
+function displayCreateAlbumPreview(albumPhotos) {
+  console.log(albumPhotos);
+
   pageName.textContent = "New Album";
 
   leftHeaderButton.innerHTML = `<img src="/close_icon_light.svg" alt="Close Button" id="closeButton">`;
   rightHeaderButton.innerHTML = `<img src="/next_button_light.svg" alt="Next Button" id="albumNext">`;
+
+  const carouselDiv = document.createElement("div");
+  carouselDiv.id = "carousel";
+  carouselDiv.className = "keen-slider overflow-hidden";
+
+  const mappedPhotos = albumPhotos.map((obj) => {
+    return {
+      photoSrc: obj.data
+    };
+  });
+  console.log("Mapped photos:", mappedPhotos);
+  console.log(albumPhotos);
+  albumObj.photos = mappedPhotos;
+
+  mappedPhotos.forEach((photo, index) => {
+    console.log(`Creating slide ${index + 1} for photo with src: ${photo.photoSrc}`);
+
+    const slideDiv = document.createElement("div");
+    slideDiv.className = "keen-slider__slide";
+
+    const img = document.createElement("img");
+    img.className = "rounded-12.75 h-image w-image object-cover";
+    img.src = photo.photoSrc;
+    img.alt = `image ${index}`;
+
+    slideDiv.appendChild(img);
+
+    carouselDiv.appendChild(slideDiv);
+  });
 
   const pageContent = document.querySelector("#pageContent");
   pageContent.innerHTML = `
@@ -775,27 +836,14 @@ function displayCreateAlbumPreview() {
     </div>
     <div id="createNewAlbum" class="flex-1 flex-col items-center bg-light-mode w-430 overflow-hidden p-2">
       <div class="w-full">
-        <div id="my-keen-slider" class="keen-slider overflow-hidden">
-          <div class="keen-slider__slide">
-            <img class="rounded-12.75" src="/hi.jpg" alt="image1">
-          </div>
-          <div class="keen-slider__slide">
-            <img class="rounded-12.75" src="/hi.jpg" alt="image2">
-          </div>
-          <div class="keen-slider__slide">
-            <img class="rounded-12.75" src="/hi.jpg" alt="image3">
-          </div>
-          <div class="keen-slider__slide">
-            <img class="rounded-12.75" src="/hi.jpg" alt="image4">
-          </div>
-        </div>
+        
       </div>
       <div class="w-full mt-3">
         <h1 class="text-h2 leading-h2 font-medium">Upload more files<h1>
       </div>
       <div class="flex flex-col items-center bg-light-grey w-full h-full overflow-hidden mt-3 p-5 border-t border-spacing-2 border-dashed border-grey">
         <form class="hidden">
-          <input id="myInput" type="file" class="hidden" multiple="false" />
+          <input id="myInput" type="file" class="hidden" multiple="false"/>
         </form>
         <div class="flex justify-center mt-24 md:mt-16 mb-5">
           <img id="uploadIcon" src="/upload_photo_grey_light.svg" alt="Upload Icon"/>
@@ -810,6 +858,9 @@ function displayCreateAlbumPreview() {
       </div>
       </div>
     </div>`;
+
+    const createNewAlbum = document.querySelector("#createNewAlbum div.w-full");
+    createNewAlbum.appendChild(carouselDiv);
 
     function navigation(slider) {
       let wrapper, dots;
@@ -851,16 +902,164 @@ function displayCreateAlbumPreview() {
       });
     }
     
-    const slider = new KeenSlider("#my-keen-slider", {
+    const slider = new KeenSlider("#carousel", {
+      loop: true,
+      mode: "free-snap",
+      slides: {
+        origin: "center",
+        perView: 2,
+        spacing: 15,
+      },
       loop: false,
-      slidesPerView: 1,
-      spacing: 10,
       initial: 0,
       drag: true,
       dragStartThreshold: 10
     }, [navigation]);
 }
 
+async function displayAlbumConfirmation() {
+  nav.classList.add("hidden");
+  console.log(albumObj);
+
+  leftHeaderButton.innerHTML = `<img src="/back_button_icon_light.svg" alt="Back Button" id="albumConfirmationBackButton"></img>`;
+  
+  pageName.innerHTML = "Post";
+
+  rightHeaderButton.innerHTML = `<img src="/create_button_light.svg" alt="Create Button" id="createAlbum"></img>`;
+
+  const carouselDiv = document.createElement("div");
+  carouselDiv.id = "carousel";
+  carouselDiv.className = "keen-slider overflow-hidden";
+
+  albumObj.photos.forEach((photo, index) => {
+    console.log(`Creating slide ${index + 1} for photo with src: ${photo.photoSrc}`);
+
+    const slideDiv = document.createElement("div");
+    slideDiv.className = "keen-slider__slide";
+
+    const img = document.createElement("img");
+    img.className = "rounded-12.75 h-image w-image object-cover";
+    img.src = photo.photoSrc;
+    img.alt = `image ${index}`;
+
+    slideDiv.appendChild(img);
+
+    carouselDiv.appendChild(slideDiv);
+  });
+
+  pageContent.innerHTML = `
+    <div id="albumConfirmation" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full">
+      <div id="albumCarousel" class="flex-1 flex flex-col justify-between w-full px-4 m-40">
+        <div class="w-full">
+        
+        </div>
+      </div>
+      <div id="albumCircle"class="flex flex-row justify-center items-center ml-4 w-full">
+        <img id="circleImage" class="w-62 h-62 rounded-full" src="/placeholder_image.svg"></img>
+        <div class="flex flex-col ml-4">
+          <h2 id="circleName" class="text-20 font-medium mr-2.5"></h2>
+          <button id="editButton">
+            <p class="text-light-mode-accent underline text-secondary">Edit<p>
+          </button>
+        </div>
+      </div>
+      <div class="flex-1 flex flex-col justify-between w-full px-4 mt-40">
+        <form class="flex flex-col">
+          <div class="flex items-center mt-4 mb-28">
+              <label for="albumName" class="font-medium text-h2 mr-6">Title</label>
+              <input
+              type="text"
+              placeholder="add a title to your album"
+              id="albumName"
+              class="w-full bg-transparent text-h2 text-text-grey font-light items-end border-none"
+              required
+              />
+          </div>
+        </form>
+      </div>
+      <div class="flex items-center justify-between w-full">
+        <div class="mt-10">
+          <p class="font-bold text-26 leading-h2 hidden">Edit</p>
+        </div>
+      </div>
+      </div>
+    </div>`;
+
+    const circleImage = document.querySelector("#circleImage");
+    console.log(albumObj.circleSrc);
+
+    circleImage.src = albumObj.circleSrc;
+    circleName.textContent = albumObj.circleName;
+
+    const createNewAlbum = document.querySelector("#albumCarousel div.w-full");
+    createNewAlbum.appendChild(carouselDiv);
+
+    function navigation(slider) {
+      let wrapper, dots;
+    
+      function createDiv(className) {
+        const div = document.createElement("div");
+        className.split(" ").forEach((name) => div.classList.add(name));
+        return div;
+      }
+
+      function setupWrapper() {
+        wrapper = createDiv("navigation-wrapper");
+        slider.container.parentNode.appendChild(wrapper);
+        wrapper.appendChild(slider.container);
+      }
+    
+      function setupDots() {
+        dots = createDiv("dots");
+        slider.track.details.slides.forEach((_e, idx) => {
+          const dot = createDiv("dot");
+          dot.addEventListener("click", () => slider.moveToIdx(idx));
+          dots.appendChild(dot);
+        });
+        wrapper.appendChild(dots);
+      }
+    
+      slider.on("created", () => {
+        setupWrapper();
+        setupDots();
+      });
+    
+      slider.on("slideChanged", () => {
+        if (dots && dots.children) {
+          const currentIndex = slider.track.details.rel;
+          Array.from(dots.children).forEach((dot, idx) => {
+            dot.classList.toggle("dot--active", idx === currentIndex);
+          });
+        }
+      });
+    }
+    
+    const slider = new KeenSlider("#carousel", {
+      loop: true,
+      mode: "free-snap",
+      slides: {
+        origin: "center",
+        perView: 2,
+        spacing: 15,
+      },
+      loop: false,
+      initial: 0,
+      drag: true,
+      dragStartThreshold: 10
+    }, [navigation]);
+}
+
+async function getAlbumName() {
+  const albumNameInput = document.querySelector("#albumName");
+
+  if (albumNameInput) {
+    const albumName = albumNameInput.value;
+    console.log("album name:", albumName);
+    return albumName;
+  } else {
+    return null;
+  }
+}
 
 async function displayCircle(circleData) { 
   leftHeaderButton.innerHTML = `
@@ -976,12 +1175,12 @@ async function dropHandler(event) {
 async function showCreateOrAddToCircle(circleRender) {
   pageName.innerHTML = `Add to a Circle`;
   leftHeaderButton.innerHTML = `
-    <img src="/back_button_icon_light.svg" alt="Back Button" id="backButton"></img>
+    <img src="/back_button_icon_light.svg" alt="Back Button" id="addCircleBackButton"></img>
     `;
   rightHeaderButton.innerHTML = "";
 
   pageContent.innerHTML = `
-  <div class="container pb-16 mb-4 w-full">
+  <div id="addAlbumToCircle" class="container pb-16 mb-4 w-full">
     <div class="font-light text-11 justify-center text-center text-dark-grey w-full mb-3">
       <p>choose which circle you want your album</p>
       <p>to be added to</p>
@@ -996,7 +1195,7 @@ async function showCreateOrAddToCircle(circleRender) {
     <div class="h-100"></div>
   </div>`
 
-  await cleanUpSectionEventListener()
+  await cleanUpSectionEventListener();
   document.querySelector("#circleList").addEventListener("click", async function (event){
     const circleDiv = event.target.closest("div.circle")
     if (circleDiv) {
@@ -1004,10 +1203,19 @@ async function showCreateOrAddToCircle(circleRender) {
         console.log("clicked", circleDiv.id)
         //MODIFY THIS TO SELECT CIRCLE TO BE USED FOR POST CONFIRMATION & POST
 
-        // let { success, data, error } = await getCircle(circleDiv.id)
-        // if (success && data) {
-        //   await displayCircle(data)
-        // }
+        albumObj.isCircle = true;
+        albumObj.id = circleDiv.id;
+
+        console.log("Selected circle object:", albumObj);
+        
+        let { success, data, error } = await getCircle(circleDiv.id)
+        if (success && data) {
+          console.log(data);
+          albumObj.circleSrc = data.circle.picture;
+          albumObj.circleName = data.circle.name;
+          console.log(albumObj);
+        }
+        await displayAlbumConfirmation();
       }
     }
   })

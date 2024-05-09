@@ -59,7 +59,8 @@ theme: {
       '110': '110px',
       '180': '180px',
       '42': '42px',
-      '58': '58px'
+      '58': '58px',
+      '62': '62px'
     },
     height: {
       '932': '932px',
@@ -73,7 +74,8 @@ theme: {
       '228':'228px',
       'image': '215px',
       'navbar': '85px',
-      '400': '400px'
+      '400': '400px',
+      '62': '62px'
     },
     boxShadow: {
       'background-shadow': 'inset 0 0 100px -30px rgba(0, 0, 0, 0.2)'
@@ -89,7 +91,8 @@ theme: {
     },
     margin: {
       '4': '4px',
-      'header': '105px'
+      'header': '105px',
+      '40': '40px'
     },
     outline: {
       '1': '1px'
