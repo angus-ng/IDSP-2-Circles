@@ -98,21 +98,16 @@ class AuthenticationController implements IController {
 
   private facebook = passport.authenticate("facebook")
 
-  private facebookCb = (req: express.Request, res:express.Response, next:express.NextFunction) => {
-    passport.authenticate('facebook', function(err:any, user:any, info:any) {
-      if (err || !user) {
-        return res.status(200).json({success: true, data:null })
-      }
-      console.log("this", user)
-      res.status(200).json({success: true, data:user.username})
-    })(req, res, next)
-  }
+  private facebookCb = passport.authenticate("facebook", {
+    successRedirect: "/",
+    failureRedirect: '/'
+  })
    
   private google = passport.authenticate("google")
 
   private googleCb = passport.authenticate("google", {
     successRedirect: "/",
-    failureRedirect: '/auth/login'
+    failureRedirect: '/'
   })
 
 }

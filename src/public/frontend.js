@@ -135,12 +135,8 @@ header.addEventListener("click", async (event) => {
   }
 
   if (circleBackButton) {
-    const circleName = document.querySelector("#circleName");
-    console.log(circleName.value)
-    isPrivacyPublic = document.querySelector("#privacyCheckbox").checked;
-    let circleImgSrc = document.querySelector("#circleImage").src;
-    newCircleNameInput = circleName.value;
     await displayCreateCircle();
+    const circleName = document.querySelector("#circleName");
     document.querySelector("#privacyCheckbox").checked = isPrivacyPublic;
     document.querySelector("#circleImage").src = circleImgSrc;
     document.querySelector("#addPicture img").src = addPictureSrc;
@@ -178,6 +174,15 @@ header.addEventListener("click", async (event) => {
         }
       }
     }
+  }
+
+  if (circlePreviewBackButton) {
+    const circleName = document.querySelector("#circleName");
+    circleImgSrc = document.querySelector("#circleImage").src;
+    isPrivacyPublic = document.querySelector("#privacyCheckbox").checked;
+    newCircleNameInput = circleName.value;
+    await displayInviteFriends();
+    return;
   }
 });
 
@@ -424,7 +429,7 @@ async function displayInviteFriends() {
 async function displayCreateCirclePreview() {
   nav.classList.add("hidden");
   leftHeaderButton.innerHTML = `
-    <img src="/back_button_icon_light.svg" alt="Back Button" id="circleBackButton"></img>
+    <img src="/back_button_icon_light.svg" alt="Back Button" id="circlePreviewBackButton"></img>
     `;
   
   pageName.innerHTML = "New Circle";
@@ -731,12 +736,17 @@ async function displayCreateAlbum () {
 
   if (fileInput.getAttribute('listener') !== true) {
     fileInput.addEventListener("input", async function (event) {
-      const res = await handleSelectFile();
+      const fileList = [];
     
       const files = event.target.files;
-      console.log(files)
+      for (let i = 0; i < files.length; i++) {
+        const file = await uploadFile(files[i]);
+        fileList.push(file);
+      }
+      console.log(fileList);
+      console.log(files.length)
       if (files.length > 0) {
-        await displayCreateAlbumPreview();
+        await displayCreateAlbumPreview(files);
         await cleanUpSectionEventListener();
       }
     });
@@ -747,7 +757,7 @@ async function displayCreateAlbum () {
     uploadSection.addEventListener("drop", sectionDrop, true);
   }
 
-  section.classList.remove("imageUploadSection");
+  uploadSection.classList.remove("imageUploadSection");
 }
 
 function displayCreateAlbumPreview() {

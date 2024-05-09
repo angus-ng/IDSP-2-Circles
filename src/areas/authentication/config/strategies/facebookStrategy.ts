@@ -11,7 +11,7 @@ const facebookStrategy = new FacebookStrategy(
     clientID: String(process.env.FACEBOOK_APP_ID),
     clientSecret: String(process.env.FACEBOOK_APP_SECRET),
     callbackURL: "http://localhost:5000/auth/facebook/callback",
-    profileFields: ["id", "picture.type(large)"]
+    profileFields: ["id", "displayName", "picture.type(large)"]
   },
   async (accessToken: string, refreshToken: string, profile: Profile, done:VerifyCallback) => {
     try {
