@@ -10,7 +10,7 @@ class LandingController {
         this.path = "/";
         this.router = express_1.default.Router();
         this.showLandingPage = (_, res) => {
-            res.render(path_1.default.join(__dirname, "../../frontend/index"));
+            res.render(path_1.default.join(__dirname, "../../../../public/index.html"));
             return;
         };
         this.initializeRoutes();
