@@ -106,8 +106,8 @@ header.addEventListener("click", async (event) => {
   }
 
   if (createCircleButton) {
-    console.log("yes");
-    handleCreateCircle();
+    await handleCreateCircle();
+    await displayExplore();
     return;
   }
 
@@ -551,6 +551,7 @@ async function displayCreateAlbum() {
   const pageContent = document.querySelector("#pageContent");
   pageContent.innerHTML = `
   <a href="">
+  <input id="myInput" type="file" style="visibility:hidden" multiple=true/>
     <div id="createNewAlbum" class="flex justify-center py-10 my-48 rounded-lg w-full z-10;">
         <div class="flex-shrink-0 items-center mt-10 mb-10">
           <div class="flex justify-center">
@@ -567,9 +568,17 @@ async function displayCreateAlbum() {
   </a>`;
 
   const createNewAlbumDiv = document.querySelector("#createNewAlbum");
+  const myAlbumInput = document.querySelector("#myInput");
   createNewAlbumDiv.addEventListener("click", async (event) => {
+    myAlbumInput.click();
     event.preventDefault();
-    console.log(event.target);
+  });
+  myAlbumInput.addEventListener("input", async function (event) {
+    event.preventDefault();
+    const res = await uploadMultiple(myAlbumInput.files);
+    if (res) {
+      console.log(await res.data);
+    }
   });
   createNewAlbumDiv.addEventListener(
     "dragover",
@@ -581,18 +590,16 @@ async function displayCreateAlbum() {
   );
   createNewAlbumDiv.addEventListener(
     "drop",
-    function (event) {
+    async function (event) {
       event.preventDefault();
-      dropHandler(event);
+      await uploadMultiple(event.dataTransfer.files);
     },
     false
   );
 }
 
-async function dropHandler(event) {
-  event.preventDefault();
+async function uploadMultiple(files) {
   const fileList = [];
-  const files = event.dataTransfer.files;
   for (let i = 0; i < files.length; i++) {
     const file = await uploadFile(files[i]);
     fileList.push(file);
