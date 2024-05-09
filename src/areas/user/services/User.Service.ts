@@ -9,6 +9,7 @@ export class UserService implements IUserService {
     try {
         await this._db.prisma.follows.create({
             data: {
+              //@ts-ignore
                 followerName: followerName,
                 followingName: followingName
             }
@@ -22,6 +23,7 @@ export class UserService implements IUserService {
     try {
         await this._db.prisma.follows.deleteMany({
             where: {
+                //@ts-ignore
                 followerName: followerName,
                 followingName: followingName
             }

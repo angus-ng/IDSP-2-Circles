@@ -19,7 +19,8 @@ export class AlbumService implements IAlbumService {
         const createdAlbum = await this._db.prisma.album.create({
             data: {
                 name: newAlbumInput.name,
-                pictureList: newAlbumInput.picturePath,
+                //@ts-ignore
+                pictureList: newAlbumInput.pictureList,
                 ownerId: creator.username,
             }
         })
@@ -81,12 +82,12 @@ export class AlbumService implements IAlbumService {
     return true
   }
   async getAlbum (id: string): Promise<Album | null> {
-    const circle = await this._db.prisma.circle.findUnique({
+    const album = await this._db.prisma.album.findUnique({
         where: {
             id: id
         }
     })
-    return circle;
+    return album;
   }
 
   async listAlbums (currentUser:string): Promise<{album: Album}[] | void> { // remove this void when implemented

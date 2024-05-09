@@ -52,7 +52,7 @@ class AlbumController implements IController {
         const newAlbumInput = {
           creator: loggedInUser, 
           name: albumName,
-            pictureList: pictureList
+          pictureList: pictureList
           }
           //validate the input before passing it to our db
           

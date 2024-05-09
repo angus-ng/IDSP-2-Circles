@@ -14,7 +14,7 @@ const services_1 = require("./areas/circle/services");
 // import { SettingService } from "./areas/settings/services";
 const services_2 = require("./areas/album/services");
 const album_controller_1 = __importDefault(require("./areas/album/controllers/album.controller"));
-const user_controller_1 = __importDefault(require("./areas/user/controller/user.controller"));
+const user_controller_1 = __importDefault(require("./areas/user/controllers/user.controller"));
 const services_3 = require("./areas/user/services");
 // import SearchController from "./areas/search/controllers/search.controller";
 // import { SearchService } from "./areas/search/services";
@@ -33,5 +33,4 @@ const server = new app_1.default([
     // new SearchController(new SearchService())
     // new SettingController(new SettingService()),
 ]);
-console.log(new user_controller_1.default(new services_3.UserService()), new services_3.UserService());
 server.start();

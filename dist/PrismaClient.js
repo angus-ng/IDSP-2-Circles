@@ -6,14 +6,18 @@ const adapter_libsql_1 = require("@prisma/adapter-libsql");
 const client_2 = require("@libsql/client");
 class DBClient {
     constructor() {
-        const libsql = (0, client_2.createClient)({
-            url: `${process.env.TURSO_DATABASE_URL}`,
-            authToken: `${process.env.TURSO_AUTH_TOKEN}`
-        });
-        const adapter = new adapter_libsql_1.PrismaLibSQL(libsql);
-        // @ts-ignore
-        this.prisma = new client_1.PrismaClient({ adapter });
-        this.libSQL = libsql;
+        if (process.env.NODE_ENV === "production") {
+            const libsql = (0, client_2.createClient)({
+                url: `${process.env.TURSO_DATABASE_URL}`,
+                authToken: `${process.env.TURSO_AUTH_TOKEN}`
+            });
+            const adapter = new adapter_libsql_1.PrismaLibSQL(libsql);
+            this.prisma = new client_1.PrismaClient({ adapter });
+            this.libSQL = libsql;
+        }
+        else {
+            this.prisma = new client_1.PrismaClient();
+        }
     }
 }
 // Use singleton to avoid creating unnecesary connections

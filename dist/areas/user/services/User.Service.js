@@ -23,6 +23,7 @@ class UserService {
             try {
                 yield this._db.prisma.follows.create({
                     data: {
+                        //@ts-ignore
                         followerName: followerName,
                         followingName: followingName
                     }
@@ -38,6 +39,7 @@ class UserService {
             try {
                 yield this._db.prisma.follows.deleteMany({
                     where: {
+                        //@ts-ignore
                         followerName: followerName,
                         followingName: followingName
                     }
@@ -54,22 +56,26 @@ class UserService {
                 return;
             }
             try {
-                const listOfFollowings = [];
+                const listOfFollowers = [];
                 const user = yield this._db.prisma.user.findUnique({
                     where: {
                         username: followingName
                     },
                     include: {
-                        following: {}
+                        followers: {
+                            include: {
+                                follower: true
+                            }
+                        }
                     }
                 });
                 if (!user) {
                     return;
                 }
-                for (let follower of user.following) {
-                    listOfFollowings.push(follower.followerId);
+                for (let follower of user.followers) {
+                    listOfFollowers.push(follower.follower.username);
                 }
-                return listOfFollowings;
+                return listOfFollowers;
             }
             catch (error) {
                 throw new Error("Unable to find followings");
@@ -88,14 +94,18 @@ class UserService {
                         username: followerName
                     },
                     include: {
-                        followers: {}
+                        following: {
+                            include: {
+                                following: true
+                            }
+                        }
                     }
                 });
                 if (!user) {
                     return;
                 }
-                for (let following of user.followers) {
-                    listOfFollowings.push(following.followingId);
+                for (let following of user.following) {
+                    listOfFollowings.push(following.following.username);
                 }
                 return listOfFollowings;
             }

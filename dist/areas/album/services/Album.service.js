@@ -32,7 +32,8 @@ class AlbumService {
                 const createdAlbum = yield this._db.prisma.album.create({
                     data: {
                         name: newAlbumInput.name,
-                        pictureList: newAlbumInput.picturePath,
+                        //@ts-ignore
+                        pictureList: newAlbumInput.pictureList,
                         ownerId: creator.username,
                     }
                 });
@@ -90,12 +91,12 @@ class AlbumService {
     }
     getAlbum(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const circle = yield this._db.prisma.circle.findUnique({
+            const album = yield this._db.prisma.album.findUnique({
                 where: {
                     id: id
                 }
             });
-            return circle;
+            return album;
         });
     }
     listAlbums(currentUser) {
