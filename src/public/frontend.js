@@ -198,6 +198,7 @@ header.addEventListener("click", async (event) => {
   if (albumConfirmationBackButton) {
     const { success, data } = await getListOfCircles();
     if (success && data) {
+      nav.classList.remove("hidden");
       const circleRender = await displayListOfCircles(data);
       console.log(circleRender)
       showCreateOrAddToCircle(circleRender);
@@ -847,7 +848,7 @@ function displayCreateAlbumPreview(albumPhotos) {
       <div class="w-full mt-3">
         <h1 class="text-h2 leading-h2 font-medium">Upload more files<h1>
       </div>
-      <div class="flex flex-col items-center bg-light-grey w-full h-full overflow-hidden mt-3 p-5 border-t border-spacing-2 border-dashed border-grey">
+      <div id="dropMore" class="flex flex-col items-center bg-light-grey w-full h-full overflow-hidden mt-3 p-5 border-t border-spacing-2 border-dashed border-grey">
         <form class="hidden">
           <input id="myInput" type="file" class="hidden" multiple="false"/>
         </form>
@@ -921,6 +922,37 @@ function displayCreateAlbumPreview(albumPhotos) {
       drag: true,
       dragStartThreshold: 10
     }, [navigation]);
+
+    const uploadSection = document.querySelector("#dropMore")
+    const fileInput = document.querySelector("#myInput");
+    if (uploadSection.getAttribute('listener') !== true){
+      uploadSection.addEventListener("mousedown", sectionUploadClick, true);
+    }
+  
+    if (fileInput.getAttribute('listener') !== true) {
+      fileInput.addEventListener("input", async function (event) {
+      
+        const files = event.target.files;
+        for (let i = 0; i < files.length; i++) {
+          const file = await uploadFile(files[i]);
+          albumPhotos.push(file);
+        }
+        console.log("Files uploaded:", albumPhotos);
+        console.log(files.length);
+        if (files.length > 0) {
+          await displayCreateAlbumPreview(albumPhotos);
+          await cleanUpSectionEventListener();
+        }
+      });
+    }
+  
+    if (uploadSection.getAttribute('listener') !== true){
+      uploadSection.addEventListener("dragover", sectionDrag, true);
+      uploadSection.addEventListener("drop", sectionDrop, true);
+    }
+  
+    uploadSection.classList.remove("imageUploadSection");
+
 }
 
 async function displayAlbumConfirmation() {
@@ -1165,16 +1197,16 @@ sectionDrop = async(event) => {
 
 async function dropHandler(event) {
   event.preventDefault();
-  const fileList = [];
   const files = event.dataTransfer.files;
   for (let i = 0; i < files.length; i++) {
     const file = await uploadFile(files[i]);
-    fileList.push(file);
+    albumPhotos.push(file);
   }
-  console.log(fileList);
-  console.log(files.length)
+  console.log("Files uploaded:", albumPhotos);
+  console.log(files.length);
   if (files.length > 0) {
-    await displayCreateAlbumPreview(files);
+    await displayCreateAlbumPreview(albumPhotos);
+    await cleanUpSectionEventListener();
   }
 }
 
