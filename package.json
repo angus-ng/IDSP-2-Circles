@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "tsx watch ./src/server.ts",
-    "build": "npx tailwindcss -i ./src/input.css -o ./src/public/output.css --watch"
+    "build:tailwind": "npx tailwindcss -i ./src/input.css -o ./src/public/output.css --watch",
+    "build": "tsc -p .",
+    "start:watcher": "npm run build -- -w",
+    "start:JS": "nodemon ./dist/server.js"
   },
   "prisma": {
     "schema": "./src/prisma/schema.prisma",
@@ -49,6 +52,7 @@
     "ioredis": "^5.4.1",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
+    "nodemon": "^3.1.0",
     "passport": "^0.7.0",
     "passport-facebook": "^3.0.0",
     "passport-google-oauth20": "^2.0.0",
