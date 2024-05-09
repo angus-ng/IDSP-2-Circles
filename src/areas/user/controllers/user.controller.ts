@@ -27,7 +27,8 @@ class UserController implements IController {
     const followingName = req.params.followingName
     console.log(req.params.followerName,"getFollowers")
     const d = await this._service.getFollowers(followingName)
-    console.log(d, "BRUH")
+    console.log(d)
+    res.status(200).json({success: true, data: null})
   }
   private getFollowing = async (req: Request, res: Response) => {
     const followerName = req.params.followerName
@@ -37,6 +38,7 @@ class UserController implements IController {
     //console.log(this._service,"hello")
     // console.log(this._service)
     const d = await this._service.getFollowing(followerName)
+    console.log(d)
     //await this._service.getFollowing("A_A")
     res.status(200).json({success: true, data: null})
   }

@@ -35,22 +35,26 @@ export class UserService implements IUserService {
         return
       }
       try {
-        const listOfFollowings = []
+        const listOfFollowers = []
         const user = await this._db.prisma.user.findUnique({
           where: {
             username: followingName
           },
           include: {
-            following: {}
+            following: {
+              include: {
+                follower: true
+              }
+            }
           }
         })
         if (!user) {
             return 
         }
         for (let follower of user.following) {
-          listOfFollowings.push(follower.followerId)
+          listOfFollowers.push(follower.follower.username)
         }
-        return listOfFollowings
+        return listOfFollowers
       } catch (error) {
         throw new Error("Unable to find followings")
       }
@@ -66,14 +70,18 @@ export class UserService implements IUserService {
             username: followerName
           },
           include: {
-            followers: {}
+            following: {
+              include: {
+                following: true
+              }
+            }
           }
         })
         if (!user) {
             return 
         }
-        for (let following of user.followers) {
-          listOfFollowings.push(following.followingId)
+        for (let following of user.following) {
+          listOfFollowings.push(following.following.username)
         }
         return listOfFollowings
       } catch (error) {

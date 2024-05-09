@@ -100,6 +100,7 @@ async function getFollowing(followerName) {
   console.log(followerName);
   const response = await fetch(`/user/getFollowing/${followerName}`);
   const responseJson = await response.json();
-
+  const response2 = await fetch(`/user/getFollowers/${followerName}`);
+  const response2Json = await response2.json();
   return responseJson;
 }
