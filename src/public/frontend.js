@@ -646,7 +646,7 @@ async function displayProfile(circleRender, albumRender){
       <h2 class="text-secondary text-center">Friends</h2>
       </div>
     </div>
-    <div class="grid grid-cols-2 gap-4">
+    <div class="flex flex-row justify-between">
       <div>
         <img id="albumTab" src="/albumTab_deselected_light.svg" class="w-180 h-27 object-cover"></img>
       </div>
@@ -864,21 +864,21 @@ async function displayCircle(circleData) {
   console.log(circleData.circle.albums)
   const albumList = circleData.circle.albums.map((obj) => {
     return `
-  <div class="w-180 h-min relative album" id="${obj.id}">
-    <img class="w-180 max-h-56 h-min rounded-xl object-cover" src="${obj.photos[0].src}"/>
-    <div class="m-2 text-secondary font-semibold absolute inset-0 flex items-end justify-start">
-      <p class="text-light-mode-bg">${obj.name}</p>
-    </div>
-    <div class="absolute inset-0 flex items-end justify-end gap-1 p-2">
-      <img src="/like_icon.svg" alt="Like Icon"></img>
-      <img src="/comment_icon.svg" alt="Comment Icon"></img>
-    </div>
-  </div>`
+    <div class="w-full h-min relative album" id="${obj.id}">
+      <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.photos[0].src}"/>
+      <div class="m-2 text-secondary font-semibold absolute inset-0 flex items-end justify-start">
+        <p class="text-light-mode-bg">${obj.name}</p>
+      </div>
+      <div class="absolute inset-0 flex items-end justify-end gap-1 p-2">
+        <img src="/like_icon.svg" alt="Like Icon"></img>
+        <img src="/comment_icon.svg" alt="Comment Icon"></img>
+      </div>
+    </div>`
   })
   console.log(albumList)
 
   pageContent.innerHTML = `
-  <div class="">
+  <div class="w-full px-0 mx-0">
     <div class="flex justify-center mt-6 mb-1.5">
       <img src="${circleData.circle.picture}" class="rounded-full w-180 h-180 object-cover"/></img>
     </div>
@@ -897,11 +897,11 @@ async function displayCircle(circleData) {
     <div class="flex gap-2">
       ${memberList.join("")}
     </div>
-    <div id="albumList" class="pb-48">
+    <div id="albumList" class="pb-48 w-full">
       <div class="mt-6 mb-2">
         <p class="text-24 font-medium">Albums</p>
       </div>
-      <div class="columns-2 gap-4 space-y-4 grid-flow-row">
+      <div class="m-auto grid grid-cols-2 gap-4">
         ${albumList.join("")}
       </div>
     </div>
@@ -1036,10 +1036,10 @@ async function displayAlbum(albumData){
       <div class="mt-4">
         <p class="flex justify-center font-medium text-lg">${albumData.circle.name}</p>
       </div>
-      <div class="grid grid-cols-5 place-items-center mt-12 mb-2">
+      <div class="grid grid-cols-5 place-items-center mt-12 mb-2 mr-0">
         <p class="grid-span-1 text-base font-medium">${albumData.photos.length} Photos</p>
       </div>
-      <div id="photoList" class="pb-28">
+      <div id="photoList" class="pb-28 w-full">
         <div class="columns-2 gap-4 space-y-4 grid-flow-row">
           ${photoList.join("")}
         </div>

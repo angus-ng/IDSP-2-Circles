@@ -1414,6 +1414,11 @@ input:checked + .toggle-bg {
   margin-bottom: auto;
 }
 
+.mx-0 {
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
 .mb-1 {
   margin-bottom: 0.25rem;
 }
@@ -1520,6 +1525,10 @@ input:checked + .toggle-bg {
 
 .mt-header {
   margin-top: 105px;
+}
+
+.mr-0 {
+  margin-right: 0px;
 }
 
 .block {
@@ -1870,8 +1879,16 @@ input:checked + .toggle-bg {
   grid-template-rows: repeat(2, minmax(0, 1fr));
 }
 
+.flex-row {
+  flex-direction: row;
+}
+
 .flex-col {
   flex-direction: column;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
 }
 
 .flex-nowrap {
@@ -1930,9 +1947,21 @@ input:checked + .toggle-bg {
   gap: 1rem;
 }
 
+.gap-6 {
+  gap: 1.5rem;
+}
+
+.gap-5 {
+  gap: 1.25rem;
+}
+
 .gap-x-2 {
   -moz-column-gap: 0.5rem;
        column-gap: 0.5rem;
+}
+
+.gap-y-4 {
+  row-gap: 1rem;
 }
 
 .space-x-2 > :not([hidden]) ~ :not([hidden]) {
@@ -2285,6 +2314,11 @@ input:checked + .toggle-bg {
 .py-3 {
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
+}
+
+.px-0 {
+  padding-left: 0px;
+  padding-right: 0px;
 }
 
 .pb-0 {
@@ -2920,6 +2954,14 @@ input:checked + .toggle-bg {
 
   .md\:w-430 {
     width: 430px;
+  }
+
+  .md\:flex-row {
+    flex-direction: row;
+  }
+
+  .md\:flex-col {
+    flex-direction: column;
   }
 }
 
