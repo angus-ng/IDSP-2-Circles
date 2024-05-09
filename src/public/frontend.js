@@ -29,7 +29,7 @@ main();
 
 function displayLoginPage() {
   pageContent.innerHTML = `
-  <div id="loginPage" class="flex flex-col items-center rounded-lg mt-20 w-full z-10">
+  <div id="loginPage" class="flex flex-col items-center rounded-lg w-full z-10">
     <div class="flex-shrink-0 mt-2 mb-6">
         <img src="/logo_with_wordmark_light.svg" alt="Logo with Wordmark">  
     </div>
