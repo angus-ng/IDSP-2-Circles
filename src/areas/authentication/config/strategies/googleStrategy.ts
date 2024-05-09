@@ -8,7 +8,7 @@ const db = new AuthenticationService()
 const googleStrategy = new GoogleStrategy({
     clientID: String(process.env.GOOGLE_CLIENT_ID),
     clientSecret: String(process.env.GOOGLE_CLIENT_SECRET),
-    callbackURL: "http://localhost:5000/auth/google/callback",
+    callbackURL: "https://idsp-2-circles.onrender.com/auth/google/callback",
     scope: ['profile', 'email']
   },
   async (accessToken:string, refreshToken:string, profile:Profile, done:VerifyCallback) => {

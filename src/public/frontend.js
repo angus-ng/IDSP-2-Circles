@@ -19,6 +19,7 @@ async function initiatePage() {
   if (!currentLocalUser) {
     await displayLoginPage();
   } else {
+    await getFollowing("A_A")
     await displayExplore();
   }
 }
