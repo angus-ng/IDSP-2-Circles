@@ -897,7 +897,7 @@ async function displayCircle(circleData) {
     <div class="flex gap-2">
       ${memberList.join("")}
     </div>
-    <div id="albumList" class="pb-28">
+    <div id="albumList" class="pb-48">
       <div class="mt-6 mb-2">
         <p class="text-24 font-medium">Albums</p>
       </div>
@@ -1028,20 +1028,21 @@ async function displayAlbum(albumData){
 
   console.log(albumList)
 
-  pageContent.innerHTML = `<div>
-    <div id="memberList" class="flex mt-8 justify-center">
-      ${memberList.join("")}
-    </div>
-    <div class="mt-4">
-      <p class="flex justify-center font-medium text-lg">${albumData.circle.name}</p>
-    </div>
-    <div class="grid grid-cols-5 place-items-center mt-12 mb-2">
-      <p class="grid-span-1 text-base font-medium">${albumData.photos.length} Photos</p>
-    </div>
-    <div id="photoList" class="pb-28">
-      <div class="columns-2 gap-4 space-y-4 grid-flow-row">
-        ${photoList.join("")}
+  pageContent.innerHTML = `
+    <div id="albumPhotos">
+      <div id="memberList" class="flex mt-8 justify-center">
+        ${memberList.join("")}
       </div>
-    </div>
+      <div class="mt-4">
+        <p class="flex justify-center font-medium text-lg">${albumData.circle.name}</p>
+      </div>
+      <div class="grid grid-cols-5 place-items-center mt-12 mb-2">
+        <p class="grid-span-1 text-base font-medium">${albumData.photos.length} Photos</p>
+      </div>
+      <div id="photoList" class="pb-28">
+        <div class="columns-2 gap-4 space-y-4 grid-flow-row">
+          ${photoList.join("")}
+        </div>
+      </div>
   </div>`
 }

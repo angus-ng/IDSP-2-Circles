@@ -2323,6 +2323,22 @@ input:checked + .toggle-bg {
   padding-top: 2rem;
 }
 
+.pb-32 {
+  padding-bottom: 8rem;
+}
+
+.pb-36 {
+  padding-bottom: 9rem;
+}
+
+.pb-44 {
+  padding-bottom: 11rem;
+}
+
+.pb-48 {
+  padding-bottom: 12rem;
+}
+
 .text-center {
   text-align: center;
 }
