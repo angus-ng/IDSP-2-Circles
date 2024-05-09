@@ -41,7 +41,7 @@ export class UserService implements IUserService {
             username: followingName
           },
           include: {
-            following: {
+            followers: {
               include: {
                 follower: true
               }
@@ -51,7 +51,7 @@ export class UserService implements IUserService {
         if (!user) {
             return 
         }
-        for (let follower of user.following) {
+        for (let follower of user.followers) {
           listOfFollowers.push(follower.follower.username)
         }
         return listOfFollowers

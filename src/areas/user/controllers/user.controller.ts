@@ -25,7 +25,7 @@ class UserController implements IController {
   }
   private getFollowers = async (req: Request, res: Response) => {
     const followingName = req.params.followingName
-    console.log(req.params.followerName,"getFollowers")
+    console.log(req.params.followingName,"getFollowers")
     const d = await this._service.getFollowers(followingName)
     console.log(d)
     res.status(200).json({success: true, data: null})
