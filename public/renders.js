@@ -87,7 +87,7 @@ async function displayCreateCircle() {
           <div id="divider" class="my-4">
               <img src="/lightmode/divider.svg" alt="Divider">                          
           </div>
-            <input id="myInput" type="file" class="hidden" multiple=false />
+            <input id="fileUpload" type="file" class="hidden" multiple=false />
             <div class="flex items-center justify-between mt-2 mb-2">
               <div>
                 <p class="font-medium text-h2 leading-h2">Private or Public</p>
@@ -112,7 +112,7 @@ async function displayCreateCircle() {
   const circleNameInput = document.querySelector("#circleName");
   circleNameInput.value = newCircleNameInput;
   const addPictureButton = document.querySelector("#addPicture");
-  const fileInput = document.querySelector("#myInput");
+  const fileInput = document.querySelector("#fileUpload");
   const nextButton = document.querySelector("#nextButton");
   const circlePhoto = document.querySelector("#circleImage");
 
@@ -227,7 +227,7 @@ async function displayCreateCirclePreview() {
               <div class="flex justify-center items-center">
                   <input
                       type="text"
-                      value="Sample Text"
+                      placeholder="add a name to your circle"
                       readonly
                       id="circleName"
                       class="bg-transparent text-2xl font-bold border-none text-center p-1 min-w-[50px] w-auto"
@@ -240,7 +240,7 @@ async function displayCreateCirclePreview() {
             <div id="divider" class="mb-2">
                 <img src="/lightmode/divider.svg" alt="Divider">                          
             </div>
-            <input id="myInput" type="file" class="hidden" multiple=false/>
+            <input id="fileUpload" type="file" class="hidden" multiple=false/>
             <div class="flex items-center justify-between w-full">
                 <div>
                     <p class="font-medium text-h2 leading-h2">Private or Public</p>
@@ -269,7 +269,7 @@ async function displayCreateCirclePreview() {
           </div>
       </div>`;
   
-    const fileInput = document.querySelector("#myInput");
+    const fileInput = document.querySelector("#fileUpload");
     const circlePhoto = document.querySelector("#circleImage");
     document
       .querySelector("#circleImage")
@@ -584,7 +584,7 @@ async function displayListOfCircles(data) {
       <div id="createNewAlbum" class="flex-1 flex flex-col justify-start items-center w-full">
         <div class="flex flex-col items-center">
           <form>
-            <input id="myInput" type="file" class="hidden" multiple="false" />
+            <input id="fileUpload" type="file" class="hidden" multiple="false" />
           </form>
           <div class="flex justify-center mt-64 md:mt-52 mb-6">
             <img id="uploadIcon" src="/lightmode/upload_photo.svg" alt="Upload Icon" />
@@ -602,7 +602,7 @@ async function displayListOfCircles(data) {
   
     const uploadSection = document.querySelector("#createNewAlbum");
   
-    const fileInput = document.querySelector("#myInput");
+    const fileInput = document.querySelector("#fileUpload");
   
     if (uploadSection.getAttribute("listener") !== true) {
       uploadSection.addEventListener("mousedown", sectionUploadClick, true);
@@ -687,7 +687,7 @@ function displayCreateAlbumPreview(albumPhotos) {
         </div>
         <div id="dropMore" class="flex flex-col items-center bg-light-grey w-full h-full overflow-hidden mt-3 p-5 border-t border-spacing-2 border-dashed border-grey">
           <form class="hidden">
-            <input id="myInput" type="file" class="hidden" multiple="false"/>
+            <input id="fileUpload" type="file" class="hidden" multiple="false"/>
           </form>
           <div class="flex justify-center mt-24 md:mt-16 mb-5">
             <img id="uploadIcon" src="/lightmode/upload_photo_grey.svg" alt="Upload Icon"/>
@@ -765,7 +765,7 @@ function displayCreateAlbumPreview(albumPhotos) {
     );
   
     const uploadSection = document.querySelector("#dropMore");
-    const fileInput = document.querySelector("#myInput");
+    const fileInput = document.querySelector("#fileUpload");
     if (uploadSection.getAttribute("listener") !== true) {
       uploadSection.addEventListener("mousedown", sectionUploadClick, true);
     }

@@ -42,7 +42,7 @@ async function handleSendCircleRequest(requestee, circleId) {
 }
 
 async function handleSelectFile() {
-  const fileInput = document.querySelector("#myInput");
+  const fileInput = document.querySelector("#fileUpload");
   const file = fileInput.files[0];
   if (!file) {
     return;

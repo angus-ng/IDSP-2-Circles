@@ -287,7 +287,7 @@ async function cleanUpSectionEventListener() {
 }
 
 async function sectionUploadClick(event) {
-  const fileInput = document.querySelector("#myInput");
+  const fileInput = document.querySelector("#fileUpload");
   event.preventDefault();
   event.stopImmediatePropagation();
   console.log(fileInput);
