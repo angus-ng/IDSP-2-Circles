@@ -623,12 +623,12 @@ async function displaySearch() {
     const username = target.getAttribute("name");
     const method = target.getAttribute("method");
     switch (method) {
-      case "Follow":
+      case "Add Friend":
         await sendFriendRequest(username, currentLocalUser);
         alert("friend request sent");
         await displaySearch();
         break;
-      case "Unfollow":
+      case "Remove Friend":
         console.log(method);
         break;
       default:
