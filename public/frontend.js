@@ -1463,14 +1463,14 @@ async function displayAlbum(albumData) {
       </div>
   </div>`;
   const albumPhotos = document.querySelector("#albumPhotos");
-  console.log("THIS", albumPhotos)
+  console.log("THIS", albumPhotos);
   albumPhotos.addEventListener("click", async (event) => {
     const photo = event.target.closest("#photo img");
     const overlay = event.target.closest("#photoOverlay");
     if (photo) {
       console.log(photo.src);
       await displayPhoto(photo.src);
-    } 
+    }
 
     if (overlay) {
       const img = event.target.closest("#image");
@@ -1480,6 +1480,7 @@ async function displayAlbum(albumData) {
         overlay.remove();
       }
     }
+  });
 }
 
 function displayCircleInvites(circleInvites) {
@@ -1562,12 +1563,13 @@ function displayAlbumInvites(albumInvites) {
 const clearNewAlbum = () => {
   albumObj = {};
   albumPhotos = [];
-}
+};
 
 async function displayPhoto(photoSrc) {
   const albumPhotos = document.querySelector("#albumPhotos");
   const photoDiv = document.createElement("div");
-  photoDiv.className = "absolute top-0 left-0 bg-overlay-bg h-screen w-screen flex justify-center items-center mx-auto z-20";
+  photoDiv.className =
+    "absolute top-0 left-0 bg-overlay-bg h-screen w-screen flex justify-center items-center mx-auto z-20";
   photoDiv.id = "photoOverlay";
   const personalView = document.createElement("img");
   personalView.src = `${photoSrc}`;

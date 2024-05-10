@@ -1244,10 +1244,6 @@ select {
   min-width: 50px;
 }
 
-.max-w-xs {
-  max-width: 20rem;
-}
-
 .max-w-sm {
   max-width: 24rem;
 }
@@ -1784,11 +1780,6 @@ select {
 
 .leading-tertiary {
   line-height: 14px;
-}
-
-.text-blue-500 {
-  --tw-text-opacity: 1;
-  color: rgb(59 130 246 / var(--tw-text-opacity));
 }
 
 .text-blue-600 {
