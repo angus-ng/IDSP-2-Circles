@@ -126,12 +126,12 @@ header.addEventListener("click", async (event) => {
   }
 
   if (createCircleButton) {
-    for (let friend of checkedFriends) {
-      console.log("FRIEND", friend);
-      const { success, data } = await handleSendCircleRequest(friend);
-    }
     const { success, data } = await handleCreateCircle();
     const circleId = data;
+    for (let friend of checkedFriends) {
+      console.log("FRIEND", friend);
+      const { success, data } = await handleSendCircleRequest(friend, circleId);
+    }
     if (success && data) {
       const { success, data, error } = await getCircle(circleId);
       if (success && data) {
@@ -173,8 +173,7 @@ header.addEventListener("click", async (event) => {
     const { success, data } = await getListOfCircles();
     if (success && data) {
       const circleRender = await displayListOfCircles(data);
-      console.log(circleRender);
-      showCreateOrAddToCircle(circleRender);
+      await showCreateOrAddToCircle(circleRender);
       return;
     }
   }
@@ -599,19 +598,131 @@ async function displaySearch() {
   rightHeaderButton.innerHTML = "";
   leftHeaderButton.innerHTML = "";
   pageContent.innerHTML = `
-  <div id="searchPage" class="flex flex-col justify-center py-2 w-full h-screen">
+  <div id="searchPage" class="flex flex-col py-2 w-full h-screen">
+  <input type="text" id="searchBox">
+    <div class="shrink-0 mt-10 mb-6 justify-center w-full">
+      <div id="suggestedFriends"></div>
+    </div>
   </div>
   `;
+  const searchBox = document.querySelector("#searchBox");
+
+  // this is to show all users when the page first loads
+  const searchResult = await getSearchResult(searchBox.value);
+  const suggestedFriends = document.querySelector("#suggestedFriends");
+  suggestedFriends.innerHTML = displayUserSearch(searchResult.data).join("");
+
+  searchBox.addEventListener("input", async (event) => {
+    const searchResult = await getSearchResult(searchBox.value);
+    suggestedFriends.innerHTML = displayUserSearch(searchResult.data).join("");
+  });
+
+  suggestedFriends.addEventListener("click", async (event) => {
+    event.preventDefault();
+    const target = event.target;
+    const username = target.getAttribute("name");
+    const method = target.getAttribute("method");
+    switch (method) {
+      case "Follow":
+        await sendFriendRequest(username, currentLocalUser);
+        alert("friend request sent");
+        await displaySearch();
+        break;
+      case "Unfollow":
+        console.log(method);
+        break;
+      default:
+        break;
+    }
+  });
+}
+
+function displayUserSearch(listOfUsers) {
+  if (!listOfUsers) {
+    return [];
+  }
+  let newArr = listOfUsers.map((user) => {
+    if (user.username === currentLocalUser) {
+      return;
+    }
+    let followStatus = "Follow";
+    for (let friend of user.friendOf) {
+      if (friend.friend_1_name === currentLocalUser) {
+        followStatus = "Unfollow";
+      }
+    }
+    return `<div class="flex items-center my-5">
+    <div class="flex-none w-58">
+      <img class="rounded w-58 h-58" src="${user.profilePicture}" alt="${user.username}'s profile picture"></img>
+    </div>
+    <div class="ml-8 flex-none w-207">
+      <h2 class="font-medium text-14 leading-tertiary">${user.username}</h2>
+    </div>
+    <div class="flex-none w-58">
+      <form>
+        <button name="${user.username}" method="${followStatus}" class="cursor-pointer">${followStatus}</button>
+      </form>
+    </div>
+  </div>`;
+  });
+  return newArr;
 }
 
 async function displayActivity() {
   pageName.innerHTML = "Activity";
   rightHeaderButton.innerHTML = "";
   leftHeaderButton.innerHTML = "";
+  const { friendRequests, circleInvites, albumInvites } = await getActivites(
+    currentLocalUser
+  );
+
   pageContent.innerHTML = `
-  <div id="activityPage" class="flex flex-col justify-center py-2 w-full h-screen">
+  <div id="activityPage" class="flex flex-col py-2 w-full h-screen">
+    <div class="shrink-0 mt-10 mb-6 w-full">
+        <h1 class="font-bold text-20 leading-body">Friend Requests</h1>
+        <div id="friendRequests"> </div>
+    </div>
+    <div class="shrink-0 mt-10 mb-6 w-full">
+        <h1 class="font-bold text-20 leading-body">Circle Invites</h1>
+        <div id="circleInvites"> </div>
+    </div>
+    <div class="shrink-0 mt-10 mb-6 w-full">
+        <h1 class="font-bold text-20 leading-body">Album Invites</h1>
+        <div id="albumInvites"> </div>
+    </div>
   </div>
   `;
+  const friendRequestsDiv = document.querySelector("#friendRequests");
+  friendRequestsDiv.innerHTML = displayFriendRequests(friendRequests);
+  const circleInvitesDiv = document.querySelector("#circleInvites");
+  circleInvitesDiv.innerHTML = displayCircleInvites(circleInvites);
+  const albumInvitesDiv = document.querySelector("#albumInvites");
+  albumInvitesDiv.innerHTML = displayAlbumInvites(albumInvites);
+
+  const activityPage = document.querySelector("#activityPage");
+  activityPage.addEventListener("click", async (event) => {
+    event.preventDefault();
+    const target = event.target;
+    const id = target.getAttribute("identifier");
+    const invitee = target.getAttribute("sentTo");
+    switch (target.name) {
+      case "friendRequest":
+        await acceptFriendRequest(id, invitee);
+        await displayActivity();
+        break;
+      case "circleInvite":
+        await acceptCircleInvite(id, invitee);
+        await displayActivity();
+        break;
+      case "albumInvite":
+        await acceptAlbumInvite(id, invitee);
+        await displayActivity();
+        break;
+      default:
+        console.log("DO NOTHING LOL");
+        break;
+    }
+  });
 }
 
 async function displayNavBar() {
@@ -1317,6 +1428,7 @@ async function displayAlbum(albumData) {
   <img src="/back_button_icon_light.svg" alt="Back Button" id="backButtonAlbum"></img>
   </span
   `;
+  rightHeaderButton.innerHTML = ``;
 
   pageName.innerHTML = `${albumData.name}`;
 
@@ -1350,6 +1462,83 @@ async function displayAlbum(albumData) {
         </div>
       </div>
   </div>`;
+}
+
+function displayCircleInvites(circleInvites) {
+  if (circleInvites.length === 0) {
+    return `<div class="flex items-center my-5">
+      <div class="ml-8 flex-none w-207">
+        <h2 class="font-medium text-14 leading-tertiary">No circle invites. Maybe go out and have fun XD? 😂😂😂</h2>
+      </div>
+    </div>`;
+  }
+  let newArr = circleInvites.map((invite) => {
+    return `<div class="flex items-center my-5">
+    <div class="flex-none w-58">
+      <img class="rounded w-58 h-58" src="${invite.circle.picture}" alt="${invite.circle.name}'s picture"></img>
+    </div>
+    <div class="ml-8 flex-none w-207">
+      <h2 class="font-medium text-14 leading-tertiary">${invite.circle.name}</h2>
+    </div>
+    <div class="flex-none w-58">
+      <form>
+        <button identifier="${invite.circle.id}" sentTo="${invite.invitee_username}" name="circleInvite" class="cursor-pointer">Accept</button>
+      </form>
+    </div>
+  </div>`;
+  });
+  return newArr;
+}
+
+function displayFriendRequests(friendRequest) {
+  if (friendRequest.length === 0) {
+    return `<div class="flex items-center my-5">
+      <div class="ml-8 flex-none w-207">
+        <h2 class="font-medium text-14 leading-tertiary">No friend requests. Maybe go make some friends XD? 😂😂😂</h2>
+      </div>
+    </div>`;
+  }
+  let newArr = friendRequest.map((request) => {
+    return `<div class="flex items-center my-5">
+    <div class="flex-none w-58">
+      <img class="rounded w-58 h-58" src="${request.requester.profilePicture}" alt="${request.requester.username}'s profile picture"></img>
+    </div>
+    <div class="ml-8 flex-none w-207">
+      <h2 class="font-medium text-14 leading-tertiary">${request.requesterName}</h2>
+    </div>
+    <div class="flex-none w-58">
+      <form>
+        <button identifier="${request.requesterName}" sentTo="${request.requesteeName}" name="friendRequest" class="cursor-pointer">Accept</button>
+      </form>
+    </div>
+  </div>`;
+  });
+  return newArr;
+}
+function displayAlbumInvites(albumInvites) {
+  if (albumInvites.length === 0) {
+    return `<div class="flex items-center my-5">
+      <div class="ml-8 flex-none w-207">
+        <h2 class="font-medium text-14 leading-tertiary">No album invites. Maybe go out and have fun XD? 😂😂😂</h2>
+      </div>
+    </div>`;
+  }
+  let newArr = albumInvites.map((invite) => {
+    return `<div class="flex items-center my-5">
+    <div class="flex-none w-58">
+      <img class="rounded w-58 h-58" src="${invite.album.circle.picture}" alt="${invite.album.name}'s circle picture"></img>
+    </div>
+    <div class="ml-8 flex-none w-207">
+      <h2 class="font-medium text-14 leading-tertiary">${invite.album.name} from ${invite.album.circle.name}</h2>
+    </div>
+    <div class="flex-none w-58">
+      <form>
+        <button identifier="${invite.albumId}" sentTo="${invite.invitee_username}" name="albumInvite" class="cursor-pointer">Accept</button>
+      </form>
+    </div>
+  </div>`;
+  });
+  return newArr;
 }
 
 const clearNewAlbum = () => {

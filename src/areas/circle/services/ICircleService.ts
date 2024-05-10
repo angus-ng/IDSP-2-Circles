@@ -8,5 +8,7 @@ export default interface ICircleService {
     checkMembership(id: string, currentUser: string): Promise<boolean>
     getCircle(id: string): Promise<Circle | null>
     listCircles(currentUser: string): Promise<{circle: Circle}[]>
+    inviteToCircle(username: string, circleName: string): Promise<void>
     getMembers(id: string): Promise<{user: {username: string, profilePicture: string}}[] | null>
+    acceptInvite(id: string, username: string): Promise<void>
 }

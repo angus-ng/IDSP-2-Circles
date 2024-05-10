@@ -21,39 +21,24 @@ async function handleCreateCircle() {
   }
 }
 
-async function handleSendCircleRequest(requestee) {
+async function handleSendCircleRequest(requestee, circleId) {
   try {
-    const circleName = document.querySelector("#circleName").value;
-    if (!circleName) {
-      return { success: true, data: null };
-    }
-    console.log("CIRCLENAME", circleName)
-    console.log(requestee)
     const input = {
       requestee: requestee,
-      circleName: circleName
-    }
-    // const formData = new FormData();
-    // formData.append("requestee", requestee);
-    // formData.append("circleName", circleName);
+      circleId: circleId,
+    };
     const response = await fetch("/circle/invite", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(input)
+      body: JSON.stringify(input),
     });
     const jsonResponse = await response.json();
-    console.log("JSONRESPONSE", jsonResponse)
     return jsonResponse;
   } catch (error) {
     return { success: true, data: null, error };
   }
-}
-
-async function handleCreateAlbum() {
-  try {
-  } catch (error) {}
 }
 
 async function handleSelectFile() {
@@ -166,4 +151,111 @@ async function getFriends(username) {
   const response = await fetch(`/user/getFriends/${username}`);
   const responseJson = await response.json();
   return responseJson.data;
+}
+
+async function getActivites(currentLocalUser) {
+  const response = await fetch(`/user/getActivities/${currentLocalUser}`);
+  const responseJson = await response.json();
+  return responseJson.data;
+}
+
+async function acceptCircleInvite(id, invitee) {
+  try {
+    const inviteObj = {
+      id: id,
+      invitee: invitee,
+    };
+    const response = await fetch("/circle/accept", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(inviteObj),
+    });
+
+    const jsonResponse = await response.json();
+    return jsonResponse;
+  } catch (err) {
+    return { success: true, data: null, error: err };
+  }
+}
+
+async function acceptAlbumInvite(id, invitee) {
+  try {
+    const inviteObj = {
+      id: id,
+      invitee: invitee,
+    };
+    const response = await fetch("/album/accept", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(inviteObj),
+    });
+
+    const jsonResponse = await response.json();
+    return jsonResponse;
+  } catch (err) {
+    return { success: true, data: null, error: err };
+  }
+}
+
+async function acceptFriendRequest(requester, requestee) {
+  try {
+    const requestObj = {
+      requester: requester,
+      requestee: requestee,
+    };
+    const response = await fetch("/user/accept", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestObj),
+    });
+
+    const jsonResponse = await response.json();
+    return jsonResponse;
+  } catch (err) {
+    return { success: true, data: null, error: err };
+  }
+}
+
+async function getSearchResult(input) {
+  try {
+    if (input.trim() === "") {
+      const response = await fetch(`/user/searchAll`);
+
+      const jsonResponse = await response.json();
+      return jsonResponse;
+    } 
+    const response = await fetch(`/user/search/${input.trim()}/`);
+
+    const jsonResponse = await response.json();
+    return jsonResponse;
+  } catch (err) {
+    return { success: true, data: null, error: err };
+  }
+}
+
+async function sendFriendRequest(requestee, requester) {
+  try {
+    const requestObj = {
+      requester: requester,
+      requestee: requestee,
+    };
+    const response = await fetch("/user/sendFriendRequest", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestObj),
+    });
+
+    const jsonResponse = await response.json();
+    return jsonResponse;
+  } catch (err) {
+    return { success: true, data: null, error: err };
+  }
 }

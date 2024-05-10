@@ -26,6 +26,7 @@ class CircleController implements IController {
     this.router.get(`${this.path}/:id/delete`, ensureAuthenticated, this.deleteCircle);
     this.router.post(`${this.path}/invite`, ensureAuthenticated, this.circleInvite);
     this.router.post(`${this.path}/list`, ensureAuthenticated, this.getCircleList);
+    this.router.post(`${this.path}/accept`, ensureAuthenticated, this.acceptInvite)
   }
 
   private uploadImage = async (req: Request, res: Response) => {
@@ -51,7 +52,7 @@ class CircleController implements IController {
         const newCircle = await this._service.createCircle(newCircleInput)
 
         if (!newCircle){
-          return res.status(200).json({ success: true, data:null});
+          return res.status(200).json({ success: true, data:newCircle});
         }
 
         res.status(200).json({ success: true, data: newCircle.id });
@@ -94,10 +95,10 @@ class CircleController implements IController {
   }
   
   private circleInvite = async (req:Request, res:Response) => {
-    const { requestee, circleName } = req.body
+    const { requestee, circleId } = req.body
 
-    console.log("inviting ",requestee, " to ", circleName)
-    console.log(req.body)
+    console.log("inviting",requestee, "to", circleId,"...")
+    this._service.inviteToCircle(requestee, circleId)
     
     //change to verify selected are friends of current user
 
@@ -106,10 +107,22 @@ class CircleController implements IController {
 
   private getCircleList = async (req:Request, res:Response) => {
     let loggedInUser = req.user!.username
-    console.log (loggedInUser)
     const circles = await this._service.listCircles(loggedInUser)
 
     res.json({success: true, data: circles})
+  }
+  
+  private acceptInvite = async (req: Request, res: Response) => {
+    const { id, invitee } = req.body
+    let loggedInUser = req.user!.username
+    try {
+      if (loggedInUser === invitee) {
+        await this._service.acceptInvite(id, invitee)
+      }
+      return res.status(200).json({success: true, data: null});
+    } catch (error) {
+      return res.status(200).json({success: false, error: "failed to accept invite"});
+    }
   }
 }
 

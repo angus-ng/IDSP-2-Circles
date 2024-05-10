@@ -25,6 +25,7 @@ class AlbumController implements IController {
     this.router.post(`${this.path}/upload`, ensureAuthenticated, upload.single("file"), this.uploadImages); 
     this.router.get(`${this.path}/:id`, ensureAuthenticated, this.showAlbum);
     this.router.post(`${this.path}/list`, ensureAuthenticated, this.getAlbumList);
+    this.router.post(`${this.path}/accpet`, ensureAuthenticated)
   }
 
   private uploadImages = async (req: Request, res: Response) => {
@@ -46,7 +47,7 @@ class AlbumController implements IController {
           const { id } = req.body;
           console.log(id)
           const albumObj = {
-            photos,
+            photos: photos,
             albumName: name,
             circleId: id,
             creator: loggedInUser
@@ -91,6 +92,19 @@ class AlbumController implements IController {
     const albums = await this._service.listAlbums(loggedInUser)
 
     res.json({success: true, data: albums})
+  }
+
+  private acceptInvite = async (req: Request, res: Response) => {
+    const { id, invitee } = req.body
+    let loggedInUser = req.user!.username
+    try {
+      if (loggedInUser === invitee) {
+        await this._service.acceptInvite(id, invitee)
+      }
+      return res.status(200).json({success: true, data: null});
+    } catch (error) {
+      return res.status(200).json({success: false, error: "failed to accept invite"});
+    }
   }
 }
 

@@ -29,7 +29,7 @@ export class CircleService implements ICircleService {
         if (createdCircle) {
             await this._db.prisma.userCircle.create({
                 data: {
-                    userId: creator.id,
+                    username: creator.username,
                     circleId: createdCircle.id
                 }
             })
@@ -42,85 +42,101 @@ export class CircleService implements ICircleService {
   }
 
   async deleteCircle(id: string, currentUser:string): Promise<void> {
-    const user = await this._db.prisma.user.findUnique({
-        where: {
-            username: currentUser
+    try {
+        const user = await this._db.prisma.user.findUnique({
+            where: {
+                username: currentUser
+            }
+        })
+        const circle = await this._db.prisma.circle.findUnique({
+            where: {
+                id: id
+            }
+        })
+    
+        if (!user || !circle || circle.ownerId !== user.username) {
+            return;
         }
-    })
-    const circle = await this._db.prisma.circle.findUnique({
-        where: {
-            id: id
-        }
-    })
-
-    if (!user || !circle || circle.ownerId !== user.username) {
-        return;
+    
+        // delete circle
+        await this._db.prisma.circle.delete({
+            where: {
+                id: id,
+            },
+          })
+    } catch (error:any) {
+        throw new Error(error)
     }
-
-    // delete circle
-    await this._db.prisma.circle.delete({
-        where: {
-            id: id,
-        },
-      })
   }
 
   async checkMembership(id: string, currentUser:string): Promise<boolean> {
-    const user = await this._db.prisma.user.findUnique({
-        where: {
-            username : currentUser
+    try {
+        const user = await this._db.prisma.user.findUnique({
+            where: {
+                username : currentUser
+            }
+        })
+    
+        const membership = await this._db.prisma.userCircle.findFirst({
+            where: {
+                username: String(user!.username),
+                circleId: id
+            }
+        })
+    
+        if (!membership) {
+            return false;
         }
-    })
-
-    const membership = await this._db.prisma.userCircle.findFirst({
-        where: {
-            userId: String(user!.id),
-            circleId: id
-        }
-    })
-
-    if (!membership) {
-        return false;
+        return true
+    } catch (error:any) {
+        throw new Error(error)
     }
-    return true
   }
   async getCircle (id: string): Promise<Circle | null> {
-    const circle = await this._db.prisma.circle.findUnique({
-        include: {
-            albums: {
-                select: {
-                    id: true,
-                    name: true,
-                    photos: {
-                        take: 1
+    try {
+        const circle = await this._db.prisma.circle.findUnique({
+            include: {
+                albums: {
+                    select: {
+                        id: true,
+                        name: true,
+                        photos: {
+                            take: 1
+                        }
                     }
                 }
+            },
+            where: {
+                id: id
             }
-        },
-        where: {
-            id: id
-        }
-    })
-    return circle;
+        })
+        return circle;
+    } catch (error:any) {
+        throw new Error(error)
+    }
   }
 
   async listCircles (currentUser:string): Promise<{circle: Circle}[]> {
-    const user = await this._db.prisma.user.findUnique({
-        where: {
-            username: currentUser
-        }
-    })
-    const circleArr = await this._db.prisma.userCircle.findMany({
-        select: {
-            circle: true
-        },
-        where: {
-            userId: user!.id
-        }
-    })
-    console.log(circleArr)
-
-    return circleArr;
+    try {
+        const user = await this._db.prisma.user.findUnique({
+            where: {
+                username: currentUser
+            }
+        })
+        const circleArr = await this._db.prisma.userCircle.findMany({
+            select: {
+                circle: true
+            },
+            where: {
+                username: user!.username
+            }
+        })
+        console.log(circleArr)
+    
+        return circleArr;
+    } catch (error:any) {
+        throw new Error(error)
+    }
   }
 
   async getMembers (circleId: string) {
@@ -138,5 +154,50 @@ export class CircleService implements ICircleService {
         }
     })
     return members;
+  }
+  async inviteToCircle(username: string, circleName: string): Promise<void> {
+    try {
+        await this._db.prisma.circleInvite.create({
+          data:{
+              invitee_username: username,
+              circleId: circleName
+          }
+        })
+    } catch (error:any) {
+        throw new Error(error)
+    }
+  }
+  async acceptInvite(id: string, username: string): Promise<void> {
+      try {
+        const cirlceInvite = await this._db.prisma.circleInvite.findUnique({
+            where: {
+                invitee_username_circleId: {
+                    circleId: id,
+                    invitee_username: username
+                }
+            }
+        })
+        if (cirlceInvite) {
+            await this._db.prisma.circleInvite.delete({
+                where: {
+                    invitee_username_circleId: {
+                        circleId: id,
+                        invitee_username: username
+                    }
+                }
+            })
+            await this._db.prisma.userCircle.create({
+                data: {
+                    username: username,
+                    circleId: id
+                }
+            })
+            return
+        } else {
+            throw new Error("Failed to accept circle invite")
+        }
+      } catch (error:any) {
+        throw new Error(error)
+      }
   }
 }

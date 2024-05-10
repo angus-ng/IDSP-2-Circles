@@ -20,8 +20,10 @@ export class AlbumService implements IAlbumService {
             data: {
                 name: newAlbumInput.albumName,
                 circleId: newAlbumInput.circleId,
+                ownerName: newAlbumInput.creator
             }
         })
+        console.log(createdAlbum, 'LSJADLkajslkdjkasjdlkasjskla')
 
         //make the explicit album user relationship
         if (createdAlbum) {
@@ -86,7 +88,7 @@ export class AlbumService implements IAlbumService {
 
     const membership = await this._db.prisma.userCircle.findFirst({
         where: {
-            userId: user.id,
+            username: user.username,
             circleId: albumCircleId.circleId
         }
     })
@@ -140,5 +142,38 @@ export class AlbumService implements IAlbumService {
         }
     })
     //return new Error("Not implemented");
+  }
+  async acceptInvite(id: string, username: string): Promise<void> {
+    try {
+        const cirlceInvite = await this._db.prisma.albumInvite.findUnique({
+            where: {
+                invitee_username_albumId: {
+                    albumId: id,
+                    invitee_username: username
+                }
+            }
+        })
+        if (cirlceInvite) {
+            await this._db.prisma.albumInvite.delete({
+                where: {
+                    invitee_username_albumId: {
+                        albumId: id,
+                        invitee_username: username
+                    }
+                }
+            })
+            await this._db.prisma.userCircle.create({
+                data: {
+                    username: username,
+                    circleId: id
+                }
+            })
+            return
+        } else {
+            throw new Error("Failed to accept album invite")
+        }
+      } catch (error:any) {
+        throw new Error(error)
+      }
   }
 }
