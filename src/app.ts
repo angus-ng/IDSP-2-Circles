@@ -1,5 +1,4 @@
 import express from "express";
-import errorMiddleware from "./middleware/error.middleware";
 import Controller from "./interfaces/controller.interface";
 import dotenv from "dotenv";
 
@@ -14,7 +13,6 @@ class App {
     this._app = express();
     this.initializeMiddlewares();
     this.initializeControllers(controllers);
-    this.initializeErrorHandling();
   }
 
   public start() {
@@ -29,9 +27,6 @@ class App {
     // require("./middleware/authentication.middlewares")(this._app);
   }
 
-  private initializeErrorHandling() {
-    this._app.use(errorMiddleware);
-  }
 
   private initializeControllers(controllers: Controller[]) {
     controllers.forEach((controller) => {
