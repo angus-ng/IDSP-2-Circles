@@ -2,13 +2,18 @@
 module.exports = {
   mode: "jit",
   content: [
-    "./src/**/*.ejs",
-    "./src/public/*.js",
-    "./node_modules/flowbite/**/*.js"
+    "./public/*.html",
+    "./public/*.js",
 ],
 theme: {
   fontFamily: {
     sans: ['"DM Sans"', 'sans-serif']
+  },
+  screens: {
+    'min-size': '430px'
+  },
+  borderRadius:{
+    'xxxl': '6000px'
   },
   extend: {
     colors: {
@@ -75,7 +80,8 @@ theme: {
       'image': '215px',
       'navbar': '85px',
       '400': '400px',
-      '62': '62px'
+      '62': '62px',
+      '415': '415px'
     },
     boxShadow: {
       'background-shadow': 'inset 0 0 100px -30px rgba(0, 0, 0, 0.2)'
@@ -84,7 +90,8 @@ theme: {
       '20': '20px',
       'input-box': '28px',
       'checkbox': '3px',
-      '12.75': '12.75px'
+      '12.75': '12.75px',
+      'xxl': '600px'
     },
     borderWidth: {
       'circle': '0.75px',
@@ -107,6 +114,5 @@ theme: {
 },
 plugins: [
   require('@tailwindcss/forms'),
-  require('flowbite/plugin')
 ],
 }

@@ -672,7 +672,7 @@ async function getListOfCircles() {
 
 async function displayProfile(circleRender, albumRender){
   pageContent.innerHTML = `
-  <div id="profilePage" class="container pt-8 pb-16 mb-4 w-full">
+  <div id="profilePage" class="pt-8 pb-16 mb-4 w-full">
     <div class="flex justify-center mb-4">
       <img id="profilePicture" src="/placeholder_image.svg" class="w-110 h-110 object-cover rounded-full"></img>
     </div>
@@ -1277,7 +1277,7 @@ async function displayAlbum(albumData){
     return `<img src="${obj.user.profilePicture}" class="w-16 h-16 rounded-full object-cover"></img>`
   })
   const photoList = albumData.photos.map((obj) => {
-    return `<div class="w-full h-min relative photo" id="${obj.id}">
+    return `<div id="photo" class="w-full h-min relative photo" albumId="${obj.id}">
     <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.src}"/>
   </div>`
   })
@@ -1298,10 +1298,44 @@ async function displayAlbum(albumData){
           ${photoList.join("")}
         </div>
       </div>
-  </div>`
+    </div>`;
+
+  const albumPhotos = document.querySelector("#albumPhotos");
+  console.log("THIS", albumPhotos)
+  albumPhotos.addEventListener("click", async (event) => {
+    const photo = event.target.closest("#photo img");
+    const overlay = event.target.closest("#photoOverlay");
+    if (photo) {
+      console.log(photo.src);
+      await displayPhoto(photo.src);
+    } 
+
+    if (overlay) {
+      const img = event.target.closest("#image");
+      if (img) {
+        event.stopPropagation();
+      } else {
+        overlay.remove();
+      }
+    }
+  });
 }
 
 const clearNewAlbum = () => {
   albumObj = {};
   albumPhotos = [];
+}
+
+async function displayPhoto(photoSrc) {
+  const albumPhotos = document.querySelector("#albumPhotos");
+  const photoDiv = document.createElement("div");
+  photoDiv.className = "container absolute top-0 left-0 bg-overlay-bg h-screen w-full flex justify-center items-center mx-auto z-20";
+  photoDiv.id = "photoOverlay";
+  const personalView = document.createElement("img");
+  personalView.src = `${photoSrc}`;
+  personalView.id = "image";
+  personalView.className = "max-w-415 mx-auto object-cover rounded-xxxl px-4";
+
+  photoDiv.appendChild(personalView);
+  albumPhotos.appendChild(photoDiv);
 }
