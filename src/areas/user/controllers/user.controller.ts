@@ -27,8 +27,8 @@ class UserController implements IController {
       let loggedInUser = req.user!.username
       const { requester, requestee } = req.body
       if (loggedInUser === requester) {
-        await this._service.friend(requester, requestee)
-        res.status(200).json({success:true, data: null})
+        const message = await this._service.friend(requester, requestee)
+        res.status(200).json({success:true, data: message})
       } else {
         res.status(400).json({success:false, error: "Failed to send friend request"})
       }
@@ -37,6 +37,18 @@ class UserController implements IController {
     }
   }
   private unfriend = async (req: Request, res: Response) => {
+    try {
+      let loggedInUser = req.user!.username
+      const { requester, requestee } = req.body
+      if (loggedInUser === requester) {
+        const message = await this._service.unfriend(requester, requestee)
+        res.status(200).json({success:true, data: message})
+      } else {
+        res.status(400).json({success:false, error: "Failed to unfriend"})
+      }
+    } catch (error:any) {
+      throw new Error(error)
+    }
   }
   private getFriends = async (req: Request, res: Response) => {
     let loggedInUser = req.user!.username

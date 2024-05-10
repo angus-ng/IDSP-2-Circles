@@ -216,7 +216,28 @@ async function acceptFriendRequest(requester, requestee) {
     });
 
     const jsonResponse = await response.json();
-    return jsonResponse;
+    return jsonResponse.data;
+  } catch (err) {
+    return { success: true, data: null, error: err };
+  }
+}
+
+async function unfriend(requester, requestee) {
+  try {
+    const requestObj = {
+      requester: requester,
+      requestee: requestee,
+    };
+    const response = await fetch("/user/unfriend", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestObj),
+    });
+
+    const jsonResponse = await response.json();
+    return jsonResponse.data;
   } catch (err) {
     return { success: true, data: null, error: err };
   }
@@ -229,7 +250,7 @@ async function getSearchResult(input) {
 
       const jsonResponse = await response.json();
       return jsonResponse;
-    } 
+    }
     const response = await fetch(`/user/search/${input.trim()}/`);
 
     const jsonResponse = await response.json();
@@ -254,7 +275,7 @@ async function sendFriendRequest(requestee, requester) {
     });
 
     const jsonResponse = await response.json();
-    return jsonResponse;
+    return jsonResponse.data;
   } catch (err) {
     return { success: true, data: null, error: err };
   }
