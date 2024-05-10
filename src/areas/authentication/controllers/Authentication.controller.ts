@@ -1,9 +1,7 @@
 import express, { NextFunction, Request, Response } from "express";
 import IController from "../../../interfaces/controller.interface";
 import { IAuthenticationService } from "../services/IAuthentication.service";
-import EmailAlreadyExistsException from "../../../exceptions/EmailAlreadyExists";
 import passport from "passport";
-import WrongCredentialsException from "../../../exceptions/WrongCredentialsException";
 import path from "node:path";
 import { User } from "@prisma/client";
 
@@ -79,7 +77,7 @@ class AuthenticationController implements IController {
         res.redirect("/")
       
       } else {
-        const error = new EmailAlreadyExistsException(userProfile.email)
+        const error = new Error(userProfile.email)
         const errorMessage = error.message;
         res.render("authentication/views/register", { errorMessage });
         throw error;
