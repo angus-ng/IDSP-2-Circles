@@ -66,9 +66,6 @@ export class UserService implements IUserService {
         for (let friend of user.friends) {
           listOfFriendName.push(friend.friend_2_name)
         }
-        for (let friend of user.friendOf) {
-          listOfFriendName.push(friend.friend_1_name)
-        }
 
         const listOfFriends = []
         for (let username of listOfFriendName) {
@@ -103,21 +100,9 @@ export class UserService implements IUserService {
           circle: {}
         }
       })
-      const albumInvites = await this._db.prisma.albumInvite.findMany({
-        where: {
-          invitee_username: username
-        }, include: {
-          album: {
-            include: {
-              circle: {}
-            }
-          }
-        }
-      })
       const activities:Activies = {
         friendRequests: friendRequests,
         circleInvites: circleInvites,
-        albumInvites: albumInvites
       }
       return activities
     } catch (error: any) {

@@ -37,7 +37,6 @@ model User {
   friends         Friend[]        @relation("friend_1")
   friendOf        Friend[]        @relation("friend_2")
   circleInvites   CircleInvite[]  @relation("circle_invitee")
-  albumInvites    AlbumInvite[]   @relation("album_invitee")
 }
 
 model Friend {
@@ -61,16 +60,15 @@ model Circle {
 }
 
 model Album {
-  id        String        @id @default(cuid())
-  owner     User          @relation(fields: [ownerName], references: [username])
-  ownerName   String
+  id        String      @id @default(cuid())
+  owner     User        @relation(fields: [ownerName], references: [username])
+  ownerName String
   name      String
   likes     Like[]
   photos    Photo[]
   UserAlbum UserAlbum[]
-  circle    Circle        @relation(fields: [circleId], references: [id], onDelete: Cascade)
+  circle    Circle      @relation(fields: [circleId], references: [id], onDelete: Cascade)
   circleId  String
-  invites   AlbumInvite[] @relation("album")
 }
 
 model Photo {
@@ -121,15 +119,6 @@ model UserAlbum {
   albumId  String
 
   @@id([username, albumId])
-}
-
-model AlbumInvite {
-  invitee          User   @relation("album_invitee", fields: [invitee_username], references: [username])
-  invitee_username String
-  album            Album  @relation("album", fields: [albumId], references: [id])
-  albumId          String
-
-  @@id([invitee_username, albumId])
 }
 
 model CircleInvite {

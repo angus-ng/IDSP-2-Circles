@@ -672,7 +672,7 @@ async function displayActivity() {
   pageName.innerHTML = "Activity";
   rightHeaderButton.innerHTML = "";
   leftHeaderButton.innerHTML = "";
-  const { friendRequests, circleInvites, albumInvites } = await getActivites(
+  const { friendRequests, circleInvites } = await getActivites(
     currentLocalUser
   );
 
@@ -686,18 +686,12 @@ async function displayActivity() {
         <h1 class="font-bold text-20 leading-body">Circle Invites</h1>
         <div id="circleInvites"> </div>
     </div>
-    <div class="shrink-0 mt-10 mb-6 w-full">
-        <h1 class="font-bold text-20 leading-body">Album Invites</h1>
-        <div id="albumInvites"> </div>
-    </div>
   </div>
   `;
   const friendRequestsDiv = document.querySelector("#friendRequests");
   friendRequestsDiv.innerHTML = displayFriendRequests(friendRequests);
   const circleInvitesDiv = document.querySelector("#circleInvites");
   circleInvitesDiv.innerHTML = displayCircleInvites(circleInvites);
-  const albumInvitesDiv = document.querySelector("#albumInvites");
-  albumInvitesDiv.innerHTML = displayAlbumInvites(albumInvites);
 
   const activityPage = document.querySelector("#activityPage");
   activityPage.addEventListener("click", async (event) => {
@@ -1528,31 +1522,6 @@ function displayFriendRequests(friendRequest) {
     <div class="flex-none w-58">
       <form>
         <button identifier="${request.requesterName}" sentTo="${request.requesteeName}" name="friendRequest" class="cursor-pointer">Accept</button>
-      </form>
-    </div>
-  </div>`;
-  });
-  return newArr;
-}
-function displayAlbumInvites(albumInvites) {
-  if (albumInvites.length === 0) {
-    return `<div class="flex items-center my-5">
-      <div class="ml-8 flex-none w-207">
-        <h2 class="font-medium text-14 leading-tertiary">No album invites. Maybe go out and have fun XD? 😂😂😂</h2>
-      </div>
-    </div>`;
-  }
-  let newArr = albumInvites.map((invite) => {
-    return `<div class="flex items-center my-5">
-    <div class="flex-none w-58">
-      <img class="rounded w-58 h-58" src="${invite.album.circle.picture}" alt="${invite.album.name}'s circle picture"></img>
-    </div>
-    <div class="ml-8 flex-none w-207">
-      <h2 class="font-medium text-14 leading-tertiary">${invite.album.name} from ${invite.album.circle.name}</h2>
-    </div>
-    <div class="flex-none w-58">
-      <form>
-        <button identifier="${invite.albumId}" sentTo="${invite.invitee_username}" name="albumInvite" class="cursor-pointer">Accept</button>
       </form>
     </div>
   </div>`;
