@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "tsx watch ./src/server.ts",
-    "build:tailwind": "npx tailwindcss -i ./src/input.css -o ./src/public/output.css --watch",
+    "build:tailwind": "npx tailwindcss -i ./src/input.css -o ./public/output.css --watch",
     "build": "tsc -p .",
     "start:watcher": "npm run build -- -w",
     "start:JS": "nodemon ./dist/server.js"

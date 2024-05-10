@@ -218,9 +218,9 @@ header.addEventListener("click", async (event) => {
       if (success && data) {
         console.log(data)
         await displayAlbum(data);
+        nav.classList.remove("hidden");
       }
     }
-    nav.classList.remove("hidden");
     return;
   }
 });
@@ -1270,6 +1270,7 @@ async function displayAlbum(albumData){
   <img src="/back_button_icon_light.svg" alt="Back Button" id="backButtonAlbum"></img>
   </span
   `;
+  rightHeaderButton.innerHTML = ``;
 
   pageName.innerHTML = `${albumData.name}`
   
@@ -1329,12 +1330,12 @@ const clearNewAlbum = () => {
 async function displayPhoto(photoSrc) {
   const albumPhotos = document.querySelector("#albumPhotos");
   const photoDiv = document.createElement("div");
-  photoDiv.className = "container absolute top-0 left-0 bg-overlay-bg h-screen w-full flex justify-center items-center mx-auto z-20";
+  photoDiv.className = "absolute top-0 left-0 bg-overlay-bg h-screen w-screen flex justify-center items-center mx-auto z-20";
   photoDiv.id = "photoOverlay";
   const personalView = document.createElement("img");
   personalView.src = `${photoSrc}`;
   personalView.id = "image";
-  personalView.className = "max-w-415 mx-auto object-cover rounded-xxxl px-4";
+  personalView.className = "max-w-sm object-cover rounded-xl";
 
   photoDiv.appendChild(personalView);
   albumPhotos.appendChild(photoDiv);

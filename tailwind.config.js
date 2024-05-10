@@ -12,9 +12,6 @@ theme: {
   screens: {
     'min-size': '430px'
   },
-  borderRadius:{
-    'xxxl': '6000px'
-  },
   extend: {
     colors: {
       'light-mode-bg': 'rgba(248, 244, 234, 0.86)',
@@ -91,7 +88,6 @@ theme: {
       'input-box': '28px',
       'checkbox': '3px',
       '12.75': '12.75px',
-      'xxl': '600px'
     },
     borderWidth: {
       'circle': '0.75px',
