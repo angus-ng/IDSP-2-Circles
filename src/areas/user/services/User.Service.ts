@@ -11,14 +11,14 @@ export class UserService implements IUserService {
         const friendRequest = await this._db.prisma.friendRequest.findUnique({
             where: {
               requesterName_requesteeName: {
-                requesteeName: requestee,
-                requesterName: requester
+                requesteeName: requester,
+                requesterName: requestee
               },
               status: false
             }
         })
         if (friendRequest) {
-          await this.acceptRequest(requester, requestee)
+          await this.acceptRequest(requestee, requester)
         } else {
           await this._db.prisma.friendRequest.create({
             data: {
@@ -150,6 +150,12 @@ export class UserService implements IUserService {
                   friend_2_name: requester
               }
           })
+          await this._db.prisma.friend.create({
+            data: {
+                friend_1_name: requester,
+                friend_2_name: requestee
+            }
+        })
           return
       } else {
           throw new Error("You have not been friend requested by this user")

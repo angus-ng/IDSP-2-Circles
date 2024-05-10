@@ -645,10 +645,10 @@ function displayUserSearch(listOfUsers) {
     if (user.username === currentLocalUser) {
       return;
     }
-    let followStatus = "Follow";
+    let followStatus = "Add Friend";
     for (let friend of user.friendOf) {
       if (friend.friend_1_name === currentLocalUser) {
-        followStatus = "Unfollow";
+        followStatus = "Remove Friend";
       }
     }
     return `<div class="flex items-center my-5">
