@@ -127,7 +127,7 @@ header.addEventListener("click", async (event) => {
 
   if (createCircleButton) {
     for (let friend of checkedFriends) {
-      console.log(friend);
+      console.log("FRIEND", friend);
       const { success, data } = await handleSendCircleRequest(friend);
     }
     const { success, data } = await handleCreateCircle();

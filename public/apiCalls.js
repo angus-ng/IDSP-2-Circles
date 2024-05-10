@@ -27,14 +27,24 @@ async function handleSendCircleRequest(requestee) {
     if (!circleName) {
       return { success: true, data: null };
     }
-    const formData = new FormData();
-    formData.append("requestee", requestee);
-    formData.append("circleName", circleName);
+    console.log("CIRCLENAME", circleName)
+    console.log(requestee)
+    const input = {
+      requestee: requestee,
+      circleName: circleName
+    }
+    // const formData = new FormData();
+    // formData.append("requestee", requestee);
+    // formData.append("circleName", circleName);
     const response = await fetch("/circle/invite", {
       method: "POST",
-      body: formData,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(input)
     });
     const jsonResponse = await response.json();
+    console.log("JSONRESPONSE", jsonResponse)
     return jsonResponse;
   } catch (error) {
     return { success: true, data: null, error };
