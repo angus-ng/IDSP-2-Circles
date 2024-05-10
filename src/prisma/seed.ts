@@ -19,7 +19,7 @@ async function main() {
       email: 'b@b.com',
       username: "B_B",
       password: await hash("b", 12),
-      profilePicture: "https://static.wikia.nocookie.net/character-catalogue/images/c/c2/Takoyaki_Cat.png/revision/latest?cb=20230810135739",
+      profilePicture: "https://static.wikia.nocookie.net/character-catalogue/images/c/c2/Takoyaki_Cat.png",
     },
   })
   const c = await prisma.user.upsert({
