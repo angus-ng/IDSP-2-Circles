@@ -8,7 +8,19 @@ export class UserService implements IUserService {
 
   async friend(requester:string, requestee:string): Promise<string|void> {
     try {
-        const friendRequestReceive = await this._db.prisma.friendRequest.findUnique({
+        const exists = await this._db.prisma.friendRequest.findUnique({
+          where: {
+            requesterName_requesteeName: {
+              requesteeName: requestee,
+              requesterName: requester
+            }
+          }
+        })
+        if (exists) {
+          return;
+        }
+        
+        const friendRequest = await this._db.prisma.friendRequest.findUnique({
             where: {
               requesterName_requesteeName: {
                 requesteeName: requester,
@@ -17,38 +29,17 @@ export class UserService implements IUserService {
               status: false
             }
         })
-        const friendRequestSent = await this._db.prisma.friendRequest.findUnique({
-          where: {
-            requesterName_requesteeName: {
-              requesteeName: requestee,
-              requesterName: requester
-            },
-            status: false
-          }
-      }) 
-        if (friendRequestReceive) {
-          await this.acceptRequest(requestee, requester)
-          return "friend added"
-        } else if (friendRequestSent) {
-          await this._db.prisma.friendRequest.delete({
-            where: {
-              requesterName_requesteeName: {
-                requesteeName: requestee,
-                requesterName: requester
-              }
-            }
-          })
-          return `removed friend request to ${requestee}`
-        } else {
-          await this._db.prisma.friendRequest.create({
+        if (friendRequest) {
+          return await this.acceptRequest(requestee, requester)
+        } 
+
+        await this._db.prisma.friendRequest.create({
             data: {
               requesteeName: requestee,
               requesterName: requester,
               status: false
             }
           })
-          return `friend requested ${requestee}`
-        }
     } catch (error: any) {
         throw new Error(error)
     }
@@ -249,5 +240,39 @@ export class UserService implements IUserService {
     } catch (error:any) {
       throw new Error(error)
     }
+  }
+
+  async getUser(username: string, currentUser: string): Promise<any> {
+    if (username === currentUser) {
+      const userInfo = await this._db.prisma.user.findUnique({
+        select: {
+          username: true,
+          profilePicture: true,
+          _count: {
+            select: {
+              friends: true,
+              UserCircle: true
+            }
+          },
+          UserCircle: {
+            select: {
+              circle: {
+                select: {
+                  name: true,
+                  picture: true,
+                  id: true
+                }
+              }
+            }
+          },
+          Album: true
+        },
+        where: {
+          username: username
+        }
+      })
+      return userInfo;
+    }
+    return null
   }
 }

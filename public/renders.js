@@ -149,13 +149,19 @@ async function displayCreateCircle() {
 
 async function displayListOfFriends(friends) {
   let newArr = friends.map((friend) => {
+    let username = document.createElement("h2")
+    let username2 = document.createElement("h2")
+    username.className="font-medium text-14 leading-tertiary"
+    username2.className="font-light text-14 text-dark-grey"
+    username.textContent=friend.username;
+    username2.textContent=friend.username
     return `<div class="flex items-center my-5">
     <div class="flex-none w-58">
       <img class="rounded w-58 h-58" src="${friend.profilePicture}" alt="${friend.username}'s profile picture"></img>
     </div>
     <div class="ml-8 flex-none w-207">
-      <h2 class="font-medium text-14 leading-tertiary">${friend.username}</h2>
-      <h2 class="font-light text-14 text-dark-grey">${friend.username}</h2>
+      ${username.outerHTML}
+      ${username2.outerHTML}
     </div>
     <div class="flex-none w-58">
       <form>
@@ -394,12 +400,15 @@ function displayUserSearch(listOfUsers) {
         followStatus = "Accept Request";
       }
     }
+      let username = document.createElement("h2")
+      username.className="font-medium text-14 leading-tertiary"
+      username.textContent=user.username;
     return `<div class="flex items-center my-5">
       <div class="flex-none w-58">
         <img class="rounded w-58 h-58" src="${user.profilePicture}" alt="${user.username}'s profile picture"></img>
       </div>
       <div class="ml-8 flex-none w-207">
-        <h2 class="font-medium text-14 leading-tertiary">${user.username}</h2>
+        ${username.outerHTML}
       </div>
       <div class="flex-none w-58">
         <form>
@@ -485,119 +494,120 @@ async function displayNavBar() {
               <img src="/lightmode/profile_icon.svg" alt="Profile Icon">
           </a>
       </footer>`;
-  const navBar = document.querySelector("footer");
-  navBar.addEventListener("click", async function (event) {
-    event.preventDefault();
-    const exploreButton = event.target.closest("#explore");
-    const searchButton = event.target.closest("#search");
-    const newButton = event.target.closest("#new");
-    const activityButton = event.target.closest("#activity");
-    const profileButton = event.target.closest("#profile");
-
-    clearNewAlbum();
-
-    if (exploreButton) {
-      await displayExplore();
-      newCircleNameInput = "";
-    }
-    if (searchButton) {
-      await displaySearch();
-      newCircleNameInput = "";
-    }
-    if (newButton) {
-      modal.classList.remove("hidden");
-      modal.classList.add("shown");
-      newCircleNameInput = "";
-    }
-    if (activityButton) {
-      await displayActivity();
-      newCircleNameInput = "";
-    }
-    if (profileButton) {
-      pageName.innerHTML = currentLocalUser;
-      rightHeaderButton.innerHTML = "";
-      newCircleNameInput = "";
-      const { success, data } = await getListOfCircles();
-      if (success && data) {
-        const circleRender = await displayListOfCircles(data);
-        await displayProfile(circleRender);
-        //update friendCounter here via id when implemented
-        //update profilePicture when implemented
-
-        return;
-      }
-    }
-  });
-}
-
-async function displayProfile(circleRender, albumRender) {
-  pageContent.innerHTML = `
-    <div id="profilePage" class="pt-8 pb-16 mb-4 w-full">
-      <div class="flex justify-center mb-4">
-        <img id="profilePicture" src="/placeholder_image.svg" class="w-110 h-110 object-cover rounded-full"></img>
-      </div>
-      <div class="flex justify-center">
-        <h2 class="text-base text-center">@${currentLocalUser}</h2>
-      </div>
-      <div class="mt-6 mb-6 m-auto grid grid-cols-2 gap-4">
-        <div class="grid grid-rows-2 gap-0 justify-center">
-          <h2 class="text-base font-bold text-center">${
-            circleRender.length
-          }</h2>
-          <h2 class="text-secondary text-center">Circles</h2>
-        </div>
+    const navBar = document.querySelector("footer");
+    navBar.addEventListener("click", async function (event) {
+      event.preventDefault();
+      const exploreButton = event.target.closest("#explore");
+      const searchButton = event.target.closest("#search");
+      const newButton = event.target.closest("#new");
+      const activityButton = event.target.closest("#activity");
+      const profileButton = event.target.closest("#profile");
   
-        <div class="grid grid-rows-2 gap-0 justify-center">
-        <h2 class="text-base font-bold text-center" id="friendCounter">0</h2>
-        <h2 class="text-secondary text-center">Friends</h2>
-        </div>
-      </div>
-      <div class="flex flex-row justify-between">
-        <div>
-          <img id="albumTab" src="/lightmode/albumTab_deselected.svg" class="w-180 h-27 object-cover"></img>
-        </div>
-        <div>
-          <img id="circleTab" src="/lightmode/circlesTab_selected.svg" class="w-180 h-27 object-cover"></img>
-        </div>
-      </div>
-      <div id="albumList" class="m-auto grid grid-cols-3 gap-4 mt-6 mb-6 hidden">
-      </div>
-      <div id="circleList" class="m-auto grid grid-cols-3 gap-4 mt-6 mb-6 place-items-center">
-      ${circleRender.join("")}
-      </div>
-      <div class="h-100"></div>
-    </div>`;
-  document
-    .querySelector("#circleList")
-    .addEventListener("click", async function (event) {
-      const circleDiv = event.target.closest("div.circle");
-      if (circleDiv) {
-        if (circleDiv.hasAttribute("id")) {
-          let { success, data, error } = await getCircle(circleDiv.id);
-          if (success && data) {
-            await displayCircle(data);
-          }
+      clearNewAlbum();
+  
+      if (exploreButton) {
+        await displayExplore();
+        newCircleNameInput = "";
+      }
+      if (searchButton) {
+        await displaySearch();
+        newCircleNameInput = "";
+      }
+      if (newButton) {
+        modal.classList.remove("hidden");
+        modal.classList.add("shown");
+        newCircleNameInput = "";
+      }
+      if (activityButton) {
+        await displayActivity();
+        newCircleNameInput = "";
+      }
+      if (profileButton) {
+        rightHeaderButton.innerHTML = "";
+        newCircleNameInput = "";
+        const { success, data } = await getUser(currentLocalUser)
+        if (success && data) {
+          return await displayProfile(data);
         }
       }
     });
-  await cleanUpSectionEventListener();
+}
+
+async function displayProfile(userData) {
+  const circleRender = await displayListOfCircles(userData);
+  console.log(circleRender)
+  pageName.textContent = userData.username;
+  pageContent.innerHTML = `
+  <div id="profilePage" class="pt-8 pb-16 mb-4 w-full">
+    <div class="flex justify-center mb-4">
+      <img id="profilePicture" src="${userData.profilePicture}" class="w-110 h-110 object-cover rounded-full"></img>
+    </div>
+    <div class="flex justify-center">
+      <h2 id="username" class="text-base text-center">@</h2>
+    </div>
+    <div class="mt-6 mb-6 m-auto grid grid-cols-2 gap-4">
+      <div class="grid grid-rows-2 gap-0 justify-center">
+        <h2 class="text-base font-bold text-center">${userData._count.UserCircle}</h2>
+        <h2 class="text-secondary text-center">Circles</h2>
+      </div>
+
+      <div class="grid grid-rows-2 gap-0 justify-center">
+      <h2 class="text-base font-bold text-center" id="friendCounter">${userData._count.friends}</h2>
+      <h2 class="text-secondary text-center">Friends</h2>
+      </div>
+    </div>
+    <div class="flex flex-row justify-between">
+      <div>
+        <img id="albumTab" src="/lightmode/albumTab_deselected.svg" class="w-180 h-27 object-cover"></img>
+      </div>
+      <div>
+        <img id="circleTab" src="/lightmode/circlesTab_selected.svg" class="w-180 h-27 object-cover"></img>
+      </div>
+    </div>
+    <div id="albumList" class="m-auto grid grid-cols-3 gap-4 mt-6 mb-6 hidden">
+    </div>
+    <div id="circleList" class="m-auto grid grid-cols-3 gap-4 mt-6 mb-6 place-items-center">
+    ${circleRender.join("")}
+    </div>
+    <div class="h-100"></div>
+  </div>`;
+  document.querySelector("#username").textContent = "@"+ userData.username;
+    document
+      .querySelector("#circleList")
+      .addEventListener("click", async function (event) {
+        const circleDiv = event.target.closest("div.circle");
+        if (circleDiv) {
+          if (circleDiv.hasAttribute("id")) {
+            let { success, data, error } = await getCircle(circleDiv.id);
+            if (success && data) {
+              await displayCircle(data);
+            }
+          }
+        }
+      });
+    await cleanUpSectionEventListener();
 }
 
 async function displayListOfCircles(data) {
-  let newArr = data.map((obj) => {
-    return `
+    let circleListArr = data.UserCircle.map((obj) => {
+      let circleName = document.createElement('p')
+      circleName.className = "text-center text-secondary"
+      circleName.textContent = obj.circle.name;
+      return `
         <div id="${obj.circle.id}" class="circle">
-          <img src="${obj.circle.picture}" class="rounded-full w-100 h-100 object-cover cursor-pointer border-circle border-black"/></img>
-          <p class="text-center text-secondary">${obj.circle.name}</p>
+          <div class="flex justify-center">
+            <img src="${obj.circle.picture}" class="rounded-full w-100 h-100 object-cover cursor-pointer border-circle border-black"/></img>
+          </div>
+          ${circleName.outerHTML}
         </div>`;
-  });
-  return newArr;
-}
-
-async function displayCreateAlbum() {
-  pageName.innerHTML = `New Album`;
-
-  leftHeaderButton.innerHTML = `
+    });
+    return circleListArr;
+  }
+  
+  async function displayCreateAlbum() {
+    pageName.innerHTML = `New Album`;
+  
+    leftHeaderButton.innerHTML = `
       <img src="/lightmode/close_icon.svg" alt="Close Button" id="closeButton"></img>
       `;
   rightHeaderButton.innerHTML = "";
@@ -964,28 +974,31 @@ async function displayCircle(circleData) {
   leftHeaderButton.innerHTML = `
     <img src="/lightmode/back_button.svg" alt="Back Button" id="backButton"></img>
     `;
-  rightHeaderButton.innerHTML = "";
-  pageName.innerHTML = "";
-  const memberList = circleData.members.map((obj) => {
-    return `<img src="${obj.user.profilePicture}" class="w-42 h-42 rounded-full object-cover"></img>`;
-  });
-  console.log(circleData.circle.albums);
-  const albumList = circleData.circle.albums.map((obj) => {
-    return `
+    rightHeaderButton.innerHTML = "";
+    pageName.textContent = "";
+    const memberList = circleData.members.map((obj) => {
+      return `<img src="${obj.user.profilePicture}" class="w-42 h-42 rounded-full object-cover"></img>`;
+    });
+    const albumList = circleData.circle.albums.map((obj) => {
+      let circleName = document.createElement('p')
+      circleName.className = "text-center text-secondary"
+      circleName.textContent = obj.name;
+      return `
       <div class="w-full h-min relative album" id="${obj.id}">
         <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.photos[0].src}"/>
         <div class="m-2 text-secondary font-semibold absolute inset-0 flex items-end justify-start">
-          <p class="text-light-mode-bg">${obj.name}</p>
+          ${circleName.outerHTML}
         </div>
         <div class="absolute inset-0 flex items-end justify-end gap-1 p-2">
           <img src="/like_icon.svg" alt="Like Icon"></img>
           <img src="/comment_icon.svg" alt="Comment Icon"></img>
         </div>
       </div>`;
-  });
-  console.log(albumList);
-
-  pageContent.innerHTML = `
+    });
+    let circleName = document.createElement('p')
+    circleName.className = "text-center text-20 font-bold"
+    circleName.textContent = circleData.circle.name;
+    pageContent.innerHTML = `
     <div class="w-full px-0 mx-0">
       <div class="flex justify-center mt-6 mb-1.5">
         <img src="${
@@ -993,7 +1006,7 @@ async function displayCircle(circleData) {
         }" class="rounded-full w-180 h-180 object-cover"/></img>
       </div>
       <div class="mb-3">
-        <p class="text-center text-20 font-bold">${circleData.circle.name}</p>
+        <p class="text-center text-20 font-bold">${circleName.outerHTML}</p>
       </div>
       <div class="grid grid-cols-1 place-items-center">
         <label class="inline-flex items-center cursor-pointer">
@@ -1041,14 +1054,17 @@ function displayCircleInvites(circleInvites) {
           <h2 class="font-medium text-14 leading-tertiary">No circle invites. Maybe go out and have fun XD? 😂😂😂</h2>
         </div>
       </div>`;
-  }
-  let newArr = circleInvites.map((invite) => {
-    return `<div class="flex items-center my-5">
+    }
+    let newArr = circleInvites.map((invite) => {
+      let circleName = document.createElement("h2")
+      circleName.className="font-medium text-14 leading-tertiary"
+      circleName.textContent=invite.circle.name;
+      return `<div class="flex items-center my-5">
       <div class="flex-none w-58">
         <img class="rounded w-58 h-58" src="${invite.circle.picture}" alt="${invite.circle.name}'s picture"></img>
       </div>
       <div class="ml-8 flex-none w-207">
-        <h2 class="font-medium text-14 leading-tertiary">${invite.circle.name}</h2>
+        ${circleName.outerHTML}
       </div>
       <div class="flex-none w-58">
         <form>
@@ -1061,34 +1077,33 @@ function displayCircleInvites(circleInvites) {
 }
 
 async function displayAlbum(albumData) {
-  console.log(albumData);
-  leftHeaderButton.innerHTML = `
+    leftHeaderButton.innerHTML = `
     <span id="${albumData.circle.id}">
-    <img src="/lightmode/back_button_icon.svg" alt="Back Button" id="backButtonAlbum"></img>
+    <img src="/lightmode/back_button.svg" alt="Back Button" id="backButtonAlbum"></img>
     </span
     `;
-  rightHeaderButton.innerHTML = ``;
-
-  pageName.innerHTML = `${albumData.name}`;
-
-  const memberList = albumData.circle.UserCircle.map((obj) => {
-    return `<img src="${obj.user.profilePicture}" class="w-16 h-16 rounded-full object-cover"></img>`;
-  });
-  const photoList = albumData.photos.map((obj) => {
-    return `<div id="photo" class="w-full h-min relative photo" albumId="${obj.id}">
+    rightHeaderButton.innerHTML = ``;
+  
+    pageName.textContent = `${albumData.name}`;
+  
+    const memberList = albumData.circle.UserCircle.map((obj) => {
+      return `<img src="${obj.user.profilePicture}" class="w-16 h-16 rounded-full object-cover"></img>`;
+    });
+    const photoList = albumData.photos.map((obj) => {
+      return `<div id="photo" class="w-full h-min relative photo" albumId="${obj.id}">
       <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.src}"/>
     </div>`;
-  });
-
-  pageContent.innerHTML = `
+    });
+    let circleName = document.createElement('p')
+    circleName.className = "flex justify-center font-medium text-lg"
+    circleName.textContent = albumData.circle.name;
+    pageContent.innerHTML = `
       <div id="albumPhotos">
         <div id="memberList" class="flex mt-8 justify-center">
           ${memberList.join("")}
         </div>
         <div class="mt-4">
-          <p class="flex justify-center font-medium text-lg">${
-            albumData.circle.name
-          }</p>
+         ${circleName.outerHTML}
         </div>
         <div class="grid grid-cols-5 place-items-center mt-12 mb-2 mr-0">
           <p class="grid-span-1 text-base font-medium">${
@@ -1129,14 +1144,17 @@ function displayFriendRequests(friendRequest) {
           <h2 class="font-medium text-14 leading-tertiary">No friend requests. Maybe go make some friends XD? 😂😂😂</h2>
         </div>
       </div>`;
-  }
-  let newArr = friendRequest.map((request) => {
-    return `<div class="flex items-center my-5">
+    }
+    let newArr = friendRequest.map((request) => {
+      let username = document.createElement("h2")
+      username.className="font-medium text-14 leading-tertiary"
+      username.textContent=request.requester.username;
+      return `<div class="flex items-center my-5">
       <div class="flex-none w-58">
         <img class="rounded w-58 h-58" src="${request.requester.profilePicture}" alt="${request.requester.username}'s profile picture"></img>
       </div>
       <div class="ml-8 flex-none w-207">
-        <h2 class="font-medium text-14 leading-tertiary">${request.requesterName}</h2>
+        ${username.outerHTML}
       </div>
       <div class="flex-none w-58">
         <form>
