@@ -114,7 +114,7 @@ header.addEventListener("click", async (event) => {
   }
 
   if (albumNextButton) {
-    const { success, data } = await getListOfCircles();
+    const { success, data } = await getUser(currentLocalUser);
     if (success && data) {
       const circleRender = await displayListOfCircles(data);
       await showCreateOrAddToCircle(circleRender);
@@ -148,7 +148,7 @@ header.addEventListener("click", async (event) => {
   }
 
   if (albumConfirmationBackButton) {
-    const { success, data } = await getListOfCircles();
+    const { success, data } = await getUser(currentLocalUser);
     if (success && data) {
       nav.classList.remove("hidden");
       const circleRender = await displayListOfCircles(data);

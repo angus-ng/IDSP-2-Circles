@@ -9,4 +9,5 @@ export default interface IUserService {
     getActivities(username: string):Promise<Activies | void>
     acceptRequest(requester: string, requestee: string) :Promise<void>
     search(input: string, currentUser: string): Promise<User[]>
+    getUser(username:string, currentUser: string): Promise<any>
 }

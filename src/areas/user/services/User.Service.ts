@@ -8,6 +8,18 @@ export class UserService implements IUserService {
 
   async friend(requester:string, requestee:string) {
     try {
+        const exists = await this._db.prisma.friendRequest.findUnique({
+          where: {
+            requesterName_requesteeName: {
+              requesteeName: requestee,
+              requesterName: requester
+            }
+          }
+        })
+        if (exists) {
+          return;
+        }
+        
         const friendRequest = await this._db.prisma.friendRequest.findUnique({
             where: {
               requesterName_requesteeName: {
@@ -18,16 +30,16 @@ export class UserService implements IUserService {
             }
         })
         if (friendRequest) {
-          await this.acceptRequest(requestee, requester)
-        } else {
-          await this._db.prisma.friendRequest.create({
+          return await this.acceptRequest(requestee, requester)
+        } 
+
+        await this._db.prisma.friendRequest.create({
             data: {
               requesteeName: requestee,
               requesterName: requester,
               status: false
             }
           })
-        }
     } catch (error: any) {
         throw new Error(error)
     }
@@ -166,5 +178,39 @@ export class UserService implements IUserService {
     } catch (error:any) {
       throw new Error(error)
     }
+  }
+
+  async getUser(username: string, currentUser: string): Promise<any> {
+    if (username === currentUser) {
+      const userInfo = await this._db.prisma.user.findUnique({
+        select: {
+          username: true,
+          profilePicture: true,
+          _count: {
+            select: {
+              friends: true,
+              UserCircle: true
+            }
+          },
+          UserCircle: {
+            select: {
+              circle: {
+                select: {
+                  name: true,
+                  picture: true,
+                  id: true
+                }
+              }
+            }
+          },
+          Album: true
+        },
+        where: {
+          username: username
+        }
+      })
+      return userInfo;
+    }
+    return null
   }
 }
