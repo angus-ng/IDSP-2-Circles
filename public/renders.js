@@ -509,6 +509,7 @@ async function displayNavBar() {
 
 async function displayProfile(userData) {
   const circleRender = await displayListOfCircles(userData);
+  const albumRender = await displayListOfAlbums(userData);
   console.log(circleRender)
   pageName.textContent = userData.username;
   pageContent.innerHTML = `
@@ -539,6 +540,7 @@ async function displayProfile(userData) {
       </div>
     </div>
     <div id="albumList" class="m-auto grid grid-cols-3 gap-4 mt-6 mb-6 hidden">
+    ${albumRender.join("")}
     </div>
     <div id="circleList" class="m-auto grid grid-cols-3 gap-4 mt-6 mb-6 place-items-center">
     ${circleRender.join("")}
@@ -954,14 +956,14 @@ async function displayCircle(circleData) {
       return `<img src="${obj.user.profilePicture}" class="w-42 h-42 rounded-full object-cover"></img>`;
     });
     const albumList = circleData.circle.albums.map((obj) => {
-      let circleName = document.createElement('p')
-      circleName.className = "text-center text-secondary"
-      circleName.textContent = obj.name;
+      let albumName = document.createElement('p')
+      albumName.className = "text-center text-secondary"
+      albumName.textContent = obj.name;
       return `
       <div class="w-full h-min relative album" id="${obj.id}">
         <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.photos[0].src}"/>
         <div class="m-2 text-secondary font-semibold absolute inset-0 flex items-end justify-start">
-          ${circleName.outerHTML}
+          ${albumName.outerHTML}
         </div>
         <div class="absolute inset-0 flex items-end justify-end gap-1 p-2">
           <img src="/like_icon.svg" alt="Like Icon"></img>
@@ -1153,4 +1155,25 @@ async function displayPhoto(photoSrc) {
   
     photoDiv.appendChild(personalView);
     albumPhotos.appendChild(photoDiv);
+}
+
+async function displayListOfAlbums (data) {
+  console.log(data)
+  const albumList = data.Album.map((obj) => {
+    let albumName = document.createElement('p')
+    albumName.className = "text-center text-secondary"
+    albumName.textContent = obj.name;
+    return `
+    <div class="w-full h-min relative album" id="${obj.id}">
+      <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.photos[0].src}"/>
+      <div class="m-2 text-secondary font-semibold absolute inset-0 flex items-end justify-start">
+        ${albumName.outerHTML}
+      </div>
+      <div class="absolute inset-0 flex items-end justify-end gap-1 p-2">
+        <img src="/like_icon.svg" alt="Like Icon"></img>
+        <img src="/comment_icon.svg" alt="Comment Icon"></img>
+      </div>
+    </div>`;
+  });
+  return albumList
 }

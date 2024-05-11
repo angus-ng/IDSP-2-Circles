@@ -19,7 +19,7 @@ export class UserService implements IUserService {
         if (exists) {
           return;
         }
-        
+
         const friendRequest = await this._db.prisma.friendRequest.findUnique({
             where: {
               requesterName_requesteeName: {
@@ -203,7 +203,11 @@ export class UserService implements IUserService {
               }
             }
           },
-          Album: true
+          Album: {
+            include: {
+              photos: true
+            }
+          }
         },
         where: {
           username: username
