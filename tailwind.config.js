@@ -79,7 +79,8 @@ theme: {
       'navbar': '85px',
       '400': '400px',
       '62': '62px',
-      '415': '415px'
+      '415': '415px',
+      '58': '58px'
     },
     boxShadow: {
       'background-shadow': 'inset 0 0 100px -30px rgba(0, 0, 0, 0.2)'

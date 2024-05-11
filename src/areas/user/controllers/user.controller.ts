@@ -16,22 +16,19 @@ class UserController implements IController {
   private initializeRoutes() {
     this.router.post(`${this.path}/sendFriendRequest`, ensureAuthenticated, this.friend);
     this.router.post(`${this.path}/unfollow`, ensureAuthenticated, this.unfriend);
-    this.router.get(`${this.path}/getFriends/:username`, ensureAuthenticated, this.getFriends)
-    this.router.get(`${this.path}/getActivities/:username`, ensureAuthenticated, this.getActivities)
+    this.router.get(`${this.path}/getFriends`, ensureAuthenticated, this.getFriends)
+    this.router.get(`${this.path}/getActivities`, ensureAuthenticated, this.getActivities)
     this.router.post(`${this.path}/accept`, ensureAuthenticated, this.acceptFriendRequest)
     this.router.get(`${this.path}/search/:input`, ensureAuthenticated, this.search)
     this.router.get(`${this.path}/searchAll`, ensureAuthenticated, this.searchAll)
+    this.router.post(`${this.path}/`, ensureAuthenticated, this.getUser);
   }
   private friend = async (req: Request, res: Response) => {
     try {
       let loggedInUser = req.user!.username
-      const { requester, requestee } = req.body
-      if (loggedInUser === requester) {
-        await this._service.friend(requester, requestee)
+      const { requestee } = req.body
+        await this._service.friend(loggedInUser, requestee)
         res.status(200).json({success:true, data: null})
-      } else {
-        res.status(400).json({success:false, error: "Failed to send friend request"})
-      }
     } catch (error: any) {
       throw new Error(error)
     }
@@ -40,26 +37,16 @@ class UserController implements IController {
   }
   private getFriends = async (req: Request, res: Response) => {
     let loggedInUser = req.user!.username
-    const username = req.params.username
-    if (loggedInUser === username) {
-      const friends = await this._service.getFriends(username)
+      const friends = await this._service.getFriends(loggedInUser)
       res.status(200).json({success: true, data: friends})
-    } else {
-      res.status(400).json({success:false, error: "Not authorized"})
-    }
   }
 
   private getActivities = async (req: Request, res: Response) => {
     try {
       let loggedInUser = req.user!.username
-      const username = req.params.username
-      if (loggedInUser === username) {
-        const activities = await this._service.getActivities(username)
+        const activities = await this._service.getActivities(loggedInUser)
         res.status(200).json({success:true, data: activities})
-      } else {
-        res.status(400).json({success:false, error: "Not authorized"})
-      }
-    } catch (error: any) {
+      } catch (error: any) {
       throw new Error(error)
     }
   }
@@ -96,6 +83,19 @@ class UserController implements IController {
       res.status(200).json({success:true, data: output})
     } catch (error: any) {
       throw new Error(error)
+    }
+  }
+  private getUser = async (req: Request, res: Response) => {
+    try {
+      let loggedInUser = req.user!.username
+      let { username } = req.body
+
+      const profileObj = await this._service.getUser(username, loggedInUser)
+      console.log(loggedInUser, username)
+      console.log(profileObj)
+      res.status(200).json({success: true, data: profileObj})
+    } catch (err) {
+      res.status(200).json({success: true, data: null, error:err})
     }
   }
 }

@@ -148,13 +148,19 @@ async function displayCreateCircle() {
 
 async function displayListOfFriends(friends) {
   let newArr = friends.map((friend) => {
+    let username = document.createElement("h2")
+    let username2 = document.createElement("h2")
+    username.className="font-medium text-14 leading-tertiary"
+    username2.className="font-light text-14 text-dark-grey"
+    username.textContent=friend.username;
+    username2.textContent=friend.username
     return `<div class="flex items-center my-5">
     <div class="flex-none w-58">
       <img class="rounded w-58 h-58" src="${friend.profilePicture}" alt="${friend.username}'s profile picture"></img>
     </div>
     <div class="ml-8 flex-none w-207">
-      <h2 class="font-medium text-14 leading-tertiary">${friend.username}</h2>
-      <h2 class="font-light text-14 text-dark-grey">${friend.username}</h2>
+      ${username.outerHTML}
+      ${username2.outerHTML}
     </div>
     <div class="flex-none w-58">
       <form>
@@ -182,8 +188,8 @@ async function displayInviteFriends() {
       <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full">
         <div class="relative w-full h-9 mt-8">
           <form onkeydown="return event.key != 'Enter';">
-            <input class="w-380 px-14 py-2 border-grey border-2 rounded-input-box" placeholder="search friends"/>
-            <img src="/lightmode/search_icon_no_text.svg" alt="search icon" class="absolute left-4 top-2.5 w-6 h-6"/>
+            <input class="w-380 px-14 py-2 border-grey border-2 rounded-input-box text-secondary leading-secondary" placeholder="search friends"/>
+            <img src="/lightmode/search_icon_no_text.svg" alt="search icon" class="absolute left-4 top-2.5 w-25 h-25"/>
           </form>
         </div>
         <div class="shrink-0 mt-10 mb-6 justify-center w-full">
@@ -193,7 +199,7 @@ async function displayInviteFriends() {
       </div>
       `;
     const suggestedFriends = document.querySelector("#suggestedFriends");
-  
+    console.log(friendsList)
     suggestedFriends.innerHTML = friendsList.join("");
   }
   
@@ -316,12 +322,16 @@ async function displaySearch() {
     leftHeaderButton.innerHTML = "";
     pageContent.innerHTML = `
     <div id="searchPage" class="flex flex-col py-2 w-full h-screen">
-    <input type="text" id="searchBox">
+      <div class="relative w-full h-9 mt-8">
+        <input type="text" id="searchBox" class="w-380 px-14 py-2 border-grey border-2 rounded-input-box text-secondary leading-secondary" placeholder="search account">
+        <img src="/lightmode/search_icon_no_text.svg" alt="search icon" class="absolute left-4 top-2.5 w-25 h-25"/>
+      </div>
       <div class="shrink-0 mt-10 mb-6 justify-center w-full">
         <div id="suggestedFriends"></div>
       </div>
     </div>
     `;
+
     const searchBox = document.querySelector("#searchBox");
   
     // this is to show all users when the page first loads
@@ -368,12 +378,16 @@ function displayUserSearch(listOfUsers) {
           followStatus = "Remove Friend";
         }
       }
+      let username = document.createElement("h2");
+      console.log(user)
+      username.className="font-medium text-14 leading-tertiary"
+      username.textContent=user.username;
       return `<div class="flex items-center my-5">
       <div class="flex-none w-58">
-        <img class="rounded w-58 h-58" src="${user.profilePicture}" alt="${user.username}'s profile picture"></img>
+        <img class="rounded-full w-58 h-58 object-cover" src="${user.profilePicture}" alt="${user.username}'s profile picture"></img>
       </div>
       <div class="ml-8 flex-none w-207">
-        <h2 class="font-medium text-14 leading-tertiary">${user.username}</h2>
+        ${username.outerHTML}
       </div>
       <div class="flex-none w-58">
         <form>
@@ -488,57 +502,55 @@ async function displayNavBar() {
         newCircleNameInput = "";
       }
       if (profileButton) {
-        pageName.innerHTML = currentLocalUser;
         rightHeaderButton.innerHTML = "";
         newCircleNameInput = "";
-        const { success, data } = await getListOfCircles();
+        const { success, data } = await getUser(currentLocalUser)
         if (success && data) {
-          const circleRender = await displayListOfCircles(data);
-          await displayProfile(circleRender);
-          //update friendCounter here via id when implemented
-          //update profilePicture when implemented
-  
-          return;
+          return await displayProfile(data);
         }
       }
     });
 }
 
-async function displayProfile(circleRender, albumRender) {
-    pageContent.innerHTML = `
-    <div id="profilePage" class="pt-8 pb-16 mb-4 w-full">
-      <div class="flex justify-center mb-4">
-        <img id="profilePicture" src="/placeholder_image.svg" class="w-110 h-110 object-cover rounded-full"></img>
+async function displayProfile(userData) {
+  const circleRender = await displayListOfCircles(userData);
+  console.log(circleRender)
+  pageName.textContent = userData.username;
+  pageContent.innerHTML = `
+  <div id="profilePage" class="pt-8 pb-16 mb-4 w-full">
+    <div class="flex justify-center mb-4">
+      <img id="profilePicture" src="${userData.profilePicture}" class="w-110 h-110 object-cover rounded-full"></img>
+    </div>
+    <div class="flex justify-center">
+      <h2 id="username" class="text-base text-center">@</h2>
+    </div>
+    <div class="mt-6 mb-6 m-auto grid grid-cols-2 gap-4">
+      <div class="grid grid-rows-2 gap-0 justify-center">
+        <h2 class="text-base font-bold text-center">${userData._count.UserCircle}</h2>
+        <h2 class="text-secondary text-center">Circles</h2>
       </div>
-      <div class="flex justify-center">
-        <h2 class="text-base text-center">@${currentLocalUser}</h2>
+
+      <div class="grid grid-rows-2 gap-0 justify-center">
+      <h2 class="text-base font-bold text-center" id="friendCounter">${userData._count.friends}</h2>
+      <h2 class="text-secondary text-center">Friends</h2>
       </div>
-      <div class="mt-6 mb-6 m-auto grid grid-cols-2 gap-4">
-        <div class="grid grid-rows-2 gap-0 justify-center">
-          <h2 class="text-base font-bold text-center">${circleRender.length}</h2>
-          <h2 class="text-secondary text-center">Circles</h2>
-        </div>
-  
-        <div class="grid grid-rows-2 gap-0 justify-center">
-        <h2 class="text-base font-bold text-center" id="friendCounter">0</h2>
-        <h2 class="text-secondary text-center">Friends</h2>
-        </div>
+    </div>
+    <div class="flex flex-row justify-between">
+      <div>
+        <img id="albumTab" src="/lightmode/albumTab_deselected.svg" class="w-180 h-27 object-cover"></img>
       </div>
-      <div class="flex flex-row justify-between">
-        <div>
-          <img id="albumTab" src="/lightmode/albumTab_deselected.svg" class="w-180 h-27 object-cover"></img>
-        </div>
-        <div>
-          <img id="circleTab" src="/lightmode/circlesTab_selected.svg" class="w-180 h-27 object-cover"></img>
-        </div>
+      <div>
+        <img id="circleTab" src="/lightmode/circlesTab_selected.svg" class="w-180 h-27 object-cover"></img>
       </div>
-      <div id="albumList" class="m-auto grid grid-cols-3 gap-4 mt-6 mb-6 hidden">
-      </div>
-      <div id="circleList" class="m-auto grid grid-cols-3 gap-4 mt-6 mb-6 place-items-center">
-      ${circleRender.join("")}
-      </div>
-      <div class="h-100"></div>
-    </div>`;
+    </div>
+    <div id="albumList" class="m-auto grid grid-cols-3 gap-4 mt-6 mb-6 hidden">
+    </div>
+    <div id="circleList" class="m-auto grid grid-cols-3 gap-4 mt-6 mb-6 place-items-center">
+    ${circleRender.join("")}
+    </div>
+    <div class="h-100"></div>
+  </div>`;
+  document.querySelector("#username").textContent = "@"+ userData.username;
     document
       .querySelector("#circleList")
       .addEventListener("click", async function (event) {
@@ -556,14 +568,19 @@ async function displayProfile(circleRender, albumRender) {
 }
   
 async function displayListOfCircles(data) {
-    let newArr = data.map((obj) => {
+    let circleListArr = data.UserCircle.map((obj) => {
+      let circleName = document.createElement('p')
+      circleName.className = "text-center text-secondary"
+      circleName.textContent = obj.circle.name;
       return `
         <div id="${obj.circle.id}" class="circle">
-          <img src="${obj.circle.picture}" class="rounded-full w-100 h-100 object-cover cursor-pointer border-circle border-black"/></img>
-          <p class="text-center text-secondary">${obj.circle.name}</p>
+          <div class="flex justify-center">
+            <img src="${obj.circle.picture}" class="rounded-full w-100 h-100 object-cover cursor-pointer border-circle border-black"/></img>
+          </div>
+          ${circleName.outerHTML}
         </div>`;
     });
-    return newArr;
+    return circleListArr;
   }
   
   async function displayCreateAlbum() {
@@ -937,17 +954,19 @@ async function displayCircle(circleData) {
     <img src="/lightmode/back_button.svg" alt="Back Button" id="backButton"></img>
     `;
     rightHeaderButton.innerHTML = "";
-    pageName.innerHTML = "";
+    pageName.textContent = "";
     const memberList = circleData.members.map((obj) => {
       return `<img src="${obj.user.profilePicture}" class="w-42 h-42 rounded-full object-cover"></img>`;
     });
-    console.log(circleData.circle.albums);
     const albumList = circleData.circle.albums.map((obj) => {
+      let circleName = document.createElement('p')
+      circleName.className = "text-center text-secondary"
+      circleName.textContent = obj.name;
       return `
       <div class="w-full h-min relative album" id="${obj.id}">
         <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.photos[0].src}"/>
         <div class="m-2 text-secondary font-semibold absolute inset-0 flex items-end justify-start">
-          <p class="text-light-mode-bg">${obj.name}</p>
+          ${circleName.outerHTML}
         </div>
         <div class="absolute inset-0 flex items-end justify-end gap-1 p-2">
           <img src="/like_icon.svg" alt="Like Icon"></img>
@@ -955,8 +974,9 @@ async function displayCircle(circleData) {
         </div>
       </div>`;
     });
-    console.log(albumList);
-  
+    let circleName = document.createElement('p')
+    circleName.className = "text-center text-20 font-bold"
+    circleName.textContent = circleData.circle.name;
     pageContent.innerHTML = `
     <div class="w-full px-0 mx-0">
       <div class="flex justify-center mt-6 mb-1.5">
@@ -965,7 +985,7 @@ async function displayCircle(circleData) {
         }" class="rounded-full w-180 h-180 object-cover"/></img>
       </div>
       <div class="mb-3">
-        <p class="text-center text-20 font-bold">${circleData.circle.name}</p>
+        <p class="text-center text-20 font-bold">${circleName.outerHTML}</p>
       </div>
       <div class="grid grid-cols-1 place-items-center">
         <label class="inline-flex items-center cursor-pointer">
@@ -1015,12 +1035,15 @@ function displayCircleInvites(circleInvites) {
       </div>`;
     }
     let newArr = circleInvites.map((invite) => {
+      let circleName = document.createElement("h2")
+      circleName.className="font-medium text-14 leading-tertiary"
+      circleName.textContent=invite.circle.name;
       return `<div class="flex items-center my-5">
       <div class="flex-none w-58">
         <img class="rounded w-58 h-58" src="${invite.circle.picture}" alt="${invite.circle.name}'s picture"></img>
       </div>
       <div class="ml-8 flex-none w-207">
-        <h2 class="font-medium text-14 leading-tertiary">${invite.circle.name}</h2>
+        ${circleName.outerHTML}
       </div>
       <div class="flex-none w-58">
         <form>
@@ -1033,7 +1056,6 @@ function displayCircleInvites(circleInvites) {
 }
 
 async function displayAlbum(albumData) {
-    console.log(albumData);
     leftHeaderButton.innerHTML = `
     <span id="${albumData.circle.id}">
     <img src="/lightmode/back_button.svg" alt="Back Button" id="backButtonAlbum"></img>
@@ -1041,7 +1063,7 @@ async function displayAlbum(albumData) {
     `;
     rightHeaderButton.innerHTML = ``;
   
-    pageName.innerHTML = `${albumData.name}`;
+    pageName.textContent = `${albumData.name}`;
   
     const memberList = albumData.circle.UserCircle.map((obj) => {
       return `<img src="${obj.user.profilePicture}" class="w-16 h-16 rounded-full object-cover"></img>`;
@@ -1051,16 +1073,16 @@ async function displayAlbum(albumData) {
       <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.src}"/>
     </div>`;
     });
-  
+    let circleName = document.createElement('p')
+    circleName.className = "flex justify-center font-medium text-lg"
+    circleName.textContent = albumData.circle.name;
     pageContent.innerHTML = `
       <div id="albumPhotos">
         <div id="memberList" class="flex mt-8 justify-center">
           ${memberList.join("")}
         </div>
         <div class="mt-4">
-          <p class="flex justify-center font-medium text-lg">${
-            albumData.circle.name
-          }</p>
+         ${circleName.outerHTML}
         </div>
         <div class="grid grid-cols-5 place-items-center mt-12 mb-2 mr-0">
           <p class="grid-span-1 text-base font-medium">${
@@ -1103,12 +1125,15 @@ function displayFriendRequests(friendRequest) {
       </div>`;
     }
     let newArr = friendRequest.map((request) => {
+      let username = document.createElement("h2")
+      username.className="font-medium text-14 leading-tertiary"
+      username.textContent=request.requester.username;
       return `<div class="flex items-center my-5">
       <div class="flex-none w-58">
         <img class="rounded w-58 h-58" src="${request.requester.profilePicture}" alt="${request.requester.username}'s profile picture"></img>
       </div>
       <div class="ml-8 flex-none w-207">
-        <h2 class="font-medium text-14 leading-tertiary">${request.requesterName}</h2>
+        ${username.outerHTML}
       </div>
       <div class="flex-none w-58">
         <form>
@@ -1140,5 +1165,12 @@ async function displayPopup(activity) {
   notificationText.textContent = `${activity}`;
   const popup = document.querySelector("#popup");
   popup.classList.remove("hidden");
+
+  popup.addEventListener("click", () => {
+    const popupCloseButton = event.target.closest("#popupCloseButton");
+    if (popupCloseButton) {
+      popup.classList.add("hidden");
+    }
+  })
   
 }

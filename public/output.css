@@ -1075,6 +1075,10 @@ select {
   height: 1.25rem;
 }
 
+.h-58 {
+  height: 58px;
+}
+
 .h-6 {
   height: 1.5rem;
 }
@@ -1665,10 +1669,6 @@ select {
 .text-light-mode-accent {
   --tw-text-opacity: 1;
   color: rgb(0 68 204 / var(--tw-text-opacity));
-}
-
-.text-light-mode-bg {
-  color: rgba(248, 244, 234, 0.86);
 }
 
 .text-text-grey {

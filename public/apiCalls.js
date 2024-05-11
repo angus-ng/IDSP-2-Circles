@@ -147,14 +147,14 @@ async function handleCreateAlbum(albumObj) {
   }
 }
 
-async function getFriends(username) {
-  const response = await fetch(`/user/getFriends/${username}`);
+async function getFriends() {
+  const response = await fetch(`/user/getFriends/`);
   const responseJson = await response.json();
   return responseJson.data;
 }
 
-async function getActivites(currentLocalUser) {
-  const response = await fetch(`/user/getActivities/${currentLocalUser}`);
+async function getActivites() {
+  const response = await fetch(`/user/getActivities/`);
   const responseJson = await response.json();
   return responseJson.data;
 }
@@ -257,5 +257,22 @@ async function sendFriendRequest(requestee, requester) {
     return jsonResponse;
   } catch (err) {
     return { success: true, data: null, error: err };
+  }
+}
+
+async function getUser(username) {
+  try {
+    const response = await fetch(`/user/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({username})
+    })
+    const jsonResponse = await response.json();
+    console.log(jsonResponse)
+    return jsonResponse
+  } catch (err) {
+
   }
 }
