@@ -15,7 +15,7 @@ class UserController implements IController {
 
   private initializeRoutes() {
     this.router.post(`${this.path}/sendFriendRequest`, ensureAuthenticated, this.friend);
-    this.router.post(`${this.path}/unfollow`, ensureAuthenticated, this.unfriend);
+    this.router.post(`${this.path}/unfriend`, ensureAuthenticated, this.unfriend);
     this.router.get(`${this.path}/getFriends/:username`, ensureAuthenticated, this.getFriends)
     this.router.get(`${this.path}/getActivities/:username`, ensureAuthenticated, this.getActivities)
     this.router.post(`${this.path}/accept`, ensureAuthenticated, this.acceptFriendRequest)

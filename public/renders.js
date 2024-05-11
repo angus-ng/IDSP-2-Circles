@@ -348,6 +348,7 @@ async function displaySearch() {
         await displaySearch();
         break;
       case "Remove Friend":
+        //MAKE USER CONFIRM IF THEY WANT TO REMOVE THIS FRIEND FIRST
         response = await unfriend(username, currentLocalUser);
         console.log(response);
         await displaySearch();
