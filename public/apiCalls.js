@@ -216,7 +216,49 @@ async function acceptFriendRequest(requester, requestee) {
     });
 
     const jsonResponse = await response.json();
-    return jsonResponse;
+    return jsonResponse.data;
+  } catch (err) {
+    return { success: true, data: null, error: err };
+  }
+}
+
+async function removeFriendRequest(user1, user2) {
+  try {
+    const requestObj = {
+      user1: user1,
+      user2: user2,
+    };
+    const response = await fetch("/user/removeRequest", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestObj),
+    });
+
+    const jsonResponse = await response.json();
+    return jsonResponse.data;
+  } catch (err) {
+    return { success: true, data: null, error: err };
+  }
+}
+
+async function unfriend(requestee, requester) {
+  try {
+    const requestObj = {
+      requester: requester,
+      requestee: requestee,
+    };
+    const response = await fetch("/user/unfriend", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestObj),
+    });
+
+    const jsonResponse = await response.json();
+    return jsonResponse.data;
   } catch (err) {
     return { success: true, data: null, error: err };
   }
@@ -229,7 +271,7 @@ async function getSearchResult(input) {
 
       const jsonResponse = await response.json();
       return jsonResponse;
-    } 
+    }
     const response = await fetch(`/user/search/${input.trim()}/`);
 
     const jsonResponse = await response.json();
@@ -254,7 +296,7 @@ async function sendFriendRequest(requestee, requester) {
     });
 
     const jsonResponse = await response.json();
-    return jsonResponse;
+    return jsonResponse.data;
   } catch (err) {
     return { success: true, data: null, error: err };
   }

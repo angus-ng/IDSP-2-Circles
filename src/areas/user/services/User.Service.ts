@@ -6,7 +6,7 @@ import Activies from "./../../../interfaces/activities.interface";
 export class UserService implements IUserService {
   readonly _db: DBClient = DBClient.getInstance();
 
-  async friend(requester:string, requestee:string) {
+  async friend(requester:string, requestee:string): Promise<string|void> {
     try {
         const exists = await this._db.prisma.friendRequest.findUnique({
           where: {
@@ -45,13 +45,23 @@ export class UserService implements IUserService {
     }
   }
 
-  async unfriend(friend_1_name: string, friend_2_name: string) {
+  async unfriend(friend_1_name: string, friend_2_name: string): Promise<string|void> {
     try {
-        await this._db.prisma.friend.deleteMany({
-            where: {
+        await this._db.prisma.friend.delete({
+          where: {
+            friend_1_name_friend_2_name: {
               friend_1_name: friend_1_name,
               friend_2_name: friend_2_name
             }
+          }
+        })
+        await this._db.prisma.friend.delete({
+          where: {
+            friend_1_name_friend_2_name: {
+              friend_1_name: friend_2_name,
+              friend_2_name: friend_1_name
+            }
+          }
         })
     } catch (error: any) {
         throw new Error(error)
@@ -161,6 +171,52 @@ export class UserService implements IUserService {
       throw new Error(error)
     }
   }
+  async removeRequest(user1: string, user2: string): Promise<void> {
+    try {
+      const friendRequestReceive = await this._db.prisma.friendRequest.findUnique({
+        where: {
+          requesterName_requesteeName: {
+            requesteeName: user1,
+            requesterName: user2
+          },
+          status: false
+        }
+    })
+    const friendRequestSent = await this._db.prisma.friendRequest.findUnique({
+      where: {
+        requesterName_requesteeName: {
+          requesteeName: user2,
+          requesterName: user1
+        },
+        status: false
+      }
+    }) 
+    if (friendRequestReceive) {
+      await this._db.prisma.friendRequest.delete({
+        where: {
+          requesterName_requesteeName: {
+            requesteeName: user1,
+            requesterName: user2
+          },
+          status: false
+        }
+      })
+    }
+    if (friendRequestSent) {
+      await this._db.prisma.friendRequest.delete({
+        where: {
+          requesterName_requesteeName: {
+            requesteeName: user2,
+            requesterName: user1
+          },
+          status: false
+        }
+      })
+    }
+    } catch (error:any) {
+      throw new Error(error)
+    }
+  }
   async search(input: string, currentUser: string): Promise<User[]> {
     try {
       const userSearchResults = await this._db.prisma.user.findMany({
@@ -170,7 +226,13 @@ export class UserService implements IUserService {
           },
         }, include: {
           friendOf: {},
-          friends: {}
+          friends: {},
+          requestReceived: {
+            include:{requester:{}}
+          },
+          requestsSent: {
+            include:{requestee:{}}
+          }
         }
       })
       return userSearchResults
