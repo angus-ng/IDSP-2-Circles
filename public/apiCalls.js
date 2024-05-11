@@ -243,7 +243,7 @@ async function removeFriendRequest(user1, user2) {
   }
 }
 
-async function unfriend(requester, requestee) {
+async function unfriend(requestee, requester) {
   try {
     const requestObj = {
       requester: requester,
