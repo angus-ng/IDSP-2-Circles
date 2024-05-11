@@ -62,7 +62,8 @@ theme: {
       '180': '180px',
       '42': '42px',
       '58': '58px',
-      '62': '62px'
+      '62': '62px',
+      'popup': '398px'
     },
     height: {
       '932': '932px',
@@ -88,6 +89,7 @@ theme: {
       'input-box': '28px',
       'checkbox': '3px',
       '12.75': '12.75px',
+      'popup': '15px'
     },
     borderWidth: {
       'circle': '0.75px',
@@ -105,7 +107,7 @@ theme: {
     },
     padding: {
       '20': '20px'
-    }
+    },
   },
 },
 plugins: [

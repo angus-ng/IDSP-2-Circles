@@ -342,7 +342,7 @@ async function displaySearch() {
       switch (method) {
         case "Add Friend":
           await sendFriendRequest(username, currentLocalUser);
-          alert("friend request sent");
+          await displayPopup("friend request sent");
           await displaySearch();
           break;
         case "Remove Friend":
@@ -1036,7 +1036,7 @@ async function displayAlbum(albumData) {
     console.log(albumData);
     leftHeaderButton.innerHTML = `
     <span id="${albumData.circle.id}">
-    <img src="/lightmode/back_button_icon.svg" alt="Back Button" id="backButtonAlbum"></img>
+    <img src="/lightmode/back_button.svg" alt="Back Button" id="backButtonAlbum"></img>
     </span
     `;
     rightHeaderButton.innerHTML = ``;
@@ -1133,4 +1133,12 @@ async function displayPhoto(photoSrc) {
   
     photoDiv.appendChild(personalView);
     albumPhotos.appendChild(photoDiv);
+}
+
+async function displayPopup(activity) {
+  const notificationText = document.querySelector("#notificationText");
+  notificationText.textContent = `${activity}`;
+  const popup = document.querySelector("#popup");
+  popup.classList.remove("hidden");
+  
 }
