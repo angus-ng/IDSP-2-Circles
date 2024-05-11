@@ -222,6 +222,27 @@ async function acceptFriendRequest(requester, requestee) {
   }
 }
 
+async function removeFriendRequest(user1, user2) {
+  try {
+    const requestObj = {
+      user1: user1,
+      user2: user2,
+    };
+    const response = await fetch("/user/removeRequest", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestObj),
+    });
+
+    const jsonResponse = await response.json();
+    return jsonResponse.data;
+  } catch (err) {
+    return { success: true, data: null, error: err };
+  }
+}
+
 async function unfriend(requester, requestee) {
   try {
     const requestObj = {

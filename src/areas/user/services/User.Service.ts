@@ -180,6 +180,52 @@ export class UserService implements IUserService {
       throw new Error(error)
     }
   }
+  async removeRequest(user1: string, user2: string): Promise<void> {
+    try {
+      const friendRequestReceive = await this._db.prisma.friendRequest.findUnique({
+        where: {
+          requesterName_requesteeName: {
+            requesteeName: user1,
+            requesterName: user2
+          },
+          status: false
+        }
+    })
+    const friendRequestSent = await this._db.prisma.friendRequest.findUnique({
+      where: {
+        requesterName_requesteeName: {
+          requesteeName: user2,
+          requesterName: user1
+        },
+        status: false
+      }
+    }) 
+    if (friendRequestReceive) {
+      await this._db.prisma.friendRequest.delete({
+        where: {
+          requesterName_requesteeName: {
+            requesteeName: user1,
+            requesterName: user2
+          },
+          status: false
+        }
+      })
+    }
+    if (friendRequestSent) {
+      await this._db.prisma.friendRequest.delete({
+        where: {
+          requesterName_requesteeName: {
+            requesteeName: user2,
+            requesterName: user1
+          },
+          status: false
+        }
+      })
+    }
+    } catch (error:any) {
+      throw new Error(error)
+    }
+  }
   async search(input: string, currentUser: string): Promise<User[]> {
     try {
       const userSearchResults = await this._db.prisma.user.findMany({
@@ -189,7 +235,13 @@ export class UserService implements IUserService {
           },
         }, include: {
           friendOf: {},
-          friends: {}
+          friends: {},
+          requestReceived: {
+            include:{requester:{}}
+          },
+          requestsSent: {
+            include:{requestee:{}}
+          }
         }
       })
       return userSearchResults

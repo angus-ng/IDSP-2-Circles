@@ -340,15 +340,26 @@ async function displaySearch() {
     const target = event.target;
     const username = target.getAttribute("name");
     const method = target.getAttribute("method");
+    let response;
     switch (method) {
       case "Add Friend":
-        const response = await sendFriendRequest(username, currentLocalUser);
-        alert(response);
+        response = await sendFriendRequest(username, currentLocalUser);
+        console.log(response);
         await displaySearch();
         break;
       case "Remove Friend":
-        const res = await unfriend(username, currentLocalUser);
-        alert(res);
+        response = await unfriend(username, currentLocalUser);
+        console.log(response);
+        await displaySearch();
+        break;
+      case "Remove Request":
+        response = await removeFriendRequest(username, currentLocalUser);
+        console.log(response);
+        await displaySearch();
+        break;
+      case "Accept Request":
+        response = await acceptFriendRequest(username, currentLocalUser);
+        console.log(response);
         await displaySearch();
         break;
       default:
@@ -368,7 +379,18 @@ function displayUserSearch(listOfUsers) {
     let followStatus = "Add Friend";
     for (let friend of user.friendOf) {
       if (friend.friend_1_name === currentLocalUser) {
+        method = "Remove Friend";
         followStatus = "Remove Friend";
+      }
+    }
+    for (let request of user.requestReceived) {
+      if (request.requester.username === currentLocalUser) {
+        followStatus = "Remove Request";
+      }
+    }
+    for (let request of user.requestsSent) {
+      if (request.requestee.username === currentLocalUser) {
+        followStatus = "Accept Request";
       }
     }
     return `<div class="flex items-center my-5">
