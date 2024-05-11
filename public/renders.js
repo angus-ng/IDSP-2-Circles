@@ -561,13 +561,25 @@ async function displayProfile(userData) {
       <h2 class="text-secondary text-center">Friends</h2>
       </div>
     </div>
-    <div class="flex flex-row justify-between">
-      <div>
-        <img id="albumTab" src="/lightmode/albumTab_deselected.svg" class="w-180 h-27 object-cover"></img>
-      </div>
-      <div>
-        <img id="circleTab" src="/lightmode/circlesTab_selected.svg" class="w-180 h-27 object-cover"></img>
-      </div>
+    <div id="profileTabs" class="w-full justify-center">
+      <ul class="flex flex-row w-full justify-center gap-x-38 -mb-px text-sm font-medium text-center text-gray-500 dark:text-gray-400">
+          <li id="albumTab" class="me-2 w-180 border-b">
+              <a class="w-180 inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-black hover:border-black dark:hover:text-gray-300 group">
+                <p class="text-13 font-bold mr-2">albums</p>
+                <svg width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M11.55 0H2.45C1.93283 0 1.43684 0.205446 1.07114 0.571142C0.705446 0.936838 0.5 1.43283 0.5 1.95V11.05C0.5 11.5672 0.705446 12.0632 1.07114 12.4289C1.43684 12.7946 1.93283 13 2.45 13H11.55C11.6569 12.9985 11.7635 12.9876 11.8685 12.9675L12.0635 12.922H12.109H12.1415L12.382 12.831L12.4665 12.7855C12.5315 12.7465 12.603 12.714 12.668 12.6685C12.7548 12.6046 12.8373 12.5352 12.915 12.4605L12.9605 12.402C13.0243 12.3373 13.083 12.2678 13.136 12.194L13.1945 12.1095C13.2399 12.0371 13.279 11.961 13.3115 11.882C13.3293 11.8508 13.3446 11.8182 13.357 11.7845C13.3895 11.7065 13.409 11.622 13.435 11.5375V11.44C13.4719 11.313 13.4937 11.1821 13.5 11.05V1.95C13.5 1.43283 13.2946 0.936838 12.9289 0.571142C12.5632 0.205446 12.0672 0 11.55 0ZM2.45 11.7C2.27761 11.7 2.11228 11.6315 1.99038 11.5096C1.86848 11.3877 1.8 11.2224 1.8 11.05V8.2485L3.9385 6.1035C3.99893 6.04258 4.07082 5.99422 4.15002 5.96122C4.22923 5.92822 4.31419 5.91123 4.4 5.91123C4.48581 5.91123 4.57077 5.92822 4.64997 5.96122C4.72918 5.99422 4.80107 6.04258 4.8615 6.1035L10.4515 11.7H2.45ZM12.2 11.05C12.1994 11.1301 12.184 11.2095 12.1545 11.284C12.1396 11.3157 12.1223 11.3461 12.1025 11.375C12.0851 11.4025 12.0655 11.4286 12.044 11.453L8.5665 7.9755L9.1385 7.4035C9.19893 7.34258 9.27082 7.29422 9.35003 7.26122C9.42923 7.22822 9.51419 7.21123 9.6 7.21123C9.68581 7.21123 9.77077 7.22822 9.84997 7.26122C9.92918 7.29422 10.0011 7.34258 10.0615 7.4035L12.2 9.5485V11.05ZM12.2 7.709L10.978 6.5C10.606 6.14704 10.1128 5.95028 9.6 5.95028C9.08722 5.95028 8.59398 6.14704 8.222 6.5L7.65 7.072L5.778 5.2C5.40602 4.84704 4.91278 4.65028 4.4 4.65028C3.88722 4.65028 3.39398 4.84704 3.022 5.2L1.8 6.409V1.95C1.8 1.77761 1.86848 1.61228 1.99038 1.49038C2.11228 1.36848 2.27761 1.3 2.45 1.3H11.55C11.7224 1.3 11.8877 1.36848 12.0096 1.49038C12.1315 1.61228 12.2 1.77761 12.2 1.95V7.709ZM7.975 2.6C7.78216 2.6 7.59366 2.65718 7.43332 2.76432C7.27298 2.87145 7.14801 3.02373 7.07422 3.20188C7.00042 3.38004 6.98111 3.57608 7.01873 3.76521C7.05635 3.95434 7.14921 4.12807 7.28557 4.26443C7.42193 4.40079 7.59565 4.49365 7.78479 4.53127C7.97392 4.56889 8.16996 4.54958 8.34812 4.47578C8.52627 4.40199 8.67855 4.27702 8.78568 4.11668C8.89282 3.95634 8.95 3.76784 8.95 3.575C8.95 3.31641 8.84728 3.06842 8.66443 2.88557C8.48158 2.70272 8.23359 2.6 7.975 2.6Z" fill="#737373"/>
+                </svg>
+              </a>
+          </li>
+          <li id="circleTab" class="me-2 w-180 border-b">
+              <a class="w-180 inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-black hover:border-black dark:hover:text-gray-300">
+                <p class="text-13 font-bold mr-2">circles</p>
+                <svg width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M7 13C6.10083 13 5.25583 12.8293 4.465 12.4878C3.67417 12.1463 2.98625 11.6833 2.40125 11.0987C1.81625 10.5142 1.35323 9.82626 1.0122 9.035C0.671167 8.24373 0.500434 7.39873 0.500001 6.5C0.499567 5.60126 0.670301 4.75627 1.0122 3.965C1.3541 3.17373 1.81712 2.48582 2.40125 1.90125C2.98538 1.31668 3.6733 0.853666 4.465 0.5122C5.2567 0.170733 6.1017 0 7 0C7.8983 0 8.74329 0.170733 9.53499 0.5122C10.3267 0.853666 11.0146 1.31668 11.5987 1.90125C12.1829 2.48582 12.6461 3.17373 12.9884 3.965C13.3308 4.75627 13.5013 5.60126 13.5 6.5C13.4987 7.39873 13.328 8.24373 12.9878 9.035C12.6476 9.82626 12.1846 10.5142 11.5987 11.0987C11.0129 11.6833 10.325 12.1465 9.53499 12.4884C8.74503 12.8303 7.90003 13.0009 7 13ZM7 11.7C8.45166 11.7 9.68124 11.1962 10.6887 10.1887C11.6962 9.18125 12.2 7.95166 12.2 6.5C12.2 5.04833 11.6962 3.81875 10.6887 2.81125C9.68124 1.80375 8.45166 1.3 7 1.3C5.54833 1.3 4.31875 1.80375 3.31125 2.81125C2.30375 3.81875 1.8 5.04833 1.8 6.5C1.8 7.95166 2.30375 9.18125 3.31125 10.1887C4.31875 11.1962 5.54833 11.7 7 11.7Z" fill="#737373"/>
+                </svg>
+              </a>
+          </li>
+      </ul>
     </div>
     <div id="albumList" class="m-auto grid grid-cols-3 gap-4 mt-6 mb-6 hidden">
     ${albumRender.join("")}
@@ -577,6 +589,29 @@ async function displayProfile(userData) {
     </div>
     <div class="h-100"></div>
   </div>`;
+
+  const profileTabs = document.querySelector("#profileTabs");
+  profileTabs.addEventListener("click", (event) => {
+    const albumTab = event.target.closest("#albumTab");
+    const circleTab = event.target.closest("#circleTab");
+    const albumTabLink = document.querySelector("#albumTab a");
+    const circleTabLink = document.querySelector("#circleTab a");
+
+    if (albumTab) {
+      albumTabLink.classList.add("active");
+      albumTabLink.querySelector('svg path').setAttribute('fill', 'black');
+      circleTabLink.classList.remove("active");
+      circleTabLink.querySelector('svg path').setAttribute('fill', '#737373');
+    }
+
+    if (circleTab) {
+      circleTabLink.classList.add("active");
+      circleTabLink.querySelector('svg path').setAttribute('fill', 'black');
+      albumTabLink.classList.remove("active");
+      albumTabLink.querySelector('svg path').setAttribute('fill', '#737373');
+    }
+  });
+
   document.querySelector("#username").textContent = "@"+ userData.username;
     document
       .querySelector("#circleList")

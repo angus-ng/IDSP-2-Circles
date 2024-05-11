@@ -4,6 +4,7 @@ module.exports = {
   content: [
     "./public/*.html",
     "./public/*.js",
+    "./node_modules/flowbite/**/*.js"
 ],
 theme: {
   fontFamily: {
@@ -104,7 +105,8 @@ theme: {
       '1': '1px'
     },
     spacing: {
-      '22': '22px'
+      '22': '22px',
+      '38': '38px'
     },
     padding: {
       '20': '20px'
@@ -113,5 +115,6 @@ theme: {
 },
 plugins: [
   require('@tailwindcss/forms'),
+  require('flowbite/plugin')
 ],
 }
