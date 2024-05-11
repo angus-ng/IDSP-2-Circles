@@ -189,8 +189,8 @@ async function displayInviteFriends() {
       <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full">
         <div class="relative w-full h-9 mt-8">
           <form onkeydown="return event.key != 'Enter';">
-            <input class="w-380 px-14 py-2 border-grey border-2 rounded-input-box" placeholder="search friends"/>
-            <img src="/lightmode/search_icon_no_text.svg" alt="search icon" class="absolute left-4 top-2.5 w-6 h-6"/>
+            <input class="w-380 px-14 py-2 border-grey border-2 rounded-input-box text-secondary leading-secondary" placeholder="search friends"/>
+            <img src="/lightmode/search_icon_no_text.svg" alt="search icon" class="absolute left-4 top-2.5 w-25 h-25"/>
           </form>
         </div>
         <div class="shrink-0 mt-10 mb-6 justify-center w-full">
@@ -323,7 +323,10 @@ async function displaySearch() {
   leftHeaderButton.innerHTML = "";
   pageContent.innerHTML = `
     <div id="searchPage" class="flex flex-col py-2 w-full h-screen">
-    <input type="text" id="searchBox">
+      <div class="relative w-full h-9 mt-8">
+        <input type="text" id="searchBox" class="w-380 px-14 py-2 border-grey border-2 rounded-input-box text-secondary leading-secondary" placeholder="search account">
+        <img src="/lightmode/search_icon_no_text.svg" alt="search icon" class="absolute left-4 top-2.5 w-25 h-25"/>
+      </div>
       <div class="shrink-0 mt-10 mb-6 justify-center w-full">
         <div id="suggestedFriends"></div>
       </div>
@@ -351,6 +354,7 @@ async function displaySearch() {
       case "Add Friend":
         response = await sendFriendRequest(username, currentLocalUser);
         console.log(response);
+        await displayPopup("friend request sent");
         await displaySearch();
         break;
       case "Remove Friend":
@@ -405,7 +409,7 @@ function displayUserSearch(listOfUsers) {
       username.textContent=user.username;
     return `<div class="flex items-center my-5">
       <div class="flex-none w-58">
-        <img class="rounded w-58 h-58" src="${user.profilePicture}" alt="${user.username}'s profile picture"></img>
+        <img class="rounded-full w-58 h-58 object-cover" src="${user.profilePicture}" alt="${user.username}'s profile picture"></img>
       </div>
       <div class="ml-8 flex-none w-207">
         ${username.outerHTML}
@@ -1202,4 +1206,19 @@ async function displayListOfAlbums (data) {
     </div>`;
   });
   return albumList
+}
+
+async function displayPopup(activity) {
+  const notificationText = document.querySelector("#notificationText");
+  notificationText.textContent = `${activity}`;
+  const popup = document.querySelector("#popup");
+  popup.classList.remove("hidden");
+
+  popup.addEventListener("click", () => {
+    const popupCloseButton = event.target.closest("#popupCloseButton");
+    if (popupCloseButton) {
+      popup.classList.add("hidden");
+    }
+  })
+  
 }

@@ -62,7 +62,8 @@ theme: {
       '180': '180px',
       '42': '42px',
       '58': '58px',
-      '62': '62px'
+      '62': '62px',
+      'popup': '398px'
     },
     height: {
       '932': '932px',
@@ -78,7 +79,8 @@ theme: {
       'navbar': '85px',
       '400': '400px',
       '62': '62px',
-      '415': '415px'
+      '415': '415px',
+      '58': '58px'
     },
     boxShadow: {
       'background-shadow': 'inset 0 0 100px -30px rgba(0, 0, 0, 0.2)'
@@ -88,6 +90,7 @@ theme: {
       'input-box': '28px',
       'checkbox': '3px',
       '12.75': '12.75px',
+      'popup': '15px'
     },
     borderWidth: {
       'circle': '0.75px',
@@ -105,7 +108,7 @@ theme: {
     },
     padding: {
       '20': '20px'
-    }
+    },
   },
 },
 plugins: [
