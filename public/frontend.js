@@ -293,25 +293,18 @@ async function handleLocalAuth() {
   }
 }
 
-function toggleEdit() {
-  isEditable = !isEditable;
-
-  if (isEditable) {
-    circleName.removeAttribute("readonly");
-    return circleName.focus();
-  }
-
-  circleName.setAttribute("readonly", true);
-}
-
 pageContent.addEventListener("click", async(event) => {
-  const localAuthButton = document.querySelector("#localAuth");
+  const localAuthButton = event.target.closest("#localAuth");
   const emailNextButton = event.target.closest("#emailNext");
   const passwordNextButton = event.target.closest("#passwordNext");
   const birthdayNextButton = event.target.closest("#birthdayNext");
   const nameNextButton = event.target.closest("#nameNext");
   const usernameNextButton = event.target.closest("#usernameNext");
   const profilePictureNextButton = event.target.closest("#profilePictureNext");
+
+  if (localAuthButton) {
+    handleLocalAuth();
+  }
 
   if (emailNextButton) {
     await displaySignUpPasswordPage();
