@@ -665,6 +665,14 @@ async function displayActivity() {
   const noCircleInvites = `<p class="text-secondary text-medium-grey" >No circle invites pending.</p>`
   const circleInvitePreviews = [];
   for (i=0; i < circleInvites.length; i++) {
+    if (i > 3) {
+      const count = circleInvites.length-4;
+      const andMore = `<div class="w-8 h-8 rounded-full border-2 border-white border-solid ml-neg12 flex justify-center items-center bg-dark-grey">
+        <p class="text-secondary text-white font-bold">+${count}</p>
+      </div>`
+      circleInvitePreviews.push(andMore);
+      break;
+    }
     const circleImg = document.createElement("img")
     circleImg.src = circleInvites[i].circle.picture;
     circleImg.alt = `${circleInvites[i].circle.name}'s picture`
@@ -676,6 +684,14 @@ async function displayActivity() {
   const noFriendRequests = `<p class="text-secondary text-medium-grey" >No friend requests pending.</p>`
   const friendRequestsPreviews = [];
   for (i=0; i < friendRequests.length; i++) {
+    if (i > 3) {
+      const count = friendRequests.length-4;
+      const andMore = `<div class="w-8 h-8 rounded-full border-2 border-white border-solid ml-neg12 flex justify-center items-center bg-dark-grey">
+        <p class="text-secondary text-white font-bold">+${count}</p>
+      </div>`
+      friendRequestsPreviews.push(andMore);
+      break;
+    }
     const friendImg = document.createElement("img")
     friendImg.src = friendRequests[i].requester.profilePicture;
     let altText = (friendRequests[i].requester.displayName) ? friendRequests[i].requester.displayName : friendRequests[i].requester.username
@@ -1444,7 +1460,7 @@ async function displayCircleInvites() {
         break;
       case "declineCircleInvite":
         await declineCircleInvite(id, invitee);
-        await displayActivity();
+        await displayCircleInvites();
         break;
       default:
         break;
@@ -1556,11 +1572,11 @@ async function displayFriendRequests() {
     switch (event.target.name) {
       case "acceptFriendRequest":
         await acceptFriendRequest(id, invitee);
-        await displayActivity();
+        await displayFriendRequests();
         break;
       case "declineFriendRequest":
         await removeFriendRequest(id, invitee)
-        await displayActivity();
+        await displayFriendRequests();
         break;
       default:
         break;
