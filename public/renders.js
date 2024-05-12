@@ -539,7 +539,7 @@ async function displayNavBar() {
 
 async function displayProfile(userData) {
   const circleRender = await displayListOfCircles(userData);
-  const albumRender = await displayListOfAlbums(userData);
+  const albumRender = await displayListOfAlbums(userData, true);
   console.log(circleRender)
   pageName.textContent = userData.username;
   pageContent.innerHTML = `
@@ -575,7 +575,7 @@ async function displayProfile(userData) {
               </a>
           </li>
           <li id="circleTab" class="me-2 w-180 border-b">
-              <a class="w-180 inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg text-black border-black hover:text-black hover:border-black dark:hover:text-gray-300 active">
+              <a class="w-180 inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg text-black border-black hover:text-black hover:border-black active">
                 <p id="circleText" class="text-13 font-bold mr-2">circles</p>
                 <svg width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M7 13C6.10083 13 5.25583 12.8293 4.465 12.4878C3.67417 12.1463 2.98625 11.6833 2.40125 11.0987C1.81625 10.5142 1.35323 9.82626 1.0122 9.035C0.671167 8.24373 0.500434 7.39873 0.500001 6.5C0.499567 5.60126 0.670301 4.75627 1.0122 3.965C1.3541 3.17373 1.81712 2.48582 2.40125 1.90125C2.98538 1.31668 3.6733 0.853666 4.465 0.5122C5.2567 0.170733 6.1017 0 7 0C7.8983 0 8.74329 0.170733 9.53499 0.5122C10.3267 0.853666 11.0146 1.31668 11.5987 1.90125C12.1829 2.48582 12.6461 3.17373 12.9884 3.965C13.3308 4.75627 13.5013 5.60126 13.5 6.5C13.4987 7.39873 13.328 8.24373 12.9878 9.035C12.6476 9.82626 12.1846 10.5142 11.5987 11.0987C11.0129 11.6833 10.325 12.1465 9.53499 12.4884C8.74503 12.8303 7.90003 13.0009 7 13ZM7 11.7C8.45166 11.7 9.68124 11.1962 10.6887 10.1887C11.6962 9.18125 12.2 7.95166 12.2 6.5C12.2 5.04833 11.6962 3.81875 10.6887 2.81125C9.68124 1.80375 8.45166 1.3 7 1.3C5.54833 1.3 4.31875 1.80375 3.31125 2.81125C2.30375 3.81875 1.8 5.04833 1.8 6.5C1.8 7.95166 2.30375 9.18125 3.31125 10.1887C4.31875 11.1962 5.54833 11.7 7 11.7Z" fill="#0E0E0E"/>
@@ -584,7 +584,7 @@ async function displayProfile(userData) {
           </li>
       </ul>
     </div>
-    <div id="albumList" class="m-auto grid grid-cols-3 gap-4 mt-6 mb-6 hidden">
+    <div id="albumList" class="m-auto mt-6 mb-6 columns-2 gap-4 space-y-4 grid-flow-row hidden">
     ${albumRender.join("")}
     </div>
     <div id="circleList" class="m-auto grid grid-cols-3 gap-4 mt-6 mb-6 place-items-center">
@@ -601,20 +601,21 @@ async function displayProfile(userData) {
     const circleTabLink = document.querySelector("#circleTab a");
     const circleList = document.querySelector("#circleList");
     const albumList = document.querySelector("#albumList");
-    const circleText = document.querySelector("#circleText");
     const settings = event.target.closest("#settings");
+    const like = event.target.closest("#like");
+    const comment = event.target.closest("#comment");
 
     if (albumTab) {
       if (albumList.classList.contains("hidden")){
-        albumList.classList.remove("hidden")
-        circleList.classList.add("hidden")
+        albumList.classList.remove("hidden");
+        circleList.classList.add("hidden");
       }
       albumTabLink.classList.add("active");
-      albumTabLink.querySelector('svg path').setAttribute('fill', 'black');
+      albumTabLink.querySelector('svg path').setAttribute("fill", "black");
       circleTabLink.classList.remove("active");
-      circleTabLink.querySelector('svg path').setAttribute('fill', '#737373');
-      circleTabLink.classList.add("border-transparent");
-      circleText.classList.add("text-dark-grey");
+      circleTabLink.querySelector('svg path').setAttribute("fill", "#737373");
+      circleTabLink.classList.remove("border-black");
+      circleTabLink.classList.remove("text-black");
     }
 
     if (circleTab) {
@@ -624,10 +625,29 @@ async function displayProfile(userData) {
       }
       circleTabLink.classList.add("active");
       circleTabLink.querySelector('svg path').setAttribute('fill', 'black');
-      circleText.classList.add("text-black");
       albumTabLink.classList.remove("active");
-      albumTabLink.querySelector('svg path').setAttribute('fill', '#737373');
+      albumTabLink.querySelector("svg path").setAttribute('fill', '#737373');
     }
+
+    if (like) {
+      
+      if (like.classList.contains("liked")) {
+        console.log("unliked");
+        like.classList.remove("liked");
+        like.querySelector("svg path").setAttribute("fill", "none");
+        like.querySelector("svg path").setAttribute("stroke", "#FFFFFF");
+      } else {
+        like.classList.add("liked");
+        console.log("liked");
+        like.querySelector("svg path").setAttribute("fill", "#FF4646");
+        like.querySelector("svg path").setAttribute("stroke", "#FF4646");
+      }
+    }
+
+    if (comment) {
+      console.log("comment");
+    }
+
 
     if (settings) {
       console.log("no settings xd");
@@ -1044,7 +1064,7 @@ async function displayCircle(circleData) {
     });
     const albumList = circleData.circle.albums.map((obj) => {
       let albumName = document.createElement('p')
-      albumName.className = "text-center text-secondary"
+      albumName.className = "text-light-mode-bg mix-blend-difference"
       albumName.textContent = obj.name;
       return `
       <div class="w-full h-min relative album" id="${obj.id}">
@@ -1244,21 +1264,34 @@ async function displayPhoto(photoSrc) {
   albumPhotos.appendChild(photoDiv);
 }
 
-async function displayListOfAlbums (data) {
+async function displayListOfAlbums (data, profile=false) {
   console.log(data)
   const albumList = data.Album.map((obj) => {
     let albumName = document.createElement('p')
-    albumName.className = "text-center text-secondary"
+    albumName.className = "text-light-mode-bg mix-blend-difference"
     albumName.textContent = obj.name;
+    const circleImage = `<div class="absolute top-0 right-0 m-2 flex items-start justify-end gap-1 p2">
+      <img src="${obj.circle.picture}" class="w-8 rounded-full object-cover"/>
+    </div>`
+
     return `
     <div class="w-full h-min relative album" id="${obj.id}">
       <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.photos[0].src}"/>
+      ${profile ? circleImage : null}
       <div class="m-2 text-secondary font-semibold absolute inset-0 flex items-end justify-start">
         ${albumName.outerHTML}
       </div>
       <div class="absolute inset-0 flex items-end justify-end gap-1 p-2">
-        <img src="/like_icon.svg" alt="Like Icon"></img>
-        <img src="/comment_icon.svg" alt="Comment Icon"></img>
+        <div id="like">
+          <svg width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9.22318 16.2905L9.22174 16.2892C6.62708 13.9364 4.55406 12.0515 3.11801 10.2946C1.69296 8.55118 1 7.05624 1 5.5C1 2.96348 2.97109 1 5.5 1C6.9377 1 8.33413 1.67446 9.24117 2.73128L10 3.61543L10.7588 2.73128C11.6659 1.67446 13.0623 1 14.5 1C17.0289 1 19 2.96348 19 5.5C19 7.05624 18.307 8.55118 16.882 10.2946C15.4459 12.0515 13.3729 13.9364 10.7783 16.2892L10.7768 16.2905L10 16.9977L9.22318 16.2905Z" stroke="white" stroke-width="2"/>
+          </svg>
+        </div>
+        <div id="comment">
+          <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10.5 19.125C8.79414 19.125 7.12658 18.6192 5.70821 17.6714C4.28983 16.7237 3.18434 15.3767 2.53154 13.8006C1.87873 12.2246 1.70793 10.4904 2.04073 8.81735C2.37352 7.14426 3.19498 5.60744 4.4012 4.40121C5.60743 3.19498 7.14426 2.37353 8.81735 2.04073C10.4904 1.70793 12.2246 1.87874 13.8006 2.53154C15.3767 3.18435 16.7237 4.28984 17.6714 5.70821C18.6192 7.12658 19.125 8.79414 19.125 10.5C19.125 11.926 18.78 13.2705 18.1667 14.455L19.125 19.125L14.455 18.1667C13.2705 18.78 11.925 19.125 10.5 19.125Z" stroke="#F8F4EA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
       </div>
     </div>`;
   });

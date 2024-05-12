@@ -26,7 +26,8 @@ theme: {
       'light-grey': '#D9D9D9',
       'medium-grey': '#565656',
       'dark-grey': '#737373',
-      'text-grey': '#484848'
+      'text-grey': '#484848',
+      'like': '#FF4646'
     },
     fontSize: {
       'h1': '29px',
