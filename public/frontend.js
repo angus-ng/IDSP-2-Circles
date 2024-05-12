@@ -109,6 +109,7 @@ header.addEventListener("click", async (event) => {
     pageContent.innerHTML = "";
     leftHeaderButton.innerHTML = "";
     rightHeaderButton.innerHTML = `<img src="/lightmode/map_icon.svg" alt="Map Icon"</img>`;
+    nav.classList.remove("hidden");
     return;
   }
 
@@ -180,12 +181,8 @@ const modal = document.querySelector("#modal");
 modal.addEventListener("click", async function (event) {
   event.preventDefault();
   const closeModal = event.target.closest("#closeModalButton");
-  const createAlbumModalButton = event.target.closest(
-    "#createAlbumModalButton"
-  );
-  const createCircleModalButton = event.target.closest(
-    "#createCircleModalButton"
-  );
+  const createAlbumModalButton = event.target.closest("#createAlbumModalButton");
+  const createCircleModalButton = event.target.closest("#createCircleModalButton");
 
   if (closeModal) {
     if (modal.classList.contains("shown")) {
@@ -198,6 +195,7 @@ modal.addEventListener("click", async function (event) {
     clearNewAlbum();
     modal.classList.remove("shown");
     modal.classList.add("hidden");
+    nav.classList.add("hidden");
     await displayCreateAlbum();
   }
 
