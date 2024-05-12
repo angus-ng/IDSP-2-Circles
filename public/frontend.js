@@ -48,6 +48,7 @@ header.addEventListener("click", async (event) => {
     "#albumConfirmationBackButton"
   );
   const addCircleBackButton = event.target.closest("#addCircleBackButton");
+  const toActivity = event.target.closest("#toActivity")
 
   if (nextButtonInviteFriends) {
     const circleName = document.querySelector("#circleName");
@@ -173,6 +174,10 @@ header.addEventListener("click", async (event) => {
       }
     }
     return;
+  }
+
+  if (toActivity) {
+    await displayActivity()
   }
 });
 

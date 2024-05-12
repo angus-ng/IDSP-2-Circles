@@ -463,58 +463,75 @@ function displayUserSearch(listOfUsers) {
 }
 
 async function displayActivity() {
-  pageName.textContent = "Activity";
+  pageName.textContent = "All Activity";
   rightHeaderButton.innerHTML = "";
   leftHeaderButton.innerHTML = "";
-  const { friendRequests, circleInvites } = await getActivites(
-    currentLocalUser
-  );
+  const { friendRequests, circleInvites } = await getActivities(currentLocalUser);
+  const noCircleInvites = `<p class="text-secondary text-medium-grey" >No circle invites pending.</p>`
+  const circleInvitePreviews = [];
+  for (i=0; i < circleInvites.length; i++) {
+    const circleImg = document.createElement("img")
+    circleImg.src = circleInvites[i].circle.picture;
+    circleImg.alt = `${circleInvites[i].circle.name}'s picture`
+    circleImg.className = "w-8 h-8 rounded-full object-cover border-2 border-white border-solid";
+    (i > 0) ? circleImg.classList.add("ml-neg12") : null
+    circleInvitePreviews.push(circleImg.outerHTML);
+  }
+  
+  const noFriendRequests = `<p class="text-secondary text-medium-grey" >No friend requests pending.</p>`
+  const friendRequestsPreviews = [];
+  for (i=0; i < friendRequests.length; i++) {
+    const friendImg = document.createElement("img")
+    friendImg.src = friendRequests[i].requester.profilePicture;
+    let altText = (friendRequests[i].requester.displayName) ? friendRequests[i].requester.displayName : friendRequests[i].requester.username
+    altText = altText + "'s profile picture"
+    friendImg.alt = altText
+    friendImg.className = "w-8 h-8 rounded-full object-cover border-2 border-white border-solid";
+    (i > 0) ? friendImg.classList.add("ml-neg12") : null
+    friendRequestsPreviews.push(friendImg.outerHTML);
+  }
 
   pageContent.innerHTML = `
     <div id="activityPage" class="flex flex-col py-2 w-full h-screen">
-      <div class="shrink-0 mt-10 mb-6 w-full">
-          <h1 class="font-bold text-20 leading-body">Friend Requests</h1>
-          <div id="friendRequests"> </div>
+      <div id="circleInviteSection" class="h-100 border-solid border border-y-black border-x-transparent w-full flex items-center flex-wrap flex-row space-y-0">
+        <div class="w-full">
+          <h2 class="font-medium text-base">Circle Invites</h2>
+        </div>
+        <div class="self-start flex">
+          ${circleInvites.length ? circleInvitePreviews.join("") : noCircleInvites}
+        </div>
       </div>
-      <div class="shrink-0 mt-10 mb-6 w-full">
-          <h1 class="font-bold text-20 leading-body">Circle Invites</h1>
-          <div id="circleInvites"> </div>
+      <div id="friendInviteSection" class="h-100 border-solid border border-t-transparent border-b-black border-x-transparent w-full flex items-center flex-wrap flex-row space-y-0">
+        <div class="w-full">
+          <h2 class="font-medium text-base">Friend Requests</h2>
+        </div>
+        <div class="self-start flex">
+          ${friendRequests.length ? friendRequestsPreviews.join("") : noFriendRequests}
+        </div>
       </div>
     </div>
     `;
-  const friendRequestsDiv = document.querySelector("#friendRequests");
-  friendRequestsDiv.innerHTML = displayFriendRequests(friendRequests);
-  const circleInvitesDiv = document.querySelector("#circleInvites");
-  circleInvitesDiv.innerHTML = displayCircleInvites(circleInvites);
 
-  const activityPage = document.querySelector("#activityPage");
-  activityPage.addEventListener("click", async (event) => {
-    event.preventDefault();
-    const target = event.target;
-    const id = target.getAttribute("identifier");
-    const invitee = target.getAttribute("sentTo");
-    switch (target.name) {
-      case "acceptFriendRequest":
-        await acceptFriendRequest(id, invitee);
-        await displayActivity();
-        break;
-      case "declineFriendRequest":
-        await removeFriendRequest(id, invitee)
-        await displayActivity();
-        break;
-      case "acceptCircleInvite":
-        await acceptCircleInvite(id, invitee);
-        await displayActivity();
-        break;
-      case "declineCircleInvite":
-        await declineCircleInvite(id, invitee);
-        await displayActivity();
-        break;
-      default:
-        console.log("DO NOTHING LOL");
-        break;
-    }
-  });
+    document.querySelector("#activityPage").addEventListener("click", async function (event) {
+      event.preventDefault();
+      const circleInviteSection = event.target.closest("#circleInviteSection")
+      const friendInviteSection = event.target.closest("#friendInviteSection")
+
+      switch (event.target) {
+        case circleInviteSection:
+          if (circleInvites.length) {
+            await displayCircleInvites()
+          }
+          break;
+        case friendInviteSection:
+          if (friendRequests.length) {
+            await displayFriendRequests()
+          }
+          break;
+        default:
+          break;
+      }
+    })
 }
 
 async function displayNavBar() {
@@ -582,8 +599,17 @@ async function displayNavBar() {
 async function displayProfile(userData) {
   const circleRender = await displayListOfCircles(userData);
   const albumRender = await displayListOfAlbums(userData, true);
+  const addAsFriend = document.createElement("div")
+  addAsFriend.className = "flex justify-center";
+  (currentLocalUser === userData.username) ? null : addAsFriend.innerHTML=`<button class="w-110 h-38 rounded-input-box bg-light-mode-accent text-white">Add friend</button>`
+
   console.log(circleRender);
   pageName.textContent = userData.displayName ? userData.displayName : userData.username;
+  leftHeaderButton.innerHTML = "";
+  const username = document.createElement("h2")
+  username.id ="username"
+  username.className="text-base text-center"
+  username.textContent=`@${userData.username}`
   pageContent.innerHTML = `
   <div id="profilePage" class="relative pt-2 pb-16 mb-4 w-full">
     <div id="settings" class="absolute top-0 right-0 w-6 h-6">
@@ -593,7 +619,7 @@ async function displayProfile(userData) {
       <img id="profilePicture" src="${userData.profilePicture}" class="w-110 h-110 object-cover rounded-full"></img>
     </div>
     <div class="flex justify-center mt-2">
-      <h2 id="username" class="text-base text-center">@${userData.username}</h2>
+      ${username.outerHTML}
     </div>
     <div class="w-180 mt-6 mb-6 m-auto grid grid-cols-2 gap-4">
       <div class="gap-0 justify-center">
@@ -609,9 +635,7 @@ async function displayProfile(userData) {
         </div>
       </div>
     </div>
-    <div class="flex justify-center">
-      <button class="w-110 h-38 rounded-input-box bg-light-mode-accent text-white">Add friend</button>
-    </div>
+    ${addAsFriend.outerHTML}
     <div id="profileTabs" class="w-full justify-center">
       <ul class="flex flex-row w-full justify-center gap-x-38 -mb-px text-sm font-medium text-center text-dark-grey">
         <li id="albumTab" class="me-2 w-180">
@@ -1120,7 +1144,7 @@ async function displayCircle(circleData) {
     });
     const albumList = circleData.circle.albums.map((obj) => {
       let albumName = document.createElement('p')
-      albumName.className = "text-light-mode-bg mix-blend-difference"
+      albumName.className = "text-white text-shadow shadow-black"
       albumName.textContent = obj.name;
       return `
       <div class="w-full h-min relative album" id="${obj.id}">
@@ -1186,15 +1210,11 @@ async function displayCircle(circleData) {
   });
 }
 
-function displayCircleInvites(circleInvites) {
-  if (circleInvites.length === 0) {
-    return `<div class="flex items-center my-5">
-        <div class="ml-8 flex-none w-207">
-          <h2 class="font-medium text-14 leading-tertiary">No circle invites. Maybe go out and have fun XD? 😂😂😂</h2>
-        </div>
-      </div>`;
-    }
-    let newArr = circleInvites.map((invite) => {
+async function displayCircleInvites() {
+  pageName.textContent = "Circle Invites";
+  leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="toActivity"></img>`;
+  const { circleInvites } = await getActivities(currentLocalUser);
+    let circleInviteList = circleInvites.map((invite) => {
       let circleName = document.createElement("h2")
       circleName.className="font-medium text-14 leading-tertiary"
       circleName.textContent=invite.circle.name;
@@ -1213,8 +1233,28 @@ function displayCircleInvites(circleInvites) {
           </form>
         </div>
       </div>`;
-  });
-  return newArr;
+  }).join("");
+  pageContent.innerHTML = `<div id="circleInviteList">
+  ${circleInviteList}
+  </div>`
+  const circleInviteListPage = document.querySelector("#circleInviteList")
+  circleInviteListPage.addEventListener("click", async function (event) {
+    event.preventDefault();
+    const id = event.target.getAttribute("identifier");
+    const invitee = event.target.getAttribute("sentTo");
+    switch (event.target.name) {
+      case "acceptCircleInvite":
+        await acceptCircleInvite(id, invitee);
+        await displayCircleInvites()
+        break;
+      case "declineCircleInvite":
+        await declineCircleInvite(id, invitee);
+        await displayActivity();
+        break;
+      default:
+        break;
+    }
+  })
 }
 
 async function displayAlbum(albumData) {
@@ -1278,25 +1318,29 @@ async function displayAlbum(albumData) {
   });
 }
 
-function displayFriendRequests(friendRequest) {
-  if (friendRequest.length === 0) {
-    return `<div class="flex items-center my-5">
-        <div class="ml-8 flex-none w-207">
-          <h2 class="font-medium text-14 leading-tertiary">No friend requests. Maybe go make some friends XD? 😂😂😂</h2>
-        </div>
-      </div>`;
-    }
-    let newArr = friendRequest.map((request) => {
+async function displayFriendRequests() {
+  pageName.textContent = "Friend Requests";
+  leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="toActivity"></img>`;
+  const { friendRequests } = await getActivities(currentLocalUser);
+
+    let friendRequestsList = friendRequests.map((request) => {
       let username = document.createElement("h2")
       username.className="font-medium text-14 leading-tertiary"
       username.textContent=`@${request.requester.username}`;
+      const displayName = username.cloneNode(true);
+      request.requester.displayName ? displayName.textContent = request.requester.displayName : displayName.textContent = request.requester.username
       return `
       <div class="flex items-center my-5">
       <div class="flex-none w-58">
-        <img class="rounded w-58 h-58" src="${request.requester.profilePicture}" alt="${request.requester.username}'s profile picture"></img>
+        <img class="rounded-full w-58 h-58" src="${request.requester.profilePicture}" alt="${request.requester.username}'s profile picture"></img>
       </div>
-      <div class="ml-8 flex-none w-110">
-        ${username.outerHTML}
+      <div class="ml-8 flex-none w-110 grid grid-rows-2">
+        <div>
+          ${displayName.outerHTML}
+        </div>
+        <div>
+          ${username.outerHTML}
+        </div>
       </div>
       <div class="ml-auto w-166">
         <form class="flex text-white gap-2">
@@ -1305,8 +1349,29 @@ function displayFriendRequests(friendRequest) {
         </form>
       </div>
     </div>`;
-  });
-  return newArr;
+  }).join("");
+  pageContent.innerHTML = `<div id="friendRequestsList">
+    ${friendRequestsList}
+  </div>`
+  const friendRequestsListPage = document.querySelector("#friendRequestsList")
+  friendRequestsListPage.addEventListener("click", async function (event) {
+    event.preventDefault();
+    const id = event.target.getAttribute("identifier");
+    const invitee = event.target.getAttribute("sentTo");
+    switch (event.target.name) {
+      case "acceptFriendRequest":
+        await acceptFriendRequest(id, invitee);
+        await displayActivity();
+        break;
+      case "declineFriendRequest":
+        await removeFriendRequest(id, invitee)
+        await displayActivity();
+        break;
+      default:
+        break;
+    }
+  })
+
 }
 
 async function displayPhoto(photoSrc) {
@@ -1328,7 +1393,7 @@ async function displayListOfAlbums (data, profile=false) {
   console.log(data)
   const albumList = data.Album.map((obj) => {
     let albumName = document.createElement('p')
-    albumName.className = "text-light-mode-bg mix-blend-difference"
+    albumName.className = "text-white text-shadow shadow-black"
     albumName.textContent = obj.name;
     const circleImage = `<div class="absolute top-0 right-0 m-2 flex items-start justify-end gap-1 p2">
       <img src="${obj.circle.picture}" class="w-8 rounded-full object-cover"/>

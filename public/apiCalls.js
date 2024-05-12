@@ -153,7 +153,7 @@ async function getFriends() {
   return responseJson.data;
 }
 
-async function getActivites() {
+async function getActivities() {
   const response = await fetch(`/user/getActivities/`);
   const responseJson = await response.json();
   return responseJson.data;

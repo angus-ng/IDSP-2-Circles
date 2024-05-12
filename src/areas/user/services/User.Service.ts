@@ -112,7 +112,13 @@ export class UserService implements IUserService {
           requesteeName: username,
           status: false
         }, include: {
-          requester: {}
+          requester: {
+            select: {
+              displayName: true,
+              username: true,
+              profilePicture: true
+            }
+          }
         }
       })
       const circleInvites = await this._db.prisma.circleInvite.findMany({
