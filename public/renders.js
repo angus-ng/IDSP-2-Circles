@@ -11,7 +11,7 @@ function displayLoginPage() {
               </div>
               <div class="flex items-center mt-4 mb-6">
                   <label for="password" class=""></label>
-                  <input type="text" placeholder="Password" id="passwordInput" name="passwordInput" class="rounded-input-box w-input-box text-17 border-dark-grey border-2 items-end">
+                  <input type="password" placeholder="Password" id="passwordInput" name="passwordInput" class="rounded-input-box w-input-box text-17 border-dark-grey border-2 items-end">
               </div>
               <div class="flex items-center mt-4 mb-6">
                   <div class="grid grid-cols-2 w-full">
@@ -345,7 +345,6 @@ async function displayCreateCircle() {
   circleNameInput.value = newCircleNameInput;
   const addPictureButton = document.querySelector("#addPicture");
   const fileInput = document.querySelector("#fileUpload");
-  const nextButton = document.querySelector("#nextButton");
   const circlePhoto = document.querySelector("#circleImage");
 
   circlePhoto.addEventListener("click", async function (event) {
@@ -688,12 +687,19 @@ async function displayActivity() {
 
   pageContent.innerHTML = `
     <div id="activityPage" class="flex flex-col py-2 w-full h-screen">
-      <div id="circleInviteSection" class="h-100 border-solid border border-y-black border-x-transparent w-full flex items-center flex-wrap flex-row space-y-0">
+      <div id="circleInviteSection" class="h-100 border-solid border border-y-black border-x-transparent w-full flex items-center flex-wrap flex-row justify-between space-y-0">
         <div class="w-full">
-          <h2 class="font-medium text-base">Circle Invites</h2>
+            <h2 class="font-medium text-base">Circle Invites</h2>
         </div>
-        <div class="self-start flex">
-          ${circleInvites.length ? circleInvitePreviews.join("") : noCircleInvites}
+        <div class="w-full">
+          <div class="flex-none w-180 h-33 items-center">
+              ${circleInvites.length ? circleInvitePreviews.join("") : noCircleInvites}
+          </div>
+          <div class="flex-none w-2 h-4">
+            <svg width="9" height="15" viewBox="0 0 9 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 1L7.5 7.5L1 14" stroke="#0E0E0E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
         </div>
       </div>
       <div id="friendInviteSection" class="h-100 border-solid border border-t-transparent border-b-black border-x-transparent w-full flex items-center flex-wrap flex-row space-y-0">
@@ -707,10 +713,11 @@ async function displayActivity() {
     </div>
     `;
 
-    document.querySelector("#activityPage").addEventListener("click", async function (event) {
+    const activityPage = document.querySelector("#activityPage");
+    activityPage.addEventListener("click", async function (event) {
       event.preventDefault();
-      const circleInviteSection = event.target.closest("#circleInviteSection")
-      const friendInviteSection = event.target.closest("#friendInviteSection")
+      const circleInviteSection = event.target.closest("#circleInviteSection");
+      const friendInviteSection = event.target.closest("#friendInviteSection");
 
       switch (event.target) {
         case circleInviteSection:
