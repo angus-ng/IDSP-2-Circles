@@ -1142,19 +1142,21 @@ function displayCircleInvites(circleInvites) {
       let circleName = document.createElement("h2")
       circleName.className="font-medium text-14 leading-tertiary"
       circleName.textContent=invite.circle.name;
-      return `<div class="flex items-center my-5">
-      <div class="flex-none w-58">
-        <img class="rounded w-58 h-58" src="${invite.circle.picture}" alt="${invite.circle.name}'s picture"></img>
-      </div>
-      <div class="ml-8 flex-none w-207">
-        ${circleName.outerHTML}
-      </div>
-      <div class="flex-none w-58">
-        <form>
-          <button identifier="${invite.circle.id}" sentTo="${invite.invitee_username}" name="circleInvite" class="cursor-pointer">Accept</button>
-        </form>
-      </div>
-    </div>`;
+      return `
+      <div class="flex items-center my-5">
+        <div class="flex-none w-58">
+          <img class="rounded w-58 h-58" src="${invite.circle.picture}" alt="${invite.circle.name}'s picture"></img>
+        </div>
+        <div class="ml-8 flex-none w-110">
+          ${circleName.outerHTML}
+        </div>
+        <div class="ml-auto w-166">
+          <form class="flex text-white gap-2">
+            <button identifier="${invite.circle.id}" sentTo="${invite.invitee_username}" name="circleInvite" class="w-request h-request rounded-input-box bg-light-mode-accent">accept</button>
+            <button class="w-request h-request rounded-input-box bg-dark-grey">decline</button>
+          </form>
+        </div>
+      </div>`;
   });
   return newArr;
 }
@@ -1242,8 +1244,8 @@ function displayFriendRequests(friendRequest) {
       </div>
       <div class="ml-auto w-166">
         <form class="flex text-white gap-2">
-          <button identifier="${request.requesterName}" sentTo="${request.requesteeName}" name="friendRequest" class="w-1/2 h-request rounded-input-box bg-light-mode-accent">accept</button>
-          <button class="w-1/2 h-request rounded-input-box bg-dark-grey">decline</button>
+          <button identifier="${request.requesterName}" sentTo="${request.requesteeName}" name="friendRequest" class="w-request h-request rounded-input-box bg-light-mode-accent">accept</button>
+          <button class="w-request h-request rounded-input-box bg-dark-grey">decline</button>
         </form>
       </div>
     </div>`;
