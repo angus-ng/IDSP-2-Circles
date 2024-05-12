@@ -305,22 +305,12 @@ function toggleEdit() {
 }
 
 pageContent.addEventListener("click", async(event) => {
-  const localAuthButton = document.querySelector("#localAuth");
-  const editButton = event.target.closest("#editButton");
-  const parentId = event.target.parentElement.id;
-  const uploadPhotoSection = event.target.closest("#createNewAlbum");
   const emailNextButton = event.target.closest("#emailNext");
   const passwordNextButton = event.target.closest("#passwordNext");
   const birthdayNextButton = event.target.closest("#birthdayNext");
   const nameNextButton = event.target.closest("#nameNext");
   const usernameNextButton = event.target.closest("#usernameNext");
   const profilePictureNextButton = event.target.closest("#profilePictureNext");
-
-  if (parentId === "editButton") {
-    toggleEdit();
-  } else if (parentId === "localAuth") {
-    handleLocalAuth();
-  }
 
   if (emailNextButton) {
     await displaySignUpPasswordPage();

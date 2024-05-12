@@ -463,18 +463,15 @@ async function displayCreateCirclePreview() {
                 <img id="circleImage" src="/placeholder_image.svg" alt="Placeholder Image" class="object-cover w-234 h-230 rounded-full cursor-pointer">                     
             </div>
             <div class="flex justify-center my-5 relative w-full">
-              <div class="flex justify-center items-center">
-                  <input
-                      type="text"
-                      placeholder="add a name to your circle"
-                      readonly
-                      id="circleName"
-                      class="bg-transparent text-2xl font-bold border-none text-center p-1 min-w-[50px] w-auto"
-                  />
-              </div>
-              <button id="editButton" class="absolute right-0 top-0 mt-2 mr-1">
-                  <img src="/lightmode/edit_icon.svg" alt="Edit Icon" />
-              </button>
+                <input
+                    type="text"
+                    placeholder="add a name to your circle"
+                    id="circleName"
+                    class="bg-transparent text-24 font-bold border-none text-center w-auto px-0"
+                />
+                <button id="editButton" class="mr-1">
+                    <img src="/lightmode/edit_icon.svg" alt="Edit Icon" />
+                </button>
             </div>
             <div id="divider" class="mb-2">
                 <img src="/lightmode/divider.svg" alt="Divider">                          
@@ -508,6 +505,13 @@ async function displayCreateCirclePreview() {
           </div>
       </div>`;
 
+      const editButton = document.querySelector("#editButton");
+      const circleNameInput = document.querySelector("#circleName");
+      
+      editButton.addEventListener("click", () => {
+          circleNameInput.focus();
+      });
+
   const fileInput = document.querySelector("#fileUpload");
   const circlePhoto = document.querySelector("#circleImage");
   document
@@ -533,7 +537,6 @@ async function displayCreateCirclePreview() {
     await updateCheckbox();
   });
 
-  const circleNameInput = document.querySelector("#circleName");
   circleNameInput.value = newCircleNameInput;
 }
 
