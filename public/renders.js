@@ -494,12 +494,12 @@ async function displayCreateCirclePreview() {
                         </label>
                 </div>
             </div>
-            <div class="flex items-center justify-between w-full">
+            <div class="flex items-center justify-between w-full hidden">
               <div class="mt-10">
                 <p class="font-bold text-26 leading-h2">added friends</p>
               </div>
             </div>
-            <div class="flex items-center justify-between w-full">
+            <div class="flex items-center justify-between w-full hidden">
               <div class="mt-10">
                 <p class="text-body leading-tertiary">Most Recent Activity with:</p>
               </div>

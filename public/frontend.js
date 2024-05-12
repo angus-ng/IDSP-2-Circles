@@ -126,8 +126,11 @@ header.addEventListener("click", async (event) => {
   if (createCircleButton) {
     const { success, data, error} = await handleCreateCircle();
     if (error) {
-      //DO SOMETHING
-      console.log(error)
+      if (error === "Missing circle name") {
+        await displayPopup("Please add a title to your circle");
+      }
+      console.log(error);
+      return;
     }
     if (success && data) {
       const circleId = data;
