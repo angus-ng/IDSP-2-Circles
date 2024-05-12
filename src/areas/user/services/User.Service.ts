@@ -229,6 +229,7 @@ export class UserService implements IUserService {
         select: {
           username: true,
           profilePicture: true,
+          displayName: true,
             friendOf: {},
             friends: {},
             requestReceived: {
