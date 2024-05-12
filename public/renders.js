@@ -1651,11 +1651,15 @@ async function displayPopup(activity) {
   const popup = document.querySelector("#popup");
   popup.classList.remove("hidden");
 
-  popup.addEventListener("click", () => {
-    const popupCloseButton = event.target.closest("#popupCloseButton");
-    if (popupCloseButton) {
+  const closeButton = document.querySelector("#popupCloseButton");
+  closeButton.addEventListener("click", () => {
       popup.classList.add("hidden");
-    }
-  })
-  
+  });
+
+  setTimeout(() => {
+      popup.classList.add("opacity-0", "duration-1000");
+      popup.addEventListener("transitionend", () => {
+          popup.remove();
+      });
+  }, 2000);
 }
