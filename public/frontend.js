@@ -229,8 +229,11 @@ header.addEventListener("click", async (event) => {
     albumObj.name = albumName;
     const { success, data, error } = await handleCreateAlbum(albumObj);
     if (error) {
-      console.log(error)
-      //DO SOMETHING
+      if (error === "Missing album name") {
+        await displayPopup("Please add a title to your album");
+      }
+      console.log(error);
+      return;
     }
     const albumId = data;
     if (success && data) {
