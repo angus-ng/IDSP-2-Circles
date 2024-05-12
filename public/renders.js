@@ -735,21 +735,23 @@ async function displayActivity() {
         </div>
     </div>`;
 
-  const circleInvitesDiv = document.querySelector("#circleInvites");
+  const activityPage = document.querySelector("#activityPage");
 
-  circleInvitesDiv.addEventListener("click", async function (event) {
+  activityPage.addEventListener("click", async(event) => {
+    const circleInvitesDiv = event.target.closest("#circleInvites");
+    const friendRequestsDiv = event.target.closest("#friendRequests");
     event.preventDefault();
-    if (circleInvites.length) {
-      await displayCircleInvites()
+
+    if (circleInvitesDiv) {
+      if (circleInvites.length) {
+        await displayCircleInvites()
+      }
     }
-  });
 
-  const friendRequestsDiv = document.querySelector("#friendRequests");
-
-  friendRequestsDiv.addEventListener("click", async function (event) {
-    event.preventDefault();
-    if (friendRequests.length) {
-      await displayFriendRequests();
+    if (friendRequestsDiv) {
+      if (friendRequests.length) {
+        await displayFriendRequests();
+      }
     }
   });
 }
