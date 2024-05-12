@@ -242,9 +242,14 @@ export class UserService implements IUserService {
             }
         },
         where:{
-          username: {
-            contains: input
-          },
+          OR : [
+            {
+              username: {contains: input}
+            },
+            {
+              displayName: {contains: input}
+            }
+          ]
         }, 
       })
       return userSearchResults
