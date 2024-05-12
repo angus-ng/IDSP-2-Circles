@@ -44,6 +44,7 @@ header.addEventListener("click", async (event) => {
   const createAlbumButton = event.target.closest("#createAlbum");
   const albumConfirmationBackButton = event.target.closest("#albumConfirmationBackButton");
   const addCircleBackButton = event.target.closest("#addCircleBackButton");
+  const toActivity = event.target.closest("#toActivity");
   const emailBackButton = event.target.closest("#emailBack");
   const passwordBackButton = event.target.closest("#passwordBack");
   const birthdayBackButton = event.target.closest("#birthdayBack");
@@ -96,6 +97,7 @@ header.addEventListener("click", async (event) => {
     primaryButton.textContent = "Add Picture";
     primaryButton.id = "addProfilePicture";
     const secondaryButton = document.querySelector("#changeProfilePicture");
+    secondaryButton.classList.remove("hidden");
     secondaryButton.textContent = "Skip";
     secondaryButton.id = "profilePictureNext";
     await displaySignUpProfilePicturePage();
@@ -225,6 +227,10 @@ header.addEventListener("click", async (event) => {
       }
     }
     return;
+  }
+
+  if (toActivity) {
+    await displayActivity()
   }
 });
 

@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+const plugin = require('tailwindcss/plugin')
 module.exports = {
   mode: "jit",
   content: [
@@ -108,7 +109,8 @@ theme: {
     margin: {
       '4': '4px',
       'header': '105px',
-      '40': '40px'
+      '40': '40px',
+      "neg12": "-12px"
     },
     outline: {
       '1': '1px'
@@ -120,10 +122,25 @@ theme: {
     padding: {
       '20': '20px'
     },
+    textShadow: {
+      sm: '0 1px 2px var(--tw-shadow-color)',
+      DEFAULT: '0 1px 6px var(--tw-shadow-color)',
+      lg: '0 8px 16px var(--tw-shadow-color)',
+    },
   },
 },
 plugins: [
   require('@tailwindcss/forms'),
-  require('flowbite/plugin')
+  require('flowbite/plugin'),
+  plugin(function ({ matchUtilities, theme }) {
+    matchUtilities(
+      {
+        'text-shadow': (value) => ({
+          textShadow: value,
+        }),
+      },
+      { values: theme('textShadow') }
+    )
+  })
 ],
 }
