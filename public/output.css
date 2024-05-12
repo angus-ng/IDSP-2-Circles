@@ -2350,10 +2350,6 @@ input:checked + .toggle-bg {
   padding-bottom: 4rem;
 }
 
-.pb-24 {
-  padding-bottom: 6rem;
-}
-
 .pb-28 {
   padding-bottom: 7rem;
 }
@@ -2380,6 +2376,10 @@ input:checked + .toggle-bg {
 
 .pt-6 {
   padding-top: 1.5rem;
+}
+
+.pb-200 {
+  padding-bottom: 200px;
 }
 
 .text-center {

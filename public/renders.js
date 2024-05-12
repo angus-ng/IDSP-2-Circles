@@ -1463,7 +1463,7 @@ async function displayCircleInvites() {
         </div>
       </div>`;
   }).join("");
-  pageContent.innerHTML = `<div id="circleInviteList" class="flex flex-col pb-24">
+  pageContent.innerHTML = `<div id="circleInviteList" class="flex flex-col pb-200">
   ${circleInviteList}
   </div>`
   const circleInviteListPage = document.querySelector("#circleInviteList")
@@ -1579,7 +1579,7 @@ async function displayFriendRequests() {
       </div>
     </div>`;
   }).join("");
-  pageContent.innerHTML = `<div id="friendRequestsList" class="flex flex-col">
+  pageContent.innerHTML = `<div id="friendRequestsList" class="flex flex-col pb-200">
     ${friendRequestsList}
   </div>`
   const friendRequestsListPage = document.querySelector("#friendRequestsList")
