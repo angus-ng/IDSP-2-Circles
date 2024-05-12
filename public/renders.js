@@ -709,7 +709,7 @@ async function displayActivity() {
   }
 
   pageContent.innerHTML = `
-    <div id="activityPage" class="flex flex-col py-2 w-full h-screen">
+    <div id="activityPage" class="flex-non flex-col py-2 w-full h-full">
         <div id="circleInviteSection" class="h-100 border-solid border border-y-black border-x-transparent w-full flex items-center flex-wrap flex-row justify-between space-y-0">
             <div class="w-full">
                 <h2 class="font-medium text-base">Circle Invites</h2>
@@ -1463,7 +1463,7 @@ async function displayCircleInvites() {
         </div>
       </div>`;
   }).join("");
-  pageContent.innerHTML = `<div id="circleInviteList" class="flex flex-col">
+  pageContent.innerHTML = `<div id="circleInviteList" class="flex flex-col pb-24">
   ${circleInviteList}
   </div>`
   const circleInviteListPage = document.querySelector("#circleInviteList")
