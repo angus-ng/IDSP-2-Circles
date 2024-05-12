@@ -1145,7 +1145,7 @@ function displayCircleInvites(circleInvites) {
       return `
       <div class="flex items-center my-5">
         <div class="flex-none w-58">
-          <img class="rounded w-58 h-58" src="${invite.circle.picture}" alt="${invite.circle.name}'s picture"></img>
+          <img class="rounded-input-box w-58 h-58" src="${invite.circle.picture}" alt="${invite.circle.name}'s picture"></img>
         </div>
         <div class="ml-8 flex-none w-110">
           ${circleName.outerHTML}
