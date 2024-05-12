@@ -708,10 +708,10 @@ async function displayActivity() {
                 <h2 class="font-medium text-base">Circle Invites</h2>
             </div>
             <div id="circleInvites" class="flex w-full">
-                <div class="flex-none w-180 h-33 items-center">
+                <div class="flex w-180 h-33 items-center">
                     ${circleInvites.length ? circleInvitePreviews.join("") : noCircleInvites}
                 </div>
-                <div class="flex-none w-2 h-4 ml-auto">
+                <div class="flex w-2 h-33 items-center ml-auto">
                     <svg width="9" height="15" viewBox="0 0 9 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M1 1L7.5 7.5L1 14" stroke="#0E0E0E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
@@ -723,10 +723,10 @@ async function displayActivity() {
                 <h2 class="font-medium text-base">Friend Requests</h2>
             </div>
             <div id="friendRequests" class="flex w-full">
-              <div class="flex-none w-180 h-33 items-center">
+              <div class="flex w-180 h-33 items-center">
                   ${friendRequests.length ? friendRequestsPreviews.join("") : noFriendRequests}
               </div>
-              <div class="flex-none w-2 h-4 ml-auto">
+              <div class="flex w-2 h-33 items-center ml-auto">
                   <svg width="9" height="15" viewBox="0 0 9 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M1 1L7.5 7.5L1 14" stroke="#0E0E0E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
@@ -744,7 +744,7 @@ async function displayActivity() {
 
     if (circleInvitesDiv) {
       if (circleInvites.length) {
-        await displayCircleInvites()
+        await displayCircleInvites();
       }
     }
 
