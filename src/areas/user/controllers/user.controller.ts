@@ -83,7 +83,7 @@ class UserController implements IController {
     try {
       let loggedInUser = req.user!.username
       const { user1, user2 } = req.body
-      if (loggedInUser === user2) {
+      if (loggedInUser === user2 || loggedInUser === user1) {
         await this._service.removeRequest(user1, user2)
         res.status(200).json({success:true, data: null})
       } else {

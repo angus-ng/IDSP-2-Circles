@@ -19,6 +19,7 @@ model User {
   firstName       String?
   lastName        String?
   username        String          @unique
+  displayName     String?
   email           String?         @unique
   profilePicture  String
   password        String?         @unique
@@ -28,7 +29,6 @@ model User {
   Comment         Comment[]
   Like            Like[]
   UserCircle      UserCircle[]
-  UserAlbum       UserAlbum[]
   Circle          Circle[]
   Album           Album[]
   Photos          Photo[]
@@ -57,17 +57,17 @@ model Circle {
   UserCircle UserCircle[]
   albums     Album[]
   invites    CircleInvite[] @relation("circle")
+  isPublic   Boolean        @default(false)
 }
 
 model Album {
-  id        String      @id @default(cuid())
-  owner     User        @relation(fields: [ownerName], references: [username])
+  id        String  @id @default(cuid())
+  owner     User    @relation(fields: [ownerName], references: [username])
   ownerName String
   name      String
   likes     Like[]
   photos    Photo[]
-  UserAlbum UserAlbum[]
-  circle    Circle      @relation(fields: [circleId], references: [id], onDelete: Cascade)
+  circle    Circle  @relation(fields: [circleId], references: [id], onDelete: Cascade)
   circleId  String
 }
 
@@ -110,15 +110,6 @@ model UserCircle {
   circleId String
 
   @@id([username, circleId])
-}
-
-model UserAlbum {
-  user     User   @relation(fields: [username], references: [username])
-  username String
-  album    Album  @relation(fields: [albumId], references: [id], onDelete: Cascade)
-  albumId  String
-
-  @@id([username, albumId])
 }
 
 model CircleInvite {

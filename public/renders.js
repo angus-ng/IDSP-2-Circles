@@ -191,8 +191,8 @@ async function displayListOfFriends(friends) {
     let username2 = document.createElement("h2")
     username.className="font-medium text-14 leading-tertiary"
     username2.className="font-light text-14 text-dark-grey"
-    username.textContent=friend.username;
-    username2.textContent=friend.username
+    username.textContent= friend.displayName ? friend.displayName : friend.username;
+    username2.textContent=`@${friend.username}`
     return `<div class="flex items-center my-5">
     <div class="flex-none w-58">
       <img class="rounded w-58 h-58" src="${friend.profilePicture}" alt="${friend.username}'s profile picture"></img>
@@ -494,16 +494,20 @@ async function displayActivity() {
     const id = target.getAttribute("identifier");
     const invitee = target.getAttribute("sentTo");
     switch (target.name) {
-      case "friendRequest":
+      case "acceptFriendRequest":
         await acceptFriendRequest(id, invitee);
         await displayActivity();
         break;
-      case "circleInvite":
+      case "declineFriendRequest":
+        await removeFriendRequest(id, invitee)
+        await displayActivity();
+        break;
+      case "acceptCircleInvite":
         await acceptCircleInvite(id, invitee);
         await displayActivity();
         break;
-      case "albumInvite":
-        await acceptAlbumInvite(id, invitee);
+      case "declineCircleInvite":
+        await declineCircleInvite(id, invitee);
         await displayActivity();
         break;
       default:
@@ -579,7 +583,7 @@ async function displayProfile(userData) {
   const circleRender = await displayListOfCircles(userData);
   const albumRender = await displayListOfAlbums(userData, true);
   console.log(circleRender)
-  pageName.textContent = userData.username;
+  pageName.textContent = userData.displayName ? userData.displayName : userData.username
   pageContent.innerHTML = `
   <div id="profilePage" class="relative pt-2 pb-16 mb-4 w-full">
     <div id="settings" class=" absolute top-0 right-0 w-6 h-6">
@@ -592,18 +596,20 @@ async function displayProfile(userData) {
       <h2 id="username" class="text-base text-center">@</h2>
     </div>
     <div class="w-180 mt-6 mb-6 m-auto grid grid-cols-2 gap-4">
-      <div class="grid grid-rows-2 gap-0 justify-center">
-        <h2 class="text-base font-bold text-center">${userData._count.UserCircle}</h2>
-        <h2 class="text-secondary text-center">Circles</h2>
+      <div class="gap-0 justify-center">
+        <div id="circles">
+          <h2 class="text-base font-bold text-center">${userData._count.UserCircle}</h2>
+          <h2 class="text-secondary text-center">Circles</h2>
+        </div>
       </div>
 
-      <div class="grid grid-rows-2 gap-0 justify-center">
+      <div class="gap-0 justify-center">
         <div id="friends">
           <h2 class="text-base font-bold text-center" id="friendCounter">${userData._count.friends}</h2>
           <h2 class="text-secondary text-center">Friends</h2>
         </div>
       </div>
-      </div>
+    </div>
     <div class="flex justify-center">
       <button class="w-110 h-38 rounded-input-box bg-light-mode-accent text-white">Add friend</button>
     </div>
@@ -1199,8 +1205,8 @@ function displayCircleInvites(circleInvites) {
         </div>
         <div class="ml-auto w-166">
           <form class="flex text-white gap-2">
-            <button identifier="${invite.circle.id}" sentTo="${invite.invitee_username}" name="circleInvite" class="w-request h-request rounded-input-box bg-light-mode-accent">accept</button>
-            <button class="w-request h-request rounded-input-box bg-dark-grey">decline</button>
+            <button identifier="${invite.circle.id}" sentTo="${invite.invitee_username}" name="acceptCircleInvite" class="w-request h-request rounded-input-box bg-light-mode-accent">accept</button>
+            <button identifier="${invite.circle.id}" sentTo="${invite.invitee_username}" name="declineCircleInvite" class="w-request h-request rounded-input-box bg-dark-grey">decline</button>
           </form>
         </div>
       </div>`;
@@ -1280,7 +1286,7 @@ function displayFriendRequests(friendRequest) {
     let newArr = friendRequest.map((request) => {
       let username = document.createElement("h2")
       username.className="font-medium text-14 leading-tertiary"
-      username.textContent=request.requester.username;
+      username.textContent=`@${request.requester.username}`;
       return `
       <div class="flex items-center my-5">
       <div class="flex-none w-58">
@@ -1291,8 +1297,8 @@ function displayFriendRequests(friendRequest) {
       </div>
       <div class="ml-auto w-166">
         <form class="flex text-white gap-2">
-          <button identifier="${request.requesterName}" sentTo="${request.requesteeName}" name="friendRequest" class="w-request h-request rounded-input-box bg-light-mode-accent">accept</button>
-          <button class="w-request h-request rounded-input-box bg-dark-grey">decline</button>
+          <button identifier="${request.requesterName}" sentTo="${request.requesteeName}" name="acceptFriendRequest" class="w-request h-request rounded-input-box bg-light-mode-accent">accept</button>
+          <button identifier="${request.requesterName}" sentTo="${request.requesteeName}" name="declineFriendRequest" class="w-request h-request rounded-input-box bg-dark-grey">decline</button>
         </form>
       </div>
     </div>`;

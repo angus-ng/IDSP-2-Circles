@@ -247,6 +247,7 @@ export class UserService implements IUserService {
       const userInfo = await this._db.prisma.user.findUnique({
         select: {
           username: true,
+          displayName: true,
           profilePicture: true,
           _count: {
             select: {
