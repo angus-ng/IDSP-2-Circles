@@ -664,6 +664,14 @@ async function displayActivity() {
   const noCircleInvites = `<p class="text-secondary text-medium-grey" >No circle invites pending.</p>`
   const circleInvitePreviews = [];
   for (i=0; i < circleInvites.length; i++) {
+    if (i > 3) {
+      const count = circleInvites.length-4;
+      const andMore = `<div class="w-8 h-8 rounded-full border-2 border-white border-solid ml-neg12 flex justify-center items-center bg-dark-grey">
+        <p class="text-secondary text-white font-bold">+${count}</p>
+      </div>`
+      circleInvitePreviews.push(andMore);
+      break;
+    }
     const circleImg = document.createElement("img")
     circleImg.src = circleInvites[i].circle.picture;
     circleImg.alt = `${circleInvites[i].circle.name}'s picture`
@@ -675,6 +683,14 @@ async function displayActivity() {
   const noFriendRequests = `<p class="text-secondary text-medium-grey" >No friend requests pending.</p>`
   const friendRequestsPreviews = [];
   for (i=0; i < friendRequests.length; i++) {
+    if (i > 3) {
+      const count = friendRequests.length-4;
+      const andMore = `<div class="w-8 h-8 rounded-full border-2 border-white border-solid ml-neg12 flex justify-center items-center bg-dark-grey">
+        <p class="text-secondary text-white font-bold">+${count}</p>
+      </div>`
+      friendRequestsPreviews.push(andMore);
+      break;
+    }
     const friendImg = document.createElement("img")
     friendImg.src = friendRequests[i].requester.profilePicture;
     let altText = (friendRequests[i].requester.displayName) ? friendRequests[i].requester.displayName : friendRequests[i].requester.username
@@ -687,53 +703,55 @@ async function displayActivity() {
 
   pageContent.innerHTML = `
     <div id="activityPage" class="flex flex-col py-2 w-full h-screen">
-      <div id="circleInviteSection" class="h-100 border-solid border border-y-black border-x-transparent w-full flex items-center flex-wrap flex-row justify-between space-y-0">
-        <div class="w-full">
-            <h2 class="font-medium text-base">Circle Invites</h2>
+        <div id="circleInviteSection" class="h-100 border-solid border border-y-black border-x-transparent w-full flex items-center flex-wrap flex-row justify-between space-y-0">
+            <div class="w-full">
+                <h2 class="font-medium text-base">Circle Invites</h2>
+            </div>
+            <div id="circleInvites" class="flex w-full">
+                <div class="flex-none w-180 h-33 items-center">
+                    ${circleInvites.length ? circleInvitePreviews.join("") : noCircleInvites}
+                </div>
+                <div class="flex-none w-2 h-4 ml-auto">
+                    <svg width="9" height="15" viewBox="0 0 9 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 1L7.5 7.5L1 14" stroke="#0E0E0E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+            </div>
         </div>
-        <div class="w-full">
-          <div class="flex-none w-180 h-33 items-center">
-              ${circleInvites.length ? circleInvitePreviews.join("") : noCircleInvites}
-          </div>
-          <div class="flex-none w-2 h-4">
-            <svg width="9" height="15" viewBox="0 0 9 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M1 1L7.5 7.5L1 14" stroke="#0E0E0E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
+        <div id="friendInviteSection" class="h-100 border-solid border border-t-transparent border-b-black border-x-transparent w-full flex items-center flex-wrap flex-row space-y-0">
+            <div class="w-full">
+                <h2 class="font-medium text-base">Friend Requests</h2>
+            </div>
+            <div id="friendRequests" class="flex w-full">
+              <div class="flex-none w-180 h-33 items-center">
+                  ${friendRequests.length ? friendRequestsPreviews.join("") : noFriendRequests}
+              </div>
+              <div class="flex-none w-2 h-4 ml-auto">
+                  <svg width="9" height="15" viewBox="0 0 9 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M1 1L7.5 7.5L1 14" stroke="#0E0E0E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+              </div>
+            </div>
         </div>
-      </div>
-      <div id="friendInviteSection" class="h-100 border-solid border border-t-transparent border-b-black border-x-transparent w-full flex items-center flex-wrap flex-row space-y-0">
-        <div class="w-full">
-          <h2 class="font-medium text-base">Friend Requests</h2>
-        </div>
-        <div class="self-start flex">
-          ${friendRequests.length ? friendRequestsPreviews.join("") : noFriendRequests}
-        </div>
-      </div>
-    </div>
-    `;
+    </div>`;
 
-    const activityPage = document.querySelector("#activityPage");
-    activityPage.addEventListener("click", async function (event) {
-      event.preventDefault();
-      const circleInviteSection = event.target.closest("#circleInviteSection");
-      const friendInviteSection = event.target.closest("#friendInviteSection");
+  const circleInvitesDiv = document.querySelector("#circleInvites");
 
-      switch (event.target) {
-        case circleInviteSection:
-          if (circleInvites.length) {
-            await displayCircleInvites()
-          }
-          break;
-        case friendInviteSection:
-          if (friendRequests.length) {
-            await displayFriendRequests()
-          }
-          break;
-        default:
-          break;
-      }
-    })
+  circleInvitesDiv.addEventListener("click", async function (event) {
+    event.preventDefault();
+    if (circleInvites.length) {
+      await displayCircleInvites()
+    }
+  });
+
+  const friendRequestsDiv = document.querySelector("#friendRequests");
+
+  friendRequestsDiv.addEventListener("click", async function (event) {
+    event.preventDefault();
+    if (friendRequests.length) {
+      await displayFriendRequests();
+    }
+  });
 }
 
 async function displayNavBar() {
@@ -1451,7 +1469,7 @@ async function displayCircleInvites() {
         break;
       case "declineCircleInvite":
         await declineCircleInvite(id, invitee);
-        await displayActivity();
+        await displayCircleInvites();
         break;
       default:
         break;
@@ -1563,11 +1581,11 @@ async function displayFriendRequests() {
     switch (event.target.name) {
       case "acceptFriendRequest":
         await acceptFriendRequest(id, invitee);
-        await displayActivity();
+        await displayFriendRequests();
         break;
       case "declineFriendRequest":
         await removeFriendRequest(id, invitee)
-        await displayActivity();
+        await displayFriendRequests();
         break;
       default:
         break;

@@ -1590,6 +1590,10 @@ input:checked + .toggle-bg {
   height: 0.75rem;
 }
 
+.h-33 {
+  height: 33px;
+}
+
 .h-38 {
   height: 38px;
 }
@@ -1659,10 +1663,6 @@ input:checked + .toggle-bg {
   height: 100vh;
 }
 
-.h-33 {
-  height: 33px;
-}
-
 .max-h-56 {
   max-height: 14rem;
 }
@@ -1697,6 +1697,10 @@ input:checked + .toggle-bg {
 
 .w-180 {
   width: 180px;
+}
+
+.w-2 {
+  width: 0.5rem;
 }
 
 .w-207 {
@@ -1773,10 +1777,6 @@ input:checked + .toggle-bg {
 
 .w-screen {
   width: 100vw;
-}
-
-.w-2 {
-  width: 0.5rem;
 }
 
 .min-w-\[50px\] {
