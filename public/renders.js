@@ -572,10 +572,10 @@ async function displayProfile(userData) {
               </a>
           </li>
           <li id="circleTab" class="me-2 w-180 border-b">
-              <a class="w-180 inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-black hover:border-black dark:hover:text-gray-300 active">
-                <p class="text-13 font-bold mr-2">circles</p>
+              <a class="w-180 inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg text-black border-black hover:text-black hover:border-black dark:hover:text-gray-300 active">
+                <p id="circleText" class="text-13 font-bold mr-2">circles</p>
                 <svg width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M7 13C6.10083 13 5.25583 12.8293 4.465 12.4878C3.67417 12.1463 2.98625 11.6833 2.40125 11.0987C1.81625 10.5142 1.35323 9.82626 1.0122 9.035C0.671167 8.24373 0.500434 7.39873 0.500001 6.5C0.499567 5.60126 0.670301 4.75627 1.0122 3.965C1.3541 3.17373 1.81712 2.48582 2.40125 1.90125C2.98538 1.31668 3.6733 0.853666 4.465 0.5122C5.2567 0.170733 6.1017 0 7 0C7.8983 0 8.74329 0.170733 9.53499 0.5122C10.3267 0.853666 11.0146 1.31668 11.5987 1.90125C12.1829 2.48582 12.6461 3.17373 12.9884 3.965C13.3308 4.75627 13.5013 5.60126 13.5 6.5C13.4987 7.39873 13.328 8.24373 12.9878 9.035C12.6476 9.82626 12.1846 10.5142 11.5987 11.0987C11.0129 11.6833 10.325 12.1465 9.53499 12.4884C8.74503 12.8303 7.90003 13.0009 7 13ZM7 11.7C8.45166 11.7 9.68124 11.1962 10.6887 10.1887C11.6962 9.18125 12.2 7.95166 12.2 6.5C12.2 5.04833 11.6962 3.81875 10.6887 2.81125C9.68124 1.80375 8.45166 1.3 7 1.3C5.54833 1.3 4.31875 1.80375 3.31125 2.81125C2.30375 3.81875 1.8 5.04833 1.8 6.5C1.8 7.95166 2.30375 9.18125 3.31125 10.1887C4.31875 11.1962 5.54833 11.7 7 11.7Z" fill="#737373"/>
+                  <path d="M7 13C6.10083 13 5.25583 12.8293 4.465 12.4878C3.67417 12.1463 2.98625 11.6833 2.40125 11.0987C1.81625 10.5142 1.35323 9.82626 1.0122 9.035C0.671167 8.24373 0.500434 7.39873 0.500001 6.5C0.499567 5.60126 0.670301 4.75627 1.0122 3.965C1.3541 3.17373 1.81712 2.48582 2.40125 1.90125C2.98538 1.31668 3.6733 0.853666 4.465 0.5122C5.2567 0.170733 6.1017 0 7 0C7.8983 0 8.74329 0.170733 9.53499 0.5122C10.3267 0.853666 11.0146 1.31668 11.5987 1.90125C12.1829 2.48582 12.6461 3.17373 12.9884 3.965C13.3308 4.75627 13.5013 5.60126 13.5 6.5C13.4987 7.39873 13.328 8.24373 12.9878 9.035C12.6476 9.82626 12.1846 10.5142 11.5987 11.0987C11.0129 11.6833 10.325 12.1465 9.53499 12.4884C8.74503 12.8303 7.90003 13.0009 7 13ZM7 11.7C8.45166 11.7 9.68124 11.1962 10.6887 10.1887C11.6962 9.18125 12.2 7.95166 12.2 6.5C12.2 5.04833 11.6962 3.81875 10.6887 2.81125C9.68124 1.80375 8.45166 1.3 7 1.3C5.54833 1.3 4.31875 1.80375 3.31125 2.81125C2.30375 3.81875 1.8 5.04833 1.8 6.5C1.8 7.95166 2.30375 9.18125 3.31125 10.1887C4.31875 11.1962 5.54833 11.7 7 11.7Z" fill="#0E0E0E"/>
                 </svg>
               </a>
           </li>
@@ -596,8 +596,9 @@ async function displayProfile(userData) {
     const circleTab = event.target.closest("#circleTab");
     const albumTabLink = document.querySelector("#albumTab a");
     const circleTabLink = document.querySelector("#circleTab a");
-    const circleList = document.querySelector("#circleList")
-    const albumList = document.querySelector("#albumList")
+    const circleList = document.querySelector("#circleList");
+    const albumList = document.querySelector("#albumList");
+    const circleText = document.querySelector("#circleText");
 
     if (albumTab) {
       if (albumList.classList.contains("hidden")){
@@ -608,15 +609,18 @@ async function displayProfile(userData) {
       albumTabLink.querySelector('svg path').setAttribute('fill', 'black');
       circleTabLink.classList.remove("active");
       circleTabLink.querySelector('svg path').setAttribute('fill', '#737373');
+      circleTabLink.classList.add("border-transparent");
+      circleText.classList.add("text-dark-grey");
     }
 
     if (circleTab) {
       if (circleList.classList.contains("hidden")){
-        circleList.classList.remove("hidden")
-        albumList.classList.add("hidden")
+        circleList.classList.remove("hidden");
+        albumList.classList.add("hidden");
       }
       circleTabLink.classList.add("active");
       circleTabLink.querySelector('svg path').setAttribute('fill', 'black');
+      circleText.classList.add("text-black");
       albumTabLink.classList.remove("active");
       albumTabLink.querySelector('svg path').setAttribute('fill', '#737373');
     }
