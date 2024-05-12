@@ -444,7 +444,7 @@ function displayUserSearch(listOfUsers) {
     }
       let username = document.createElement("h2")
       username.className="font-medium text-14 leading-tertiary"
-      username.textContent=user.username;
+      username.textContent=`@${user.username}`;
     return `<div class="flex items-center my-5">
       <div class="flex-none w-58">
         <img class="rounded-full w-58 h-58 object-cover" src="${user.profilePicture}" alt="${user.username}'s profile picture"></img>

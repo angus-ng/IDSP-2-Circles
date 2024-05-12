@@ -291,11 +291,13 @@ async function getSearchResult(input) {
       const response = await fetch(`/user/searchAll`);
 
       const jsonResponse = await response.json();
+      console.log(jsonResponse)
       return jsonResponse;
     }
     const response = await fetch(`/user/search/${input.trim()}/`);
 
     const jsonResponse = await response.json();
+    console.log(jsonResponse)
     return jsonResponse;
   } catch (err) {
     return { success: true, data: null, error: err };

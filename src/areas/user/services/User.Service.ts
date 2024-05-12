@@ -223,23 +223,28 @@ export class UserService implements IUserService {
       throw new Error(error)
     }
   }
-  async search(input: string, currentUser: string): Promise<User[]> {
+  async search(input: string, currentUser: string): Promise<any> {
     try {
       const userSearchResults = await this._db.prisma.user.findMany({
+        select: {
+          username: true,
+          profilePicture: true,
+            friendOf: {},
+            friends: {},
+            requestReceived: {
+              include:{requester:{}},
+              where:{requesterName:currentUser}
+            },
+            requestsSent: {
+              include:{requestee:{}},
+              where:{requesteeName:currentUser}
+            }
+        },
         where:{
           username: {
             contains: input
           },
-        }, include: {
-          friendOf: {},
-          friends: {},
-          requestReceived: {
-            include:{requester:{}}
-          },
-          requestsSent: {
-            include:{requestee:{}}
-          }
-        }
+        }, 
       })
       return userSearchResults
       //return users
