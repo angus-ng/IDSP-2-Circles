@@ -169,7 +169,7 @@ export class CircleService implements ICircleService {
   }
   async acceptInvite(id: string, username: string): Promise<void> {
       try {
-        const cirlceInvite = await this._db.prisma.circleInvite.findUnique({
+        const circleInvite = await this._db.prisma.circleInvite.findUnique({
             where: {
                 invitee_username_circleId: {
                     circleId: id,
@@ -177,7 +177,7 @@ export class CircleService implements ICircleService {
                 }
             }
         })
-        if (cirlceInvite) {
+        if (circleInvite) {
             await this._db.prisma.circleInvite.delete({
                 where: {
                     invitee_username_circleId: {
@@ -200,4 +200,18 @@ export class CircleService implements ICircleService {
         throw new Error(error)
       }
   }
+  async removeRequest(id: string, invitee: string): Promise<void> {
+        try {
+            const circleInviteReceive = await this._db.prisma.circleInvite.delete({
+                where: {
+                invitee_username_circleId: {
+                    invitee_username: invitee,
+                    circleId: id
+                }
+                }
+            })
+        } catch (err) {
+            return; 
+        }
+    }
 }

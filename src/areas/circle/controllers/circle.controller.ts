@@ -27,6 +27,7 @@ class CircleController implements IController {
     this.router.post(`${this.path}/invite`, ensureAuthenticated, this.circleInvite);
     this.router.post(`${this.path}/list`, ensureAuthenticated, this.getCircleList);
     this.router.post(`${this.path}/accept`, ensureAuthenticated, this.acceptInvite)
+    this.router.post(`${this.path}/decline`, ensureAuthenticated, this.removeCircleInvite)
   }
 
   private uploadImage = async (req: Request, res: Response) => {
@@ -122,6 +123,21 @@ class CircleController implements IController {
       return res.status(200).json({success: true, data: null});
     } catch (error) {
       return res.status(200).json({success: false, error: "failed to accept invite"});
+    }
+  }
+
+  private removeCircleInvite = async (req: Request, res: Response) => {
+    try {
+      let loggedInUser = req.user!.username
+      const { id, invitee } = req.body
+      if (loggedInUser === invitee) {
+        await this._service.removeRequest(id, invitee)
+        res.status(200).json({success:true, data: null})
+      } else {
+        res.status(400).json({success:false, error: "Failed to accept friend request"})
+      }
+    } catch (error: any) {
+      throw new Error(error)
     }
   }
 }

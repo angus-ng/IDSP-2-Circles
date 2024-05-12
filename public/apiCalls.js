@@ -180,6 +180,27 @@ async function acceptCircleInvite(id, invitee) {
   }
 }
 
+async function declineCircleInvite(id, invitee) {
+  try {
+    const inviteObj = {
+      id: id,
+      invitee: invitee,
+    };
+    const response = await fetch("/circle/decline", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(inviteObj),
+    });
+
+    const jsonResponse = await response.json();
+    return jsonResponse;
+  } catch (err) {
+    return { success: true, data: null, error: err };
+  }
+}
+
 async function acceptAlbumInvite(id, invitee) {
   try {
     const inviteObj = {
