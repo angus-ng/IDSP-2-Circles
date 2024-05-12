@@ -305,6 +305,7 @@ function toggleEdit() {
 }
 
 pageContent.addEventListener("click", async(event) => {
+  const localAuthButton = document.querySelector("#localAuth");
   const emailNextButton = event.target.closest("#emailNext");
   const passwordNextButton = event.target.closest("#passwordNext");
   const birthdayNextButton = event.target.closest("#birthdayNext");
