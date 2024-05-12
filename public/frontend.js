@@ -87,6 +87,7 @@ header.addEventListener("click", async (event) => {
     primaryButton.textContent = "Next";
     primaryButton.id = "nameNext";
     const secondaryButton = document.querySelector("#profilePictureNext");
+    secondaryButton.id = "secondaryButton";
     secondaryButton.classList.add("hidden");
     await displaySignUpUsernamePage();
   }

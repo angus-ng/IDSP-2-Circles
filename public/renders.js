@@ -245,7 +245,7 @@ async function displaySignUpProfilePicturePage() {
   const signUpPageContent = document.querySelector("#signUpPageContent");
   const signUpPageAdditionalContent = document.querySelector("#signUpAdditionalContent");
   const primaryButton = document.querySelector("#usernameNext");
-  const secondaryButton = document.querySelector("#profilePictureNext");
+  const secondaryButton = document.querySelector("#secondaryButton");
   
   leftHeaderButton.id = "profilePictureBack";
 
