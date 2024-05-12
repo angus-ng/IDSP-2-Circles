@@ -557,12 +557,12 @@ async function displaySearch() {
   rightHeaderButton.innerHTML = "";
   leftHeaderButton.innerHTML = "";
   pageContent.innerHTML = `
-    <div id="searchPage" class="flex flex-col py-2 w-full h-screen">
+    <div id="searchPage" class="py-2 w-full h-full">
       <div class="relative w-full h-9 mt-8">
         <input type="text" id="searchBox" class="w-380 px-14 py-2 border-grey border-2 rounded-input-box text-secondary leading-secondary" placeholder="search account">
         <img src="/lightmode/search_icon_no_text.svg" alt="search icon" class="absolute left-4 top-2.5 w-25 h-25"/>
       </div>
-      <div class="shrink-0 mt-10 mb-6 justify-center w-full">
+      <div class="flex flex-col shrink-0 mt-10 mb-6 justify-center w-full">
         <div id="suggestedFriends"></div>
       </div>
     </div>
@@ -1448,7 +1448,7 @@ async function displayCircleInvites() {
       circleName.className="font-medium text-14 leading-tertiary"
       circleName.textContent=invite.circle.name;
       return `
-      <div class="flex items-center my-5">
+      <div class="flex items-center my-3">
         <div class="flex-none w-58">
           <img class="rounded-input-box w-58 h-58" src="${invite.circle.picture}" alt="${invite.circle.name}'s picture"></img>
         </div>
