@@ -381,19 +381,19 @@ async function displayCreateCircle() {
 
 async function displayListOfFriends(friends) {
   let newArr = friends.map((friend) => {
+    let displayName = document.createElement("h2")
     let username = document.createElement("h2")
-    let username2 = document.createElement("h2")
-    username.className="font-medium text-14 leading-tertiary"
-    username2.className="font-light text-14 text-dark-grey"
-    username.textContent= friend.displayName ? friend.displayName : friend.username;
-    username2.textContent=`@${friend.username}`
+    displayName.className="font-medium text-14 leading-tertiary"
+    username.className="font-light text-14 text-dark-grey"
+    displayName.textContent= friend.displayName ? friend.displayName : friend.username;
+    username.textContent=`@${friend.username}`
     return `<div class="flex items-center my-5">
     <div class="flex-none w-58">
       <img class="rounded w-58 h-58" src="${friend.profilePicture}" alt="${friend.username}'s profile picture"></img>
     </div>
     <div class="ml-8 flex-none w-207">
+      ${displayName.outerHTML}
       ${username.outerHTML}
-      ${username2.outerHTML}
     </div>
     <div class="flex-none w-58">
       <form>
@@ -639,14 +639,18 @@ function displayUserSearch(listOfUsers) {
         friendStatus = "Accept Request";
       }
     }
-      let username = document.createElement("h2")
-      username.className="font-medium text-14 leading-tertiary"
-      username.textContent=`@${user.username}`;
+    let displayName = document.createElement("h2")
+    let username = document.createElement("h2")
+    displayName.className="font-medium text-14 leading-tertiary"
+    username.className="font-light text-14 text-dark-grey"
+    displayName.textContent= user.displayName ? user.displayName : user.username;
+    username.textContent=`@${user.username}`
     return `<div class="flex items-center my-5">
       <div class="flex-none w-58">
         <img class="rounded-full w-58 h-58 object-cover" src="${user.profilePicture}" alt="${user.username}'s profile picture"></img>
       </div>
       <div class="ml-8 flex-none w-207">
+        ${displayName.outerHTML}
         ${username.outerHTML}
       </div>
       <div class="flex-none w-58">
