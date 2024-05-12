@@ -227,13 +227,14 @@ header.addEventListener("click", async (event) => {
     console.log("album created");
     const albumName = await getAlbumName();
     albumObj.name = albumName;
-    const { success, data } = await handleCreateAlbum(albumObj);
+    const { success, data, error } = await handleCreateAlbum(albumObj);
+    if (error) {
+      console.log(error)
+      //DO SOMETHING
+    }
     const albumId = data;
     if (success && data) {
       const { success, data, error } = await getAlbum(albumId);
-      if (error) {
-        //DO SOMETHING
-      }
       if (success && data) {
         console.log(data);
         await displayAlbum(data);
