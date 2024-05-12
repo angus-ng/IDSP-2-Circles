@@ -1232,16 +1232,18 @@ function displayFriendRequests(friendRequest) {
       let username = document.createElement("h2")
       username.className="font-medium text-14 leading-tertiary"
       username.textContent=request.requester.username;
-      return `<div class="flex items-center my-5">
+      return `
+      <div class="flex items-center my-5">
       <div class="flex-none w-58">
         <img class="rounded w-58 h-58" src="${request.requester.profilePicture}" alt="${request.requester.username}'s profile picture"></img>
       </div>
-      <div class="ml-8 flex-none w-207">
+      <div class="ml-8 flex-none w-110">
         ${username.outerHTML}
       </div>
-      <div class="flex-none w-58">
-        <form>
-          <button identifier="${request.requesterName}" sentTo="${request.requesteeName}" name="friendRequest" class="cursor-pointer">Accept</button>
+      <div class="ml-auto w-166">
+        <form class="flex text-white gap-2">
+          <button identifier="${request.requesterName}" sentTo="${request.requesteeName}" name="friendRequest" class="w-1/2 h-request rounded-input-box bg-light-mode-accent">accept</button>
+          <button class="w-1/2 h-request rounded-input-box bg-dark-grey">decline</button>
         </form>
       </div>
     </div>`;

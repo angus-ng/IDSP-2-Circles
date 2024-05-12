@@ -1513,6 +1513,10 @@ input:checked + .toggle-bg {
   margin-top: 105px;
 }
 
+.ml-auto {
+  margin-left: auto;
+}
+
 .block {
   display: block;
 }
@@ -1627,6 +1631,10 @@ input:checked + .toggle-bg {
   height: 85px;
 }
 
+.h-request {
+  height: 34px;
+}
+
 .h-screen {
   height: 100vh;
 }
@@ -1731,8 +1739,16 @@ input:checked + .toggle-bg {
   width: 398px;
 }
 
+.w-request {
+  width: 78px;
+}
+
 .w-screen {
   width: 100vw;
+}
+
+.w-166 {
+  width: 166px;
 }
 
 .min-w-\[50px\] {
@@ -2103,6 +2119,11 @@ input:checked + .toggle-bg {
 .bg-blue-700 {
   --tw-bg-opacity: 1;
   background-color: rgb(26 86 219 / var(--tw-bg-opacity));
+}
+
+.bg-dark-grey {
+  --tw-bg-opacity: 1;
+  background-color: rgb(115 115 115 / var(--tw-bg-opacity));
 }
 
 .bg-gray-100 {

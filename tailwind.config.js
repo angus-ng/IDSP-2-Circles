@@ -65,7 +65,9 @@ theme: {
       '42': '42px',
       '58': '58px',
       '62': '62px',
-      'popup': '398px'
+      'popup': '398px',
+      'request': '78px',
+      '166': '166px'
     },
     height: {
       '932': '932px',
@@ -82,7 +84,8 @@ theme: {
       '400': '400px',
       '62': '62px',
       '415': '415px',
-      '58': '58px'
+      '58': '58px',
+      'request': '34px'
     },
     boxShadow: {
       'background-shadow': 'inset 0 0 100px -30px rgba(0, 0, 0, 0.2)'
