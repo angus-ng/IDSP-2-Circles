@@ -1658,8 +1658,15 @@ async function displayPopup(activity) {
 
   setTimeout(() => {
       popup.classList.add("opacity-0", "duration-1000");
-      popup.addEventListener("transitionend", () => {
-          popup.remove();
+      popup.addEventListener("transitionend", async() => {
+          await resetPopup();
       });
   }, 2000);
+
+  async function resetPopup() {
+    const notificationText = popup.querySelector("#notificationText");
+    notificationText.textContent = "";
+    popup.classList.remove("opacity-0", "duration-1000");
+    popup.classList.add("hidden");
+  }
 }
