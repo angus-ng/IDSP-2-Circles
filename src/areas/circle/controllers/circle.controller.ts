@@ -43,6 +43,11 @@ class CircleController implements IController {
         let loggedInUser = req.user!.username
         
         const { circleName, picturePath } = req.body
+
+        if (!circleName) {
+          throw new Error("missing circle name")
+        }
+
         const newCircleInput = {
           creator: loggedInUser, 
           name: circleName,
@@ -58,7 +63,7 @@ class CircleController implements IController {
 
         res.status(200).json({ success: true, data: newCircle.id });
     } catch (err) {
-        res.status(200).json({success: true, data: null, error:err})
+        return res.status(200).json({success: true, data: null, error: "failed to create circle"})
     }
   }
 

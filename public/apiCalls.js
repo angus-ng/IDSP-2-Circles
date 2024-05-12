@@ -128,7 +128,7 @@ async function getAlbum(albumId) {
 async function handleCreateAlbum(albumObj) {
   try {
     if (!albumObj.name) {
-      return { success: true, data: null };
+      return { success: true, data: null, error: "Missing album name" };
     }
     console.log(albumObj);
     let response = await fetch("/album/create", {

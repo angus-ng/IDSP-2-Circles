@@ -439,7 +439,7 @@ async function displayInviteFriends() {
 function saveCheckedFriends() {
   const addCheckboxes = document.querySelectorAll("#add");
   addCheckboxes.forEach((checkbox) => {
-    if (checkbox.checked) {
+    if (checkbox.checked && (!checkedFriends.includes(checkbox.value))) {
       checkedFriends.push(checkbox.value);
     }
   });

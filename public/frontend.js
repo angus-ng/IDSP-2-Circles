@@ -131,9 +131,10 @@ header.addEventListener("click", async (event) => {
       }
       console.log(error);
       return;
+      
     }
+    const circleId = data;
     if (success && data) {
-      const circleId = data;
       console.log(circleId)
       for (let friend of checkedFriends) {
         console.log(circleId)
@@ -231,6 +232,9 @@ header.addEventListener("click", async (event) => {
     const albumId = data;
     if (success && data) {
       const { success, data, error } = await getAlbum(albumId);
+      if (error) {
+        //DO SOMETHING
+      }
       if (success && data) {
         console.log(data);
         await displayAlbum(data);
