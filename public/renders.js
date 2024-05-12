@@ -539,7 +539,7 @@ async function displayNavBar() {
 
 async function displayProfile(userData) {
   const circleRender = await displayListOfCircles(userData);
-  const albumRender = await displayListOfAlbums(userData);
+  const albumRender = await displayListOfAlbums(userData, true);
   console.log(circleRender)
   pageName.textContent = userData.username;
   pageContent.innerHTML = `
@@ -581,7 +581,7 @@ async function displayProfile(userData) {
           </li>
       </ul>
     </div>
-    <div id="albumList" class="m-auto grid grid-cols-3 gap-4 mt-6 mb-6 hidden">
+    <div id="albumList" class="columns-2 gap-4 space-y-4 grid-flow-row hidden">
     ${albumRender.join("")}
     </div>
     <div id="circleList" class="m-auto grid grid-cols-3 gap-4 mt-6 mb-6 place-items-center">
@@ -1036,7 +1036,7 @@ async function displayCircle(circleData) {
     });
     const albumList = circleData.circle.albums.map((obj) => {
       let albumName = document.createElement('p')
-      albumName.className = "text-center text-secondary"
+      albumName.className = "text-light-mode-bg mix-blend-difference"
       albumName.textContent = obj.name;
       return `
       <div class="w-full h-min relative album" id="${obj.id}">
@@ -1236,15 +1236,20 @@ async function displayPhoto(photoSrc) {
   albumPhotos.appendChild(photoDiv);
 }
 
-async function displayListOfAlbums (data) {
+async function displayListOfAlbums (data, profile=false) {
   console.log(data)
   const albumList = data.Album.map((obj) => {
     let albumName = document.createElement('p')
-    albumName.className = "text-center text-secondary"
+    albumName.className = "text-light-mode-bg mix-blend-difference"
     albumName.textContent = obj.name;
+    const circleImage = `<div class="absolute inset-0 flex items-start justify-end gap-1 p2">
+      <img src="${obj.circle.picture}" class="w-8 rounded-full object-cover"/>
+    </div>`
+
     return `
     <div class="w-full h-min relative album" id="${obj.id}">
       <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.photos[0].src}"/>
+      ${profile ? circleImage : null}
       <div class="m-2 text-secondary font-semibold absolute inset-0 flex items-end justify-start">
         ${albumName.outerHTML}
       </div>

@@ -1727,6 +1727,10 @@ input:checked + .toggle-bg {
   width: 100vw;
 }
 
+.w-8 {
+  width: 2rem;
+}
+
 .min-w-\[50px\] {
   min-width: 50px;
 }
@@ -2385,6 +2389,11 @@ input:checked + .toggle-bg {
   line-height: 14px;
 }
 
+.text-black {
+  --tw-text-opacity: 1;
+  color: rgb(0 0 0 / var(--tw-text-opacity));
+}
+
 .text-blue-600 {
   --tw-text-opacity: 1;
   color: rgb(28 100 242 / var(--tw-text-opacity));
@@ -2425,6 +2434,10 @@ input:checked + .toggle-bg {
   color: rgb(0 68 204 / var(--tw-text-opacity));
 }
 
+.text-light-mode-bg {
+  color: rgba(248, 244, 234, 0.86);
+}
+
 .text-text-grey {
   --tw-text-opacity: 1;
   color: rgb(72 72 72 / var(--tw-text-opacity));
@@ -2433,11 +2446,6 @@ input:checked + .toggle-bg {
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
-}
-
-.text-black {
-  --tw-text-opacity: 1;
-  color: rgb(0 0 0 / var(--tw-text-opacity));
 }
 
 .underline {
@@ -2450,6 +2458,26 @@ input:checked + .toggle-bg {
 
 .opacity-100 {
   opacity: 1;
+}
+
+.mix-blend-screen {
+  mix-blend-mode: screen;
+}
+
+.mix-blend-overlay {
+  mix-blend-mode: overlay;
+}
+
+.mix-blend-difference {
+  mix-blend-mode: difference;
+}
+
+.mix-blend-exclusion {
+  mix-blend-mode: exclusion;
+}
+
+.mix-blend-luminosity {
+  mix-blend-mode: luminosity;
 }
 
 .shadow {

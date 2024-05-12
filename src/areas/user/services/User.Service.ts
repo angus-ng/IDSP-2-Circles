@@ -267,7 +267,12 @@ export class UserService implements IUserService {
           },
           Album: {
             include: {
-              photos: true
+              photos: true,
+              circle: {
+                select: { 
+                  picture: true
+                }
+              }
             }
           }
         },
