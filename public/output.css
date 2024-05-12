@@ -1377,6 +1377,16 @@ input:checked + .toggle-bg {
   margin-bottom: 1.5rem;
 }
 
+.mx-6 {
+  margin-left: 1.5rem;
+  margin-right: 1.5rem;
+}
+
+.mx-8 {
+  margin-left: 2rem;
+  margin-right: 2rem;
+}
+
 .-mb-px {
   margin-bottom: -1px;
 }
@@ -1725,6 +1735,10 @@ input:checked + .toggle-bg {
 
 .w-screen {
   width: 100vw;
+}
+
+.w-6 {
+  width: 1.5rem;
 }
 
 .min-w-\[50px\] {

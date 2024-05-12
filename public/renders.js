@@ -543,14 +543,17 @@ async function displayProfile(userData) {
   console.log(circleRender)
   pageName.textContent = userData.username;
   pageContent.innerHTML = `
-  <div id="profilePage" class="pt-8 pb-16 mb-4 w-full">
+  <div id="profilePage" class="relative pt-2 pb-16 mb-4 w-full">
+    <div id="settings" class=" absolute top-0 right-0 w-6 h-6">
+      <img src="/lightmode/settings_icon.svg">
+    </div>
     <div class="flex justify-center mb-4">
       <img id="profilePicture" src="${userData.profilePicture}" class="w-110 h-110 object-cover rounded-full"></img>
     </div>
-    <div class="flex justify-center">
+    <div class="flex justify-center mt-2">
       <h2 id="username" class="text-base text-center">@</h2>
     </div>
-    <div class="mt-6 mb-6 m-auto grid grid-cols-2 gap-4">
+    <div class="w-180 mt-6 mb-6 m-auto grid grid-cols-2 gap-4">
       <div class="grid grid-rows-2 gap-0 justify-center">
         <h2 class="text-base font-bold text-center">${userData._count.UserCircle}</h2>
         <h2 class="text-secondary text-center">Circles</h2>
@@ -590,8 +593,8 @@ async function displayProfile(userData) {
     <div class="h-100"></div>
   </div>`;
 
-  const profileTabs = document.querySelector("#profileTabs");
-  profileTabs.addEventListener("click", (event) => {
+  const profilePage = document.querySelector("#profilePage");
+  profilePage.addEventListener("click", (event) => {
     const albumTab = event.target.closest("#albumTab");
     const circleTab = event.target.closest("#circleTab");
     const albumTabLink = document.querySelector("#albumTab a");
@@ -599,6 +602,7 @@ async function displayProfile(userData) {
     const circleList = document.querySelector("#circleList");
     const albumList = document.querySelector("#albumList");
     const circleText = document.querySelector("#circleText");
+    const settings = event.target.closest("#settings");
 
     if (albumTab) {
       if (albumList.classList.contains("hidden")){
@@ -623,6 +627,10 @@ async function displayProfile(userData) {
       circleText.classList.add("text-black");
       albumTabLink.classList.remove("active");
       albumTabLink.querySelector('svg path').setAttribute('fill', '#737373');
+    }
+
+    if (settings) {
+      console.log("no settings xd");
     }
   });
 
