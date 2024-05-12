@@ -4,7 +4,6 @@ function displayLoginPage() {
       <div class="flex-shrink-0 mt-2 mb-6">
           <img src="/lightmode/logo_with_wordmark.svg" alt="Logo with Wordmark">  
       </div>
-  
       <div class="flex-1">
               <div class="flex items-center mt-6 mb-6">
                   <label for="login" class=""></label>
@@ -21,7 +20,7 @@ function displayLoginPage() {
                           <label for="rememberMe" class="ml-2 text-secondary">Remember Me</label>
                       </div>
                       <div class="justify-self-end">
-                          <a href="" class="text-secondary leading-secondary text-light-mode-accent text-decoration-line: underline">Forgot Password?</a>
+                          <a class="text-secondary leading-secondary text-light-mode-accent text-decoration-line: underline cursor-pointer">Forgot Password?</a>
                       </div>
                   </div>
               </div>
@@ -48,7 +47,7 @@ function displayLoginPage() {
               </div>
           <div class="flex items-center justify-between mt-6 gap-1">
               <p class="text-secondary leading-secondary">Don't have an account?</p>
-              <a id="signUp" class="text-secondary leading-secondary text-light-mode-accent text-decoration-line: underline">Sign up</a>
+              <a id="signUp" class="text-secondary leading-secondary text-light-mode-accent text-decoration-line: underline cursor-pointer">Sign up</a>
           </div>
       </div>
   </div>`;
@@ -58,39 +57,235 @@ function displayLoginPage() {
     const signUp = event.target.closest("#signUp");
 
     if (signUp) {
-      await displaySignUp();
+      await displaySignUpPage();
+      await displaySignUpEmailPage();
     }
 
   });
 }
 
-async function displaySignUp() {
+async function displaySignUpPage() {
   header.classList.remove("hidden");
   leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button">`
   pageContent.innerHTML = `
   <div id="signUpPage" class="flex flex-col items-center rounded-lg w-full h-full z-10">
-    <div class="mb-10">
-      <h1 class="font-medium text-onboarding">Enter your Email</h1>
-      <p class="text-body leading-body text-onboarding-grey">Enter the email where you can be contacted. No one will see this on your profile.</p>
+    <div id="signUpTitleSection" class="w-full mb-4 mt-6">
+        <h1 id= "signUpTitle" class="font-medium text-onboarding"></h1>
+        <p id="signUpSubtitle" class="text-body leading-body text-onboarding-grey"></p>
     </div>
-    <div class="mt-2 flex-1">
-      <form class="flex flex-col flex-grow">
-        <div class="mb-4">
-          <label for="email" class="font-medium text-h2 mb-3.5">Email</label>
-          <input class="w-380 py-2 border-dark-grey border-2 rounded-input-box text-14 leading-secondary mb-2" placeholder="Email"/>
-        </div>
-        <div class="mt-2">
-          <label for="emailConfirmation" class="font-medium text-h2 mb-3.5">Confirm Email</label>
-          <input class="w-380 py-2 border-dark-grey border-2 rounded-input-box text-14 leading-secondary" placeholder="Email"/>
-        </div>
-        <div class="flex-grow"></div>
-      </form>
+    <div id="signUpAdditionalContent"></div>
+    <div id="signUpPageContent" class="mt-8 flex-1">
+        <form class="flex flex-col flex-grow">
+            <div id="input1" class="mb-6">
+                
+            </div>
+            <div id="input2" class="mt-4">
+               
+            </div>
+            <div class="flex-grow"></div>
+        </form>
     </div>
-    <button class="w-380 h-45 bg-light-mode-accent text-white rounded-input-box fixed bottom-8">Next</button>
+    <button id="primaryButton" class="w-380 h-45 bg-light-mode-accent text-white rounded-input-box fixed bottom-8">Next</button>
+    <button id="secondaryButton" class="w-380 h-45 bg-white text-dark-grey border-2 border-dark-grey rounded-input-box fixed bottom-8 hidden"></button>
   </div>`;
+}
 
+async function displaySignUpEmailPage() {
+  header.classList.remove("hidden");
+  leftHeaderButton.id = "emailBack";
+  const signUpTitle = document.querySelector("#signUpTitle");
+  const signUpSubtitle = document.querySelector("#signUpSubtitle");
+  const signUpPageContent = document.querySelector("#signUpPageContent");
+  const signUpPageAdditionalContent = document.querySelector("#signUpAdditionalContent");
+  const primaryButton = document.querySelector("#primaryButton");
 
+  signUpTitle.textContent = "Enter your Email";
+  signUpSubtitle.textContent = "Enter the email where you can be contacted. No one will see this on your profile.";
+
+  signUpPageContent.innerHTML = `
+  <form class="flex flex-col flex-grow">
+    <div class="mb-6">
+        <label for="email" class="font-medium text-h2 mb-2">Email</label>
+        <input type="email" class="w-380 py-2 border-dark-grey border-2 rounded-input-box text-14 leading-secondary mt-2" placeholder="Email"/>
+    </div>
+    <div class="mt-4">
+        <label for="emailConfirmation" class="font-medium text-h2 mb-4">Confirm Email</label>
+        <input type="email" class="w-380 py-2 border-dark-grey border-2 rounded-input-box text-14 leading-secondary mt-2" placeholder="Email"/>
+    </div>
+    <div class="flex-grow"></div>
+  </form>`;
+
+  signUpPageAdditionalContent.textContent = "";
+
+  primaryButton.id = "emailNext";
+}
+
+async function displaySignUpPasswordPage() {
+  leftHeaderButton.id = "passwordBack";
+  const signUpTitle = document.querySelector("#signUpTitle");
+  const signUpSubtitle = document.querySelector("#signUpSubtitle");
+  const signUpPageContent = document.querySelector("#signUpPageContent");
+  const signUpPageAdditionalContent = document.querySelector("#signUpAdditionalContent");
+  const primaryButton = document.querySelector("#emailNext");
+
+  signUpTitle.textContent = "Create a password";
+  signUpSubtitle.textContent = "Your new password must contain:";
+
+  signUpPageContent.innerHTML = `
+  <form class="flex flex-col flex-grow">
+    <div class="mb-6">
+        <label for="password" class="font-medium text-h2 mb-2">Password</label>
+        <input type="password" class="w-380 py-2 border-dark-grey border-2 rounded-input-box text-14 leading-secondary mt-2" placeholder="Password"/>
+    </div>
+    <div class="mt-4">
+        <label for="passwordConfirmation" class="font-medium text-h2 mb-4">Confirm Password</label>
+        <input type="password" class="w-380 py-2 border-dark-grey border-2 rounded-input-box text-14 leading-secondary mt-2" placeholder="Password"/>
+    </div>
+    <div class="flex-grow"></div>
+  </form>`;
+
+  const passwordRequirements = document.createElement("ul");
+  passwordRequirements.className = "grid grid-cols-2 gap-1 text-secondary list-disc custom-list text-onboarding-grey";
+  passwordRequirements.innerHTML = `
+  <li>minimum 8 characters</li>
+  <li>1 lowercase character</li>
+  <li>1 uppercase character</li>
+  <li>1 number or special character</li>`;
+
+  signUpPageAdditionalContent.appendChild(passwordRequirements);
+
+  primaryButton.id = "passwordNext";
+}
+
+async function displaySignUpBirthdayPage() {
+  const signUpTitle = document.querySelector("#signUpTitle");
+  const signUpSubtitle = document.querySelector("#signUpSubtitle");
+  const signUpPageContent = document.querySelector("#signUpPageContent");
+  const signUpPageAdditionalContent = document.querySelector("#signUpAdditionalContent");
+  const primaryButton = document.querySelector("#passwordNext");
   
+  leftHeaderButton.id = "birthdayBack";
+
+  signUpTitle.textContent = "Tell us your birthday!";
+  signUpSubtitle.textContent = "Use your own birthday. No one will see this on your profile.";
+
+  signUpPageContent.innerHTML = `
+  <form class="flex flex-col flex-grow">
+    <div class="mb-6">
+        <label for="date" class="font-medium text-h2 mb-2">Birthday</label>
+        <input type="date" class="w-380 py-2 border-dark-grey border-2 rounded-input-box text-14 leading-secondary mt-2" placeholder="April 4 2024"/>
+    </div>
+    <div class="flex-grow"></div>
+  </form>`;
+
+  signUpPageAdditionalContent.textContent = "";
+
+  primaryButton.id = "birthdayNext";
+}
+
+async function displaySignUpNamePage() {
+  const signUpTitle = document.querySelector("#signUpTitle");
+  const signUpSubtitle = document.querySelector("#signUpSubtitle");
+  const signUpPageContent = document.querySelector("#signUpPageContent");
+  const signUpPageAdditionalContent = document.querySelector("#signUpAdditionalContent");
+  const primaryButton = document.querySelector("#birthdayNext");
+  
+  leftHeaderButton.id = "nameBack";
+
+  signUpTitle.textContent = "What’s your name?";
+  signUpSubtitle.textContent = "Add your name so friends can find you easier.";
+
+  signUpPageContent.innerHTML = `
+  <form class="flex flex-col flex-grow">
+      <div class="mb-6">
+          <label for="text" class="font-medium text-h2 mb-2">First Name</label>
+          <input type="text" class="w-380 py-2 border-dark-grey border-2 rounded-input-box text-14 leading-secondary mt-2" placeholder="First Name"/>
+      </div>
+      <div class="mb-6">
+          <label for="text" class="font-medium text-h2 mb-2">Last Name</label>
+          <input type="text" class="w-380 py-2 border-dark-grey border-2 rounded-input-box text-14 leading-secondary mt-2" placeholder="Last Name"/>
+      </div>
+      <div class="flex-grow"></div>
+  </form>`;
+
+  signUpPageAdditionalContent.textContent = "";
+
+  primaryButton.id = "nameNext";
+}
+
+async function displaySignUpUsernamePage() {
+  const signUpTitle = document.querySelector("#signUpTitle");
+  const signUpSubtitle = document.querySelector("#signUpSubtitle");
+  const signUpPageContent = document.querySelector("#signUpPageContent");
+  const signUpPageAdditionalContent = document.querySelector("#signUpAdditionalContent");
+  const primaryButton = document.querySelector("#nameNext");
+  
+  leftHeaderButton.id = "usernameBack";
+
+  signUpTitle.textContent = "Create a username";
+  signUpSubtitle.textContent = "Add a username. You can change this at any time.";
+
+  signUpPageContent.innerHTML = `
+  <form class="flex flex-col flex-grow">
+      <div class="mb-6">
+          <label for="text" class="font-medium text-h2 mb-2">Username</label>
+          <input type="text" class="w-380 py-2 border-dark-grey border-2 rounded-input-box text-14 leading-secondary mt-2" placeholder="Username"/>
+      </div>
+      <div class="flex-grow"></div>
+  </form>`;
+
+  signUpPageAdditionalContent.textContent = "";
+
+  primaryButton.id = "usernameNext";
+}
+
+async function displaySignUpProfilePicturePage() {
+  const signUpTitle = document.querySelector("#signUpTitle");
+  const signUpSubtitle = document.querySelector("#signUpSubtitle");
+  const signUpPageContent = document.querySelector("#signUpPageContent");
+  const signUpPageAdditionalContent = document.querySelector("#signUpAdditionalContent");
+  const primaryButton = document.querySelector("#usernameNext");
+  const secondaryButton = document.querySelector("#secondaryButton");
+  
+  leftHeaderButton.id = "profilePictureBack";
+
+  signUpTitle.textContent = "Add a profile picture";
+  signUpSubtitle.textContent = "Add a profile picture so your friends know it’s you. Everyone will be able to see your picture.";
+
+  signUpPageContent.innerHTML = `<img src=/placeholder_image.svg alt="placeholder image">`;
+
+  signUpPageAdditionalContent.textContent = "";
+
+  primaryButton.id = "addProfilePicture";
+  primaryButton.textContent = "Add Picture";
+  primaryButton.classList.remove("bottom-8");
+  primaryButton.classList.add("bottom-24");
+  secondaryButton.id = "profilePictureNext";
+  secondaryButton.textContent = "Skip"
+  secondaryButton.classList.remove("hidden");
+}
+
+async function displayProfileConfirmation() {
+  const signUpTitle = document.querySelector("#signUpTitle");
+  const signUpSubtitle = document.querySelector("#signUpSubtitle");
+  const signUpPageContent = document.querySelector("#signUpPageContent");
+  const signUpPageAdditionalContent = document.querySelector("#signUpAdditionalContent");
+  const primaryButton = document.querySelector("#addProfilePicture");
+  const secondaryButton = document.querySelector("#profilePictureNext");
+  
+  leftHeaderButton.id = "profileConfirmationBack";
+
+  signUpTitle.textContent = "Profile picture added";
+  signUpSubtitle.textContent = "";
+
+  signUpPageContent.innerHTML = `<img src=/placeholder_image.svg alt="placeholder image">`;
+
+  signUpPageAdditionalContent.textContent = "";
+
+  primaryButton.id = "doneButton";
+  primaryButton.textContent = "Done";
+  secondaryButton.id = "changeProfilePicture";
+  secondaryButton.textContent = "Change Picture";
 }
 
 async function displayCreateCircle() {

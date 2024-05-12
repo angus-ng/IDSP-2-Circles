@@ -28,7 +28,8 @@ theme: {
       'dark-grey': '#737373',
       'text-grey': '#484848',
       'like': '#FF4646',
-      'onboarding-grey': 'rgba(14, 14, 14, 0.75)'
+      'onboarding-grey': 'rgba(14, 14, 14, 0.75)',
+      'success': '#14AA3E'
     },
     fontSize: {
       'onboarding': '36px',

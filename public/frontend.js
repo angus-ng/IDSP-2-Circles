@@ -36,18 +36,70 @@ header.addEventListener("click", async (event) => {
   const nextButton = event.target.closest("#nextButton");
   const backButton = event.target.closest("#backButton");
   const circleBackButton = event.target.closest("#circleBackButton");
-  const circlePreviewBackButton = event.target.closest(
-    "#circlePreviewBackButton"
-  );
+  const circlePreviewBackButton = event.target.closest("#circlePreviewBackButton");
   const createCircleButton = event.target.closest("#createCircleButton");
   const closeButton = event.target.closest("#closeButton");
   const albumNextButton = event.target.closest("#albumNext");
   const backButtonAlbum = event.target.closest("#backButtonAlbum");
   const createAlbumButton = event.target.closest("#createAlbum");
-  const albumConfirmationBackButton = event.target.closest(
-    "#albumConfirmationBackButton"
-  );
+  const albumConfirmationBackButton = event.target.closest("#albumConfirmationBackButton");
   const addCircleBackButton = event.target.closest("#addCircleBackButton");
+  const emailBackButton = event.target.closest("#emailBack");
+  const passwordBackButton = event.target.closest("#passwordBack");
+  const birthdayBackButton = event.target.closest("#birthdayBack");
+  const nameBackButton = event.target.closest("#nameBack");
+  const usernameBackButton = event.target.closest("#usernameBack");
+  const profilePictureBackButton = event.target.closest("#profilePictureBack");
+  const profileConfirmationBackButton = event.target.closest("#profileConfirmationBack");
+  if (emailBackButton) {
+    await displayLoginPage();
+  }
+
+  if (passwordBackButton) {
+    const primaryButton = document.querySelector("#passwordNext");
+    primaryButton.id = "emailNext";
+    await displaySignUpEmailPage();
+  }
+
+  if (birthdayBackButton) {
+    const primaryButton = document.querySelector("#birthdayNext");
+    primaryButton.id = "passwordNext";
+    await displaySignUpPasswordPage();
+  }
+
+  if (nameBackButton) {
+    const primaryButton = document.querySelector("#nameNext");
+    primaryButton.id = "birthdayNext";
+    await displaySignUpBirthdayPage();
+  }
+
+  if (usernameBackButton) {
+    const primaryButton = document.querySelector("#usernameNext");
+    primaryButton.id = "nameNext";
+    await displaySignUpNamePage();
+  }
+
+  if (profilePictureBackButton) {
+    const primaryButton = document.querySelector("#addProfilePicture");
+    primaryButton.classList.remove("bottom-24");
+    primaryButton.classList.add("bottom-8");
+    primaryButton.textContent = "Next";
+    primaryButton.id = "nameNext";
+    const secondaryButton = document.querySelector("#profilePictureNext");
+    secondaryButton.classList.add("hidden");
+    await displaySignUpUsernamePage();
+  }
+
+  if (profileConfirmationBackButton) {
+
+    const primaryButton = document.querySelector("#doneButton");
+    primaryButton.textContent = "Add Picture";
+    primaryButton.id = "addProfilePicture";
+    const secondaryButton = document.querySelector("#changeProfilePicture");
+    secondaryButton.textContent = "Skip";
+    secondaryButton.id = "profilePictureNext";
+    await displaySignUpProfilePicturePage();
+  }
 
   if (nextButtonInviteFriends) {
     const circleName = document.querySelector("#circleName");
@@ -228,16 +280,46 @@ function toggleEdit() {
   circleName.setAttribute("readonly", true);
 }
 
-pageContent.addEventListener("click", (event) => {
+pageContent.addEventListener("click", async(event) => {
   const localAuthButton = document.querySelector("#localAuth");
   const editButton = event.target.closest("#editButton");
   const parentId = event.target.parentElement.id;
   const uploadPhotoSection = event.target.closest("#createNewAlbum");
+  const emailNextButton = event.target.closest("#emailNext");
+  const passwordNextButton = event.target.closest("#passwordNext");
+  const birthdayNextButton = event.target.closest("#birthdayNext");
+  const nameNextButton = event.target.closest("#nameNext");
+  const usernameNextButton = event.target.closest("#usernameNext");
+  const profilePictureNextButton = event.target.closest("#profilePictureNext");
 
   if (parentId === "editButton") {
     toggleEdit();
   } else if (parentId === "localAuth") {
     handleLocalAuth();
+  }
+
+  if (emailNextButton) {
+    await displaySignUpPasswordPage();
+  }
+
+  if (passwordNextButton) {
+    await displaySignUpBirthdayPage();
+  }
+
+  if (birthdayNextButton) {
+    await displaySignUpNamePage();
+  }
+
+  if (nameNextButton) {
+    await displaySignUpUsernamePage();
+  }
+
+  if (usernameNextButton) {
+    await displaySignUpProfilePicturePage();
+  }
+
+  if (profilePictureNextButton) {
+    await displayProfileConfirmation();
   }
 
   // if (uploadPhotoSection) {
