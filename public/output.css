@@ -1667,6 +1667,14 @@ input:checked + .toggle-bg {
   max-height: 14rem;
 }
 
+.max-h-\[400px\] {
+  max-height: 400px;
+}
+
+.max-h-full {
+  max-height: 100%;
+}
+
 .w-1\/2 {
   width: 50%;
 }
@@ -2027,6 +2035,10 @@ input:checked + .toggle-bg {
 
 .overflow-hidden {
   overflow: hidden;
+}
+
+.overflow-y-auto {
+  overflow-y: auto;
 }
 
 .overflow-y-scroll {
