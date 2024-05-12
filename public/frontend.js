@@ -53,7 +53,6 @@ header.addEventListener("click", async (event) => {
     const circleName = document.querySelector("#circleName");
     newCircleNameInput = circleName.value;
     circleImgSrc = document.querySelector("#circleImage").src;
-    addPictureSrc = document.querySelector("#addPicture img").src;
     isPrivacyPublic = document.querySelector("#privacyCheckbox").checked;
     await displayInviteFriends();
     return;

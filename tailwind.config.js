@@ -27,9 +27,11 @@ theme: {
       'medium-grey': '#565656',
       'dark-grey': '#737373',
       'text-grey': '#484848',
-      'like': '#FF4646'
+      'like': '#FF4646',
+      'onboarding-grey': 'rgba(14, 14, 14, 0.75)'
     },
     fontSize: {
+      'onboarding': '36px',
       'h1': '29px',
       'h2': '22px',
       'body': '17px',
@@ -86,7 +88,8 @@ theme: {
       '415': '415px',
       '58': '58px',
       'request': '34px',
-      '38': '38px'
+      '38': '38px',
+      '45': '45px'
     },
     boxShadow: {
       'background-shadow': 'inset 0 0 100px -30px rgba(0, 0, 0, 0.2)'

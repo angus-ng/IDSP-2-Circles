@@ -68,13 +68,27 @@ async function displaySignUp() {
   header.classList.remove("hidden");
   leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button">`
   pageContent.innerHTML = `
-  <div id="loginPage" class="flex flex-col items-center rounded-lg w-full z-10">
-    <div>
-      <h1>Enter your Email</h1>
-      <p>Enter the email where you can be contacted. No one will see this on your profile.</p>
+  <div id="signUpPage" class="flex flex-col items-center rounded-lg w-full h-full z-10">
+    <div class="mb-10">
+      <h1 class="font-medium text-onboarding">Enter your Email</h1>
+      <p class="text-body leading-body text-onboarding-grey">Enter the email where you can be contacted. No one will see this on your profile.</p>
     </div>
-  </div>
-  `;
+    <div class="mt-2 flex-1">
+      <form class="flex flex-col flex-grow">
+        <div class="mb-4">
+          <label for="email" class="font-medium text-h2 mb-3.5">Email</label>
+          <input class="w-380 py-2 border-dark-grey border-2 rounded-input-box text-14 leading-secondary mb-2" placeholder="Email"/>
+        </div>
+        <div class="mt-2">
+          <label for="emailConfirmation" class="font-medium text-h2 mb-3.5">Confirm Email</label>
+          <input class="w-380 py-2 border-dark-grey border-2 rounded-input-box text-14 leading-secondary" placeholder="Email"/>
+        </div>
+        <div class="flex-grow"></div>
+      </form>
+    </div>
+    <button class="w-380 h-45 bg-light-mode-accent text-white rounded-input-box fixed bottom-8">Next</button>
+  </div>`;
+
 
   
 }
@@ -83,7 +97,7 @@ async function displayCreateCircle() {
   nav.classList.add("hidden");
   pageName.textContent = `New Circle`;
 
-  leftHeaderButton.innerHTML = `<img id="backButton src="/lightmode/back_button.svg" alt="Back Button"">`
+  leftHeaderButton.innerHTML = `<img id="backButton" src="/lightmode/back_button.svg" alt="Back Button">`
   rightHeaderButton.innerHTML = `<img id="nextInviteFriends" src="/lightmode/next_button.svg" alt="Next Button">`;
 
   const pageContent = document.querySelector("#pageContent");
@@ -127,13 +141,11 @@ async function displayCreateCircle() {
                 </label>
               </div>
             </div>
-            <button id="addPicture" class="my-5">
-              <img src="/add_picture.svg" alt="Add Picture Button" class="w-full">
-            </button>
           </div>
         </div>
-    </div>
-    `;
+      <button id="addPicture" class="w-380 h-45 bg-light-mode-accent text-white rounded-input-box fixed bottom-8">Add Picture</button>
+    </div>`;
+
   const circleNameInput = document.querySelector("#circleName");
   circleNameInput.value = newCircleNameInput;
   const addPictureButton = document.querySelector("#addPicture");
@@ -158,8 +170,9 @@ async function displayCreateCircle() {
     if (res) {
       circlePhoto.src = await res.data;
     }
-    document.querySelector("#addPicture img").src =
-      "/lightmode/change_picture.svg";
+
+    addPictureButton.textContent = "Change Picture";
+    addPictureButton.className = "w-380 h-45 bg-white border-2 border-dark-grey text-dark-grey rounded-input-box fixed bottom-8";
   });
 
   privacyCheckbox.addEventListener("change", async function () {

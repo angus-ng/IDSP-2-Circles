@@ -1279,6 +1279,10 @@ input:checked + .toggle-bg {
   bottom: 6rem;
 }
 
+.bottom-8 {
+  bottom: 2rem;
+}
+
 .bottom-\[60px\] {
   bottom: 60px;
 }
@@ -1405,6 +1409,10 @@ input:checked + .toggle-bg {
   margin-bottom: 0.75rem;
 }
 
+.mb-3\.5 {
+  margin-bottom: 0.875rem;
+}
+
 .mb-4 {
   margin-bottom: 4px;
 }
@@ -1517,6 +1525,14 @@ input:checked + .toggle-bg {
   margin-top: 105px;
 }
 
+.mb-8 {
+  margin-bottom: 2rem;
+}
+
+.mb-10 {
+  margin-bottom: 2.5rem;
+}
+
 .block {
   display: block;
 }
@@ -1582,6 +1598,10 @@ input:checked + .toggle-bg {
   height: 0.75rem;
 }
 
+.h-38 {
+  height: 38px;
+}
+
 .h-4 {
   height: 1rem;
 }
@@ -1639,8 +1659,8 @@ input:checked + .toggle-bg {
   height: 100vh;
 }
 
-.h-38 {
-  height: 38px;
+.h-45 {
+  height: 45px;
 }
 
 .max-h-56 {
@@ -1785,6 +1805,10 @@ input:checked + .toggle-bg {
 
 .shrink-0 {
   flex-shrink: 0;
+}
+
+.flex-grow {
+  flex-grow: 1;
 }
 
 .border-spacing-2 {
@@ -2365,6 +2389,10 @@ input:checked + .toggle-bg {
   line-height: 1.75rem;
 }
 
+.text-onboarding {
+  font-size: 36px;
+}
+
 .text-secondary {
   font-size: 12px;
 }
@@ -2461,6 +2489,10 @@ input:checked + .toggle-bg {
 
 .text-light-mode-bg {
   color: rgba(248, 244, 234, 0.86);
+}
+
+.text-onboarding-grey {
+  color: rgba(14, 14, 14, 0.75);
 }
 
 .text-text-grey {
