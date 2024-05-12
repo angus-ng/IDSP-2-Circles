@@ -48,18 +48,43 @@ function displayLoginPage() {
               </div>
           <div class="flex items-center justify-between mt-6 gap-1">
               <p class="text-secondary leading-secondary">Don't have an account?</p>
-              <a href="/auth/register" class="text-secondary leading-secondary text-light-mode-accent text-decoration-line: underline">Sign up</a>
+              <a id="signUp" class="text-secondary leading-secondary text-light-mode-accent text-decoration-line: underline">Sign up</a>
           </div>
       </div>
   </div>`;
+
+  const loginPage = document.querySelector("#loginPage");
+  loginPage.addEventListener("click", async(event) => {
+    const signUp = event.target.closest("#signUp");
+
+    if (signUp) {
+      await displaySignUp();
+    }
+
+  });
+}
+
+async function displaySignUp() {
+  header.classList.remove("hidden");
+  leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button">`
+  pageContent.innerHTML = `
+  <div id="loginPage" class="flex flex-col items-center rounded-lg w-full z-10">
+    <div>
+      <h1>Enter your Email</h1>
+      <p>Enter the email where you can be contacted. No one will see this on your profile.</p>
+    </div>
+  </div>
+  `;
+
+  
 }
 
 async function displayCreateCircle() {
   nav.classList.add("hidden");
-  pageName.innerHTML = `New Circle`;
+  pageName.textContent = `New Circle`;
 
-  leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="backButton"></img>`;
-  rightHeaderButton.innerHTML = `<img src="/lightmode/next_button.svg" alt="Next Button" id="nextInviteFriends"></img>`;
+  leftHeaderButton.innerHTML = `<img id="backButton src="/lightmode/back_button.svg" alt="Back Button"">`
+  rightHeaderButton.innerHTML = `<img id="nextInviteFriends" src="/lightmode/next_button.svg" alt="Next Button">`;
 
   const pageContent = document.querySelector("#pageContent");
   pageContent.innerHTML = `
@@ -177,7 +202,7 @@ async function displayInviteFriends() {
   nav.classList.add("hidden");
   const friends = await getFriends(currentLocalUser);
   const friendsList = await displayListOfFriends(friends);
-  pageName.innerHTML = "Invite Friends";
+  pageName.textContent = "Invite Friends";
   leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="circleBackButton"></img>`;
   rightHeaderButton.innerHTML = `<img src="/lightmode/next_button.svg" alt="Next Button" id="nextButton"></img>`;
 
@@ -219,7 +244,7 @@ async function displayCreateCirclePreview() {
       <img src="/lightmode/back_button.svg" alt="Back Button" id="circlePreviewBackButton"></img>
       `;
 
-  pageName.innerHTML = "New Circle";
+  pageName.textContent = "New Circle";
 
   const next = document.querySelector("#nextButton");
   next.id = "createCircleButton";
@@ -306,7 +331,7 @@ async function displayCreateCirclePreview() {
 }
 
 async function displayExplore() {
-  pageName.innerHTML = "Explore";
+  pageName.textContent = "Explore";
   leftHeaderButton.innerHTML = "";
   rightHeaderButton.innerHTML = `<img src="/lightmode/map_icon.svg" alt="Map Icon"</img>`;
   pageContent.innerHTML = `
@@ -318,7 +343,7 @@ async function displayExplore() {
 }
 
 async function displaySearch() {
-  pageName.innerHTML = "Search";
+  pageName.textContent = "Search";
   rightHeaderButton.innerHTML = "";
   leftHeaderButton.innerHTML = "";
   pageContent.innerHTML = `
@@ -387,21 +412,21 @@ function displayUserSearch(listOfUsers) {
     if (user.username === currentLocalUser) {
       return;
     }
-    let followStatus = "Add Friend";
+    let friendStatus = "Add Friend";
     for (let friend of user.friendOf) {
       if (friend.friend_1_name === currentLocalUser) {
         method = "Remove Friend";
-        followStatus = "Remove Friend";
+        friendStatus = "Remove Friend";
       }
     }
     for (let request of user.requestReceived) {
       if (request.requester.username === currentLocalUser) {
-        followStatus = "Remove Request";
+        friendStatus = "Remove Request";
       }
     }
     for (let request of user.requestsSent) {
       if (request.requestee.username === currentLocalUser) {
-        followStatus = "Accept Request";
+        friendStatus = "Accept Request";
       }
     }
       let username = document.createElement("h2")
@@ -416,7 +441,7 @@ function displayUserSearch(listOfUsers) {
       </div>
       <div class="flex-none w-58">
         <form>
-          <button name="${user.username}" method="${followStatus}" class="cursor-pointer">${followStatus}</button>
+          <button name="${user.username}" method="${friendStatus}" class="">${friendStatus}</button>
         </form>
       </div>
     </div>`;
@@ -425,7 +450,7 @@ function displayUserSearch(listOfUsers) {
 }
 
 async function displayActivity() {
-  pageName.innerHTML = "Activity";
+  pageName.textContent = "Activity";
   rightHeaderButton.innerHTML = "";
   leftHeaderButton.innerHTML = "";
   const { friendRequests, circleInvites } = await getActivites(
@@ -560,9 +585,14 @@ async function displayProfile(userData) {
       </div>
 
       <div class="grid grid-rows-2 gap-0 justify-center">
-      <h2 class="text-base font-bold text-center" id="friendCounter">${userData._count.friends}</h2>
-      <h2 class="text-secondary text-center">Friends</h2>
+        <div id="friends">
+          <h2 class="text-base font-bold text-center" id="friendCounter">${userData._count.friends}</h2>
+          <h2 class="text-secondary text-center">Friends</h2>
+        </div>
       </div>
+      </div>
+    <div class="flex justify-center">
+      <button class="w-110 h-38 rounded-input-box bg-light-mode-accent text-white">Add friend</button>
     </div>
     <div id="profileTabs" class="w-full justify-center">
       <ul class="flex flex-row w-full justify-center gap-x-38 -mb-px text-sm font-medium text-center text-dark-grey">
@@ -604,6 +634,7 @@ async function displayProfile(userData) {
     const settings = event.target.closest("#settings");
     const like = event.target.closest("#like");
     const comment = event.target.closest("#comment");
+    const friends = event.target.closest("#friends");
 
     if (albumTab) {
       if (albumList.classList.contains("hidden")){
@@ -629,8 +660,11 @@ async function displayProfile(userData) {
       albumTabLink.querySelector("svg path").setAttribute('fill', '#737373');
     }
 
+    if (friends) {
+      console.log("friends");
+    }
+
     if (like) {
-      
       if (like.classList.contains("liked")) {
         console.log("unliked");
         like.classList.remove("liked");
@@ -688,7 +722,7 @@ async function displayListOfCircles(data) {
   }
   
   async function displayCreateAlbum() {
-    pageName.innerHTML = `New Album`;
+    pageName.textContent = `New Album`;
   
     leftHeaderButton.innerHTML = `
       <img src="/lightmode/close_icon.svg" alt="Close Button" id="closeButton"></img>
@@ -921,7 +955,7 @@ async function displayAlbumConfirmation() {
 
   leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="albumConfirmationBackButton"></img>`;
 
-  pageName.innerHTML = "Post";
+  pageName.textContent = "Post";
 
   rightHeaderButton.innerHTML = `<img src="/lightmode/create_button.svg" alt="Create Button" id="createAlbum"></img>`;
 

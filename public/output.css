@@ -1437,6 +1437,10 @@ input:checked + .toggle-bg {
   margin-left: 2rem;
 }
 
+.ml-auto {
+  margin-left: auto;
+}
+
 .mr-0 {
   margin-right: 0px;
 }
@@ -1511,10 +1515,6 @@ input:checked + .toggle-bg {
 
 .mt-header {
   margin-top: 105px;
-}
-
-.ml-auto {
-  margin-left: auto;
 }
 
 .block {
@@ -1639,6 +1639,10 @@ input:checked + .toggle-bg {
   height: 100vh;
 }
 
+.h-38 {
+  height: 38px;
+}
+
 .max-h-56 {
   max-height: 14rem;
 }
@@ -1665,6 +1669,10 @@ input:checked + .toggle-bg {
 
 .w-16 {
   width: 4rem;
+}
+
+.w-166 {
+  width: 166px;
 }
 
 .w-180 {
@@ -1745,10 +1753,6 @@ input:checked + .toggle-bg {
 
 .w-screen {
   width: 100vw;
-}
-
-.w-166 {
-  width: 166px;
 }
 
 .min-w-\[50px\] {
