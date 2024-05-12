@@ -58,7 +58,7 @@ class CircleController implements IController {
 
         res.status(200).json({ success: true, data: newCircle.id });
     } catch (err) {
-        //throw err;
+        res.status(200).json({success: true, data: null, error:err})
     }
   }
 

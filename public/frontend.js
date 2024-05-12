@@ -124,10 +124,14 @@ header.addEventListener("click", async (event) => {
   }
 
   if (createCircleButton) {
-    const { success, data } = await handleCreateCircle();
-    const circleId = data;
-    console.log(circleId)
+    const { success, data, error} = await handleCreateCircle();
+    if (error) {
+      //DO SOMETHING
+      console.log(error)
+    }
     if (success && data) {
+      const circleId = data;
+      console.log(circleId)
       for (let friend of checkedFriends) {
         console.log(circleId)
         console.log("FRIEND", friend);
@@ -138,8 +142,8 @@ header.addEventListener("click", async (event) => {
       if (success && data) {
         await displayCircle(data);
       }
+      nav.classList.remove("hidden");
     }
-    nav.classList.remove("hidden");
     return;
   }
 

@@ -4,7 +4,7 @@ async function handleCreateCircle() {
     const circleName = document.querySelector("#circleName").value;
 
     if (!circleName) {
-      return { success: true, data: null };
+      return { success: true, data: null, error: "Missing circle name"};
     }
 
     const formData = new FormData();
