@@ -645,7 +645,7 @@ function displayUserSearch(listOfUsers) {
     username.className="font-light text-14 text-dark-grey"
     displayName.textContent= user.displayName ? user.displayName : user.username;
     username.textContent=`@${user.username}`
-    return `<div class="flex items-center my-5">
+    return `<div class="flex items-center my-3">
       <div class="flex-none w-58">
         <img class="rounded-full w-58 h-58 object-cover" src="${user.profilePicture}" alt="${user.username}'s profile picture"></img>
       </div>
