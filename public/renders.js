@@ -1723,9 +1723,16 @@ async function displayComments() {
   closeModalButton.classList.remove("hidden");
   const modalContent = document.querySelector("#modalContent");
   modalContent.innerHTML = `
-  <div class="flex space-x-6 justify-center text-black">
+  <div class="flex flex-col w-full justify-center mx-auto text-black">
     <div>
       <h1 class="font-semibold text-23">Comments</p>
+    </div>
+    <div class="albumComments">
+    </div>
+    <div class="w-full">
+      <form>
+        <input for="newComment" class="w-input-box rounded-input-box border-2" placeholder="enter a commment">
+      </form>
     </div>
   </div>`;
 }
