@@ -4,6 +4,9 @@ import { IAuthenticationService } from "../services/IAuthentication.service";
 import passport from "passport";
 import path from "node:path";
 import { User } from "@prisma/client";
+import { kindeClient, sessionManager } from "../config/kinde";
+import { SessionManager } from "@kinde-oss/kinde-typescript-sdk";
+
 
 class AuthenticationController implements IController {
   public path = "/auth";
@@ -15,34 +18,48 @@ class AuthenticationController implements IController {
   }
   private initializeRoutes() {
     this.router.get(`${this.path}/getSession`, this.getSession)
-    this.router.get(`${this.path}/register`, this.showRegistrationPage);
     this.router.post(`${this.path}/register`, this.registration);
-    this.router.get(`${this.path}/login`, this.showLoginPage);
     this.router.post(`${this.path}/local`, this.local)
-    this.router.get(`${this.path}/logout`, this.logout);
+    this.router.get(`${this.path}/login`, this.login);
+    this.router.get(`${this.path}/register`, this.register);
     this.router.get(`${this.path}/facebook`, this.facebook)
     this.router.get(`${this.path}/facebook/callback`, this.facebookCb);
     this.router.get(`${this.path}/google`, this.google);
     this.router.get(`${this.path}/google/callback`, this.googleCb)
+    this.router.get(`${this.path}/callback`, this.callback)
+    this.router.get(`${this.path}/logout`, this.logout)
   }
 
-  private getSession = (req:Request, res:Response) => {
-    if(req.user) {  
+  private login = async (req:Request, res:Response) => {
+    const loginUrl = await kindeClient.login(sessionManager(req, res));
+    return res.redirect(loginUrl.toString());
+  }
+
+  private register = async (req:Request, res:Response) => {
+    const registerUrl = await kindeClient.register(sessionManager(req, res));
+    return res.redirect(registerUrl.toString());
+  }
+
+  private callback = async (req:Request, res:Response) => {
+    const url = new URL(`${req.protocol}://${req.get("host")}${req.url}`);
+    await kindeClient.handleRedirectToApp(sessionManager(req, res), url);
+    return res.redirect("/");
+  }
+
+  private logout = async (req:Request, res:Response) => {
+      const logoutUrl = await kindeClient.logout(sessionManager(req, res));
+      return res.redirect(logoutUrl.toString());
+  }
+
+  private getSession = async (req:Request, res:Response) => {
+    try {
+      console.log(await kindeClient.getUser(sessionManager(req, res)))
+      // make this return the user family name igven name picture email id whatvere u want or make user make a new name.
       res.json({success: true, username: req.user!.username})
-      return
-    } 
-    res.json({success: false, errorMessage: "Not logged in"})
-
+    } catch (error) {
+      res.json({success: false, errorMessage: "Not logged in"})
+    }
   }
-
-  private showLoginPage = (_: express.Request, res: express.Response) => {
-    // if(res.locals.currentUser) {
-    //   console.log("hello")
-    //   res.redirect("/") // post
-    //   return
-    // }
-    res.render(path.join(__dirname, "../views/login"));
-  };
 
   private local = (req: express.Request, res:express.Response, next:express.NextFunction) => {
     passport.authenticate('local', function(err:any, user:any, info:any) {
@@ -57,14 +74,6 @@ class AuthenticationController implements IController {
       })
     })(req, res, next)
   }
-
-  private showRegistrationPage = (_: express.Request, res: express.Response) => {
-    if(res.locals.currentUser) {  
-      res.redirect("/") // post
-      return
-    } 
-    res.render(path.join(__dirname, "../views/register"));
-  };
 
   private registration = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const userProfile = req.body;
@@ -87,12 +96,6 @@ class AuthenticationController implements IController {
     }
   };
   
-  private logout = async (req: express.Request, res: express.Response) => {
-    req.logout((err) => {
-      if (err) console.log(err);
-    });
-    res.redirect("/")
-  };
 
   private facebook = passport.authenticate("facebook")
 

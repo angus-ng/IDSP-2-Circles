@@ -3,6 +3,8 @@ import path from "path";
 import session, { MemoryStore } from "express-session";
 import morgan from "morgan";
 import Redis from "ioredis";
+import cookieParser from 'cookie-parser'
+
 const RedisStore = require("connect-redis").default
 
 module.exports = (app : Application) => {
@@ -10,6 +12,7 @@ module.exports = (app : Application) => {
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
   app.use(morgan("tiny"));
+  app.use(cookieParser())
   if (process.env.NODE_ENV === "production") {
     const redisClient = new Redis({
       port: Number(process.env.REDIS_PORT),
