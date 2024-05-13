@@ -124,6 +124,7 @@ header.addEventListener("click", async (event) => {
   }
 
   if (createCircleButton) {
+    isPrivacyPublic = document.querySelector("#privacyCheckbox").checked;
     const { success, data, error} = await handleCreateCircle();
     if (error) {
       if (error === "Missing circle name") {

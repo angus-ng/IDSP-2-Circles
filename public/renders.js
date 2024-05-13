@@ -1393,23 +1393,19 @@ async function displayCircle(circleData) {
     pageContent.innerHTML = `
     <div class="w-full px-0 mx-0">
       <div class="flex justify-center mt-6 mb-1.5">
-        <img src="${
-          circleData.circle.picture
-        }" class="rounded-full w-180 h-180 object-cover"/></img>
+        <img src="${circleData.circle.picture}" class="rounded-full w-180 h-180 object-cover"/></img>
       </div>
       <div class="mb-3">
         <p class="text-center text-20 font-bold">${circleName.outerHTML}</p>
       </div>
       <div class="grid grid-cols-1 place-items-center">
         <label class="inline-flex items-center cursor-pointer">
-            <img id="privacyIcon" src="/lightmode/lock_icon.svg" alt="Lock icon" class="mr-4">
-            <span id="privacyLabel" class="text-sm font-medium leading-body text-14 mr-4 w-12">Private</span>
+            <img id="privacyIcon" src="${circleData.circle.isPublic ? "/lightmode/globe_icon.svg": "/lightmode/lock_icon.svg"}" alt="Lock icon" class="mr-4">
+            <span id="privacyLabel" class="text-sm font-medium leading-body text-14 mr-4 w-12">${circleData.circle.isPublic ? "Public" : "Private"}</span>
         </label>
       </div>
       <div class="grid grid-cols-5 place-items-center mt-12 mb-2">
-        <p class="grid-span-1 text-base font-medium">${
-          circleData.members.length
-        } Friends</p>
+        <p class="grid-span-1 text-base font-medium">${circleData.members.length} Friends</p>
       </div>
       <div class="flex gap-2">
         ${memberList.join("")}
