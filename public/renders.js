@@ -1495,8 +1495,19 @@ async function displayAlbum(albumData) {
     rightHeaderButton.innerHTML = ``;
   
     pageName.textContent = `${albumData.name}`;
-  
-    const memberList = albumData.circle.UserCircle.map((obj) => {
+    let createdAndMore = false;
+    const memberList = albumData.circle.UserCircle.map((obj, index) => {
+      console.log(index)
+      if (index > 2) {
+        if (createdAndMore){
+          return
+        }
+        const count = albumData.circle.UserCircle.length - 3;
+        const andMore = `<div class="w-16 h-16 rounded-full border-2 flex justify-center items-center bg-dark-grey">
+        <p class="text-secondary text-white font-bold">+${count}</p>
+      </div>`
+      return andMore;
+      }
       return `<img src="${obj.user.profilePicture}" class="w-16 h-16 rounded-full object-cover"></img>`;
     });
     const photoList = albumData.photos.map((obj) => {
