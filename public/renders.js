@@ -1400,9 +1400,7 @@ async function displayCircle(circleData) {
     pageContent.innerHTML = `
     <div class="w-full px-0 mx-0">
       <div class="flex justify-center mt-6 mb-1.5">
-        <img src="${
-          circleData.circle.picture
-        }" class="rounded-full w-180 h-180 object-cover"/>
+        <img src="${circleData.circle.picture}" class="rounded-full w-180 h-180 object-cover"/>
       </div>
       <div class="mb-3">
         <p class="text-center text-20 font-bold">${circleName.outerHTML}</p>
@@ -1414,9 +1412,7 @@ async function displayCircle(circleData) {
         </label>
       </div>
       <div class="grid grid-cols-5 place-items-center mt-12 mb-2">
-        <p class="grid-span-1 text-base font-medium">${
-          circleData.members.length
-        } Friends</p>
+        <p class="grid-span-1 text-base font-medium">${circleData.members.length} Friends</p>
       </div>
       <div class="flex gap-2">
         ${memberList.join("")}
