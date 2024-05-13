@@ -1554,6 +1554,10 @@ input:checked + .toggle-bg {
   margin-top: 105px;
 }
 
+.mt-1 {
+  margin-top: 0.25rem;
+}
+
 .block {
   display: block;
 }
@@ -1708,6 +1712,10 @@ input:checked + .toggle-bg {
   height: 100vh;
 }
 
+.h-270 {
+  height: 270px;
+}
+
 .max-h-56 {
   max-height: 14rem;
 }
@@ -1762,6 +1770,10 @@ input:checked + .toggle-bg {
 
 .w-3 {
   width: 0.75rem;
+}
+
+.w-312 {
+  width: 312px;
 }
 
 .w-380 {

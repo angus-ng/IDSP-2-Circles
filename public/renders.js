@@ -2,54 +2,56 @@ function displayLoginPage() {
   pageContent.innerHTML = `
     <div id="loginPage" class="flex flex-col items-center rounded-lg w-full z-10">
       <div class="flex-shrink-0 mt-2 mb-6">
-          <img src="/lightmode/logo_with_wordmark.svg" alt="Logo with Wordmark">  
+          <img src="/lightmode/logo_with_wordmark.svg" alt="Logo with Wordmark"/>  
       </div>
       <div class="flex-1">
-              <div class="flex items-center mt-6 mb-6">
-                  <label for="login" class=""></label>
-                  <input type="text" placeholder="Phone number, email, or username" id="emailInput" name="emailInput" class="rounded-input-box w-input-box border-dark-grey border-2 text-17 items-end">
-              </div>
-              <div class="flex items-center mt-4 mb-6">
-                  <label for="password" class=""></label>
-                  <input type="password" placeholder="Password" id="passwordInput" name="passwordInput" class="rounded-input-box w-input-box text-17 border-dark-grey border-2 items-end">
-              </div>
-              <div class="flex items-center mt-4 mb-6">
-                  <div class="grid grid-cols-2 w-full">
-                      <div class="col-start-0">
-                          <input type="checkbox" name="rememberMe" id="rememberMe" class="size-5">
-                          <label for="rememberMe" class="ml-2 text-secondary">Remember Me</label>
-                      </div>
-                      <div class="justify-self-end">
-                          <a class="text-secondary leading-secondary text-light-mode-accent text-decoration-line: underline cursor-pointer">Forgot Password?</a>
-                      </div>
-                  </div>
-              </div>
-                  <button id="localAuth" class="my-2 w-full">
-                      <img src="/lightmode/login_button.svg" alt="Login Button">
-                  </button>
-              </div>
-              <div id="divider" class="my-6">
-                  <img src="/lightmode/orDivider.svg" alt="Divider">
-              </div>
-              <div class="flex items-center justify-between mt-4">
-                  <div class="grid grid-cols-2 gap-2.5">
-                      <form action="/auth/google">
-                          <button>
-                              <img src="/lightmode/google_icon.svg" alt="Google Icon">
-                          </button>
-                      </form>
-                      <form action="/auth/facebook">
-                          <button id="facebookAuth">
-                              <img src="/lightmode/facebook_icon.svg" alt="Facebook Icon">
-                          </button>
-                      </form>
-                  </div>
-              </div>
-          <div class="flex items-center justify-between mt-6 gap-1">
-              <p class="text-secondary leading-secondary">Don't have an account?</p>
-              <a id="signUp" class="text-secondary leading-secondary text-light-mode-accent text-decoration-line: underline cursor-pointer">Sign up</a>
+        <form>
+          <div class="flex items-center mt-6 mb-6">
+              <label for="login" class=""></label>
+              <input type="text" placeholder="Phone number, email, or username" id="emailInput" name="emailInput" class="rounded-input-box w-input-box border-dark-grey border-2 text-17 items-end">
           </div>
+          <div class="flex items-center mt-4 mb-6">
+              <label for="password" class=""></label>
+              <input type="password" placeholder="Password" id="passwordInput" name="passwordInput" class="rounded-input-box w-input-box text-17 border-dark-grey border-2 items-end">
+          </div>
+        </form>
+          <div class="flex items-center mt-4 mb-6">
+              <div class="grid grid-cols-2 w-full">
+                  <div class="col-start-0">
+                      <input type="checkbox" name="rememberMe" id="rememberMe" class="size-5">
+                      <label for="rememberMe" class="ml-2 text-secondary">Remember Me</label>
+                  </div>
+                  <div class="justify-self-end">
+                      <a class="text-secondary leading-secondary text-light-mode-accent text-decoration-line: underline cursor-pointer">Forgot Password?</a>
+                  </div>
+              </div>
+          </div>
+              <button id="localAuth" class="my-2 w-full">
+                  <img src="/lightmode/login_button.svg" alt="Login Button"/>
+              </button>
+          </div>
+          <div id="divider" class="my-6">
+              <img src="/lightmode/orDivider.svg" alt="Divider"/>
+          </div>
+          <div class="flex items-center justify-between mt-4">
+              <div class="grid grid-cols-2 gap-2.5">
+                  <form action="/auth/google">
+                      <button>
+                          <img src="/lightmode/google_icon.svg" alt="Google Icon"/>
+                      </button>
+                  </form>
+                  <form action="/auth/facebook">
+                      <button id="facebookAuth">
+                          <img src="/lightmode/facebook_icon.svg" alt="Facebook Icon"/>
+                      </button>
+                  </form>
+              </div>
+          </div>
+      <div class="flex items-center justify-between mt-6 gap-1">
+          <p class="text-secondary leading-secondary">Don't have an account?</p>
+          <a id="signUp" class="text-secondary leading-secondary text-light-mode-accent text-decoration-line: underline cursor-pointer">Sign up</a>
       </div>
+    </div>
   </div>`;
 
   const loginPage = document.querySelector("#loginPage");
@@ -66,7 +68,7 @@ function displayLoginPage() {
 
 async function displaySignUpPage() {
   header.classList.remove("hidden");
-  leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button">`
+  leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button"/>`
   pageContent.innerHTML = `
   <div id="signUpPage" class="flex flex-col items-center rounded-lg w-full h-full z-10">
     <div id="signUpTitleSection" class="w-full mb-4 mt-6">
@@ -252,7 +254,7 @@ async function displaySignUpProfilePicturePage() {
   signUpTitle.textContent = "Add a profile picture";
   signUpSubtitle.textContent = "Add a profile picture so your friends know it’s you. Everyone will be able to see your picture.";
 
-  signUpPageContent.innerHTML = `<img src=/placeholder_image.svg alt="placeholder image">`;
+  signUpPageContent.innerHTML = `<img src=/placeholder_image.svg alt="placeholder image"/>`;
 
   signUpPageAdditionalContent.textContent = "";
 
@@ -278,7 +280,7 @@ async function displayProfileConfirmation() {
   signUpTitle.textContent = "Profile picture added";
   signUpSubtitle.textContent = "";
 
-  signUpPageContent.innerHTML = `<img src=/placeholder_image.svg alt="placeholder image">`;
+  signUpPageContent.innerHTML = `<img src=/placeholder_image.svg alt="placeholder image"/>`;
 
   signUpPageAdditionalContent.textContent = "";
 
@@ -292,14 +294,14 @@ async function displayCreateCircle() {
   nav.classList.add("hidden");
   pageName.textContent = `New Circle`;
 
-  leftHeaderButton.innerHTML = `<img id="backButton" src="/lightmode/back_button.svg" alt="Back Button">`
-  rightHeaderButton.innerHTML = `<img id="nextInviteFriends" src="/lightmode/next_button.svg" alt="Next Button">`;
+  leftHeaderButton.innerHTML = `<img id="backButton" src="/lightmode/back_button.svg" alt="Back Button"/>`
+  rightHeaderButton.innerHTML = `<img id="nextInviteFriends" src="/lightmode/next_button.svg" alt="Next Button"/>`;
 
   const pageContent = document.querySelector("#pageContent");
   pageContent.innerHTML = `
     <div id="createNewCircle" class="flex flex-col justify-center items-center p-4 bg-light-mode rounded-lg w-full overflow-hidden">
         <div class="shrink-0 mt-14 mb-6 justify-center">
-            <img id="circleImage" src="/placeholder_image.svg" alt="Placeholder Image" class="object-cover w-234 h-230 rounded-full cursor-pointer">                     
+            <img id="circleImage" src="/placeholder_image.svg" alt="Placeholder Image" class="object-cover w-234 h-230 rounded-full cursor-pointer"/>                     
         </div>
     
         <div class="flex-1 flex flex-col justify-between w-full px-4">
@@ -319,7 +321,7 @@ async function displayCreateCircle() {
           </div>
           <div class="flex flex-col">
           <div id="divider" class="my-4">
-              <img src="/lightmode/divider.svg" alt="Divider">                          
+              <img src="/lightmode/divider.svg" alt="Divider"/>                          
           </div>
             <input id="fileUpload" type="file" class="hidden" multiple=false />
             <div class="flex items-center justify-between mt-2 mb-2">
@@ -330,7 +332,7 @@ async function displayCreateCircle() {
               <div>
                 <label class="inline-flex items-center cursor-pointer">
                   <input id="privacyCheckbox" type="checkbox" value="" class="sr-only peer">
-                  <img id="privacyIcon" src="/lightmode/lock_icon.svg" alt="Lock icon" class="mr-4">
+                  <img id="privacyIcon" src="/lightmode/lock_icon.svg" alt="Lock icon" class="mr-4"/>
                   <span id="privacyLabel" class="text-sm font-medium leading-body text-14 mr-4 w-12">Private</span>
                   <div class="peer relative h-5 w-10 rounded-full outline outline-1 outline-black after:absolute after:start-[2px] after:top-0 after:h-4 after:w-4 after:rounded-full after:bg-black after:border after:border-black after:transition-all after:content-[''] peer-checked:bg-cover peer-checked:bg-black border-2 peer-checked:outline-black peer-checked:after:translate-x-5 peer-checked:after:border-white peer-checked:after:border-opacity-80 peer-checked:after:border-2 peer-checked:after:bg-black rtl:peer-checked:after:-translate-x-full"></div>
                 </label>
@@ -389,7 +391,7 @@ async function displayListOfFriends(friends) {
     username.textContent=`@${friend.username}`
     return `<div class="flex items-center my-5">
     <div class="flex-none w-58">
-      <img class="rounded w-58 h-58" src="${friend.profilePicture}" alt="${friend.username}'s profile picture"></img>
+      <img class="rounded w-58 h-58" src="${friend.profilePicture}" alt="${friend.username}'s profile picture"/>
     </div>
     <div class="ml-8 flex-none w-207">
       ${displayName.outerHTML}
@@ -410,8 +412,8 @@ async function displayInviteFriends() {
   const friends = await getFriends(currentLocalUser);
   const friendsList = await displayListOfFriends(friends);
   pageName.textContent = "Invite Friends";
-  leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="circleBackButton"></img>`;
-  rightHeaderButton.innerHTML = `<img src="/lightmode/next_button.svg" alt="Next Button" id="nextButton"></img>`;
+  leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="circleBackButton"/>`;
+  rightHeaderButton.innerHTML = `<img src="/lightmode/next_button.svg" alt="Next Button" id="nextButton"/>`;
 
   pageContent.innerHTML = `
       <div class="font-light text-11 justify-center text-center text-dark-grey w-full">
@@ -448,7 +450,7 @@ function saveCheckedFriends() {
 async function displayCreateCirclePreview() {
   nav.classList.add("hidden");
   leftHeaderButton.innerHTML = `
-      <img src="/lightmode/back_button.svg" alt="Back Button" id="circlePreviewBackButton"></img>
+      <img src="/lightmode/back_button.svg" alt="Back Button" id="circlePreviewBackButton"/>
       `;
 
   pageName.textContent = "New Circle";
@@ -460,7 +462,7 @@ async function displayCreateCirclePreview() {
   pageContent.innerHTML = `
       <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full">
             <div class="flex-shrink-0 mt-20 mb-4">
-                <img id="circleImage" src="/placeholder_image.svg" alt="Placeholder Image" class="object-cover w-234 h-230 rounded-full cursor-pointer">                     
+                <img id="circleImage" src="/placeholder_image.svg" alt="Placeholder Image" class="object-cover w-234 h-230 rounded-full cursor-pointer"/>                     
             </div>
             <div class="flex justify-center my-5 relative w-full">
                 <input
@@ -474,7 +476,7 @@ async function displayCreateCirclePreview() {
                 </button>
             </div>
             <div id="divider" class="mb-2">
-                <img src="/lightmode/divider.svg" alt="Divider">                          
+                <img src="/lightmode/divider.svg" alt="Divider"/>                          
             </div>
             <input id="fileUpload" type="file" class="hidden" multiple=false/>
             <div class="flex items-center justify-between w-full">
@@ -543,7 +545,7 @@ async function displayCreateCirclePreview() {
 async function displayExplore() {
   pageName.textContent = "Explore";
   leftHeaderButton.innerHTML = "";
-  rightHeaderButton.innerHTML = `<img src="/lightmode/map_icon.svg" alt="Map Icon"</img>`;
+  rightHeaderButton.innerHTML = `<img src="/lightmode/map_icon.svg" alt="Map Icon"/>`;
   pageContent.innerHTML = `
     <div id="explorePage" class="flex flex-col justify-center py-2 w-full h-screen">
     </div>
@@ -647,7 +649,7 @@ function displayUserSearch(listOfUsers) {
     username.textContent=`@${user.username}`
     return `<div class="flex items-center my-3">
       <div class="flex-none w-58">
-        <img class="rounded-full w-58 h-58 object-cover" src="${user.profilePicture}" alt="${user.username}'s profile picture"></img>
+        <img class="rounded-full w-58 h-58 object-cover" src="${user.profilePicture}" alt="${user.username}'s profile picture"/>
       </div>
       <div class="ml-8 flex-none w-207">
         ${displayName.outerHTML}
@@ -768,22 +770,27 @@ async function displayNavBar() {
   nav.classList.remove("hidden");
   nav.innerHTML = `<div class="border-b border-dark-grey"></div>
   
-      <footer class="w-full flex justify-between items-center pt-4 pb-5 px-6 bg-light-mode-bg">
+      <footer class="w-full flex justify-between items-center pt-4 pb-5 px-6 bg-light-mode-bg text-grey text-13">
           
-          <a href="" id="explore" class="flex flex-col items-center">        
-              <img src="/lightmode/explore_icon.svg" alt="Explore Icon">             
+          <a id="explore" class="flex flex-col items-center">        
+              <img src="/lightmode/explore_icon.svg" alt="Explore Icon">
+              <p class="mt-1">explore</p>
           </a>
-          <a href="" id="search" class="flex flex-col items-center">
-              <img src="/lightmode/search_icon.svg" alt="Search Icon">   
+          <a id="search" class="flex flex-col items-center">
+              <img src="/lightmode/search_icon.svg" alt="Search Icon">
+              <p class="mt-1">search</p>
           </a>
-          <a href="" id="new" class="flex flex-col items-center">
-              <img src="/lightmode/new_icon.svg" alt="New Icon">   
+          <a id="new" class="flex flex-col items-center">
+              <img src="/lightmode/new_icon.svg" alt="New Icon">
+              <p class="mt-1">new</p>
           </a>
-          <a href="" id="activity" class="flex flex-col items-center">
-              <img src="/lightmode/activity_icon.svg" alt="Activity Icon">           
+          <a id="activity" class="flex flex-col items-center">
+              <img src="/lightmode/activity_icon.svg" alt="Activity Icon">
+              <p class="mt-1">activity</p>         
           </a>
-          <a href="" id="profile" class="flex flex-col items-center">
+          <a id="profile" class="flex flex-col items-center">
               <img src="/lightmode/profile_icon.svg" alt="Profile Icon">
+              <p class="mt-1">profile</p>
           </a>
       </footer>`;
     const navBar = document.querySelector("footer");
@@ -845,7 +852,7 @@ async function displayProfile(userData) {
       <img src="/lightmode/settings_icon.svg">
     </div>
     <div class="flex justify-center mb-4">
-      <img id="profilePicture" src="${userData.profilePicture}" class="w-110 h-110 object-cover rounded-full"></img>
+      <img id="profilePicture" src="${userData.profilePicture}" class="w-110 h-110 object-cover rounded-full"/>
     </div>
     <div class="flex justify-center mt-2">
       ${username.outerHTML}
@@ -987,7 +994,7 @@ async function displayListOfCircles(data) {
     return `
       <div id="${obj.circle.id}" class="circle">
         <div class="flex justify-center">
-          <img src="${obj.circle.picture}" class="rounded-full w-100 h-100 object-cover cursor-pointer border-circle border-black"/></img>
+          <img src="${obj.circle.picture}" class="rounded-full w-100 h-100 object-cover cursor-pointer border-circle border-black"/>
         </div>
         ${circleName.outerHTML}
       </div>`;
@@ -1228,11 +1235,11 @@ async function displayAlbumConfirmation() {
   nav.classList.add("hidden");
   console.log(albumObj);
 
-  leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="albumConfirmationBackButton"></img>`;
+  leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="albumConfirmationBackButton"/>`;
 
   pageName.textContent = "Post";
 
-  rightHeaderButton.innerHTML = `<img src="/lightmode/create_button.svg" alt="Create Button" id="createAlbum"></img>`;
+  rightHeaderButton.innerHTML = `<img src="/lightmode/create_button.svg" alt="Create Button" id="createAlbum"/>`;
 
   const carouselDiv = document.createElement("div");
   carouselDiv.id = "carousel";
@@ -1264,7 +1271,7 @@ async function displayAlbumConfirmation() {
           </div>
         </div>
         <div id="albumCircle"class="flex flex-row justify-center items-center ml-4 w-full">
-          <img id="circleImage" class="w-62 h-62 rounded-full" src="/placeholder_image.svg"></img>
+          <img id="circleImage" class="w-62 h-62 rounded-full" src="/placeholder_image.svg"/>
           <div class="flex flex-col ml-4">
             <h2 id="circleName" class="text-20 font-medium mr-2.5"></h2>
             <button id="editButton">
@@ -1364,12 +1371,12 @@ async function displayAlbumConfirmation() {
 
 async function displayCircle(circleData) {
   leftHeaderButton.innerHTML = `
-    <img src="/lightmode/back_button.svg" alt="Back Button" id="backButton"></img>
+    <img src="/lightmode/back_button.svg" alt="Back Button" id="backButton"/>
     `;
     rightHeaderButton.innerHTML = "";
     pageName.textContent = "";
     const memberList = circleData.members.map((obj) => {
-      return `<img src="${obj.user.profilePicture}" class="w-42 h-42 rounded-full object-cover"></img>`;
+      return `<img src="${obj.user.profilePicture}" class="w-42 h-42 rounded-full object-cover"/>`;
     });
     const albumList = circleData.circle.albums.map((obj) => {
       let albumName = document.createElement('p')
@@ -1382,8 +1389,8 @@ async function displayCircle(circleData) {
           ${albumName.outerHTML}
         </div>
         <div class="absolute inset-0 flex items-end justify-end gap-1 p-2">
-          <img src="/like_icon.svg" alt="Like Icon"></img>
-          <img src="/comment_icon.svg" alt="Comment Icon"></img>
+          <img src="/like_icon.svg" alt="Like Icon">
+          <img src="/comment_icon.svg" alt="Comment Icon">
         </div>
       </div>`;
     });
@@ -1395,7 +1402,7 @@ async function displayCircle(circleData) {
       <div class="flex justify-center mt-6 mb-1.5">
         <img src="${
           circleData.circle.picture
-        }" class="rounded-full w-180 h-180 object-cover"/></img>
+        }" class="rounded-full w-180 h-180 object-cover"/>
       </div>
       <div class="mb-3">
         <p class="text-center text-20 font-bold">${circleName.outerHTML}</p>
@@ -1441,7 +1448,7 @@ async function displayCircle(circleData) {
 
 async function displayCircleInvites() {
   pageName.textContent = "Circle Invites";
-  leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="toActivity"></img>`;
+  leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="toActivity">`;
   const { circleInvites } = await getActivities(currentLocalUser);
     let circleInviteList = circleInvites.map((invite) => {
       let circleName = document.createElement("h2")
@@ -1450,7 +1457,7 @@ async function displayCircleInvites() {
       return `
       <div class="flex items-center my-3">
         <div class="flex-none w-58">
-          <img class="rounded-input-box w-58 h-58" src="${invite.circle.picture}" alt="${invite.circle.name}'s picture"></img>
+          <img class="rounded-input-box w-58 h-58" src="${invite.circle.picture}" alt="${invite.circle.name}'s picture">
         </div>
         <div class="ml-8 flex-none w-110">
           ${circleName.outerHTML}
@@ -1489,10 +1496,10 @@ async function displayCircleInvites() {
 async function displayAlbum(albumData) {
     leftHeaderButton.innerHTML = `
     <span id="${albumData.circle.id}">
-    <img src="/lightmode/back_button.svg" alt="Back Button" id="backButtonAlbum"></img>
+    <img src="/lightmode/back_button.svg" alt="Back Button" id="backButtonAlbum">
     </span
     `;
-    rightHeaderButton.innerHTML = ``;
+    rightHeaderButton.innerHTML = `<img src="/lightmode/share_icon.svg" alt="Back Button" id="backButtonAlbum">`;
     pageName.textContent = `${albumData.name}`;
 
   const memberList = [];
@@ -1505,7 +1512,7 @@ async function displayAlbum(albumData) {
       memberList.push(andMore);
       break;
       }
-      memberList.push(`<img id="user${i+1}" src="${albumData.circle.UserCircle[i].user.profilePicture}" class="grid-item rounded-full object-cover"></img>`);
+      memberList.push(`<img id="user${i+1}" src="${albumData.circle.UserCircle[i].user.profilePicture}" class="grid-item rounded-full object-cover">`);
     }
 
     console.log(memberList);
@@ -1515,7 +1522,7 @@ async function displayAlbum(albumData) {
     </div>`;
     });
     let circleName = document.createElement("h2");
-    circleName.className = "flex justify-center font-medium text-lg"
+    circleName.className = "flex justify-center font-medium text-lg";
     circleName.textContent = albumData.circle.name;
     pageContent.innerHTML = `
       <div id="albumPhotos">
@@ -1537,6 +1544,7 @@ async function displayAlbum(albumData) {
         </div>
     </div>`;
 
+  // album user display layout
   const user1 = document.querySelector("#user1");
   user1.classList.add("h-82", "w-82", "row-span-2", "col-start-2");
   const user2 = document.querySelector("#user2");
@@ -1547,7 +1555,6 @@ async function displayAlbum(albumData) {
   user4.classList.add("h-5", "w-5", "col-start-1", "row-start-2", "justify-self-end");
 
   const albumPhotos = document.querySelector("#albumPhotos");
-  console.log("THIS", albumPhotos);
   albumPhotos.addEventListener("click", async (event) => {
     const photo = event.target.closest("#photo img");
     const overlay = event.target.closest("#photoOverlay");
@@ -1569,7 +1576,7 @@ async function displayAlbum(albumData) {
 
 async function displayFriendRequests() {
   pageName.textContent = "Friend Requests";
-  leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="toActivity"></img>`;
+  leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="toActivity"/>`;
   const { friendRequests } = await getActivities(currentLocalUser);
 
     let friendRequestsList = friendRequests.map((request) => {
@@ -1581,7 +1588,7 @@ async function displayFriendRequests() {
       return `
       <div class="flex items-center my-5">
       <div class="flex-none w-58">
-        <img class="rounded-full w-58 h-58" src="${request.requester.profilePicture}" alt="${request.requester.username}'s profile picture"></img>
+        <img class="rounded-full w-58 h-58" src="${request.requester.profilePicture}" alt="${request.requester.username}'s profile picture"/>
       </div>
       <div class="ml-8 flex-none w-110 grid grid-rows-2">
         <div>
@@ -1696,4 +1703,23 @@ async function displayPopup(activity) {
     popup.classList.remove("opacity-0", "duration-1000");
     popup.classList.add("hidden");
   }
+}
+
+async function displayConfirmationPopup(activity) {
+  const confirmationText = document.querySelector("#confirmationText");
+  confirmationText.textContent = `${activity}`;
+  const confirmationPopup = document.querySelector("#confirmationPopup");
+  confirmationPopup.classList.remove("hidden");
+
+  confirmationPopup.addEventListener("click", () => {
+    const cancelButton = event.target.closest("#cancelButton");
+    const contextButton = event.target.closest("#contextButton");
+    if (cancelButton) {
+      confirmationPopup.classList.add("hidden");
+    }
+
+    if (contextButton) {
+      console.log("do something");
+    }
+  });
 }
