@@ -19,7 +19,7 @@ export class UserService implements IUserService {
         if (exists) {
           return;
         }
-        
+
         const friendRequest = await this._db.prisma.friendRequest.findUnique({
             where: {
               requesterName_requesteeName: {
@@ -112,7 +112,13 @@ export class UserService implements IUserService {
           requesteeName: username,
           status: false
         }, include: {
-          requester: {}
+          requester: {
+            select: {
+              displayName: true,
+              username: true,
+              profilePicture: true
+            }
+          }
         }
       })
       const circleInvites = await this._db.prisma.circleInvite.findMany({
@@ -217,23 +223,34 @@ export class UserService implements IUserService {
       throw new Error(error)
     }
   }
-  async search(input: string, currentUser: string): Promise<User[]> {
+  async search(input: string, currentUser: string): Promise<any> {
     try {
       const userSearchResults = await this._db.prisma.user.findMany({
+        select: {
+          username: true,
+          profilePicture: true,
+          displayName: true,
+            friendOf: {},
+            friends: {},
+            requestReceived: {
+              include:{requester:{}},
+              where:{requesterName:currentUser}
+            },
+            requestsSent: {
+              include:{requestee:{}},
+              where:{requesteeName:currentUser}
+            }
+        },
         where:{
-          username: {
-            contains: input
-          },
-        }, include: {
-          friendOf: {},
-          friends: {},
-          requestReceived: {
-            include:{requester:{}}
-          },
-          requestsSent: {
-            include:{requestee:{}}
-          }
-        }
+          OR : [
+            {
+              username: {contains: input}
+            },
+            {
+              displayName: {contains: input}
+            }
+          ]
+        }, 
       })
       return userSearchResults
       //return users
@@ -247,6 +264,7 @@ export class UserService implements IUserService {
       const userInfo = await this._db.prisma.user.findUnique({
         select: {
           username: true,
+          displayName: true,
           profilePicture: true,
           _count: {
             select: {
@@ -265,7 +283,16 @@ export class UserService implements IUserService {
               }
             }
           },
-          Album: true
+          Album: {
+            include: {
+              photos: true,
+              circle: {
+                select: { 
+                  picture: true
+                }
+              }
+            }
+          }
         },
         where: {
           username: username

@@ -4,7 +4,7 @@ async function handleCreateCircle() {
     const circleName = document.querySelector("#circleName").value;
 
     if (!circleName) {
-      return { success: true, data: null };
+      return { success: true, data: null, error: "Missing circle name"};
     }
 
     const formData = new FormData();
@@ -128,7 +128,7 @@ async function getAlbum(albumId) {
 async function handleCreateAlbum(albumObj) {
   try {
     if (!albumObj.name) {
-      return { success: true, data: null };
+      return { success: true, data: null, error: "Missing album name" };
     }
     console.log(albumObj);
     let response = await fetch("/album/create", {
@@ -153,7 +153,7 @@ async function getFriends() {
   return responseJson.data;
 }
 
-async function getActivites() {
+async function getActivities() {
   const response = await fetch(`/user/getActivities/`);
   const responseJson = await response.json();
   return responseJson.data;
@@ -166,6 +166,27 @@ async function acceptCircleInvite(id, invitee) {
       invitee: invitee,
     };
     const response = await fetch("/circle/accept", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(inviteObj),
+    });
+
+    const jsonResponse = await response.json();
+    return jsonResponse;
+  } catch (err) {
+    return { success: true, data: null, error: err };
+  }
+}
+
+async function declineCircleInvite(id, invitee) {
+  try {
+    const inviteObj = {
+      id: id,
+      invitee: invitee,
+    };
+    const response = await fetch("/circle/decline", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -270,11 +291,13 @@ async function getSearchResult(input) {
       const response = await fetch(`/user/searchAll`);
 
       const jsonResponse = await response.json();
+      console.log(jsonResponse)
       return jsonResponse;
     }
     const response = await fetch(`/user/search/${input.trim()}/`);
 
     const jsonResponse = await response.json();
+    console.log(jsonResponse)
     return jsonResponse;
   } catch (err) {
     return { success: true, data: null, error: err };

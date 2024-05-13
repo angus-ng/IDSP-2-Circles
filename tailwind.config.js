@@ -1,9 +1,11 @@
 /** @type {import('tailwindcss').Config} */
+const plugin = require('tailwindcss/plugin')
 module.exports = {
   mode: "jit",
   content: [
     "./public/*.html",
     "./public/*.js",
+    "./node_modules/flowbite/**/*.js"
 ],
 theme: {
   fontFamily: {
@@ -25,9 +27,13 @@ theme: {
       'light-grey': '#D9D9D9',
       'medium-grey': '#565656',
       'dark-grey': '#737373',
-      'text-grey': '#484848'
+      'text-grey': '#484848',
+      'like': '#FF4646',
+      'onboarding-grey': 'rgba(14, 14, 14, 0.75)',
+      'success': '#14AA3E'
     },
     fontSize: {
+      'onboarding': '36px',
       'h1': '29px',
       'h2': '22px',
       'body': '17px',
@@ -62,7 +68,10 @@ theme: {
       '180': '180px',
       '42': '42px',
       '58': '58px',
-      '62': '62px'
+      '62': '62px',
+      'popup': '398px',
+      'request': '78px',
+      '166': '166px'
     },
     height: {
       '932': '932px',
@@ -78,7 +87,12 @@ theme: {
       'navbar': '85px',
       '400': '400px',
       '62': '62px',
-      '415': '415px'
+      '415': '415px',
+      '58': '58px',
+      'request': '34px',
+      '38': '38px',
+      '45': '45px',
+      '33': '33px'
     },
     boxShadow: {
       'background-shadow': 'inset 0 0 100px -30px rgba(0, 0, 0, 0.2)'
@@ -88,6 +102,7 @@ theme: {
       'input-box': '28px',
       'checkbox': '3px',
       '12.75': '12.75px',
+      'popup': '15px'
     },
     borderWidth: {
       'circle': '0.75px',
@@ -95,20 +110,39 @@ theme: {
     margin: {
       '4': '4px',
       'header': '105px',
-      '40': '40px'
+      '40': '40px',
+      "neg12": "-12px"
     },
     outline: {
       '1': '1px'
     },
     spacing: {
-      '22': '22px'
+      '22': '22px',
+      '38': '38px',
+      '200': '200px'
     },
     padding: {
       '20': '20px'
-    }
+    },
+    textShadow: {
+      sm: '0 1px 2px var(--tw-shadow-color)',
+      DEFAULT: '0 1px 6px var(--tw-shadow-color)',
+      lg: '0 8px 16px var(--tw-shadow-color)',
+    },
   },
 },
 plugins: [
   require('@tailwindcss/forms'),
+  require('flowbite/plugin'),
+  plugin(function ({ matchUtilities, theme }) {
+    matchUtilities(
+      {
+        'text-shadow': (value) => ({
+          textShadow: value,
+        }),
+      },
+      { values: theme('textShadow') }
+    )
+  })
 ],
 }

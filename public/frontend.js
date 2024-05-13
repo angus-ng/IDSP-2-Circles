@@ -36,24 +36,78 @@ header.addEventListener("click", async (event) => {
   const nextButton = event.target.closest("#nextButton");
   const backButton = event.target.closest("#backButton");
   const circleBackButton = event.target.closest("#circleBackButton");
-  const circlePreviewBackButton = event.target.closest(
-    "#circlePreviewBackButton"
-  );
+  const circlePreviewBackButton = event.target.closest("#circlePreviewBackButton");
   const createCircleButton = event.target.closest("#createCircleButton");
   const closeButton = event.target.closest("#closeButton");
   const albumNextButton = event.target.closest("#albumNext");
   const backButtonAlbum = event.target.closest("#backButtonAlbum");
   const createAlbumButton = event.target.closest("#createAlbum");
-  const albumConfirmationBackButton = event.target.closest(
-    "#albumConfirmationBackButton"
-  );
+  const albumConfirmationBackButton = event.target.closest("#albumConfirmationBackButton");
   const addCircleBackButton = event.target.closest("#addCircleBackButton");
+  const toActivity = event.target.closest("#toActivity");
+  const emailBackButton = event.target.closest("#emailBack");
+  const passwordBackButton = event.target.closest("#passwordBack");
+  const birthdayBackButton = event.target.closest("#birthdayBack");
+  const nameBackButton = event.target.closest("#nameBack");
+  const usernameBackButton = event.target.closest("#usernameBack");
+  const profilePictureBackButton = event.target.closest("#profilePictureBack");
+  const profileConfirmationBackButton = event.target.closest("#profileConfirmationBack");
+  if (emailBackButton) {
+    await displayLoginPage();
+  }
+
+  if (passwordBackButton) {
+    const primaryButton = document.querySelector("#passwordNext");
+    primaryButton.id = "emailNext";
+    await displaySignUpEmailPage();
+  }
+
+  if (birthdayBackButton) {
+    const primaryButton = document.querySelector("#birthdayNext");
+    primaryButton.id = "passwordNext";
+    await displaySignUpPasswordPage();
+  }
+
+  if (nameBackButton) {
+    const primaryButton = document.querySelector("#nameNext");
+    primaryButton.id = "birthdayNext";
+    await displaySignUpBirthdayPage();
+  }
+
+  if (usernameBackButton) {
+    const primaryButton = document.querySelector("#usernameNext");
+    primaryButton.id = "nameNext";
+    await displaySignUpNamePage();
+  }
+
+  if (profilePictureBackButton) {
+    const primaryButton = document.querySelector("#addProfilePicture");
+    primaryButton.classList.remove("bottom-24");
+    primaryButton.classList.add("bottom-8");
+    primaryButton.textContent = "Next";
+    primaryButton.id = "nameNext";
+    const secondaryButton = document.querySelector("#profilePictureNext");
+    secondaryButton.id = "secondaryButton";
+    secondaryButton.classList.add("hidden");
+    await displaySignUpUsernamePage();
+  }
+
+  if (profileConfirmationBackButton) {
+
+    const primaryButton = document.querySelector("#doneButton");
+    primaryButton.textContent = "Add Picture";
+    primaryButton.id = "addProfilePicture";
+    const secondaryButton = document.querySelector("#changeProfilePicture");
+    secondaryButton.classList.remove("hidden");
+    secondaryButton.textContent = "Skip";
+    secondaryButton.id = "profilePictureNext";
+    await displaySignUpProfilePicturePage();
+  }
 
   if (nextButtonInviteFriends) {
     const circleName = document.querySelector("#circleName");
     newCircleNameInput = circleName.value;
     circleImgSrc = document.querySelector("#circleImage").src;
-    addPictureSrc = document.querySelector("#addPicture img").src;
     isPrivacyPublic = document.querySelector("#privacyCheckbox").checked;
     await displayInviteFriends();
     return;
@@ -70,19 +124,29 @@ header.addEventListener("click", async (event) => {
   }
 
   if (createCircleButton) {
-    const { success, data } = await handleCreateCircle();
-    const circleId = data;
-    for (let friend of checkedFriends) {
-      console.log("FRIEND", friend);
-      const { success, data } = await handleSendCircleRequest(friend, circleId);
+    const { success, data, error} = await handleCreateCircle();
+    if (error) {
+      if (error === "Missing circle name") {
+        await displayPopup("Please add a title to your circle");
+      }
+      console.log(error);
+      return;
     }
+    const circleId = data;
     if (success && data) {
+      console.log(circleId)
+      for (let friend of checkedFriends) {
+        console.log(circleId)
+        console.log("FRIEND", friend);
+        const { success, data } = await handleSendCircleRequest(friend, circleId);
+      }
+      checkedFriends = [];
       const { success, data, error } = await getCircle(circleId);
       if (success && data) {
         await displayCircle(data);
       }
+      nav.classList.remove("hidden");
     }
-    nav.classList.remove("hidden");
     return;
   }
 
@@ -110,6 +174,7 @@ header.addEventListener("click", async (event) => {
     pageContent.innerHTML = "";
     leftHeaderButton.innerHTML = "";
     rightHeaderButton.innerHTML = `<img src="/lightmode/map_icon.svg" alt="Map Icon"</img>`;
+    nav.classList.remove("hidden");
     return;
   }
 
@@ -162,7 +227,14 @@ header.addEventListener("click", async (event) => {
     console.log("album created");
     const albumName = await getAlbumName();
     albumObj.name = albumName;
-    const { success, data } = await handleCreateAlbum(albumObj);
+    const { success, data, error } = await handleCreateAlbum(albumObj);
+    if (error) {
+      if (error === "Missing album name") {
+        await displayPopup("Please add a title to your album");
+      }
+      console.log(error);
+      return;
+    }
     const albumId = data;
     if (success && data) {
       const { success, data, error } = await getAlbum(albumId);
@@ -174,6 +246,10 @@ header.addEventListener("click", async (event) => {
     }
     return;
   }
+
+  if (toActivity) {
+    await displayActivity()
+  }
 });
 
 // create Cirlcle/Album modal
@@ -181,12 +257,8 @@ const modal = document.querySelector("#modal");
 modal.addEventListener("click", async function (event) {
   event.preventDefault();
   const closeModal = event.target.closest("#closeModalButton");
-  const createAlbumModalButton = event.target.closest(
-    "#createAlbumModalButton"
-  );
-  const createCircleModalButton = event.target.closest(
-    "#createCircleModalButton"
-  );
+  const createAlbumModalButton = event.target.closest("#createAlbumModalButton");
+  const createCircleModalButton = event.target.closest("#createCircleModalButton");
 
   if (closeModal) {
     if (modal.classList.contains("shown")) {
@@ -199,6 +271,7 @@ modal.addEventListener("click", async function (event) {
     clearNewAlbum();
     modal.classList.remove("shown");
     modal.classList.add("hidden");
+    nav.classList.add("hidden");
     await displayCreateAlbum();
   }
 
@@ -220,27 +293,41 @@ async function handleLocalAuth() {
   }
 }
 
-function toggleEdit() {
-  isEditable = !isEditable;
+pageContent.addEventListener("click", async(event) => {
+  const localAuthButton = event.target.closest("#localAuth");
+  const emailNextButton = event.target.closest("#emailNext");
+  const passwordNextButton = event.target.closest("#passwordNext");
+  const birthdayNextButton = event.target.closest("#birthdayNext");
+  const nameNextButton = event.target.closest("#nameNext");
+  const usernameNextButton = event.target.closest("#usernameNext");
+  const profilePictureNextButton = event.target.closest("#profilePictureNext");
 
-  if (isEditable) {
-    circleName.removeAttribute("readonly");
-    return circleName.focus();
+  if (localAuthButton) {
+    handleLocalAuth();
   }
 
-  circleName.setAttribute("readonly", true);
-}
+  if (emailNextButton) {
+    await displaySignUpPasswordPage();
+  }
 
-pageContent.addEventListener("click", (event) => {
-  const localAuthButton = document.querySelector("#localAuth");
-  const editButton = event.target.closest("#editButton");
-  const parentId = event.target.parentElement.id;
-  const uploadPhotoSection = event.target.closest("#createNewAlbum");
+  if (passwordNextButton) {
+    await displaySignUpBirthdayPage();
+  }
 
-  if (parentId === "editButton") {
-    toggleEdit();
-  } else if (parentId === "localAuth") {
-    handleLocalAuth();
+  if (birthdayNextButton) {
+    await displaySignUpNamePage();
+  }
+
+  if (nameNextButton) {
+    await displaySignUpUsernamePage();
+  }
+
+  if (usernameNextButton) {
+    await displaySignUpProfilePicturePage();
+  }
+
+  if (profilePictureNextButton) {
+    await displayProfileConfirmation();
   }
 
   // if (uploadPhotoSection) {

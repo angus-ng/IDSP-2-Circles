@@ -43,6 +43,9 @@ class AlbumController implements IController {
         const { photos, isCircle, name }  = req.body
         console.log(req.body,"logged")
         console.log(isCircle)
+        if (!isCircle || !name || !photos.length) {
+          throw new Error("missing params")
+        }
         if (isCircle) {
           const { id } = req.body;
           console.log(id)
@@ -57,12 +60,9 @@ class AlbumController implements IController {
 
           return res.status(200).json({ success: true, data: newAlbum.id})
         }
-        //validate the input before passing it to our db
-        
-        // this._service.createAlbum(newAlbumInput)
         res.status(200).json({ success: true, data:null });
     } catch (err) {
-        //throw err;
+        res.status(200).json({success: true, data:null, error: "Failed to create album"})
     }
   }
   

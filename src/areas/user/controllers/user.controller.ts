@@ -20,7 +20,7 @@ class UserController implements IController {
     this.router.get(`${this.path}/getActivities`, ensureAuthenticated, this.getActivities)
     this.router.post(`${this.path}/accept`, ensureAuthenticated, this.acceptFriendRequest)
     this.router.post(`${this.path}/removeRequest`, ensureAuthenticated, this.removeFriendRequest)
-    this.router.get(`${this.path}/search/:input`, ensureAuthenticated, this.search)
+    this.router.get(`${this.path}/search/:input(*)`, ensureAuthenticated, this.search)
     this.router.get(`${this.path}/searchAll`, ensureAuthenticated, this.searchAll)
     this.router.post(`${this.path}/`, ensureAuthenticated, this.getUser);
   }
@@ -83,7 +83,7 @@ class UserController implements IController {
     try {
       let loggedInUser = req.user!.username
       const { user1, user2 } = req.body
-      if (loggedInUser === user2) {
+      if (loggedInUser === user2 || loggedInUser === user1) {
         await this._service.removeRequest(user1, user2)
         res.status(200).json({success:true, data: null})
       } else {
@@ -97,7 +97,8 @@ class UserController implements IController {
   private search = async (req: Request, res: Response) => {
     try {
       let loggedInUser = req.user!.username
-      const input = req.params.input
+      const input = decodeURIComponent(req.params.input).slice(0, -1)
+      console.log(input)
       const output = await this._service.search(input, loggedInUser)
       res.status(200).json({success:true, data: output})
     } catch (error: any) {
