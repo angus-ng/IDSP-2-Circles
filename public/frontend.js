@@ -162,7 +162,9 @@ header.addEventListener("click", async (event) => {
     const circleName = document.querySelector("#circleName");
     document.querySelector("#privacyCheckbox").checked = isPrivacyPublic;
     document.querySelector("#circleImage").src = circleImgSrc;
-    document.querySelector("#addPicture img").src = addPictureSrc;
+    const addPictureButton = document.querySelector("#addPicture")
+    addPictureButton.textContent = "Change Picture";
+    addPictureButton.className = "w-380 h-45 bg-white border-2 border-dark-grey text-dark-grey rounded-input-box fixed bottom-8";
     circleName.value = newCircleNameInput;
     await updateCheckbox();
     return;
