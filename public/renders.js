@@ -423,8 +423,8 @@ async function displayInviteFriends() {
       <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full">
         <div class="relative w-full h-9 mt-8">
           <form onkeydown="return event.key != 'Enter';">
-            <input class="w-380 px-14 py-2 border-grey border-2 rounded-input-box text-secondary leading-secondary" placeholder="search friends"/>
-            <img src="/lightmode/search_icon_no_text.svg" alt="search icon" class="absolute left-4 top-2.5 w-25 h-25"/>
+            <input class="w-380 px-10 py-2 border-grey border-2 rounded-input-box text-secondary leading-secondary" placeholder="search friends"/>
+            <img src="/lightmode/search_icon_grey.svg" alt="search icon" class="absolute left-3 top-search w-25 h-25"/>
           </form>
         </div>
         <div class="shrink-0 mt-10 mb-6 justify-center w-full">
@@ -461,7 +461,7 @@ async function displayCreateCirclePreview() {
 
   pageContent.innerHTML = `
       <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full">
-            <div class="flex-shrink-0 mt-20 mb-4">
+            <div class="flex-shrink-0 mt-14 mb-4">
                 <img id="circleImage" src="/placeholder_image.svg" alt="Placeholder Image" class="object-cover w-234 h-230 rounded-full cursor-pointer"/>                     
             </div>
             <div class="flex justify-center my-5 relative w-full">
@@ -561,8 +561,8 @@ async function displaySearch() {
   pageContent.innerHTML = `
     <div id="searchPage" class="py-2 w-full h-full">
       <div class="relative w-full h-9 mt-8">
-        <input type="text" id="searchBox" class="w-380 px-14 py-2 border-grey border-2 rounded-input-box text-secondary leading-secondary" placeholder="search account">
-        <img src="/lightmode/search_icon_no_text.svg" alt="search icon" class="absolute left-4 top-2.5 w-25 h-25"/>
+        <input type="text" id="searchBox" class="w-380 px-10 py-2 border-grey border-2 rounded-input-box text-secondary leading-secondary" placeholder="search account">
+        <img src="/lightmode/search_icon_grey.svg" alt="search icon" class="absolute left-3 top-search w-25 h-25"/>
       </div>
       <div class="flex flex-col shrink-0 mt-10 mb-6 justify-center w-full">
         <div id="suggestedFriends"></div>

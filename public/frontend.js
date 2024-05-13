@@ -258,11 +258,10 @@ header.addEventListener("click", async (event) => {
 const modal = document.querySelector("#modal");
 modal.addEventListener("click", async function (event) {
   event.preventDefault();
-  const closeModal = event.target.closest("#closeModalButton");
+  const closeModalButton = event.target.closest("#closeModalButton");
   const createAlbumModalButton = event.target.closest("#createAlbumModalButton");
   const createCircleModalButton = event.target.closest("#createCircleModalButton");
-
-  if (closeModal) {
+  if (closeModalButton) {
     if (modal.classList.contains("shown")) {
       modal.classList.remove("shown");
       modal.classList.add("hidden");
@@ -284,6 +283,10 @@ modal.addEventListener("click", async function (event) {
     await displayCreateCircle();
     await cleanUpSectionEventListener();
   }
+});
+
+document.addEventListener("swiped-down", (event) => {
+  console.log(event.target)
 });
 
 async function handleLocalAuth() {

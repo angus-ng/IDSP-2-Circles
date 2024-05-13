@@ -132,7 +132,8 @@ theme: {
     spacing: {
       '22': '22px',
       '38': '38px',
-      '200': '200px'
+      '200': '200px',
+      'search': '7px'
     },
     padding: {
       '20': '20px'
