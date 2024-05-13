@@ -285,8 +285,10 @@ modal.addEventListener("click", async function (event) {
   }
 });
 
-document.addEventListener("swiped-down", (event) => {
-  console.log(event.target)
+const closeModalSwipe = document.querySelector("#modalBox");
+closeModalSwipe.addEventListener("swiped-down", (event) => {
+  modal.classList.remove("shown");
+  modal.classList.add("hidden");
 });
 
 async function handleLocalAuth() {

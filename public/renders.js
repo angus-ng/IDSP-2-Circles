@@ -772,23 +772,23 @@ async function displayNavBar() {
   
       <footer class="w-full flex justify-between items-center pt-4 pb-5 px-6 bg-light-mode-bg text-grey text-13">
           
-          <a id="explore" class="flex flex-col items-center">        
+          <a id="explore" class="flex flex-col items-center cursor-pointer">        
               <img src="/lightmode/explore_icon.svg" alt="Explore Icon">
               <p class="mt-1">explore</p>
           </a>
-          <a id="search" class="flex flex-col items-center">
+          <a id="search" class="flex flex-col items-center cursor-pointer">
               <img src="/lightmode/search_icon.svg" alt="Search Icon">
               <p class="mt-1">search</p>
           </a>
-          <a id="new" class="flex flex-col items-center">
+          <a id="new" class="flex flex-col items-center cursor-pointer">
               <img src="/lightmode/new_icon.svg" alt="New Icon">
               <p class="mt-1">new</p>
           </a>
-          <a id="activity" class="flex flex-col items-center">
+          <a id="activity" class="flex flex-col items-center cursor-pointer">
               <img src="/lightmode/activity_icon.svg" alt="Activity Icon">
               <p class="mt-1">activity</p>         
           </a>
-          <a id="profile" class="flex flex-col items-center">
+          <a id="profile" class="flex flex-col items-center cursor-pointer">
               <img src="/lightmode/profile_icon.svg" alt="Profile Icon">
               <p class="mt-1">profile</p>
           </a>

@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="/scrollbar.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/keen-slider@6.8.5/keen-slider.min.css"/>
     <link rel="stylesheet" href="/carousel.css">
-    <script src="https://cdn.jsdelivr.net/npm/keen-slider/keen-slider.min.js"></script>
+    <script defer src="/swiped-events.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/keen-slider/keen-slider.min.js"></script>
     <script defer src="/renders.js"></script>
     <script defer src="/apiCalls.js"></script>
     <script defer src="/frontend.js"></script>
@@ -64,7 +65,7 @@
 
 
 <div id="modal" class="fixed inset-x-0 bottom-0 bg-overlay-bg h-screen w-screen flex items-center justify-center z-50 hidden">
-    <div class="bg-light-mode p-6 rounded-t-20 shadow-lg w-full max-w-screen-2xl absolute bottom-0">
+    <div id="modalBox" class="bg-light-mode p-6 rounded-t-20 shadow-lg w-full max-w-screen-2xl absolute bottom-0">
         <div class="flex justify-between mb-6">
 
             <div class="w-1/8"></div>
