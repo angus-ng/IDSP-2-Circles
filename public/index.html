@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="/scrollbar.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/keen-slider@6.8.5/keen-slider.min.css"/>
     <link rel="stylesheet" href="/carousel.css">
-    <script src="https://cdn.jsdelivr.net/npm/keen-slider/keen-slider.min.js"></script>
+    <script defer src="/swiped-events.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/keen-slider/keen-slider.min.js"></script>
     <script defer src="/renders.js"></script>
     <script defer src="/apiCalls.js"></script>
     <script defer src="/frontend.js"></script>
@@ -49,12 +50,22 @@
                     <img id="popupCloseButton" class="h-3 w-3 cursor-pointer" src="/lightmode/close_icon_white.svg" alt="Close Button">
                 </div>
             </div>
+
+            <div id="confirmationPopup" class="fixed inset-x-0 bottom-24 flex justify-center rounded-popup w-312 h-270 bg-light-mode-bg text-black mx-auto z-20 hidden">
+                <div class="flex flex-row gap-3.5 items-center">
+                    <p id="confirmationText" class="font-medium text-4 text-light-mode"></p>
+                    <div class="bg-transparent border-1">
+                        <button id="cancelButton">Cancel</button>
+                        <button id="contextButton"></button>
+                    </div>
+                </div>
+            </div>
         </section>
     </div>
 
 
 <div id="modal" class="fixed inset-x-0 bottom-0 bg-overlay-bg h-screen w-screen flex items-center justify-center z-50 hidden">
-    <div class="bg-light-mode p-6 rounded-t-20 shadow-lg w-full max-w-screen-2xl absolute bottom-0">
+    <div id="modalBox" class="bg-light-mode p-6 rounded-t-20 shadow-lg w-full max-w-screen-2xl absolute bottom-0">
         <div class="flex justify-between mb-6">
 
             <div class="w-1/8"></div>
@@ -67,13 +78,15 @@
             </button>
         </div>
 
-        <div class="flex space-x-6 justify-center">
+        <div class="flex space-x-6 justify-center text-light-mode-accent font-medium text-14">
             <button id="createAlbumModalButton">
-                <img src="/lightmode/newalbum_icon.svg" alt="New Album Icon">
+                <img src="/lightmode/create_album_icon.svg" alt="New Album Icon">
+                <p class="mt-3">create album</p>
             </button>
                                     
             <button id="createCircleModalButton">
-                <img src="/lightmode/newcircle_icon.svg" alt="New Circle Icon">
+                <img src="/lightmode/create_circle_icon.svg" alt="New Circle Icon">
+                <p class="mt-3">create circle</p>
             </button>
                                           
             </div>
