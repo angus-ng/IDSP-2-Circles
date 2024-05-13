@@ -1494,29 +1494,32 @@ async function displayAlbum(albumData) {
     `;
     rightHeaderButton.innerHTML = ``;
     pageName.textContent = `${albumData.name}`;
+
   const memberList = [];
     for (i=0; i < albumData.circle.UserCircle.length; i++) {
-      if (i > 2) {
+      if (i > 3) {
         const count = albumData.circle.UserCircle.length - 3;
-        const andMore = `<div class="w-16 h-16 rounded-full border-2 flex justify-center items-center bg-dark-grey">
+        const andMore = `<div class="w-25 h-25 rounded-full border-2 flex justify-center items-center bg-dark-grey">
         <p class="text-secondary text-white font-bold">+${count}</p>
       </div>`
-      memberList.push(andMore)
+      memberList.push(andMore);
       break;
       }
-      memberList.push(`<img src="${albumData.circle.UserCircle[i].user.profilePicture}" class="w-16 h-16 rounded-full object-cover"></img>`);
+      memberList.push(`<img id="user${i+1}" src="${albumData.circle.UserCircle[i].user.profilePicture}" class="grid-item rounded-full object-cover"></img>`);
     }
+
+    console.log(memberList);
     const photoList = albumData.photos.map((obj) => {
       return `<div id="photo" class="w-full h-min relative photo" albumId="${obj.id}">
       <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.src}"/>
     </div>`;
     });
-    let circleName = document.createElement('p')
+    let circleName = document.createElement("h2");
     circleName.className = "flex justify-center font-medium text-lg"
     circleName.textContent = albumData.circle.name;
     pageContent.innerHTML = `
       <div id="albumPhotos">
-        <div id="memberList" class="flex mt-8 justify-center">
+        <div id="memberList" class="grid grid-rows-2 grid-cols-3 mt-8 mx-auto items-center justify-center w-265 gap-2 h-84">
           ${memberList.join("")}
         </div>
         <div class="mt-4">
@@ -1533,6 +1536,16 @@ async function displayAlbum(albumData) {
           </div>
         </div>
     </div>`;
+
+  const user1 = document.querySelector("#user1");
+  user1.classList.add("h-82", "w-82", "row-span-2", "col-start-2");
+  const user2 = document.querySelector("#user2");
+  user2.classList.add("h-43", "w-43", "col-start-1", "row-start-1", "justify-self-end");
+  const user3 = document.querySelector("#user3");
+  user3.classList.add("h-40", "w-40", "col-start-3", "row-start-2", "justify-self-start");
+  const user4 = document.querySelector("#user4");
+  user4.classList.add("h-5", "w-5", "col-start-1", "row-start-2", "justify-self-end");
+
   const albumPhotos = document.querySelector("#albumPhotos");
   console.log("THIS", albumPhotos);
   albumPhotos.addEventListener("click", async (event) => {

@@ -1339,6 +1339,30 @@ input:checked + .toggle-bg {
   z-index: 50;
 }
 
+.col-start-1 {
+  grid-column-start: 1;
+}
+
+.col-start-2 {
+  grid-column-start: 2;
+}
+
+.col-start-3 {
+  grid-column-start: 3;
+}
+
+.row-span-2 {
+  grid-row: span 2 / span 2;
+}
+
+.row-start-1 {
+  grid-row-start: 1;
+}
+
+.row-start-2 {
+  grid-row-start: 2;
+}
+
 .m-2 {
   margin: 0.5rem;
 }
@@ -1579,16 +1603,16 @@ input:checked + .toggle-bg {
   height: 3rem;
 }
 
-.h-16 {
-  height: 4rem;
-}
-
 .h-180 {
   height: 180px;
 }
 
 .h-230 {
   height: 230px;
+}
+
+.h-25 {
+  height: 25px;
 }
 
 .h-3 {
@@ -1607,8 +1631,16 @@ input:checked + .toggle-bg {
   height: 1rem;
 }
 
+.h-40 {
+  height: 40px;
+}
+
 .h-42 {
   height: 42px;
+}
+
+.h-43 {
+  height: 43px;
 }
 
 .h-45 {
@@ -1633,6 +1665,14 @@ input:checked + .toggle-bg {
 
 .h-8 {
   height: 2rem;
+}
+
+.h-82 {
+  height: 82px;
+}
+
+.h-84 {
+  height: 84px;
 }
 
 .h-9 {
@@ -1692,10 +1732,6 @@ input:checked + .toggle-bg {
   width: 3rem;
 }
 
-.w-16 {
-  width: 4rem;
-}
-
 .w-166 {
   width: 166px;
 }
@@ -1716,6 +1752,14 @@ input:checked + .toggle-bg {
   width: 234px;
 }
 
+.w-25 {
+  width: 25px;
+}
+
+.w-265 {
+  width: 265px;
+}
+
 .w-3 {
   width: 0.75rem;
 }
@@ -1728,12 +1772,24 @@ input:checked + .toggle-bg {
   width: 1rem;
 }
 
+.w-40 {
+  width: 40px;
+}
+
 .w-42 {
   width: 42px;
 }
 
+.w-43 {
+  width: 43px;
+}
+
 .w-430 {
   width: 430px;
+}
+
+.w-5 {
+  width: 1.25rem;
 }
 
 .w-58 {
@@ -1754,6 +1810,10 @@ input:checked + .toggle-bg {
 
 .w-8 {
   width: 2rem;
+}
+
+.w-82 {
+  width: 82px;
 }
 
 .w-auto {
@@ -2016,6 +2076,10 @@ input:checked + .toggle-bg {
   --tw-space-y-reverse: 0;
   margin-top: calc(1rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(1rem * var(--tw-space-y-reverse));
+}
+
+.justify-self-start {
+  justify-self: start;
 }
 
 .justify-self-end {
@@ -2350,6 +2414,10 @@ input:checked + .toggle-bg {
   padding-bottom: 4rem;
 }
 
+.pb-200 {
+  padding-bottom: 200px;
+}
+
 .pb-28 {
   padding-bottom: 7rem;
 }
@@ -2376,10 +2444,6 @@ input:checked + .toggle-bg {
 
 .pt-6 {
   padding-top: 1.5rem;
-}
-
-.pb-200 {
-  padding-bottom: 200px;
 }
 
 .text-center {
