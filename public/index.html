@@ -65,35 +65,23 @@
 
 
 <div id="modal" class="fixed inset-x-0 bottom-0 bg-overlay-bg h-screen w-screen flex items-center justify-center z-50 hidden">
-    <div id="modalBox" class="bg-light-mode p-6 rounded-t-20 shadow-lg w-full max-w-screen-2xl absolute bottom-0">
+    <div id="modalBox" class="bg-light-mode p-6 rounded-t-20 shadow-lg w-full absolute bottom-0">
         <div class="flex justify-between mb-6">
-
-            <div class="w-1/8"></div>
-
-            <button id="closeModal">
+            <button id="closeModal" class="mx-auto">
                 <img src="/lightmode/close_swipe_icon.svg" alt="Close Swipe Icon">
             </button>
-            <button id="closeModalButton">
+            <button id="closeModalButton" class="hidden">
                 <img src="/lightmode/close_icon.svg" alt="Close Icon">                       
             </button>
         </div>
 
-        <div class="flex space-x-6 justify-center text-light-mode-accent font-medium text-14">
-            <button id="createAlbumModalButton">
-                <img src="/lightmode/create_album_icon.svg" alt="New Album Icon">
-                <p class="mt-3">create album</p>
-            </button>
-                                    
-            <button id="createCircleModalButton">
-                <img src="/lightmode/create_circle_icon.svg" alt="New Circle Icon">
-                <p class="mt-3">create circle</p>
-            </button>
-                                          
-            </div>
+        <div id="modalContent">
+            
         </div>
     </div>
+</div>
 
-    <div id="nav" class="fixed bottom-0 w-full h-navbar bg-light-mode hidden"></div>
+<div id="nav" class="fixed bottom-0 w-full h-navbar bg-light-mode hidden"></div>
 </div>
 </body>
 </html>
