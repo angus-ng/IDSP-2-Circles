@@ -4,7 +4,8 @@ import { compare, hash } from "bcrypt"
 // import type { User } from "@prisma/client";
 import { User } from "@prisma/client";
 import { randomUUID } from "crypto";
-import { Profile } from "passport-facebook";
+import { Profile as FacebookProfile } from "passport-facebook";
+import { Profile as GoogleProfile } from "passport-google-oauth20";
 const salt = 12
 
 export class AuthenticationService implements IAuthenticationService {
@@ -68,7 +69,7 @@ export class AuthenticationService implements IAuthenticationService {
     return await this._db.prisma.user.findUnique({where : {id : id}})
   }
 
-  async findOrCreateFB(profile: Profile) {
+  async findOrCreateFB(profile: FacebookProfile) {
     const user = await this._db.prisma.user.findUnique({
       where: {
         facebookId: profile.id
@@ -94,7 +95,7 @@ export class AuthenticationService implements IAuthenticationService {
     return newUser;
   }
 
-  async findOrCreateGoogle(profile: Profile) {
+  async findOrCreateGoogle(profile: GoogleProfile) {
     const user = await this._db.prisma.user.findUnique({
       where: {
         googleId: profile.id
@@ -103,6 +104,10 @@ export class AuthenticationService implements IAuthenticationService {
 
     if (user) {
       return user;
+    }
+
+    if (!profile._json.picture) {
+      profile._json.picture = "put default photo here"
     }
 
     const newUser = await this._db.prisma.user.create({
