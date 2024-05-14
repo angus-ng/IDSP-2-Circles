@@ -14,6 +14,9 @@ theme: {
   screens: {
     'min-size': '430px'
   },
+  fontWeight: {
+    'semibold': '600'
+  },
   extend: {
     colors: {
       'light-mode-bg': 'rgba(248, 244, 234, 0.86)',
@@ -45,7 +48,8 @@ theme: {
       '15': '15px',
       '14': '14px',
       '13': '13px',
-      '11': '11px'
+      '11': '11px',
+      '23': '23px'
     },
     lineHeight: {
       'h1': '40px',

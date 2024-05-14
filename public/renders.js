@@ -768,10 +768,9 @@ async function displayActivity() {
 async function displayNavBar() {
   const nav = document.querySelector("#nav");
   nav.classList.remove("hidden");
-  nav.innerHTML = `<div class="border-b border-dark-grey"></div>
-  
+  nav.innerHTML = `
+  <div class="border-b border-dark-grey"></div>
       <footer class="w-full flex justify-between items-center pt-4 pb-5 px-6 bg-light-mode-bg text-grey text-13">
-          
           <a id="explore" class="flex flex-col items-center cursor-pointer">        
               <img src="/lightmode/explore_icon.svg" alt="Explore Icon">
               <p class="mt-1">explore</p>
@@ -793,6 +792,7 @@ async function displayNavBar() {
               <p class="mt-1">profile</p>
           </a>
       </footer>`;
+    
     const navBar = document.querySelector("footer");
     navBar.addEventListener("click", async function (event) {
       event.preventDefault();
@@ -813,9 +813,8 @@ async function displayNavBar() {
         newCircleNameInput = "";
       }
       if (newButton) {
-        modal.classList.remove("hidden");
-        modal.classList.add("shown");
         newCircleNameInput = "";
+        await displayNewModal();
       }
       if (activityButton) {
         await displayActivity();
@@ -830,6 +829,26 @@ async function displayNavBar() {
         }
       }
     });
+}
+
+async function displayNewModal() {
+  const modal = document.querySelector("#modal");
+  modal.classList.remove("hidden");
+  modal.classList.add("shown");
+  const closeModalButton = document.querySelector("#closeModalButton");
+  closeModalButton.classList.remove("hidden");
+  const modalContent = document.querySelector("#modalContent");
+  modalContent.innerHTML = `
+  <div class="flex space-x-6 justify-center text-light-mode-accent font-medium text-14">
+    <button id="createAlbumModalButton">
+        <img src="/lightmode/create_album_icon.svg" alt="New Album Icon">
+        <p class="mt-3">create album</p>
+    </button>              
+    <button id="createCircleModalButton">
+        <img src="/lightmode/create_circle_icon.svg" alt="New Circle Icon">
+        <p class="mt-3">create circle</p>
+    </button>                        
+  </div>`;
 }
 
 async function displayProfile(userData) {
@@ -1389,8 +1408,16 @@ async function displayCircle(circleData) {
           ${albumName.outerHTML}
         </div>
         <div class="absolute inset-0 flex items-end justify-end gap-1 p-2">
-          <img src="/like_icon.svg" alt="Like Icon">
-          <img src="/comment_icon.svg" alt="Comment Icon">
+          <div class="like">
+            <svg width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9.22318 16.2905L9.22174 16.2892C6.62708 13.9364 4.55406 12.0515 3.11801 10.2946C1.69296 8.55118 1 7.05624 1 5.5C1 2.96348 2.97109 1 5.5 1C6.9377 1 8.33413 1.67446 9.24117 2.73128L10 3.61543L10.7588 2.73128C11.6659 1.67446 13.0623 1 14.5 1C17.0289 1 19 2.96348 19 5.5C19 7.05624 18.307 8.55118 16.882 10.2946C15.4459 12.0515 13.3729 13.9364 10.7783 16.2892L10.7768 16.2905L10 16.9977L9.22318 16.2905Z" stroke="white" stroke-width="2"/>
+            </svg>
+          </div>
+          <div class="comment">
+            <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10.5 19.125C8.79414 19.125 7.12658 18.6192 5.70821 17.6714C4.28983 16.7237 3.18434 15.3767 2.53154 13.8006C1.87873 12.2246 1.70793 10.4904 2.04073 8.81735C2.37352 7.14426 3.19498 5.60744 4.4012 4.40121C5.60743 3.19498 7.14426 2.37353 8.81735 2.04073C10.4904 1.70793 12.2246 1.87874 13.8006 2.53154C15.3767 3.18435 16.7237 4.28984 17.6714 5.70821C18.6192 7.12658 19.125 8.79414 19.125 10.5C19.125 11.926 18.78 13.2705 18.1667 14.455L19.125 19.125L14.455 18.1667C13.2705 18.78 11.925 19.125 10.5 19.125Z" stroke="#F8F4EA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
         </div>
       </div>`;
     });
@@ -1431,6 +1458,19 @@ async function displayCircle(circleData) {
   albumListTarget.addEventListener("click", async function (event) {
     event.preventDefault();
     const albumDiv = event.target.closest(".album");
+    const likeButton = event.target.closest(".like");
+    const commentButton = event.target.closest(".comment");
+    if (likeButton) {
+      console.log("angus smells");
+      return;
+    }
+  
+    if (commentButton) {
+      console.log("comment");
+      await displayComments();
+      return;
+    }
+
     if (albumDiv) {
       if (albumDiv.hasAttribute("id")) {
         let { success, data, error } = await getAlbum(albumDiv.id);
@@ -1659,12 +1699,12 @@ async function displayListOfAlbums (data, profile=false) {
         ${albumName.outerHTML}
       </div>
       <div class="absolute inset-0 flex items-end justify-end gap-1 p-2">
-        <div id="like">
+        <div class="like">
           <svg width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M9.22318 16.2905L9.22174 16.2892C6.62708 13.9364 4.55406 12.0515 3.11801 10.2946C1.69296 8.55118 1 7.05624 1 5.5C1 2.96348 2.97109 1 5.5 1C6.9377 1 8.33413 1.67446 9.24117 2.73128L10 3.61543L10.7588 2.73128C11.6659 1.67446 13.0623 1 14.5 1C17.0289 1 19 2.96348 19 5.5C19 7.05624 18.307 8.55118 16.882 10.2946C15.4459 12.0515 13.3729 13.9364 10.7783 16.2892L10.7768 16.2905L10 16.9977L9.22318 16.2905Z" stroke="white" stroke-width="2"/>
           </svg>
         </div>
-        <div id="comment">
+        <div class="comment">
           <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M10.5 19.125C8.79414 19.125 7.12658 18.6192 5.70821 17.6714C4.28983 16.7237 3.18434 15.3767 2.53154 13.8006C1.87873 12.2246 1.70793 10.4904 2.04073 8.81735C2.37352 7.14426 3.19498 5.60744 4.4012 4.40121C5.60743 3.19498 7.14426 2.37353 8.81735 2.04073C10.4904 1.70793 12.2246 1.87874 13.8006 2.53154C15.3767 3.18435 16.7237 4.28984 17.6714 5.70821C18.6192 7.12658 19.125 8.79414 19.125 10.5C19.125 11.926 18.78 13.2705 18.1667 14.455L19.125 19.125L14.455 18.1667C13.2705 18.78 11.925 19.125 10.5 19.125Z" stroke="#F8F4EA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
@@ -1676,7 +1716,25 @@ async function displayListOfAlbums (data, profile=false) {
 }
 
 async function displayComments() {
-
+  const modal = document.querySelector("#modal");
+  modal.classList.remove("hidden");
+  modal.classList.add("shown");
+  const closeModalButton = document.querySelector("#closeModalButton");
+  closeModalButton.classList.remove("hidden");
+  const modalContent = document.querySelector("#modalContent");
+  modalContent.innerHTML = `
+  <div class="flex flex-col w-full justify-center mx-auto text-black">
+    <div>
+      <h1 class="font-semibold text-23">Comments</p>
+    </div>
+    <div class="albumComments">
+    </div>
+    <div class="w-full">
+      <form>
+        <input for="newComment" class="w-input-box rounded-input-box border-2" placeholder="enter a commment">
+      </form>
+    </div>
+  </div>`;
 }
 
 async function displayPopup(activity) {
