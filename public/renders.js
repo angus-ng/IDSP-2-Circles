@@ -12,7 +12,7 @@ function displayLoginPage() {
           </div>
           <div class="flex items-center mt-4 mb-6">
               <label for="password" class=""></label>
-              <input type="password" placeholder="Password" id="passwordInput" name="passwordInput" class="rounded-input-box w-input-box text-17 border-dark-grey border-2 items-end">
+              <input type="password" placeholder="Password" id="passwordInput" name="password" class="rounded-input-box w-input-box text-17 border-dark-grey border-2 items-end">
           </div>
         </form>
           <div class="flex items-center mt-4 mb-6">
@@ -391,7 +391,7 @@ async function displayListOfFriends(friends) {
     username.textContent=`@${friend.username}`
     return `<div class="flex items-center my-5">
     <div class="flex-none w-58">
-      <img class="rounded w-58 h-58" src="${friend.profilePicture}" alt="${friend.username}'s profile picture"/>
+      <img class="rounded-full w-58 h-58" src="${friend.profilePicture}" alt="${friend.username}'s profile picture"/>
     </div>
     <div class="ml-8 flex-none w-207">
       ${displayName.outerHTML}
@@ -858,7 +858,6 @@ async function displayProfile(userData) {
   addAsFriend.className = "flex justify-center";
   (currentLocalUser === userData.username) ? null : addAsFriend.innerHTML=`<button class="w-110 h-38 rounded-input-box bg-light-mode-accent text-white">Add friend</button>`
 
-  console.log(circleRender);
   pageName.textContent = userData.displayName ? userData.displayName : userData.username;
   leftHeaderButton.innerHTML = "";
   const username = document.createElement("h2")
@@ -884,7 +883,7 @@ async function displayProfile(userData) {
         </div>
       </div>
       <div class="gap-0 justify-center">
-        <div id="friends">
+        <div id="friends" class="cursor-pointer">
           <h2 class="text-base font-bold text-center" id="friendCounter">${userData._count.friends}</h2>
           <h2 class="text-secondary text-center">Friends</h2>
         </div>
@@ -962,7 +961,8 @@ async function displayProfile(userData) {
 
     if (friends) {
       console.log("friends");
-      await displayFriendsList(userData.username);
+      console.log(userData.username);
+      await displayFriends();
     }
 
     if (like) {
@@ -1435,8 +1435,8 @@ async function displayCircle(circleData) {
       </div>
       <div class="grid grid-cols-1 place-items-center">
         <label class="inline-flex items-center cursor-pointer">
-            <img id="privacyIcon" src="/lightmode/lock_icon.svg" alt="Lock icon" class="mr-4">
-            <span id="privacyLabel" class="text-sm font-medium leading-body text-14 mr-4 w-12">Private</span>
+            <img id="privacyIcon" src="${circleData.circle.isPublic ? "/lightmode/globe_icon.svg": "/lightmode/lock_icon.svg"}" alt="Lock icon" class="mr-4">
+            <span id="privacyLabel" class="text-sm font-medium leading-body text-14 mr-4 w-12">${circleData.circle.isPublic ? "Public" : "Private"}</span>
         </label>
       </div>
       <div class="grid grid-cols-5 place-items-center mt-12 mb-2">
@@ -1611,10 +1611,75 @@ async function displayAlbum(albumData) {
   });
 }
 
+async function displayFriends() {
+  nav.classList.add("hidden");
+  const friends = await getFriends(currentLocalUser);
+  const friendsList = await displayFriendsList(friends);
+  console.log(friends);
+  console.log(friendsList);
+  pageName.textContent = "Friends";
+  leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="friendsBackButton"/>`;
+  rightHeaderButton.innerHTML = "";
+
+  pageContent.innerHTML = `
+      <div class="font-light text-11 justify-center text-center text-dark-grey w-full">
+        <p>We don’t send notifications when you edit</p>
+        <p>your Friends List.</p>
+      </div>
+      <div id="allFriendsList" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full">
+        <div class="relative w-full h-9 mt-8">
+          <form onkeydown="return event.key != 'Enter';">
+            <input class="w-380 px-10 py-2 border-grey border-2 rounded-input-box text-secondary leading-secondary" placeholder="search friends"/>
+            <img src="/lightmode/search_icon_grey.svg" alt="search icon" class="absolute left-3 top-search w-25 h-25"/>
+          </form>
+        </div>
+        <div class="shrink-0 mt-10 mb-6 justify-center w-full">
+          <h1 id="friendCount" class="font-bold text-20 leading-body"></h1>
+          <div id="friendsDiv"></div>
+        </div>
+      </div>
+      `;
+  const friendsDiv = document.querySelector("#friendsDiv");
+  friendsDiv.innerHTML = friendsList.join("");
+
+  const friendCount = document.querySelector("#friendCount");
+  if (friendsList.length === 1) {
+    friendCount.innerHTML = `${friendsList.length} friend`;
+  } else if (friendsList.length > 1) {
+    friendCount.innerHTML = `${friendsList.length} friends`;
+  }
+}
+
 async function displayFriendsList() {
   const friends = await getFriends(currentLocalUser);
-  const friendsList = await displayListOfFriends(friends);
-  console.log(friendsList);
+  // console.log(currentLocalUser);
+  console.log(friends);
+  let newArr = friends.map((friend) => {
+    let displayName = document.createElement("h2");
+    let username = document.createElement("h2");
+    displayName.className="font-medium text-14 leading-tertiary"
+    username.className="font-light text-14 text-dark-grey"
+    displayName.textContent= friend.displayName ? friend.displayName : friend.username;
+    username.textContent=`@${friend.username}`
+    return `<div class="flex items-center my-5">
+    <div class="flex-none w-58">
+      <img class="rounded-full w-58 h-58" src="${friend.profilePicture}" alt="${friend.username}'s profile picture"/>
+    </div>
+    <div class="ml-8 flex-none w-207">
+      ${displayName.outerHTML}
+      ${username.outerHTML}
+    </div>
+    <div class="flex-none w-58">
+      <div class="removeFriendIcon">
+        <svg width="30" height="31" viewBox="0 0 30 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M17.5 10.5C17.5 7.7375 15.2625 5.5 12.5 5.5C9.7375 5.5 7.5 7.7375 7.5 10.5C7.5 13.2625 9.7375 15.5 12.5 15.5C15.2625 15.5 17.5 13.2625 17.5 10.5ZM2.5 23V24.25C2.5 24.9375 3.0625 25.5 3.75 25.5H21.25C21.9375 25.5 22.5 24.9375 22.5 24.25V23C22.5 19.675 15.8375 18 12.5 18C9.1625 18 2.5 19.675 2.5 23ZM22.5 13H27.5C28.1875 13 28.75 13.5625 28.75 14.25C28.75 14.9375 28.1875 15.5 27.5 15.5H22.5C21.8125 15.5 21.25 14.9375 21.25 14.25C21.25 13.5625 21.8125 13 22.5 13Z" fill="#0E0E0E"/>
+        </svg>
+      </div>
+    </div>
+  </div>`;
+  });
+  console.log(newArr);
+  return newArr;
 }
 
 async function displayFriendRequests() {

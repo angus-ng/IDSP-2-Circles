@@ -92,6 +92,11 @@ export class UserService implements IUserService {
         const listOfFriends = []
         for (let username of listOfFriendName) {
           const user = await this._db.prisma.user.findUnique({
+            select: {
+              username: true,
+              displayName: true,
+              profilePicture: true
+            },
             where: {
               username: username
             }
@@ -300,6 +305,68 @@ export class UserService implements IUserService {
       })
       return userInfo;
     }
-    return null
+    const userInfo = await this._db.prisma.user.findUnique({
+      select: {
+        username: true,
+        displayName: true,
+        profilePicture: true,
+        _count: {
+          select: {
+            friends: true
+          }
+        },
+      },
+      where: {
+        username: username,
+      }
+    })
+    const sharedCircles = await this._db.prisma.circle.findMany({
+      include: {
+        albums: {
+          select: {
+            circle: {
+              select: {
+                picture: true,
+              }
+            },
+            circleId: true,
+            id: true,
+            name: true,
+            ownerName: true,
+            photos: true
+          }
+        }
+      },
+      where: {
+        OR: [{
+          AND: [
+            {UserCircle: {some: {user: {username: username}}}},
+            {UserCircle: {some: {user: {username: currentUser}}}}
+          ]},
+          {
+            AND: [
+              {isPublic: true},
+              {UserCircle: {some: {user: {username: username}}}}
+            ]
+          }
+        ],}
+      })
+
+    const circles:{circle: {}}[] = [];
+    const albums: any[] = [];
+
+    sharedCircles.forEach((obj) => {
+      obj.albums.forEach((album) => {
+        albums.push(album)
+      })
+      circles.push({circle: obj})
+    })
+    const compiledObj = userInfo
+
+    userInfo.UserCircle = circles;
+    userInfo.Album = albums;
+    userInfo._count.UserCircle = circles.length
+    
+    return userInfo;
   }
 }

@@ -43,17 +43,18 @@ class CircleController implements IController {
         let loggedInUser = req.user!.username
         
         const { circleName, picturePath } = req.body
-
-        if (!circleName) {
-          throw new Error("missing circle name")
+        
+        let isPublic = false;
+        if (req.body.isPublic === "true") {
+          isPublic = true;
         }
 
         const newCircleInput = {
           creator: loggedInUser, 
           name: circleName,
-            picturePath: picturePath
+            picturePath: picturePath,
+            isPublic: isPublic
           }
-          //validate the input before passing it to our db
           
         const newCircle = await this._service.createCircle(newCircleInput)
 

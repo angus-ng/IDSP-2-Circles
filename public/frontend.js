@@ -52,6 +52,8 @@ header.addEventListener("click", async (event) => {
   const usernameBackButton = event.target.closest("#usernameBack");
   const profilePictureBackButton = event.target.closest("#profilePictureBack");
   const profileConfirmationBackButton = event.target.closest("#profileConfirmationBack");
+  const friendsBackButton = event.target.closest("#friendsBackButton");
+
   if (emailBackButton) {
     await displayLoginPage();
   }
@@ -124,6 +126,7 @@ header.addEventListener("click", async (event) => {
   }
 
   if (createCircleButton) {
+    isPrivacyPublic = document.querySelector("#privacyCheckbox").checked;
     const { success, data, error} = await handleCreateCircle();
     if (error) {
       if (error === "Missing circle name") {
@@ -251,6 +254,13 @@ header.addEventListener("click", async (event) => {
 
   if (toActivity) {
     await displayActivity()
+  }
+
+  if (friendsBackButton) {
+    const { success, data } = await getUser(currentLocalUser)
+    if (success && data) {
+      return await displayProfile(data);
+    }
   }
 });
 

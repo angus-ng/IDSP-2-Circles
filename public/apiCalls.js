@@ -6,10 +6,11 @@ async function handleCreateCircle() {
     if (!circleName) {
       return { success: true, data: null, error: "Missing circle name"};
     }
-
+    
     const formData = new FormData();
     formData.append("picturePath", circlePhoto.src);
     formData.append("circleName", circleName);
+    formData.append("isPublic", isPrivacyPublic)
     const response = await fetch("/circle/create", {
       method: "POST",
       body: formData,
