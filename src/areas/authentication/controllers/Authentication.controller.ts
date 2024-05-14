@@ -43,6 +43,21 @@ class AuthenticationController implements IController {
   private callback = async (req:Request, res:Response) => {
     const url = new URL(`${req.protocol}://${req.get("host")}${req.url}`);
     await kindeClient.handleRedirectToApp(sessionManager(req, res), url);
+    const kindeUser = await kindeClient.getUser(sessionManager(req, res))
+    const user = await this._service.getUserById(kindeUser.id)
+    if (!user) {
+      if (!kindeUser.picture) {
+        kindeUser.picture = ""
+      }
+      //@ts-ignore
+      await this._service.createUser({
+        id: kindeUser.id,
+        username: kindeUser.id,
+        firstName: kindeUser.family_name,
+        lastName: kindeUser.given_name,
+        profilePicture: kindeUser.picture
+      })
+    }
     return res.redirect("/");
   }
 
@@ -53,9 +68,10 @@ class AuthenticationController implements IController {
 
   private getSession = async (req:Request, res:Response) => {
     try {
-      console.log(await kindeClient.getUser(sessionManager(req, res)))
+      const user = await kindeClient.getUser(sessionManager(req, res))
+      console.log(user, "got user session:")
       // make this return the user family name igven name picture email id whatvere u want or make user make a new name.
-      res.json({success: true, username: req.user!.username})
+      res.json({success: true, username: user.id})
     } catch (error) {
       res.json({success: false, errorMessage: "Not logged in"})
     }

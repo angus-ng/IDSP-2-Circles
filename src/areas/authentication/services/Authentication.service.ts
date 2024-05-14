@@ -52,11 +52,18 @@ export class AuthenticationService implements IAuthenticationService {
       if (user.password){
         user.password = await hash(user.password, salt);
       }
-  
+      
+      let id = randomUUID()
+
+      if (user.id) {
+        //@ts-ignore
+        id = user.id
+      }
+
       const User = await this._db.prisma.user.create({
         data: { 
-          id: randomUUID(),
           ...user,
+          id: id,
           profilePicture: "",
         }
       })
