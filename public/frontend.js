@@ -52,6 +52,8 @@ header.addEventListener("click", async (event) => {
   const usernameBackButton = event.target.closest("#usernameBack");
   const profilePictureBackButton = event.target.closest("#profilePictureBack");
   const profileConfirmationBackButton = event.target.closest("#profileConfirmationBack");
+  const friendsBackButton = event.target.closest("#friendsBackButton");
+
   if (emailBackButton) {
     await displayLoginPage();
   }
@@ -124,6 +126,7 @@ header.addEventListener("click", async (event) => {
   }
 
   if (createCircleButton) {
+    isPrivacyPublic = document.querySelector("#privacyCheckbox").checked;
     const { success, data, error} = await handleCreateCircle();
     if (error) {
       if (error === "Missing circle name") {
@@ -162,7 +165,9 @@ header.addEventListener("click", async (event) => {
     const circleName = document.querySelector("#circleName");
     document.querySelector("#privacyCheckbox").checked = isPrivacyPublic;
     document.querySelector("#circleImage").src = circleImgSrc;
-    document.querySelector("#addPicture img").src = addPictureSrc;
+    const addPictureButton = document.querySelector("#addPicture")
+    addPictureButton.textContent = "Change Picture";
+    addPictureButton.className = "w-380 h-45 bg-white border-2 border-dark-grey text-dark-grey rounded-input-box fixed bottom-8";
     circleName.value = newCircleNameInput;
     await updateCheckbox();
     return;
@@ -250,17 +255,23 @@ header.addEventListener("click", async (event) => {
   if (toActivity) {
     await displayActivity()
   }
+
+  if (friendsBackButton) {
+    const { success, data } = await getUser(currentLocalUser);
+    if (success && data) {
+      return await displayProfile(data);
+    }
+  }
 });
 
 // create Cirlcle/Album modal
 const modal = document.querySelector("#modal");
 modal.addEventListener("click", async function (event) {
   event.preventDefault();
-  const closeModal = event.target.closest("#closeModalButton");
+  const closeModalButton = event.target.closest("#closeModalButton");
   const createAlbumModalButton = event.target.closest("#createAlbumModalButton");
   const createCircleModalButton = event.target.closest("#createCircleModalButton");
-
-  if (closeModal) {
+  if (closeModalButton) {
     if (modal.classList.contains("shown")) {
       modal.classList.remove("shown");
       modal.classList.add("hidden");
@@ -282,6 +293,12 @@ modal.addEventListener("click", async function (event) {
     await displayCreateCircle();
     await cleanUpSectionEventListener();
   }
+});
+
+const closeModalSwipe = document.querySelector("#modalBox");
+closeModalSwipe.addEventListener("swiped-down", (event) => {
+  modal.classList.remove("shown");
+  modal.classList.add("hidden");
 });
 
 async function handleLocalAuth() {

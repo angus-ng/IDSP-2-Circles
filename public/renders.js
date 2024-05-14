@@ -2,54 +2,56 @@ function displayLoginPage() {
   pageContent.innerHTML = `
     <div id="loginPage" class="flex flex-col items-center rounded-lg w-full z-10">
       <div class="flex-shrink-0 mt-2 mb-6">
-          <img src="/lightmode/logo_with_wordmark.svg" alt="Logo with Wordmark">  
+          <img src="/lightmode/logo_with_wordmark.svg" alt="Logo with Wordmark"/>  
       </div>
       <div class="flex-1">
-              <div class="flex items-center mt-6 mb-6">
-                  <label for="login" class=""></label>
-                  <input type="text" placeholder="Phone number, email, or username" id="emailInput" name="emailInput" class="rounded-input-box w-input-box border-dark-grey border-2 text-17 items-end">
-              </div>
-              <div class="flex items-center mt-4 mb-6">
-                  <label for="password" class=""></label>
-                  <input type="password" placeholder="Password" id="passwordInput" name="passwordInput" class="rounded-input-box w-input-box text-17 border-dark-grey border-2 items-end">
-              </div>
-              <div class="flex items-center mt-4 mb-6">
-                  <div class="grid grid-cols-2 w-full">
-                      <div class="col-start-0">
-                          <input type="checkbox" name="rememberMe" id="rememberMe" class="size-5">
-                          <label for="rememberMe" class="ml-2 text-secondary">Remember Me</label>
-                      </div>
-                      <div class="justify-self-end">
-                          <a class="text-secondary leading-secondary text-light-mode-accent text-decoration-line: underline cursor-pointer">Forgot Password?</a>
-                      </div>
-                  </div>
-              </div>
-                  <button id="localAuth" class="my-2 w-full">
-                      <img src="/lightmode/login_button.svg" alt="Login Button">
-                  </button>
-              </div>
-              <div id="divider" class="my-6">
-                  <img src="/lightmode/orDivider.svg" alt="Divider">
-              </div>
-              <div class="flex items-center justify-between mt-4">
-                  <div class="grid grid-cols-2 gap-2.5">
-                      <form action="/auth/google">
-                          <button>
-                              <img src="/lightmode/google_icon.svg" alt="Google Icon">
-                          </button>
-                      </form>
-                      <form action="/auth/facebook">
-                          <button id="facebookAuth">
-                              <img src="/lightmode/facebook_icon.svg" alt="Facebook Icon">
-                          </button>
-                      </form>
-                  </div>
-              </div>
-          <div class="flex items-center justify-between mt-6 gap-1">
-              <p class="text-secondary leading-secondary">Don't have an account?</p>
-              <a id="signUp" class="text-secondary leading-secondary text-light-mode-accent text-decoration-line: underline cursor-pointer">Sign up</a>
+        <form>
+          <div class="flex items-center mt-6 mb-6">
+              <label for="emailInput" class=""></label>
+              <input type="text" placeholder="Phone number, email, or username" id="emailInput" name="emailInput" class="rounded-input-box w-input-box border-dark-grey border-2 text-17 items-end">
           </div>
+          <div class="flex items-center mt-4 mb-6">
+              <label for="password" class=""></label>
+              <input type="password" placeholder="Password" id="passwordInput" name="password" class="rounded-input-box w-input-box text-17 border-dark-grey border-2 items-end">
+          </div>
+        </form>
+          <div class="flex items-center mt-4 mb-6">
+              <div class="grid grid-cols-2 w-full">
+                  <div class="col-start-0">
+                      <input type="checkbox" name="rememberMe" id="rememberMe" class="size-5">
+                      <label for="rememberMe" class="ml-2 text-secondary">Remember Me</label>
+                  </div>
+                  <div class="justify-self-end">
+                      <a class="text-secondary leading-secondary text-light-mode-accent text-decoration-line: underline cursor-pointer">Forgot Password?</a>
+                  </div>
+              </div>
+          </div>
+              <button id="localAuth" class="my-2 w-full">
+                  <img src="/lightmode/login_button.svg" alt="Login Button"/>
+              </button>
+          </div>
+          <div id="divider" class="my-6">
+              <img src="/lightmode/orDivider.svg" alt="Divider"/>
+          </div>
+          <div class="flex items-center justify-between mt-4">
+              <div class="grid grid-cols-2 gap-2.5">
+                  <form action="/auth/google">
+                      <button>
+                          <img src="/lightmode/google_icon.svg" alt="Google Icon"/>
+                      </button>
+                  </form>
+                  <form action="/auth/facebook">
+                      <button id="facebookAuth">
+                          <img src="/lightmode/facebook_icon.svg" alt="Facebook Icon"/>
+                      </button>
+                  </form>
+              </div>
+          </div>
+      <div class="flex items-center justify-between mt-6 gap-1">
+          <p class="text-secondary leading-secondary">Don't have an account?</p>
+          <a id="signUp" class="text-secondary leading-secondary text-light-mode-accent text-decoration-line: underline cursor-pointer">Sign up</a>
       </div>
+    </div>
   </div>`;
 
   const loginPage = document.querySelector("#loginPage");
@@ -66,7 +68,7 @@ function displayLoginPage() {
 
 async function displaySignUpPage() {
   header.classList.remove("hidden");
-  leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button">`
+  leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button"/>`
   pageContent.innerHTML = `
   <div id="signUpPage" class="flex flex-col items-center rounded-lg w-full h-full z-10">
     <div id="signUpTitleSection" class="w-full mb-4 mt-6">
@@ -252,7 +254,7 @@ async function displaySignUpProfilePicturePage() {
   signUpTitle.textContent = "Add a profile picture";
   signUpSubtitle.textContent = "Add a profile picture so your friends know it’s you. Everyone will be able to see your picture.";
 
-  signUpPageContent.innerHTML = `<img src=/placeholder_image.svg alt="placeholder image">`;
+  signUpPageContent.innerHTML = `<img src=/placeholder_image.svg alt="placeholder image"/>`;
 
   signUpPageAdditionalContent.textContent = "";
 
@@ -278,7 +280,7 @@ async function displayProfileConfirmation() {
   signUpTitle.textContent = "Profile picture added";
   signUpSubtitle.textContent = "";
 
-  signUpPageContent.innerHTML = `<img src=/placeholder_image.svg alt="placeholder image">`;
+  signUpPageContent.innerHTML = `<img src=/placeholder_image.svg alt="placeholder image"/>`;
 
   signUpPageAdditionalContent.textContent = "";
 
@@ -292,14 +294,14 @@ async function displayCreateCircle() {
   nav.classList.add("hidden");
   pageName.textContent = `New Circle`;
 
-  leftHeaderButton.innerHTML = `<img id="backButton" src="/lightmode/back_button.svg" alt="Back Button">`
-  rightHeaderButton.innerHTML = `<img id="nextInviteFriends" src="/lightmode/next_button.svg" alt="Next Button">`;
+  leftHeaderButton.innerHTML = `<img id="backButton" src="/lightmode/back_button.svg" alt="Back Button"/>`
+  rightHeaderButton.innerHTML = `<img id="nextInviteFriends" src="/lightmode/next_button.svg" alt="Next Button"/>`;
 
   const pageContent = document.querySelector("#pageContent");
   pageContent.innerHTML = `
     <div id="createNewCircle" class="flex flex-col justify-center items-center p-4 bg-light-mode rounded-lg w-full overflow-hidden">
         <div class="shrink-0 mt-14 mb-6 justify-center">
-            <img id="circleImage" src="/placeholder_image.svg" alt="Placeholder Image" class="object-cover w-234 h-230 rounded-full cursor-pointer">                     
+            <img id="circleImage" src="/placeholder_image.svg" alt="Placeholder Image" class="object-cover w-234 h-230 rounded-full cursor-pointer"/>                     
         </div>
     
         <div class="flex-1 flex flex-col justify-between w-full px-4">
@@ -319,7 +321,7 @@ async function displayCreateCircle() {
           </div>
           <div class="flex flex-col">
           <div id="divider" class="my-4">
-              <img src="/lightmode/divider.svg" alt="Divider">                          
+              <img src="/lightmode/divider.svg" alt="Divider"/>                          
           </div>
             <input id="fileUpload" type="file" class="hidden" multiple=false />
             <div class="flex items-center justify-between mt-2 mb-2">
@@ -330,7 +332,7 @@ async function displayCreateCircle() {
               <div>
                 <label class="inline-flex items-center cursor-pointer">
                   <input id="privacyCheckbox" type="checkbox" value="" class="sr-only peer">
-                  <img id="privacyIcon" src="/lightmode/lock_icon.svg" alt="Lock icon" class="mr-4">
+                  <img id="privacyIcon" src="/lightmode/lock_icon.svg" alt="Lock icon" class="mr-4"/>
                   <span id="privacyLabel" class="text-sm font-medium leading-body text-14 mr-4 w-12">Private</span>
                   <div class="peer relative h-5 w-10 rounded-full outline outline-1 outline-black after:absolute after:start-[2px] after:top-0 after:h-4 after:w-4 after:rounded-full after:bg-black after:border after:border-black after:transition-all after:content-[''] peer-checked:bg-cover peer-checked:bg-black border-2 peer-checked:outline-black peer-checked:after:translate-x-5 peer-checked:after:border-white peer-checked:after:border-opacity-80 peer-checked:after:border-2 peer-checked:after:bg-black rtl:peer-checked:after:-translate-x-full"></div>
                 </label>
@@ -389,7 +391,7 @@ async function displayListOfFriends(friends) {
     username.textContent=`@${friend.username}`
     return `<div class="flex items-center my-5">
     <div class="flex-none w-58">
-      <img class="rounded w-58 h-58" src="${friend.profilePicture}" alt="${friend.username}'s profile picture"></img>
+      <img class="rounded-full w-58 h-58" src="${friend.profilePicture}" alt="${friend.username}'s profile picture"/>
     </div>
     <div class="ml-8 flex-none w-207">
       ${displayName.outerHTML}
@@ -410,8 +412,8 @@ async function displayInviteFriends() {
   const friends = await getFriends(currentLocalUser);
   const friendsList = await displayListOfFriends(friends);
   pageName.textContent = "Invite Friends";
-  leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="circleBackButton"></img>`;
-  rightHeaderButton.innerHTML = `<img src="/lightmode/next_button.svg" alt="Next Button" id="nextButton"></img>`;
+  leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="circleBackButton"/>`;
+  rightHeaderButton.innerHTML = `<img src="/lightmode/next_button.svg" alt="Next Button" id="nextButton"/>`;
 
   pageContent.innerHTML = `
       <div class="font-light text-11 justify-center text-center text-dark-grey w-full">
@@ -421,8 +423,8 @@ async function displayInviteFriends() {
       <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full">
         <div class="relative w-full h-9 mt-8">
           <form onkeydown="return event.key != 'Enter';">
-            <input class="w-380 px-14 py-2 border-grey border-2 rounded-input-box text-secondary leading-secondary" placeholder="search friends"/>
-            <img src="/lightmode/search_icon_no_text.svg" alt="search icon" class="absolute left-4 top-2.5 w-25 h-25"/>
+            <input class="w-380 px-10 py-2 border-grey border-2 rounded-input-box text-secondary leading-secondary" placeholder="search friends"/>
+            <img src="/lightmode/search_icon_grey.svg" alt="search icon" class="absolute left-3 top-search w-25 h-25"/>
           </form>
         </div>
         <div class="shrink-0 mt-10 mb-6 justify-center w-full">
@@ -448,7 +450,7 @@ function saveCheckedFriends() {
 async function displayCreateCirclePreview() {
   nav.classList.add("hidden");
   leftHeaderButton.innerHTML = `
-      <img src="/lightmode/back_button.svg" alt="Back Button" id="circlePreviewBackButton"></img>
+      <img src="/lightmode/back_button.svg" alt="Back Button" id="circlePreviewBackButton"/>
       `;
 
   pageName.textContent = "New Circle";
@@ -459,8 +461,8 @@ async function displayCreateCirclePreview() {
 
   pageContent.innerHTML = `
       <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full">
-            <div class="flex-shrink-0 mt-20 mb-4">
-                <img id="circleImage" src="/placeholder_image.svg" alt="Placeholder Image" class="object-cover w-234 h-230 rounded-full cursor-pointer">                     
+            <div class="flex-shrink-0 mt-14 mb-4">
+                <img id="circleImage" src="/placeholder_image.svg" alt="Placeholder Image" class="object-cover w-234 h-230 rounded-full cursor-pointer"/>                     
             </div>
             <div class="flex justify-center my-5 relative w-full">
                 <input
@@ -474,7 +476,7 @@ async function displayCreateCirclePreview() {
                 </button>
             </div>
             <div id="divider" class="mb-2">
-                <img src="/lightmode/divider.svg" alt="Divider">                          
+                <img src="/lightmode/divider.svg" alt="Divider"/>                          
             </div>
             <input id="fileUpload" type="file" class="hidden" multiple=false/>
             <div class="flex items-center justify-between w-full">
@@ -543,7 +545,7 @@ async function displayCreateCirclePreview() {
 async function displayExplore() {
   pageName.textContent = "Explore";
   leftHeaderButton.innerHTML = "";
-  rightHeaderButton.innerHTML = `<img src="/lightmode/map_icon.svg" alt="Map Icon"</img>`;
+  rightHeaderButton.innerHTML = `<img src="/lightmode/map_icon.svg" alt="Map Icon"/>`;
   pageContent.innerHTML = `
     <div id="explorePage" class="flex flex-col justify-center py-2 w-full h-screen">
     </div>
@@ -559,8 +561,8 @@ async function displaySearch() {
   pageContent.innerHTML = `
     <div id="searchPage" class="py-2 w-full h-full">
       <div class="relative w-full h-9 mt-8">
-        <input type="text" id="searchBox" class="w-380 px-14 py-2 border-grey border-2 rounded-input-box text-secondary leading-secondary" placeholder="search account">
-        <img src="/lightmode/search_icon_no_text.svg" alt="search icon" class="absolute left-4 top-2.5 w-25 h-25"/>
+        <input type="text" id="searchBox" class="w-380 px-10 py-2 border-grey border-2 rounded-input-box text-secondary leading-secondary" placeholder="search account">
+        <img src="/lightmode/search_icon_grey.svg" alt="search icon" class="absolute left-3 top-search w-25 h-25"/>
       </div>
       <div class="flex flex-col shrink-0 mt-10 mb-6 justify-center w-full">
         <div id="suggestedFriends"></div>
@@ -578,7 +580,16 @@ async function displaySearch() {
     const searchResult = await getSearchResult(searchBox.value);
     suggestedFriends.innerHTML = displayUserSearch(searchResult.data).join("");
   });
-
+  suggestedFriends.addEventListener("click", async function (event) {
+    event.preventDefault();
+    const user = event.target.closest("div.user")
+    if (user) {
+      const { success, data } = await getUser(user.id)
+      if (success && data) {
+        return await displayProfile(data);
+      }
+    }
+  })
   suggestedFriends.addEventListener("click", async (event) => {
     event.preventDefault();
     const target = event.target;
@@ -645,9 +656,9 @@ function displayUserSearch(listOfUsers) {
     username.className="font-light text-14 text-dark-grey"
     displayName.textContent= user.displayName ? user.displayName : user.username;
     username.textContent=`@${user.username}`
-    return `<div class="flex items-center my-3">
+    return `<div class="flex items-center my-3 user" id="${user.username}">
       <div class="flex-none w-58">
-        <img class="rounded-full w-58 h-58 object-cover" src="${user.profilePicture}" alt="${user.username}'s profile picture"></img>
+        <img class="rounded-full w-58 h-58 object-cover" src="${user.profilePicture}" alt="${user.username}'s profile picture"/>
       </div>
       <div class="ml-8 flex-none w-207">
         ${displayName.outerHTML}
@@ -766,26 +777,31 @@ async function displayActivity() {
 async function displayNavBar() {
   const nav = document.querySelector("#nav");
   nav.classList.remove("hidden");
-  nav.innerHTML = `<div class="border-b border-dark-grey"></div>
-  
-      <footer class="w-full flex justify-between items-center pt-4 pb-5 px-6 bg-light-mode-bg">
-          
-          <a href="" id="explore" class="flex flex-col items-center">        
-              <img src="/lightmode/explore_icon.svg" alt="Explore Icon">             
+  nav.innerHTML = `
+  <div class="border-b border-dark-grey"></div>
+      <footer class="w-full flex justify-between items-center pt-4 pb-5 px-6 bg-light-mode-bg text-grey text-13">
+          <a id="explore" class="flex flex-col items-center cursor-pointer">        
+              <img src="/lightmode/explore_icon.svg" alt="Explore Icon">
+              <p class="mt-1">explore</p>
           </a>
-          <a href="" id="search" class="flex flex-col items-center">
-              <img src="/lightmode/search_icon.svg" alt="Search Icon">   
+          <a id="search" class="flex flex-col items-center cursor-pointer">
+              <img src="/lightmode/search_icon.svg" alt="Search Icon">
+              <p class="mt-1">search</p>
           </a>
-          <a href="" id="new" class="flex flex-col items-center">
-              <img src="/lightmode/new_icon.svg" alt="New Icon">   
+          <a id="new" class="flex flex-col items-center cursor-pointer">
+              <img src="/lightmode/new_icon.svg" alt="New Icon">
+              <p class="mt-1">new</p>
           </a>
-          <a href="" id="activity" class="flex flex-col items-center">
-              <img src="/lightmode/activity_icon.svg" alt="Activity Icon">           
+          <a id="activity" class="flex flex-col items-center cursor-pointer">
+              <img src="/lightmode/activity_icon.svg" alt="Activity Icon">
+              <p class="mt-1">activity</p>         
           </a>
-          <a href="" id="profile" class="flex flex-col items-center">
+          <a id="profile" class="flex flex-col items-center cursor-pointer">
               <img src="/lightmode/profile_icon.svg" alt="Profile Icon">
+              <p class="mt-1">profile</p>
           </a>
       </footer>`;
+    
     const navBar = document.querySelector("footer");
     navBar.addEventListener("click", async function (event) {
       event.preventDefault();
@@ -806,9 +822,8 @@ async function displayNavBar() {
         newCircleNameInput = "";
       }
       if (newButton) {
-        modal.classList.remove("hidden");
-        modal.classList.add("shown");
         newCircleNameInput = "";
+        await displayNewModal();
       }
       if (activityButton) {
         await displayActivity();
@@ -825,14 +840,34 @@ async function displayNavBar() {
     });
 }
 
+async function displayNewModal() {
+  const modal = document.querySelector("#modal");
+  modal.classList.remove("hidden");
+  modal.classList.add("shown");
+  const closeModalButton = document.querySelector("#closeModalButton");
+  closeModalButton.classList.remove("hidden");
+  const modalContent = document.querySelector("#modalContent");
+  modalContent.innerHTML = `
+  <div class="flex space-x-6 justify-center text-light-mode-accent font-medium text-14">
+    <button id="createAlbumModalButton">
+        <img src="/lightmode/create_album_icon.svg" alt="New Album Icon">
+        <p class="mt-3">create album</p>
+    </button>              
+    <button id="createCircleModalButton">
+        <img src="/lightmode/create_circle_icon.svg" alt="New Circle Icon">
+        <p class="mt-3">create circle</p>
+    </button>                        
+  </div>`;
+}
+
 async function displayProfile(userData) {
+  nav.classList.remove("hidden");
   const circleRender = await displayListOfCircles(userData);
   const albumRender = await displayListOfAlbums(userData, true);
   const addAsFriend = document.createElement("div")
   addAsFriend.className = "flex justify-center";
   (currentLocalUser === userData.username) ? null : addAsFriend.innerHTML=`<button class="w-110 h-38 rounded-input-box bg-light-mode-accent text-white">Add friend</button>`
 
-  console.log(circleRender);
   pageName.textContent = userData.displayName ? userData.displayName : userData.username;
   leftHeaderButton.innerHTML = "";
   const username = document.createElement("h2")
@@ -841,11 +876,11 @@ async function displayProfile(userData) {
   username.textContent=`@${userData.username}`
   pageContent.innerHTML = `
   <div id="profilePage" class="relative pt-2 pb-16 mb-4 w-full">
-    <div id="settings" class="absolute top-0 right-0 w-6 h-6">
+    ${currentLocalUser === userData.username ? `<div id="settings" class="absolute top-0 right-0 w-6 h-6">
       <img src="/lightmode/settings_icon.svg">
-    </div>
+    </div>`: "" }
     <div class="flex justify-center mb-4">
-      <img id="profilePicture" src="${userData.profilePicture}" class="w-110 h-110 object-cover rounded-full"></img>
+      <img id="profilePicture" src="${userData.profilePicture}" class="w-110 h-110 object-cover rounded-full"/>
     </div>
     <div class="flex justify-center mt-2">
       ${username.outerHTML}
@@ -858,25 +893,25 @@ async function displayProfile(userData) {
         </div>
       </div>
       <div class="gap-0 justify-center">
-        <div id="friends">
+        <div id="friends" class="cursor-pointer">
           <h2 class="text-base font-bold text-center" id="friendCounter">${userData._count.friends}</h2>
           <h2 class="text-secondary text-center">Friends</h2>
         </div>
       </div>
     </div>
     ${addAsFriend.outerHTML}
-    <div id="profileTabs" class="w-full justify-center">
-      <ul class="flex flex-row w-full justify-center gap-x-38 -mb-px text-sm font-medium text-center text-dark-grey">
-        <li id="albumTab" class="me-2 w-180">
-          <a class="w-180 inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg hover:text-black hover:border-black">
+    <div id="profileTabs" class="w-full justify-center mx-auto">
+      <ul class="flex flex-row w-full justify-center -mb-px text-sm font-medium text-center text-dark-grey gap-6">
+        <li id="albumTab" class="me-2 w-full mr-0">
+          <a class="w-full inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg hover:text-black hover:border-black">
             <p class="text-13 font-bold mr-2">albums</p>
             <svg width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M11.55 0H2.45C1.93283 0 1.43684 0.205446 1.07114 0.571142C0.705446 0.936838 0.5 1.43283 0.5 1.95V11.05C0.5 11.5672 0.705446 12.0632 1.07114 12.4289C1.43684 12.7946 1.93283 13 2.45 13H11.55C11.6569 12.9985 11.7635 12.9876 11.8685 12.9675L12.0635 12.922H12.109H12.1415L12.382 12.831L12.4665 12.7855C12.5315 12.7465 12.603 12.714 12.668 12.6685C12.7548 12.6046 12.8373 12.5352 12.915 12.4605L12.9605 12.402C13.0243 12.3373 13.083 12.2678 13.136 12.194L13.1945 12.1095C13.2399 12.0371 13.279 11.961 13.3115 11.882C13.3293 11.8508 13.3446 11.8182 13.357 11.7845C13.3895 11.7065 13.409 11.622 13.435 11.5375V11.44C13.4719 11.313 13.4937 11.1821 13.5 11.05V1.95C13.5 1.43283 13.2946 0.936838 12.9289 0.571142C12.5632 0.205446 12.0672 0 11.55 0ZM2.45 11.7C2.27761 11.7 2.11228 11.6315 1.99038 11.5096C1.86848 11.3877 1.8 11.2224 1.8 11.05V8.2485L3.9385 6.1035C3.99893 6.04258 4.07082 5.99422 4.15002 5.96122C4.22923 5.92822 4.31419 5.91123 4.4 5.91123C4.48581 5.91123 4.57077 5.92822 4.64997 5.96122C4.72918 5.99422 4.80107 6.04258 4.8615 6.1035L10.4515 11.7H2.45ZM12.2 11.05C12.1994 11.1301 12.184 11.2095 12.1545 11.284C12.1396 11.3157 12.1223 11.3461 12.1025 11.375C12.0851 11.4025 12.0655 11.4286 12.044 11.453L8.5665 7.9755L9.1385 7.4035C9.19893 7.34258 9.27082 7.29422 9.35003 7.26122C9.42923 7.22822 9.51419 7.21123 9.6 7.21123C9.68581 7.21123 9.77077 7.22822 9.84997 7.26122C9.92918 7.29422 10.0011 7.34258 10.0615 7.4035L12.2 9.5485V11.05ZM12.2 7.709L10.978 6.5C10.606 6.14704 10.1128 5.95028 9.6 5.95028C9.08722 5.95028 8.59398 6.14704 8.222 6.5L7.65 7.072L5.778 5.2C5.40602 4.84704 4.91278 4.65028 4.4 4.65028C3.88722 4.65028 3.39398 4.84704 3.022 5.2L1.8 6.409V1.95C1.8 1.77761 1.86848 1.61228 1.99038 1.49038C2.11228 1.36848 2.27761 1.3 2.45 1.3H11.55C11.7224 1.3 11.8877 1.36848 12.0096 1.49038C12.1315 1.61228 12.2 1.77761 12.2 1.95V7.709ZM7.975 2.6C7.78216 2.6 7.59366 2.65718 7.43332 2.76432C7.27298 2.87145 7.14801 3.02373 7.07422 3.20188C7.00042 3.38004 6.98111 3.57608 7.01873 3.76521C7.05635 3.95434 7.14921 4.12807 7.28557 4.26443C7.42193 4.40079 7.59565 4.49365 7.78479 4.53127C7.97392 4.56889 8.16996 4.54958 8.34812 4.47578C8.52627 4.40199 8.67855 4.27702 8.78568 4.11668C8.89282 3.95634 8.95 3.76784 8.95 3.575C8.95 3.31641 8.84728 3.06842 8.66443 2.88557C8.48158 2.70272 8.23359 2.6 7.975 2.6Z" fill="#737373"/>
             </svg>
           </a>
         </li>
-        <li id="circleTab" class="me-2 w-180">
-          <a class="w-180 inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg text-black border-black hover:text-black hover:border-black">
+        <li id="circleTab" class="me-2 w-full mr-0">
+          <a class="w-full inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg text-black border-black hover:text-black hover:border-black">
             <p id="circleText" class="text-13 font-bold mr-2">circles</p>
             <svg width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M7 13C6.10083 13 5.25583 12.8293 4.465 12.4878C3.67417 12.1463 2.98625 11.6833 2.40125 11.0987C1.81625 10.5142 1.35323 9.82626 1.0122 9.035C0.671167 8.24373 0.500434 7.39873 0.500001 6.5C0.499567 5.60126 0.670301 4.75627 1.0122 3.965C1.3541 3.17373 1.81712 2.48582 2.40125 1.90125C2.98538 1.31668 3.6733 0.853666 4.465 0.5122C5.2567 0.170733 6.1017 0 7 0C7.8983 0 8.74329 0.170733 9.53499 0.5122C10.3267 0.853666 11.0146 1.31668 11.5987 1.90125C12.1829 2.48582 12.6461 3.17373 12.9884 3.965C13.3308 4.75627 13.5013 5.60126 13.5 6.5C13.4987 7.39873 13.328 8.24373 12.9878 9.035C12.6476 9.82626 12.1846 10.5142 11.5987 11.0987C11.0129 11.6833 10.325 12.1465 9.53499 12.4884C8.74503 12.8303 7.90003 13.0009 7 13ZM7 11.7C8.45166 11.7 9.68124 11.1962 10.6887 10.1887C11.6962 9.18125 12.2 7.95166 12.2 6.5C12.2 5.04833 11.6962 3.81875 10.6887 2.81125C9.68124 1.80375 8.45166 1.3 7 1.3C5.54833 1.3 4.31875 1.80375 3.31125 2.81125C2.30375 3.81875 1.8 5.04833 1.8 6.5C1.8 7.95166 2.30375 9.18125 3.31125 10.1887C4.31875 11.1962 5.54833 11.7 7 11.7Z" fill="#0E0E0E"/>
@@ -895,7 +930,7 @@ async function displayProfile(userData) {
   </div>`;
 
   const profilePage = document.querySelector("#profilePage");
-  profilePage.addEventListener("click", (event) => {
+  profilePage.addEventListener("click", async(event) => {
     const albumTab = event.target.closest("#albumTab");
     const circleTab = event.target.closest("#circleTab");
     const albumTabLink = document.querySelector("#albumTab a");
@@ -903,9 +938,40 @@ async function displayProfile(userData) {
     const circleList = document.querySelector("#circleList");
     const albumList = document.querySelector("#albumList");
     const settings = event.target.closest("#settings");
-    const like = event.target.closest("#like");
-    const comment = event.target.closest("#comment");
     const friends = event.target.closest("#friends");
+    const albumDiv = event.target.closest(".album");
+    const like = event.target.closest(".like");
+    const comment = event.target.closest(".comment");
+
+    if (like) {
+      if (like.classList.contains("liked")) {
+        console.log("unliked");
+        like.classList.remove("liked");
+        like.querySelector("svg path").setAttribute("fill", "none");
+        like.querySelector("svg path").setAttribute("stroke", "#FFFFFF");
+      } else {
+        like.classList.add("liked");
+        console.log("liked");
+        like.querySelector("svg path").setAttribute("fill", "#FF4646");
+        like.querySelector("svg path").setAttribute("stroke", "#FF4646");
+      }
+      return;
+    }
+  
+    if (comment) {
+      console.log("comment");
+      await displayComments();
+      return;
+    }
+
+    if (albumDiv) {
+      if (albumDiv.hasAttribute("id")) {
+        let { success, data, error } = await getAlbum(albumDiv.id);
+        if (success && data) {
+          await displayAlbum(data);
+        }
+      }
+    }
 
     if (albumTab) {
       if (albumList.classList.contains("hidden")) {
@@ -936,26 +1002,9 @@ async function displayProfile(userData) {
 
     if (friends) {
       console.log("friends");
+      console.log(userData.username);
+      await displayFriends(userData.username);
     }
-
-    if (like) {
-      if (like.classList.contains("liked")) {
-        console.log("unliked");
-        like.classList.remove("liked");
-        like.querySelector("svg path").setAttribute("fill", "none");
-        like.querySelector("svg path").setAttribute("stroke", "#FFFFFF");
-      } else {
-        like.classList.add("liked");
-        console.log("liked");
-        like.querySelector("svg path").setAttribute("fill", "#FF4646");
-        like.querySelector("svg path").setAttribute("stroke", "#FF4646");
-      }
-    }
-
-    if (comment) {
-      console.log("comment");
-    }
-
 
     if (settings) {
       console.log("no settings xd");
@@ -987,7 +1036,7 @@ async function displayListOfCircles(data) {
     return `
       <div id="${obj.circle.id}" class="circle">
         <div class="flex justify-center">
-          <img src="${obj.circle.picture}" class="rounded-full w-100 h-100 object-cover cursor-pointer border-circle border-black"/></img>
+          <img src="${obj.circle.picture}" class="rounded-full w-100 h-100 object-cover cursor-pointer border-circle border-black"/>
         </div>
         ${circleName.outerHTML}
       </div>`;
@@ -1228,11 +1277,11 @@ async function displayAlbumConfirmation() {
   nav.classList.add("hidden");
   console.log(albumObj);
 
-  leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="albumConfirmationBackButton"></img>`;
+  leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="albumConfirmationBackButton"/>`;
 
   pageName.textContent = "Post";
 
-  rightHeaderButton.innerHTML = `<img src="/lightmode/create_button.svg" alt="Create Button" id="createAlbum"></img>`;
+  rightHeaderButton.innerHTML = `<img src="/lightmode/create_button.svg" alt="Create Button" id="createAlbum"/>`;
 
   const carouselDiv = document.createElement("div");
   carouselDiv.id = "carousel";
@@ -1264,7 +1313,7 @@ async function displayAlbumConfirmation() {
           </div>
         </div>
         <div id="albumCircle"class="flex flex-row justify-center items-center ml-4 w-full">
-          <img id="circleImage" class="w-62 h-62 rounded-full" src="/placeholder_image.svg"></img>
+          <img id="circleImage" class="w-62 h-62 rounded-full" src="/placeholder_image.svg"/>
           <div class="flex flex-col ml-4">
             <h2 id="circleName" class="text-20 font-medium mr-2.5"></h2>
             <button id="editButton">
@@ -1364,12 +1413,12 @@ async function displayAlbumConfirmation() {
 
 async function displayCircle(circleData) {
   leftHeaderButton.innerHTML = `
-    <img src="/lightmode/back_button.svg" alt="Back Button" id="backButton"></img>
+    <img src="/lightmode/back_button.svg" alt="Back Button" id="backButton"/>
     `;
     rightHeaderButton.innerHTML = "";
     pageName.textContent = "";
     const memberList = circleData.members.map((obj) => {
-      return `<img src="${obj.user.profilePicture}" class="w-42 h-42 rounded-full object-cover"></img>`;
+      return `<img src="${obj.user.profilePicture}" class="w-42 h-42 rounded-full object-cover"/>`;
     });
     const albumList = circleData.circle.albums.map((obj) => {
       let albumName = document.createElement('p')
@@ -1382,8 +1431,16 @@ async function displayCircle(circleData) {
           ${albumName.outerHTML}
         </div>
         <div class="absolute inset-0 flex items-end justify-end gap-1 p-2">
-          <img src="/like_icon.svg" alt="Like Icon"></img>
-          <img src="/comment_icon.svg" alt="Comment Icon"></img>
+          <div class="like">
+            <svg width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9.22318 16.2905L9.22174 16.2892C6.62708 13.9364 4.55406 12.0515 3.11801 10.2946C1.69296 8.55118 1 7.05624 1 5.5C1 2.96348 2.97109 1 5.5 1C6.9377 1 8.33413 1.67446 9.24117 2.73128L10 3.61543L10.7588 2.73128C11.6659 1.67446 13.0623 1 14.5 1C17.0289 1 19 2.96348 19 5.5C19 7.05624 18.307 8.55118 16.882 10.2946C15.4459 12.0515 13.3729 13.9364 10.7783 16.2892L10.7768 16.2905L10 16.9977L9.22318 16.2905Z" stroke="white" stroke-width="2"/>
+            </svg>
+          </div>
+          <div class="comment">
+            <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10.5 19.125C8.79414 19.125 7.12658 18.6192 5.70821 17.6714C4.28983 16.7237 3.18434 15.3767 2.53154 13.8006C1.87873 12.2246 1.70793 10.4904 2.04073 8.81735C2.37352 7.14426 3.19498 5.60744 4.4012 4.40121C5.60743 3.19498 7.14426 2.37353 8.81735 2.04073C10.4904 1.70793 12.2246 1.87874 13.8006 2.53154C15.3767 3.18435 16.7237 4.28984 17.6714 5.70821C18.6192 7.12658 19.125 8.79414 19.125 10.5C19.125 11.926 18.78 13.2705 18.1667 14.455L19.125 19.125L14.455 18.1667C13.2705 18.78 11.925 19.125 10.5 19.125Z" stroke="#F8F4EA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
         </div>
       </div>`;
     });
@@ -1393,23 +1450,19 @@ async function displayCircle(circleData) {
     pageContent.innerHTML = `
     <div class="w-full px-0 mx-0">
       <div class="flex justify-center mt-6 mb-1.5">
-        <img src="${
-          circleData.circle.picture
-        }" class="rounded-full w-180 h-180 object-cover"/></img>
+        <img src="${circleData.circle.picture}" class="rounded-full w-180 h-180 object-cover"/>
       </div>
       <div class="mb-3">
         <p class="text-center text-20 font-bold">${circleName.outerHTML}</p>
       </div>
       <div class="grid grid-cols-1 place-items-center">
         <label class="inline-flex items-center cursor-pointer">
-            <img id="privacyIcon" src="/lightmode/lock_icon.svg" alt="Lock icon" class="mr-4">
-            <span id="privacyLabel" class="text-sm font-medium leading-body text-14 mr-4 w-12">Private</span>
+            <img id="privacyIcon" src="${circleData.circle.isPublic ? "/lightmode/globe_icon.svg": "/lightmode/lock_icon.svg"}" alt="Lock icon" class="mr-4">
+            <span id="privacyLabel" class="text-sm font-medium leading-body text-14 mr-4 w-12">${circleData.circle.isPublic ? "Public" : "Private"}</span>
         </label>
       </div>
       <div class="grid grid-cols-5 place-items-center mt-12 mb-2">
-        <p class="grid-span-1 text-base font-medium">${
-          circleData.members.length
-        } Friends</p>
+        <p class="grid-span-1 text-base font-medium">${circleData.members.length} Friends</p>
       </div>
       <div class="flex gap-2">
         ${memberList.join("")}
@@ -1428,6 +1481,30 @@ async function displayCircle(circleData) {
   albumListTarget.addEventListener("click", async function (event) {
     event.preventDefault();
     const albumDiv = event.target.closest(".album");
+    const like = event.target.closest(".like");
+    const comment = event.target.closest(".comment");
+
+    if (like) {
+      if (like.classList.contains("liked")) {
+        console.log("unliked");
+        like.classList.remove("liked");
+        like.querySelector("svg path").setAttribute("fill", "none");
+        like.querySelector("svg path").setAttribute("stroke", "#FFFFFF");
+      } else {
+        like.classList.add("liked");
+        console.log("liked");
+        like.querySelector("svg path").setAttribute("fill", "#FF4646");
+        like.querySelector("svg path").setAttribute("stroke", "#FF4646");
+      }
+      return;
+    }
+  
+    if (comment) {
+      console.log("comment");
+      await displayComments();
+      return;
+    }
+
     if (albumDiv) {
       if (albumDiv.hasAttribute("id")) {
         let { success, data, error } = await getAlbum(albumDiv.id);
@@ -1441,7 +1518,7 @@ async function displayCircle(circleData) {
 
 async function displayCircleInvites() {
   pageName.textContent = "Circle Invites";
-  leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="toActivity"></img>`;
+  leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="toActivity">`;
   const { circleInvites } = await getActivities(currentLocalUser);
     let circleInviteList = circleInvites.map((invite) => {
       let circleName = document.createElement("h2")
@@ -1450,7 +1527,7 @@ async function displayCircleInvites() {
       return `
       <div class="flex items-center my-3">
         <div class="flex-none w-58">
-          <img class="rounded-input-box w-58 h-58" src="${invite.circle.picture}" alt="${invite.circle.name}'s picture"></img>
+          <img class="rounded-input-box w-58 h-58" src="${invite.circle.picture}" alt="${invite.circle.name}'s picture">
         </div>
         <div class="ml-8 flex-none w-110">
           ${circleName.outerHTML}
@@ -1489,34 +1566,37 @@ async function displayCircleInvites() {
 async function displayAlbum(albumData) {
     leftHeaderButton.innerHTML = `
     <span id="${albumData.circle.id}">
-    <img src="/lightmode/back_button.svg" alt="Back Button" id="backButtonAlbum"></img>
+    <img src="/lightmode/back_button.svg" alt="Back Button" id="backButtonAlbum">
     </span
     `;
-    rightHeaderButton.innerHTML = ``;
+    rightHeaderButton.innerHTML = `<img src="/lightmode/share_icon.svg" alt="Back Button" id="backButtonAlbum">`;
     pageName.textContent = `${albumData.name}`;
+
   const memberList = [];
     for (i=0; i < albumData.circle.UserCircle.length; i++) {
-      if (i > 2) {
+      if (i > 3) {
         const count = albumData.circle.UserCircle.length - 3;
-        const andMore = `<div class="w-16 h-16 rounded-full border-2 flex justify-center items-center bg-dark-grey">
+        const andMore = `<div class="w-25 h-25 rounded-full border-2 flex justify-center items-center bg-dark-grey">
         <p class="text-secondary text-white font-bold">+${count}</p>
       </div>`
-      memberList.push(andMore)
+      memberList.push(andMore);
       break;
       }
-      memberList.push(`<img src="${albumData.circle.UserCircle[i].user.profilePicture}" class="w-16 h-16 rounded-full object-cover"></img>`);
+      memberList.push(`<img id="user${i+1}" src="${albumData.circle.UserCircle[i].user.profilePicture}" class="grid-item rounded-full object-cover">`);
     }
+
+    console.log(memberList);
     const photoList = albumData.photos.map((obj) => {
       return `<div id="photo" class="w-full h-min relative photo" albumId="${obj.id}">
       <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.src}"/>
     </div>`;
     });
-    let circleName = document.createElement('p')
-    circleName.className = "flex justify-center font-medium text-lg"
+    let circleName = document.createElement("h2");
+    circleName.className = "flex justify-center font-medium text-lg";
     circleName.textContent = albumData.circle.name;
     pageContent.innerHTML = `
       <div id="albumPhotos">
-        <div id="memberList" class="flex mt-8 justify-center">
+        <div id="memberList" class="grid grid-rows-2 grid-cols-3 mt-8 mx-auto items-center justify-center w-265 gap-2 h-84">
           ${memberList.join("")}
         </div>
         <div class="mt-4">
@@ -1533,8 +1613,27 @@ async function displayAlbum(albumData) {
           </div>
         </div>
     </div>`;
+
+  // album user display layout
+  const user1 = document.querySelector("#user1");
+  user1.classList.add("h-82", "w-82", "row-span-2", "col-start-2");
+
+  const user2 = document.querySelector("#user2");
+  if (user2) {
+    user2.classList.add("h-43", "w-43", "col-start-1", "row-start-1", "justify-self-end");
+  }
+
+  const user3 = document.querySelector("#user3");
+  if (user3) {
+    user3.classList.add("h-40", "w-40", "col-start-3", "row-start-2", "justify-self-start");
+  }
+
+  const user4 = document.querySelector("#user4");
+  if (user4) {
+    user4.classList.add("h-5", "w-5", "col-start-1", "row-start-2", "justify-self-end");
+  }
+
   const albumPhotos = document.querySelector("#albumPhotos");
-  console.log("THIS", albumPhotos);
   albumPhotos.addEventListener("click", async (event) => {
     const photo = event.target.closest("#photo img");
     const overlay = event.target.closest("#photoOverlay");
@@ -1554,9 +1653,77 @@ async function displayAlbum(albumData) {
   });
 }
 
+async function displayFriends(username) {
+  nav.classList.add("hidden");
+  const friends = await getFriends(username);
+  const friendsList = await displayFriendsList(friends);
+  console.log(friends);
+  console.log(friendsList);
+  pageName.textContent = "Friends";
+  leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="friendsBackButton"/>`;
+  rightHeaderButton.innerHTML = "";
+
+  pageContent.innerHTML = `
+      <div class="font-light text-11 justify-center text-center text-dark-grey w-full">
+        <p>We don’t send notifications when you edit</p>
+        <p>your Friends List.</p>
+      </div>
+      <div id="allFriendsList" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full">
+        <div class="relative w-full h-9 mt-8">
+          <form onkeydown="return event.key != 'Enter';">
+            <input class="w-380 px-10 py-2 border-grey border-2 rounded-input-box text-secondary leading-secondary" placeholder="search friends"/>
+            <img src="/lightmode/search_icon_grey.svg" alt="search icon" class="absolute left-3 top-search w-25 h-25"/>
+          </form>
+        </div>
+        <div class="shrink-0 mt-10 mb-6 justify-center w-full">
+          <h1 id="friendCount" class="font-bold text-20 leading-body"></h1>
+          <div id="friendsDiv"></div>
+        </div>
+      </div>
+      `;
+  const friendsDiv = document.querySelector("#friendsDiv");
+  friendsDiv.innerHTML = friendsList.join("");
+
+  const friendCount = document.querySelector("#friendCount");
+  if (friendsList.length === 1) {
+    friendCount.innerHTML = `${friendsList.length} friend`;
+  } else if (friendsList.length > 1) {
+    friendCount.innerHTML = `${friendsList.length} friends`;
+  }
+}
+
+async function displayFriendsList(friends) {
+  console.log(friends);
+  let newArr = friends.map((friend) => {
+    let displayName = document.createElement("h2");
+    let username = document.createElement("h2");
+    displayName.className="font-medium text-14 leading-tertiary"
+    username.className="font-light text-14 text-dark-grey"
+    displayName.textContent= friend.displayName ? friend.displayName : friend.username;
+    username.textContent=`@${friend.username}`
+    return `<div class="flex items-center my-5">
+    <div class="flex-none w-58">
+      <img class="rounded-full w-58 h-58" src="${friend.profilePicture}" alt="${friend.username}'s profile picture"/>
+    </div>
+    <div class="ml-8 flex-none w-207">
+      ${displayName.outerHTML}
+      ${username.outerHTML}
+    </div>
+    <div class="flex-none w-58">
+      <div class="removeFriendIcon">
+        <svg width="30" height="31" viewBox="0 0 30 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M17.5 10.5C17.5 7.7375 15.2625 5.5 12.5 5.5C9.7375 5.5 7.5 7.7375 7.5 10.5C7.5 13.2625 9.7375 15.5 12.5 15.5C15.2625 15.5 17.5 13.2625 17.5 10.5ZM2.5 23V24.25C2.5 24.9375 3.0625 25.5 3.75 25.5H21.25C21.9375 25.5 22.5 24.9375 22.5 24.25V23C22.5 19.675 15.8375 18 12.5 18C9.1625 18 2.5 19.675 2.5 23ZM22.5 13H27.5C28.1875 13 28.75 13.5625 28.75 14.25C28.75 14.9375 28.1875 15.5 27.5 15.5H22.5C21.8125 15.5 21.25 14.9375 21.25 14.25C21.25 13.5625 21.8125 13 22.5 13Z" fill="#0E0E0E"/>
+        </svg>
+      </div>
+    </div>
+  </div>`;
+  });
+  return newArr;
+}
+
 async function displayFriendRequests() {
   pageName.textContent = "Friend Requests";
-  leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="toActivity"></img>`;
+  leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="toActivity"/>`;
   const { friendRequests } = await getActivities(currentLocalUser);
 
     let friendRequestsList = friendRequests.map((request) => {
@@ -1568,7 +1735,7 @@ async function displayFriendRequests() {
       return `
       <div class="flex items-center my-5">
       <div class="flex-none w-58">
-        <img class="rounded-full w-58 h-58" src="${request.requester.profilePicture}" alt="${request.requester.username}'s profile picture"></img>
+        <img class="rounded-full w-58 h-58" src="${request.requester.profilePicture}" alt="${request.requester.username}'s profile picture"/>
       </div>
       <div class="ml-8 flex-none w-110 grid grid-rows-2">
         <div>
@@ -1619,7 +1786,7 @@ async function displayPhoto(photoSrc) {
   const personalView = document.createElement("img");
   personalView.src = `${photoSrc}`;
   personalView.id = "image";
-  personalView.className = "max-w-sm object-cover rounded-xl";
+  personalView.className = "w-430 object-cover rounded-xl";
 
   photoDiv.appendChild(personalView);
   albumPhotos.appendChild(photoDiv);
@@ -1643,12 +1810,12 @@ async function displayListOfAlbums (data, profile=false) {
         ${albumName.outerHTML}
       </div>
       <div class="absolute inset-0 flex items-end justify-end gap-1 p-2">
-        <div id="like">
+        <div class="like">
           <svg width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M9.22318 16.2905L9.22174 16.2892C6.62708 13.9364 4.55406 12.0515 3.11801 10.2946C1.69296 8.55118 1 7.05624 1 5.5C1 2.96348 2.97109 1 5.5 1C6.9377 1 8.33413 1.67446 9.24117 2.73128L10 3.61543L10.7588 2.73128C11.6659 1.67446 13.0623 1 14.5 1C17.0289 1 19 2.96348 19 5.5C19 7.05624 18.307 8.55118 16.882 10.2946C15.4459 12.0515 13.3729 13.9364 10.7783 16.2892L10.7768 16.2905L10 16.9977L9.22318 16.2905Z" stroke="white" stroke-width="2"/>
           </svg>
         </div>
-        <div id="comment">
+        <div class="comment">
           <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M10.5 19.125C8.79414 19.125 7.12658 18.6192 5.70821 17.6714C4.28983 16.7237 3.18434 15.3767 2.53154 13.8006C1.87873 12.2246 1.70793 10.4904 2.04073 8.81735C2.37352 7.14426 3.19498 5.60744 4.4012 4.40121C5.60743 3.19498 7.14426 2.37353 8.81735 2.04073C10.4904 1.70793 12.2246 1.87874 13.8006 2.53154C15.3767 3.18435 16.7237 4.28984 17.6714 5.70821C18.6192 7.12658 19.125 8.79414 19.125 10.5C19.125 11.926 18.78 13.2705 18.1667 14.455L19.125 19.125L14.455 18.1667C13.2705 18.78 11.925 19.125 10.5 19.125Z" stroke="#F8F4EA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
@@ -1657,6 +1824,28 @@ async function displayListOfAlbums (data, profile=false) {
     </div>`;
   });
   return albumList
+}
+
+async function displayComments() {
+  const modal = document.querySelector("#modal");
+  modal.classList.remove("hidden");
+  modal.classList.add("shown");
+  const closeModalButton = document.querySelector("#closeModalButton");
+  closeModalButton.classList.remove("hidden");
+  const modalContent = document.querySelector("#modalContent");
+  modalContent.innerHTML = `
+  <div class="flex flex-col w-full justify-center mx-auto text-black">
+    <div>
+      <h1 class="font-semibold text-23">Comments</p>
+    </div>
+    <div class="albumComments">
+    </div>
+    <div class="w-full">
+      <form>
+        <input for="newComment" class="w-input-box rounded-input-box border-2" placeholder="enter a commment">
+      </form>
+    </div>
+  </div>`;
 }
 
 async function displayPopup(activity) {
@@ -1683,4 +1872,23 @@ async function displayPopup(activity) {
     popup.classList.remove("opacity-0", "duration-1000");
     popup.classList.add("hidden");
   }
+}
+
+async function displayConfirmationPopup(activity) {
+  const confirmationText = document.querySelector("#confirmationText");
+  confirmationText.textContent = `${activity}`;
+  const confirmationPopup = document.querySelector("#confirmationPopup");
+  confirmationPopup.classList.remove("hidden");
+
+  confirmationPopup.addEventListener("click", () => {
+    const cancelButton = event.target.closest("#cancelButton");
+    const contextButton = event.target.closest("#contextButton");
+    if (cancelButton) {
+      confirmationPopup.classList.add("hidden");
+    }
+
+    if (contextButton) {
+      console.log("do something");
+    }
+  });
 }

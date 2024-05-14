@@ -6,10 +6,11 @@ async function handleCreateCircle() {
     if (!circleName) {
       return { success: true, data: null, error: "Missing circle name"};
     }
-
+    
     const formData = new FormData();
     formData.append("picturePath", circlePhoto.src);
     formData.append("circleName", circleName);
+    formData.append("isPublic", isPrivacyPublic)
     const response = await fetch("/circle/create", {
       method: "POST",
       body: formData,
@@ -147,8 +148,15 @@ async function handleCreateAlbum(albumObj) {
   }
 }
 
-async function getFriends() {
-  const response = await fetch(`/user/getFriends/`);
+async function getFriends(username) {
+  console.log("GET", username)
+  const response = await fetch(`/user/getFriends/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({username})
+  });
   const responseJson = await response.json();
   return responseJson.data;
 }

@@ -14,6 +14,9 @@ theme: {
   screens: {
     'min-size': '430px'
   },
+  fontWeight: {
+    'semibold': '600'
+  },
   extend: {
     colors: {
       'light-mode-bg': 'rgba(248, 244, 234, 0.86)',
@@ -45,7 +48,8 @@ theme: {
       '15': '15px',
       '14': '14px',
       '13': '13px',
-      '11': '11px'
+      '11': '11px',
+      '23': '23px'
     },
     lineHeight: {
       'h1': '40px',
@@ -71,7 +75,14 @@ theme: {
       '62': '62px',
       'popup': '398px',
       'request': '78px',
-      '166': '166px'
+      '312': '312px',
+      '166': '166px',
+      '168': '168px',
+      '82': '82px',
+      '25': '25px',
+      '43': '43px',
+      '40': '40px',
+      '265': '265px'
     },
     height: {
       '932': '932px',
@@ -92,7 +103,13 @@ theme: {
       'request': '34px',
       '38': '38px',
       '45': '45px',
-      '33': '33px'
+      '33': '33px',
+      '84': '84px',
+      '82': '82px',
+      '25': '25px',
+      '43': '43px',
+      '40': '40px',
+      '270': '270px'
     },
     boxShadow: {
       'background-shadow': 'inset 0 0 100px -30px rgba(0, 0, 0, 0.2)'
@@ -119,7 +136,8 @@ theme: {
     spacing: {
       '22': '22px',
       '38': '38px',
-      '200': '200px'
+      '200': '200px',
+      'search': '7px'
     },
     padding: {
       '20': '20px'
@@ -133,7 +151,6 @@ theme: {
 },
 plugins: [
   require('@tailwindcss/forms'),
-  require('flowbite/plugin'),
   plugin(function ({ matchUtilities, theme }) {
     matchUtilities(
       {

@@ -6,7 +6,7 @@ import { Circle } from '@prisma/client'
 export class CircleService implements ICircleService {
   readonly _db: DBClient = DBClient.getInstance();
 
-  async createCircle(newCircleInput: any): Promise<Circle|null> {
+  async createCircle(newCircleInput: {creator: string, name: string, picturePath: string, isPublic: boolean}): Promise<Circle|null> {
     //find the logged in user from db
     const creator = await this._db.prisma.user.findUnique({
         where: {
@@ -22,9 +22,10 @@ export class CircleService implements ICircleService {
                 name: newCircleInput.name,
                 picture: newCircleInput.picturePath,
                 ownerId: creator.username,
+                isPublic: newCircleInput.isPublic
             }
         })
-        
+        console.log(createdCircle)
         //make the explicit circle user relationship
         if (createdCircle) {
             await this._db.prisma.userCircle.create({
