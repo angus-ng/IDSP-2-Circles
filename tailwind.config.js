@@ -151,7 +151,6 @@ theme: {
 },
 plugins: [
   require('@tailwindcss/forms'),
-  require('flowbite/plugin'),
   plugin(function ({ matchUtilities, theme }) {
     matchUtilities(
       {
