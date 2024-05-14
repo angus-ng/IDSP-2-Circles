@@ -8,7 +8,7 @@ function displayLoginPage() {
         <form>
           <div class="flex items-center mt-6 mb-6">
               <label for="emailInput" class=""></label>
-              <input type="text" placeholder="Phone number, email, or username" id="login" name="emailInput" class="rounded-input-box w-input-box border-dark-grey border-2 text-17 items-end">
+              <input type="text" placeholder="Phone number, email, or username" id="emailInput" name="emailInput" class="rounded-input-box w-input-box border-dark-grey border-2 text-17 items-end">
           </div>
           <div class="flex items-center mt-4 mb-6">
               <label for="password" class=""></label>
@@ -921,7 +921,7 @@ async function displayProfile(userData) {
   </div>`;
 
   const profilePage = document.querySelector("#profilePage");
-  profilePage.addEventListener("click", (event) => {
+  profilePage.addEventListener("click", async(event) => {
     const albumTab = event.target.closest("#albumTab");
     const circleTab = event.target.closest("#circleTab");
     const albumTabLink = document.querySelector("#albumTab a");
@@ -962,6 +962,7 @@ async function displayProfile(userData) {
 
     if (friends) {
       console.log("friends");
+      await displayFriendsList(userData.username);
     }
 
     if (like) {
@@ -1608,6 +1609,12 @@ async function displayAlbum(albumData) {
       }
     }
   });
+}
+
+async function displayFriendsList() {
+  const friends = await getFriends(currentLocalUser);
+  const friendsList = await displayListOfFriends(friends);
+  console.log(friendsList);
 }
 
 async function displayFriendRequests() {
