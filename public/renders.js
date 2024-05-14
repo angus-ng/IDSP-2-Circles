@@ -1836,19 +1836,20 @@ async function displayComments(albumId) {
   console.log(data)
   const commentList = data.map((comment) => {
     return `
-    <div class="comment flex flex-row items-center h-50">
-    <div class="flex w-58 items-center">
+    <div class="comment flex flex-row items-center h-62">
+    <div class="flex w-58 items-center h-full">
       <img src="${comment.user.profilePicture}" class="w-47 h-47 rounded-full">
     </div>
-    <div class=" flex flex-col w-294">
+    <div class=" flex flex-col w-294 h-full">
       <div class="flex flex-row gap-2">
         <h1 class="font-bold text-secondary">${comment.user.displayName ? comment.user.displayName : comment.user.username}</h1>
         <p class="text-time text-11">${comment.createdAt}</p>
       </div>
       <p>${comment.message}</p>
+      <a class="text-time text-11 underline">Reply</a>
     </div>
-    <div class="flex flex-col items-center">
-          <div class="like">
+    <div class="flex flex-1 flex-col items-center gap-1">
+          <div class="like h-full">
             <svg width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M9.22318 16.6155L9.22174 16.6142C6.62708 14.2613 4.55406 12.3765 3.11801 10.6196C1.69296 8.87613 1 7.38119 1 5.82495C1 3.28843 2.97109 1.32495 5.5 1.32495C6.9377 1.32495 8.33413 1.99941 9.24117 3.05623L10 3.94038L10.7588 3.05623C11.6659 1.99941 13.0623 1.32495 14.5 1.32495C17.0289 1.32495 19 3.28843 19 5.82495C19 7.38119 18.307 8.87613 16.882 10.6196C15.4459 12.3765 13.3729 14.2613 10.7783 16.6142L10.7768 16.6155L10 17.3226L9.22318 16.6155Z" stroke="#0E0E0E" stroke-width="2"/>
             </svg>

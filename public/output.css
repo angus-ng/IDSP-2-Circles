@@ -1572,12 +1572,12 @@ select {
   border-bottom-width: 2px;
 }
 
-.border-t {
-  border-top-width: 1px;
-}
-
 .border-b-circle {
   border-bottom-width: 0.75px;
+}
+
+.border-t {
+  border-top-width: 1px;
 }
 
 .border-solid {
@@ -1917,6 +1917,10 @@ select {
 
 .underline {
   text-decoration-line: underline;
+}
+
+.decoration-solid {
+  text-decoration-style: solid;
 }
 
 .opacity-0 {
