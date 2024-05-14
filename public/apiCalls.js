@@ -148,8 +148,15 @@ async function handleCreateAlbum(albumObj) {
   }
 }
 
-async function getFriends() {
-  const response = await fetch(`/user/getFriends/`);
+async function getFriends(username) {
+  console.log("GET", username)
+  const response = await fetch(`/user/getFriends/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({username})
+  });
   const responseJson = await response.json();
   return responseJson.data;
 }

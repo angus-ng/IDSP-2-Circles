@@ -971,7 +971,7 @@ async function displayProfile(userData) {
     if (friends) {
       console.log("friends");
       console.log(userData.username);
-      await displayFriends();
+      await displayFriends(userData.username);
     }
 
     if (like) {
@@ -1620,9 +1620,9 @@ async function displayAlbum(albumData) {
   });
 }
 
-async function displayFriends() {
+async function displayFriends(username) {
   nav.classList.add("hidden");
-  const friends = await getFriends(currentLocalUser);
+  const friends = await getFriends(username);
   const friendsList = await displayFriendsList(friends);
   console.log(friends);
   console.log(friendsList);
@@ -1659,9 +1659,7 @@ async function displayFriends() {
   }
 }
 
-async function displayFriendsList() {
-  const friends = await getFriends(currentLocalUser);
-  // console.log(currentLocalUser);
+async function displayFriendsList(friends) {
   console.log(friends);
   let newArr = friends.map((friend) => {
     let displayName = document.createElement("h2");
