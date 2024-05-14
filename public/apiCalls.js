@@ -349,3 +349,20 @@ async function getUser(username) {
 
   }
 }
+
+async function getComments(albumId) {
+  try {
+    const response = await fetch(`/album/comments`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({albumId})
+    })
+    const jsonResponse = await response.json();
+    console.log(jsonResponse)
+    return jsonResponse
+  } catch (err) {
+
+  }
+}
