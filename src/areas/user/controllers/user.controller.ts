@@ -16,7 +16,7 @@ class UserController implements IController {
   private initializeRoutes() {
     this.router.post(`${this.path}/sendFriendRequest`, ensureAuthenticated, this.friend);
     this.router.post(`${this.path}/unfriend`, ensureAuthenticated, this.unfriend);
-    this.router.get(`${this.path}/getFriends`, ensureAuthenticated, this.getFriends)
+    this.router.post(`${this.path}/getFriends`, ensureAuthenticated, this.getFriends)
     this.router.get(`${this.path}/getActivities`, ensureAuthenticated, this.getActivities)
     this.router.post(`${this.path}/accept`, ensureAuthenticated, this.acceptFriendRequest)
     this.router.post(`${this.path}/removeRequest`, ensureAuthenticated, this.removeFriendRequest)
@@ -49,9 +49,16 @@ class UserController implements IController {
     }
   }
   private getFriends = async (req: Request, res: Response) => {
+    try {
     let loggedInUser = req.user!.username
-      const friends = await this._service.getFriends(loggedInUser)
+      const { username } = req.body
+      console.log(username)
+      console.log(req.body)
+      const friends = await this._service.getFriends(username)
       res.status(200).json({success: true, data: friends})
+    } catch (err) {
+      return res.status(200).json({success: true, data: null, error: "failed to get friends"})
+    }
   }
 
   private getActivities = async (req: Request, res: Response) => {

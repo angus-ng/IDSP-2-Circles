@@ -938,9 +938,40 @@ async function displayProfile(userData) {
     const circleList = document.querySelector("#circleList");
     const albumList = document.querySelector("#albumList");
     const settings = event.target.closest("#settings");
-    const like = event.target.closest("#like");
-    const comment = event.target.closest("#comment");
     const friends = event.target.closest("#friends");
+    const albumDiv = event.target.closest(".album");
+    const like = event.target.closest(".like");
+    const comment = event.target.closest(".comment");
+
+    if (like) {
+      if (like.classList.contains("liked")) {
+        console.log("unliked");
+        like.classList.remove("liked");
+        like.querySelector("svg path").setAttribute("fill", "none");
+        like.querySelector("svg path").setAttribute("stroke", "#FFFFFF");
+      } else {
+        like.classList.add("liked");
+        console.log("liked");
+        like.querySelector("svg path").setAttribute("fill", "#FF4646");
+        like.querySelector("svg path").setAttribute("stroke", "#FF4646");
+      }
+      return;
+    }
+  
+    if (comment) {
+      console.log("comment");
+      await displayComments();
+      return;
+    }
+
+    if (albumDiv) {
+      if (albumDiv.hasAttribute("id")) {
+        let { success, data, error } = await getAlbum(albumDiv.id);
+        if (success && data) {
+          await displayAlbum(data);
+        }
+      }
+    }
 
     if (albumTab) {
       if (albumList.classList.contains("hidden")) {
@@ -971,28 +1002,9 @@ async function displayProfile(userData) {
 
     if (friends) {
       console.log("friends");
-      console.log("username", userData.username);
+      console.log(userData.username);
       await displayFriends(userData.username);
     }
-
-    if (like) {
-      if (like.classList.contains("liked")) {
-        console.log("unliked");
-        like.classList.remove("liked");
-        like.querySelector("svg path").setAttribute("fill", "none");
-        like.querySelector("svg path").setAttribute("stroke", "#FFFFFF");
-      } else {
-        like.classList.add("liked");
-        console.log("liked");
-        like.querySelector("svg path").setAttribute("fill", "#FF4646");
-        like.querySelector("svg path").setAttribute("stroke", "#FF4646");
-      }
-    }
-
-    if (comment) {
-      console.log("comment");
-    }
-
 
     if (settings) {
       console.log("no settings xd");
@@ -1469,14 +1481,25 @@ async function displayCircle(circleData) {
   albumListTarget.addEventListener("click", async function (event) {
     event.preventDefault();
     const albumDiv = event.target.closest(".album");
-    const likeButton = event.target.closest(".like");
-    const commentButton = event.target.closest(".comment");
-    if (likeButton) {
-      console.log("angus smells");
+    const like = event.target.closest(".like");
+    const comment = event.target.closest(".comment");
+
+    if (like) {
+      if (like.classList.contains("liked")) {
+        console.log("unliked");
+        like.classList.remove("liked");
+        like.querySelector("svg path").setAttribute("fill", "none");
+        like.querySelector("svg path").setAttribute("stroke", "#FFFFFF");
+      } else {
+        like.classList.add("liked");
+        console.log("liked");
+        like.querySelector("svg path").setAttribute("fill", "#FF4646");
+        like.querySelector("svg path").setAttribute("stroke", "#FF4646");
+      }
       return;
     }
   
-    if (commentButton) {
+    if (comment) {
       console.log("comment");
       await displayComments();
       return;
@@ -1594,12 +1617,21 @@ async function displayAlbum(albumData) {
   // album user display layout
   const user1 = document.querySelector("#user1");
   user1.classList.add("h-82", "w-82", "row-span-2", "col-start-2");
+
   const user2 = document.querySelector("#user2");
-  user2.classList.add("h-43", "w-43", "col-start-1", "row-start-1", "justify-self-end");
+  if (user2) {
+    user2.classList.add("h-43", "w-43", "col-start-1", "row-start-1", "justify-self-end");
+  }
+
   const user3 = document.querySelector("#user3");
-  user3.classList.add("h-40", "w-40", "col-start-3", "row-start-2", "justify-self-start");
+  if (user3) {
+    user3.classList.add("h-40", "w-40", "col-start-3", "row-start-2", "justify-self-start");
+  }
+
   const user4 = document.querySelector("#user4");
-  user4.classList.add("h-5", "w-5", "col-start-1", "row-start-2", "justify-self-end");
+  if (user4) {
+    user4.classList.add("h-5", "w-5", "col-start-1", "row-start-2", "justify-self-end");
+  }
 
   const albumPhotos = document.querySelector("#albumPhotos");
   albumPhotos.addEventListener("click", async (event) => {
@@ -1660,9 +1692,8 @@ async function displayFriends(username) {
   }
 }
 
-async function displayFriendsList(friendsList) {
-  const friends = await getFriends(friendsList);
-  console.log("friends", friends);
+async function displayFriendsList(friends) {
+  console.log(friends);
   let newArr = friends.map((friend) => {
     let displayName = document.createElement("h2");
     let username = document.createElement("h2");
@@ -1755,7 +1786,7 @@ async function displayPhoto(photoSrc) {
   const personalView = document.createElement("img");
   personalView.src = `${photoSrc}`;
   personalView.id = "image";
-  personalView.className = "max-w-sm object-cover rounded-xl";
+  personalView.className = "w-430 object-cover rounded-xl";
 
   photoDiv.appendChild(personalView);
   albumPhotos.appendChild(photoDiv);
