@@ -361,12 +361,12 @@ export class UserService implements IUserService {
       })
       circles.push({circle: obj})
     })
-    const compiledObj = userInfo
+    const compiledObj:any = userInfo
 
-    userInfo.UserCircle = circles;
-    userInfo.Album = albums;
-    userInfo._count.UserCircle = circles.length
+    compiledObj.UserCircle = circles;
+    compiledObj.Album = albums;
+    compiledObj._count.UserCircle = circles.length
     
-    return userInfo;
+    return compiledObj;
   }
 }

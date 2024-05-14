@@ -580,7 +580,16 @@ async function displaySearch() {
     const searchResult = await getSearchResult(searchBox.value);
     suggestedFriends.innerHTML = displayUserSearch(searchResult.data).join("");
   });
-
+  suggestedFriends.addEventListener("click", async function (event) {
+    event.preventDefault();
+    const user = event.target.closest("div.user")
+    if (user) {
+      const { success, data } = await getUser(user.id)
+      if (success && data) {
+        return await displayProfile(data);
+      }
+    }
+  })
   suggestedFriends.addEventListener("click", async (event) => {
     event.preventDefault();
     const target = event.target;
@@ -647,7 +656,7 @@ function displayUserSearch(listOfUsers) {
     username.className="font-light text-14 text-dark-grey"
     displayName.textContent= user.displayName ? user.displayName : user.username;
     username.textContent=`@${user.username}`
-    return `<div class="flex items-center my-3">
+    return `<div class="flex items-center my-3 user" id="${user.username}">
       <div class="flex-none w-58">
         <img class="rounded-full w-58 h-58 object-cover" src="${user.profilePicture}" alt="${user.username}'s profile picture"/>
       </div>
@@ -867,9 +876,9 @@ async function displayProfile(userData) {
   username.textContent=`@${userData.username}`
   pageContent.innerHTML = `
   <div id="profilePage" class="relative pt-2 pb-16 mb-4 w-full">
-    <div id="settings" class="absolute top-0 right-0 w-6 h-6">
+    ${currentLocalUser === userData.username ? `<div id="settings" class="absolute top-0 right-0 w-6 h-6">
       <img src="/lightmode/settings_icon.svg">
-    </div>
+    </div>`: "" }
     <div class="flex justify-center mb-4">
       <img id="profilePicture" src="${userData.profilePicture}" class="w-110 h-110 object-cover rounded-full"/>
     </div>
