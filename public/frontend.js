@@ -257,7 +257,7 @@ header.addEventListener("click", async (event) => {
   }
 
   if (friendsBackButton) {
-    const { success, data } = await getUser(currentLocalUser)
+    const { success, data } = await getUser(currentLocalUser);
     if (success && data) {
       return await displayProfile(data);
     }

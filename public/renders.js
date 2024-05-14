@@ -861,6 +861,7 @@ async function displayNewModal() {
 }
 
 async function displayProfile(userData) {
+  nav.classList.remove("hidden");
   const circleRender = await displayListOfCircles(userData);
   const albumRender = await displayListOfAlbums(userData, true);
   const addAsFriend = document.createElement("div")
@@ -970,8 +971,8 @@ async function displayProfile(userData) {
 
     if (friends) {
       console.log("friends");
-      console.log(userData.username);
-      await displayFriends();
+      console.log("username", userData.username);
+      await displayFriends(userData.username);
     }
 
     if (like) {
@@ -1620,9 +1621,9 @@ async function displayAlbum(albumData) {
   });
 }
 
-async function displayFriends() {
+async function displayFriends(username) {
   nav.classList.add("hidden");
-  const friends = await getFriends(currentLocalUser);
+  const friends = await getFriends(username);
   const friendsList = await displayFriendsList(friends);
   console.log(friends);
   console.log(friendsList);
@@ -1659,10 +1660,9 @@ async function displayFriends() {
   }
 }
 
-async function displayFriendsList() {
-  const friends = await getFriends(currentLocalUser);
-  // console.log(currentLocalUser);
-  console.log(friends);
+async function displayFriendsList(friendsList) {
+  const friends = await getFriends(friendsList);
+  console.log("friends", friends);
   let newArr = friends.map((friend) => {
     let displayName = document.createElement("h2");
     let username = document.createElement("h2");
@@ -1687,7 +1687,6 @@ async function displayFriendsList() {
     </div>
   </div>`;
   });
-  console.log(newArr);
   return newArr;
 }
 
