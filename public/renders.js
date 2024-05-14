@@ -55,20 +55,19 @@ function displayLoginPage() {
   </div>`;
 
   const loginPage = document.querySelector("#loginPage");
-  loginPage.addEventListener("click", async(event) => {
+  loginPage.addEventListener("click", async (event) => {
     const signUp = event.target.closest("#signUp");
 
     if (signUp) {
       await displaySignUpPage();
       await displaySignUpEmailPage();
     }
-
   });
 }
 
 async function displaySignUpPage() {
   header.classList.remove("hidden");
-  leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button"/>`
+  leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button"/>`;
   pageContent.innerHTML = `
   <div id="signUpPage" class="flex flex-col items-center rounded-lg w-full h-full z-10">
     <div id="signUpTitleSection" class="w-full mb-4 mt-6">
@@ -98,11 +97,14 @@ async function displaySignUpEmailPage() {
   const signUpTitle = document.querySelector("#signUpTitle");
   const signUpSubtitle = document.querySelector("#signUpSubtitle");
   const signUpPageContent = document.querySelector("#signUpPageContent");
-  const signUpPageAdditionalContent = document.querySelector("#signUpAdditionalContent");
+  const signUpPageAdditionalContent = document.querySelector(
+    "#signUpAdditionalContent"
+  );
   const primaryButton = document.querySelector("#primaryButton");
 
   signUpTitle.textContent = "Enter your Email";
-  signUpSubtitle.textContent = "Enter the email where you can be contacted. No one will see this on your profile.";
+  signUpSubtitle.textContent =
+    "Enter the email where you can be contacted. No one will see this on your profile.";
 
   signUpPageContent.innerHTML = `
   <form class="flex flex-col flex-grow">
@@ -127,7 +129,9 @@ async function displaySignUpPasswordPage() {
   const signUpTitle = document.querySelector("#signUpTitle");
   const signUpSubtitle = document.querySelector("#signUpSubtitle");
   const signUpPageContent = document.querySelector("#signUpPageContent");
-  const signUpPageAdditionalContent = document.querySelector("#signUpAdditionalContent");
+  const signUpPageAdditionalContent = document.querySelector(
+    "#signUpAdditionalContent"
+  );
   const primaryButton = document.querySelector("#emailNext");
 
   signUpTitle.textContent = "Create a password";
@@ -147,7 +151,8 @@ async function displaySignUpPasswordPage() {
   </form>`;
 
   const passwordRequirements = document.createElement("ul");
-  passwordRequirements.className = "grid grid-cols-2 gap-1 text-secondary list-disc custom-list text-onboarding-grey";
+  passwordRequirements.className =
+    "grid grid-cols-2 gap-1 text-secondary list-disc custom-list text-onboarding-grey";
   passwordRequirements.innerHTML = `
   <li>minimum 8 characters</li>
   <li>1 lowercase character</li>
@@ -163,13 +168,16 @@ async function displaySignUpBirthdayPage() {
   const signUpTitle = document.querySelector("#signUpTitle");
   const signUpSubtitle = document.querySelector("#signUpSubtitle");
   const signUpPageContent = document.querySelector("#signUpPageContent");
-  const signUpPageAdditionalContent = document.querySelector("#signUpAdditionalContent");
+  const signUpPageAdditionalContent = document.querySelector(
+    "#signUpAdditionalContent"
+  );
   const primaryButton = document.querySelector("#passwordNext");
-  
+
   leftHeaderButton.id = "birthdayBack";
 
   signUpTitle.textContent = "Tell us your birthday!";
-  signUpSubtitle.textContent = "Use your own birthday. No one will see this on your profile.";
+  signUpSubtitle.textContent =
+    "Use your own birthday. No one will see this on your profile.";
 
   signUpPageContent.innerHTML = `
   <form class="flex flex-col flex-grow">
@@ -189,9 +197,11 @@ async function displaySignUpNamePage() {
   const signUpTitle = document.querySelector("#signUpTitle");
   const signUpSubtitle = document.querySelector("#signUpSubtitle");
   const signUpPageContent = document.querySelector("#signUpPageContent");
-  const signUpPageAdditionalContent = document.querySelector("#signUpAdditionalContent");
+  const signUpPageAdditionalContent = document.querySelector(
+    "#signUpAdditionalContent"
+  );
   const primaryButton = document.querySelector("#birthdayNext");
-  
+
   leftHeaderButton.id = "nameBack";
 
   signUpTitle.textContent = "What’s your name?";
@@ -219,13 +229,16 @@ async function displaySignUpUsernamePage() {
   const signUpTitle = document.querySelector("#signUpTitle");
   const signUpSubtitle = document.querySelector("#signUpSubtitle");
   const signUpPageContent = document.querySelector("#signUpPageContent");
-  const signUpPageAdditionalContent = document.querySelector("#signUpAdditionalContent");
+  const signUpPageAdditionalContent = document.querySelector(
+    "#signUpAdditionalContent"
+  );
   const primaryButton = document.querySelector("#nameNext");
-  
+
   leftHeaderButton.id = "usernameBack";
 
   signUpTitle.textContent = "Create a username";
-  signUpSubtitle.textContent = "Add a username. You can change this at any time.";
+  signUpSubtitle.textContent =
+    "Add a username. You can change this at any time.";
 
   signUpPageContent.innerHTML = `
   <form class="flex flex-col flex-grow">
@@ -245,14 +258,17 @@ async function displaySignUpProfilePicturePage() {
   const signUpTitle = document.querySelector("#signUpTitle");
   const signUpSubtitle = document.querySelector("#signUpSubtitle");
   const signUpPageContent = document.querySelector("#signUpPageContent");
-  const signUpPageAdditionalContent = document.querySelector("#signUpAdditionalContent");
+  const signUpPageAdditionalContent = document.querySelector(
+    "#signUpAdditionalContent"
+  );
   const primaryButton = document.querySelector("#usernameNext");
   const secondaryButton = document.querySelector("#secondaryButton");
-  
+
   leftHeaderButton.id = "profilePictureBack";
 
   signUpTitle.textContent = "Add a profile picture";
-  signUpSubtitle.textContent = "Add a profile picture so your friends know it’s you. Everyone will be able to see your picture.";
+  signUpSubtitle.textContent =
+    "Add a profile picture so your friends know it’s you. Everyone will be able to see your picture.";
 
   signUpPageContent.innerHTML = `<img src=/placeholder_image.svg alt="placeholder image"/>`;
 
@@ -264,17 +280,19 @@ async function displaySignUpProfilePicturePage() {
   primaryButton.classList.add("bottom-24");
   secondaryButton.classList.remove("hidden");
   secondaryButton.id = "profilePictureNext";
-  secondaryButton.textContent = "Skip"
+  secondaryButton.textContent = "Skip";
 }
 
 async function displayProfileConfirmation() {
   const signUpTitle = document.querySelector("#signUpTitle");
   const signUpSubtitle = document.querySelector("#signUpSubtitle");
   const signUpPageContent = document.querySelector("#signUpPageContent");
-  const signUpPageAdditionalContent = document.querySelector("#signUpAdditionalContent");
+  const signUpPageAdditionalContent = document.querySelector(
+    "#signUpAdditionalContent"
+  );
   const primaryButton = document.querySelector("#addProfilePicture");
   const secondaryButton = document.querySelector("#profilePictureNext");
-  
+
   leftHeaderButton.id = "profileConfirmationBack";
 
   signUpTitle.textContent = "Profile picture added";
@@ -294,7 +312,7 @@ async function displayCreateCircle() {
   nav.classList.add("hidden");
   pageName.textContent = `New Circle`;
 
-  leftHeaderButton.innerHTML = `<img id="backButton" src="/lightmode/back_button.svg" alt="Back Button"/>`
+  leftHeaderButton.innerHTML = `<img id="backButton" src="/lightmode/back_button.svg" alt="Back Button"/>`;
   rightHeaderButton.innerHTML = `<img id="nextInviteFriends" src="/lightmode/next_button.svg" alt="Next Button"/>`;
 
   const pageContent = document.querySelector("#pageContent");
@@ -368,7 +386,8 @@ async function displayCreateCircle() {
     }
 
     addPictureButton.textContent = "Change Picture";
-    addPictureButton.className = "w-380 h-45 bg-white border-2 border-dark-grey text-dark-grey rounded-input-box fixed bottom-8";
+    addPictureButton.className =
+      "w-380 h-45 bg-white border-2 border-dark-grey text-dark-grey rounded-input-box fixed bottom-8";
   });
 
   privacyCheckbox.addEventListener("change", async function () {
@@ -383,12 +402,14 @@ async function displayCreateCircle() {
 
 async function displayListOfFriends(friends) {
   let newArr = friends.map((friend) => {
-    let displayName = document.createElement("h2")
-    let username = document.createElement("h2")
-    displayName.className="font-medium text-14 leading-tertiary"
-    username.className="font-light text-14 text-dark-grey"
-    displayName.textContent= friend.displayName ? friend.displayName : friend.username;
-    username.textContent=`@${friend.username}`
+    let displayName = document.createElement("h2");
+    let username = document.createElement("h2");
+    displayName.className = "font-medium text-14 leading-tertiary";
+    username.className = "font-light text-14 text-dark-grey";
+    displayName.textContent = friend.displayName
+      ? friend.displayName
+      : friend.username;
+    username.textContent = `@${friend.username}`;
     return `<div class="flex items-center my-5">
     <div class="flex-none w-58">
       <img class="rounded-full w-58 h-58" src="${friend.profilePicture}" alt="${friend.username}'s profile picture"/>
@@ -441,7 +462,7 @@ async function displayInviteFriends() {
 function saveCheckedFriends() {
   const addCheckboxes = document.querySelectorAll("#add");
   addCheckboxes.forEach((checkbox) => {
-    if (checkbox.checked && (!checkedFriends.includes(checkbox.value))) {
+    if (checkbox.checked && !checkedFriends.includes(checkbox.value)) {
       checkedFriends.push(checkbox.value);
     }
   });
@@ -507,12 +528,12 @@ async function displayCreateCirclePreview() {
           </div>
       </div>`;
 
-      const editButton = document.querySelector("#editButton");
-      const circleNameInput = document.querySelector("#circleName");
-      
-      editButton.addEventListener("click", () => {
-          circleNameInput.focus();
-      });
+  const editButton = document.querySelector("#editButton");
+  const circleNameInput = document.querySelector("#circleName");
+
+  editButton.addEventListener("click", () => {
+    circleNameInput.focus();
+  });
 
   const fileInput = document.querySelector("#fileUpload");
   const circlePhoto = document.querySelector("#circleImage");
@@ -572,24 +593,39 @@ async function displaySearch() {
   const searchBox = document.querySelector("#searchBox");
 
   // this is to show all users when the page first loads
-  const searchResult = await getSearchResult(searchBox.value);
   const suggestedFriends = document.querySelector("#suggestedFriends");
-  suggestedFriends.innerHTML = displayUserSearch(searchResult.data).join("");
+  let storedSearchResults = [];
 
-  searchBox.addEventListener("input", async (event) => {
-    const searchResult = await getSearchResult(searchBox.value);
-    suggestedFriends.innerHTML = displayUserSearch(searchResult.data).join("");
+  async function initializeSearch() {
+    const initialSearchResult = await getSearchResult(searchBox.value);
+    storedSearchResults = initialSearchResult.data;
+    updateSuggestedFriends(storedSearchResults);
+  }
+
+  function updateSuggestedFriends(data) {
+    suggestedFriends.innerHTML = displayUserSearch(data).join("");
+  }
+
+  await initializeSearch();
+
+  searchBox.addEventListener("input", (event) => {
+    const filteredResults = storedSearchResults.filter((user) =>
+      user.username.toLowerCase().includes(searchBox.value.toLowerCase())
+    );
+    updateSuggestedFriends(filteredResults);
   });
+
+  // Initial load
   suggestedFriends.addEventListener("click", async function (event) {
     event.preventDefault();
-    const user = event.target.closest("div.user")
+    const user = event.target.closest("div.user");
     if (user) {
-      const { success, data } = await getUser(user.id)
+      const { success, data } = await getUser(user.id);
       if (success && data) {
         return await displayProfile(data);
       }
     }
-  })
+  });
   suggestedFriends.addEventListener("click", async (event) => {
     event.preventDefault();
     const target = event.target;
@@ -650,12 +686,14 @@ function displayUserSearch(listOfUsers) {
         friendStatus = "Accept Request";
       }
     }
-    let displayName = document.createElement("h2")
-    let username = document.createElement("h2")
-    displayName.className="font-medium text-14 leading-tertiary"
-    username.className="font-light text-14 text-dark-grey"
-    displayName.textContent= user.displayName ? user.displayName : user.username;
-    username.textContent=`@${user.username}`
+    let displayName = document.createElement("h2");
+    let username = document.createElement("h2");
+    displayName.className = "font-medium text-14 leading-tertiary";
+    username.className = "font-light text-14 text-dark-grey";
+    displayName.textContent = user.displayName
+      ? user.displayName
+      : user.username;
+    username.textContent = `@${user.username}`;
     return `<div class="flex items-center my-3 user" id="${user.username}">
       <div class="flex-none w-58">
         <img class="rounded-full w-58 h-58 object-cover" src="${user.profilePicture}" alt="${user.username}'s profile picture"/>
@@ -678,44 +716,50 @@ async function displayActivity() {
   pageName.textContent = "All Activity";
   rightHeaderButton.innerHTML = "";
   leftHeaderButton.innerHTML = "";
-  const { friendRequests, circleInvites } = await getActivities(currentLocalUser);
-  const noCircleInvites = `<p class="text-secondary text-medium-grey" >No circle invites pending.</p>`
+  const { friendRequests, circleInvites } = await getActivities(
+    currentLocalUser
+  );
+  const noCircleInvites = `<p class="text-secondary text-medium-grey" >No circle invites pending.</p>`;
   const circleInvitePreviews = [];
-  for (i=0; i < circleInvites.length; i++) {
+  for (i = 0; i < circleInvites.length; i++) {
     if (i > 3) {
-      const count = circleInvites.length-4;
+      const count = circleInvites.length - 4;
       const andMore = `<div class="w-8 h-8 rounded-full border-2 border-white border-solid ml-neg12 flex justify-center items-center bg-dark-grey">
         <p class="text-secondary text-white font-bold">+${count}</p>
-      </div>`
+      </div>`;
       circleInvitePreviews.push(andMore);
       break;
     }
-    const circleImg = document.createElement("img")
+    const circleImg = document.createElement("img");
     circleImg.src = circleInvites[i].circle.picture;
-    circleImg.alt = `${circleInvites[i].circle.name}'s picture`
-    circleImg.className = "w-8 h-8 rounded-full object-cover border-2 border-white border-solid";
-    (i > 0) ? circleImg.classList.add("ml-neg12") : null
+    circleImg.alt = `${circleInvites[i].circle.name}'s picture`;
+    circleImg.className =
+      "w-8 h-8 rounded-full object-cover border-2 border-white border-solid";
+    i > 0 ? circleImg.classList.add("ml-neg12") : null;
     circleInvitePreviews.push(circleImg.outerHTML);
   }
-  
-  const noFriendRequests = `<p class="text-secondary text-medium-grey" >No friend requests pending.</p>`
+
+  const noFriendRequests = `<p class="text-secondary text-medium-grey" >No friend requests pending.</p>`;
   const friendRequestsPreviews = [];
-  for (i=0; i < friendRequests.length; i++) {
+  for (i = 0; i < friendRequests.length; i++) {
     if (i > 3) {
-      const count = friendRequests.length-4;
+      const count = friendRequests.length - 4;
       const andMore = `<div class="w-8 h-8 rounded-full border-2 border-white border-solid ml-neg12 flex justify-center items-center bg-dark-grey">
         <p class="text-secondary text-white font-bold">+${count}</p>
-      </div>`
+      </div>`;
       friendRequestsPreviews.push(andMore);
       break;
     }
-    const friendImg = document.createElement("img")
+    const friendImg = document.createElement("img");
     friendImg.src = friendRequests[i].requester.profilePicture;
-    let altText = (friendRequests[i].requester.displayName) ? friendRequests[i].requester.displayName : friendRequests[i].requester.username
-    altText = altText + "'s profile picture"
-    friendImg.alt = altText
-    friendImg.className = "w-8 h-8 rounded-full object-cover border-2 border-white border-solid";
-    (i > 0) ? friendImg.classList.add("ml-neg12") : null
+    let altText = friendRequests[i].requester.displayName
+      ? friendRequests[i].requester.displayName
+      : friendRequests[i].requester.username;
+    altText = altText + "'s profile picture";
+    friendImg.alt = altText;
+    friendImg.className =
+      "w-8 h-8 rounded-full object-cover border-2 border-white border-solid";
+    i > 0 ? friendImg.classList.add("ml-neg12") : null;
     friendRequestsPreviews.push(friendImg.outerHTML);
   }
 
@@ -727,7 +771,11 @@ async function displayActivity() {
             </div>
             <div id="circleInvites" class="flex w-full">
                 <div class="flex w-180 h-33 items-center">
-                    ${circleInvites.length ? circleInvitePreviews.join("") : noCircleInvites}
+                    ${
+                      circleInvites.length
+                        ? circleInvitePreviews.join("")
+                        : noCircleInvites
+                    }
                 </div>
                 <div class="flex w-2 h-33 items-center ml-auto">
                     <svg width="9" height="15" viewBox="0 0 9 15" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -742,7 +790,11 @@ async function displayActivity() {
             </div>
             <div id="friendRequests" class="flex w-full">
               <div class="flex w-180 h-33 items-center">
-                  ${friendRequests.length ? friendRequestsPreviews.join("") : noFriendRequests}
+                  ${
+                    friendRequests.length
+                      ? friendRequestsPreviews.join("")
+                      : noFriendRequests
+                  }
               </div>
               <div class="flex w-2 h-33 items-center ml-auto">
                   <svg width="9" height="15" viewBox="0 0 9 15" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -755,7 +807,7 @@ async function displayActivity() {
 
   const activityPage = document.querySelector("#activityPage");
 
-  activityPage.addEventListener("click", async(event) => {
+  activityPage.addEventListener("click", async (event) => {
     const circleInvitesDiv = event.target.closest("#circleInvites");
     const friendRequestsDiv = event.target.closest("#friendRequests");
     event.preventDefault();
@@ -801,43 +853,43 @@ async function displayNavBar() {
               <p class="mt-1">profile</p>
           </a>
       </footer>`;
-    
-    const navBar = document.querySelector("footer");
-    navBar.addEventListener("click", async function (event) {
-      event.preventDefault();
-      const exploreButton = event.target.closest("#explore");
-      const searchButton = event.target.closest("#search");
-      const newButton = event.target.closest("#new");
-      const activityButton = event.target.closest("#activity");
-      const profileButton = event.target.closest("#profile");
-  
-      clearNewAlbum();
-  
-      if (exploreButton) {
-        await displayExplore();
-        newCircleNameInput = "";
+
+  const navBar = document.querySelector("footer");
+  navBar.addEventListener("click", async function (event) {
+    event.preventDefault();
+    const exploreButton = event.target.closest("#explore");
+    const searchButton = event.target.closest("#search");
+    const newButton = event.target.closest("#new");
+    const activityButton = event.target.closest("#activity");
+    const profileButton = event.target.closest("#profile");
+
+    clearNewAlbum();
+
+    if (exploreButton) {
+      await displayExplore();
+      newCircleNameInput = "";
+    }
+    if (searchButton) {
+      await displaySearch();
+      newCircleNameInput = "";
+    }
+    if (newButton) {
+      newCircleNameInput = "";
+      await displayNewModal();
+    }
+    if (activityButton) {
+      await displayActivity();
+      newCircleNameInput = "";
+    }
+    if (profileButton) {
+      rightHeaderButton.innerHTML = "";
+      newCircleNameInput = "";
+      const { success, data } = await getUser(currentLocalUser);
+      if (success && data) {
+        return await displayProfile(data);
       }
-      if (searchButton) {
-        await displaySearch();
-        newCircleNameInput = "";
-      }
-      if (newButton) {
-        newCircleNameInput = "";
-        await displayNewModal();
-      }
-      if (activityButton) {
-        await displayActivity();
-        newCircleNameInput = "";
-      }
-      if (profileButton) {
-        rightHeaderButton.innerHTML = "";
-        newCircleNameInput = "";
-        const { success, data } = await getUser(currentLocalUser)
-        if (success && data) {
-          return await displayProfile(data);
-        }
-      }
-    });
+    }
+  });
 }
 
 async function displayNewModal() {
@@ -864,23 +916,33 @@ async function displayProfile(userData) {
   nav.classList.remove("hidden");
   const circleRender = await displayListOfCircles(userData);
   const albumRender = await displayListOfAlbums(userData, true);
-  const addAsFriend = document.createElement("div")
+  const addAsFriend = document.createElement("div");
   addAsFriend.className = "flex justify-center";
-  (currentLocalUser === userData.username) ? null : addAsFriend.innerHTML=`<button class="w-110 h-38 rounded-input-box bg-light-mode-accent text-white">Add friend</button>`
+  currentLocalUser === userData.username
+    ? null
+    : (addAsFriend.innerHTML = `<button class="w-110 h-38 rounded-input-box bg-light-mode-accent text-white">Add friend</button>`);
 
-  pageName.textContent = userData.displayName ? userData.displayName : userData.username;
+  pageName.textContent = userData.displayName
+    ? userData.displayName
+    : userData.username;
   leftHeaderButton.innerHTML = "";
-  const username = document.createElement("h2")
-  username.id ="username"
-  username.className="text-base text-center"
-  username.textContent=`@${userData.username}`
+  const username = document.createElement("h2");
+  username.id = "username";
+  username.className = "text-base text-center";
+  username.textContent = `@${userData.username}`;
   pageContent.innerHTML = `
   <div id="profilePage" class="relative pt-2 pb-16 mb-4 w-full">
-    ${currentLocalUser === userData.username ? `<div id="settings" class="absolute top-0 right-0 w-6 h-6">
+    ${
+      currentLocalUser === userData.username
+        ? `<div id="settings" class="absolute top-0 right-0 w-6 h-6">
       <img src="/lightmode/settings_icon.svg">
-    </div>`: "" }
+    </div>`
+        : ""
+    }
     <div class="flex justify-center mb-4">
-      <img id="profilePicture" src="${userData.profilePicture}" class="w-110 h-110 object-cover rounded-full"/>
+      <img id="profilePicture" src="${
+        userData.profilePicture
+      }" class="w-110 h-110 object-cover rounded-full"/>
     </div>
     <div class="flex justify-center mt-2">
       ${username.outerHTML}
@@ -888,13 +950,17 @@ async function displayProfile(userData) {
     <div class="w-180 mt-6 mb-6 m-auto grid grid-cols-2 gap-4">
       <div class="gap-0 justify-center">
         <div id="circles">
-          <h2 class="text-base font-bold text-center">${userData._count.UserCircle}</h2>
+          <h2 class="text-base font-bold text-center">${
+            userData._count.UserCircle
+          }</h2>
           <h2 class="text-secondary text-center">Circles</h2>
         </div>
       </div>
       <div class="gap-0 justify-center">
         <div id="friends" class="cursor-pointer">
-          <h2 class="text-base font-bold text-center" id="friendCounter">${userData._count.friends}</h2>
+          <h2 class="text-base font-bold text-center" id="friendCounter">${
+            userData._count.friends
+          }</h2>
           <h2 class="text-secondary text-center">Friends</h2>
         </div>
       </div>
@@ -930,7 +996,7 @@ async function displayProfile(userData) {
   </div>`;
 
   const profilePage = document.querySelector("#profilePage");
-  profilePage.addEventListener("click", async(event) => {
+  profilePage.addEventListener("click", async (event) => {
     const albumTab = event.target.closest("#albumTab");
     const circleTab = event.target.closest("#circleTab");
     const albumTabLink = document.querySelector("#albumTab a");
@@ -957,7 +1023,7 @@ async function displayProfile(userData) {
       }
       return;
     }
-  
+
     if (comment) {
       console.log("comment");
       await displayComments();
@@ -1027,11 +1093,10 @@ async function displayProfile(userData) {
   await cleanUpSectionEventListener();
 }
 
-
 async function displayListOfCircles(data) {
   let circleListArr = data.UserCircle.map((obj) => {
-    let circleName = document.createElement('p')
-    circleName.className = "text-center text-secondary"
+    let circleName = document.createElement("p");
+    circleName.className = "text-center text-secondary";
     circleName.textContent = obj.circle.name;
     return `
       <div id="${obj.circle.id}" class="circle">
@@ -1043,7 +1108,7 @@ async function displayListOfCircles(data) {
   });
   return circleListArr;
 }
-  
+
 async function displayCreateAlbum() {
   pageName.textContent = `New Album`;
 
@@ -1415,16 +1480,16 @@ async function displayCircle(circleData) {
   leftHeaderButton.innerHTML = `
     <img src="/lightmode/back_button.svg" alt="Back Button" id="backButton"/>
     `;
-    rightHeaderButton.innerHTML = "";
-    pageName.textContent = "";
-    const memberList = circleData.members.map((obj) => {
-      return `<img src="${obj.user.profilePicture}" class="w-42 h-42 rounded-full object-cover"/>`;
-    });
-    const albumList = circleData.circle.albums.map((obj) => {
-      let albumName = document.createElement('p')
-      albumName.className = "text-white text-shadow shadow-black"
-      albumName.textContent = obj.name;
-      return `
+  rightHeaderButton.innerHTML = "";
+  pageName.textContent = "";
+  const memberList = circleData.members.map((obj) => {
+    return `<img src="${obj.user.profilePicture}" class="w-42 h-42 rounded-full object-cover"/>`;
+  });
+  const albumList = circleData.circle.albums.map((obj) => {
+    let albumName = document.createElement("p");
+    albumName.className = "text-white text-shadow shadow-black";
+    albumName.textContent = obj.name;
+    return `
       <div class="w-full h-min relative album" id="${obj.id}">
         <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.photos[0].src}"/>
         <div class="m-2 text-secondary font-semibold absolute inset-0 flex items-end justify-start">
@@ -1443,26 +1508,36 @@ async function displayCircle(circleData) {
           </div>
         </div>
       </div>`;
-    });
-    let circleName = document.createElement('p')
-    circleName.className = "text-center text-20 font-bold"
-    circleName.textContent = circleData.circle.name;
-    pageContent.innerHTML = `
+  });
+  let circleName = document.createElement("p");
+  circleName.className = "text-center text-20 font-bold";
+  circleName.textContent = circleData.circle.name;
+  pageContent.innerHTML = `
     <div class="w-full px-0 mx-0">
       <div class="flex justify-center mt-6 mb-1.5">
-        <img src="${circleData.circle.picture}" class="rounded-full w-180 h-180 object-cover"/>
+        <img src="${
+          circleData.circle.picture
+        }" class="rounded-full w-180 h-180 object-cover"/>
       </div>
       <div class="mb-3">
         <p class="text-center text-20 font-bold">${circleName.outerHTML}</p>
       </div>
       <div class="grid grid-cols-1 place-items-center">
         <label class="inline-flex items-center cursor-pointer">
-            <img id="privacyIcon" src="${circleData.circle.isPublic ? "/lightmode/globe_icon.svg": "/lightmode/lock_icon.svg"}" alt="Lock icon" class="mr-4">
-            <span id="privacyLabel" class="text-sm font-medium leading-body text-14 mr-4 w-12">${circleData.circle.isPublic ? "Public" : "Private"}</span>
+            <img id="privacyIcon" src="${
+              circleData.circle.isPublic
+                ? "/lightmode/globe_icon.svg"
+                : "/lightmode/lock_icon.svg"
+            }" alt="Lock icon" class="mr-4">
+            <span id="privacyLabel" class="text-sm font-medium leading-body text-14 mr-4 w-12">${
+              circleData.circle.isPublic ? "Public" : "Private"
+            }</span>
         </label>
       </div>
       <div class="grid grid-cols-5 place-items-center mt-12 mb-2">
-        <p class="grid-span-1 text-base font-medium">${circleData.members.length} Friends</p>
+        <p class="grid-span-1 text-base font-medium">${
+          circleData.members.length
+        } Friends</p>
       </div>
       <div class="flex gap-2">
         ${memberList.join("")}
@@ -1498,7 +1573,7 @@ async function displayCircle(circleData) {
       }
       return;
     }
-  
+
     if (comment) {
       console.log("comment");
       await displayComments();
@@ -1520,10 +1595,11 @@ async function displayCircleInvites() {
   pageName.textContent = "Circle Invites";
   leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="toActivity">`;
   const { circleInvites } = await getActivities(currentLocalUser);
-    let circleInviteList = circleInvites.map((invite) => {
-      let circleName = document.createElement("h2")
-      circleName.className="font-medium text-14 leading-tertiary"
-      circleName.textContent=invite.circle.name;
+  let circleInviteList = circleInvites
+    .map((invite) => {
+      let circleName = document.createElement("h2");
+      circleName.className = "font-medium text-14 leading-tertiary";
+      circleName.textContent = invite.circle.name;
       return `
       <div class="flex items-center my-3">
         <div class="flex-none w-58">
@@ -1539,11 +1615,12 @@ async function displayCircleInvites() {
           </form>
         </div>
       </div>`;
-  }).join("");
+    })
+    .join("");
   pageContent.innerHTML = `<div id="circleInviteList" class="flex flex-col pb-200">
   ${circleInviteList}
-  </div>`
-  const circleInviteListPage = document.querySelector("#circleInviteList")
+  </div>`;
+  const circleInviteListPage = document.querySelector("#circleInviteList");
   circleInviteListPage.addEventListener("click", async function (event) {
     event.preventDefault();
     const id = event.target.getAttribute("identifier");
@@ -1551,7 +1628,7 @@ async function displayCircleInvites() {
     switch (event.target.name) {
       case "acceptCircleInvite":
         await acceptCircleInvite(id, invitee);
-        await displayCircleInvites()
+        await displayCircleInvites();
         break;
       case "declineCircleInvite":
         await declineCircleInvite(id, invitee);
@@ -1560,41 +1637,45 @@ async function displayCircleInvites() {
       default:
         break;
     }
-  })
+  });
 }
 
 async function displayAlbum(albumData) {
-    leftHeaderButton.innerHTML = `
+  leftHeaderButton.innerHTML = `
     <span id="${albumData.circle.id}">
     <img src="/lightmode/back_button.svg" alt="Back Button" id="backButtonAlbum">
     </span
     `;
-    rightHeaderButton.innerHTML = `<img src="/lightmode/share_icon.svg" alt="Back Button" id="backButtonAlbum">`;
-    pageName.textContent = `${albumData.name}`;
+  rightHeaderButton.innerHTML = `<img src="/lightmode/share_icon.svg" alt="Back Button" id="backButtonAlbum">`;
+  pageName.textContent = `${albumData.name}`;
 
   const memberList = [];
-    for (i=0; i < albumData.circle.UserCircle.length; i++) {
-      if (i > 3) {
-        const count = albumData.circle.UserCircle.length - 3;
-        const andMore = `<div class="w-25 h-25 rounded-full border-2 flex justify-center items-center bg-dark-grey">
+  for (i = 0; i < albumData.circle.UserCircle.length; i++) {
+    if (i > 3) {
+      const count = albumData.circle.UserCircle.length - 3;
+      const andMore = `<div class="w-25 h-25 rounded-full border-2 flex justify-center items-center bg-dark-grey">
         <p class="text-secondary text-white font-bold">+${count}</p>
-      </div>`
+      </div>`;
       memberList.push(andMore);
       break;
-      }
-      memberList.push(`<img id="user${i+1}" src="${albumData.circle.UserCircle[i].user.profilePicture}" class="grid-item rounded-full object-cover">`);
     }
+    memberList.push(
+      `<img id="user${i + 1}" src="${
+        albumData.circle.UserCircle[i].user.profilePicture
+      }" class="grid-item rounded-full object-cover">`
+    );
+  }
 
-    console.log(memberList);
-    const photoList = albumData.photos.map((obj) => {
-      return `<div id="photo" class="w-full h-min relative photo" albumId="${obj.id}">
+  console.log(memberList);
+  const photoList = albumData.photos.map((obj) => {
+    return `<div id="photo" class="w-full h-min relative photo" albumId="${obj.id}">
       <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.src}"/>
     </div>`;
-    });
-    let circleName = document.createElement("h2");
-    circleName.className = "flex justify-center font-medium text-lg";
-    circleName.textContent = albumData.circle.name;
-    pageContent.innerHTML = `
+  });
+  let circleName = document.createElement("h2");
+  circleName.className = "flex justify-center font-medium text-lg";
+  circleName.textContent = albumData.circle.name;
+  pageContent.innerHTML = `
       <div id="albumPhotos">
         <div id="memberList" class="grid grid-rows-2 grid-cols-3 mt-8 mx-auto items-center justify-center w-265 gap-2 h-84">
           ${memberList.join("")}
@@ -1620,17 +1701,35 @@ async function displayAlbum(albumData) {
 
   const user2 = document.querySelector("#user2");
   if (user2) {
-    user2.classList.add("h-43", "w-43", "col-start-1", "row-start-1", "justify-self-end");
+    user2.classList.add(
+      "h-43",
+      "w-43",
+      "col-start-1",
+      "row-start-1",
+      "justify-self-end"
+    );
   }
 
   const user3 = document.querySelector("#user3");
   if (user3) {
-    user3.classList.add("h-40", "w-40", "col-start-3", "row-start-2", "justify-self-start");
+    user3.classList.add(
+      "h-40",
+      "w-40",
+      "col-start-3",
+      "row-start-2",
+      "justify-self-start"
+    );
   }
 
   const user4 = document.querySelector("#user4");
   if (user4) {
-    user4.classList.add("h-5", "w-5", "col-start-1", "row-start-2", "justify-self-end");
+    user4.classList.add(
+      "h-5",
+      "w-5",
+      "col-start-1",
+      "row-start-2",
+      "justify-self-end"
+    );
   }
 
   const albumPhotos = document.querySelector("#albumPhotos");
@@ -1697,10 +1796,12 @@ async function displayFriendsList(friends) {
   let newArr = friends.map((friend) => {
     let displayName = document.createElement("h2");
     let username = document.createElement("h2");
-    displayName.className="font-medium text-14 leading-tertiary"
-    username.className="font-light text-14 text-dark-grey"
-    displayName.textContent= friend.displayName ? friend.displayName : friend.username;
-    username.textContent=`@${friend.username}`
+    displayName.className = "font-medium text-14 leading-tertiary";
+    username.className = "font-light text-14 text-dark-grey";
+    displayName.textContent = friend.displayName
+      ? friend.displayName
+      : friend.username;
+    username.textContent = `@${friend.username}`;
     return `<div class="flex items-center my-5">
     <div class="flex-none w-58">
       <img class="rounded-full w-58 h-58" src="${friend.profilePicture}" alt="${friend.username}'s profile picture"/>
@@ -1726,12 +1827,15 @@ async function displayFriendRequests() {
   leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="toActivity"/>`;
   const { friendRequests } = await getActivities(currentLocalUser);
 
-    let friendRequestsList = friendRequests.map((request) => {
-      let username = document.createElement("h2")
-      username.className="font-medium text-14 leading-tertiary"
-      username.textContent=`@${request.requester.username}`;
+  let friendRequestsList = friendRequests
+    .map((request) => {
+      let username = document.createElement("h2");
+      username.className = "font-medium text-14 leading-tertiary";
+      username.textContent = `@${request.requester.username}`;
       const displayName = username.cloneNode(true);
-      request.requester.displayName ? displayName.textContent = request.requester.displayName : displayName.textContent = request.requester.username
+      request.requester.displayName
+        ? (displayName.textContent = request.requester.displayName)
+        : (displayName.textContent = request.requester.username);
       return `
       <div class="flex items-center my-5">
       <div class="flex-none w-58">
@@ -1752,11 +1856,12 @@ async function displayFriendRequests() {
         </form>
       </div>
     </div>`;
-  }).join("");
+    })
+    .join("");
   pageContent.innerHTML = `<div id="friendRequestsList" class="flex flex-col pb-200">
     ${friendRequestsList}
-  </div>`
-  const friendRequestsListPage = document.querySelector("#friendRequestsList")
+  </div>`;
+  const friendRequestsListPage = document.querySelector("#friendRequestsList");
   friendRequestsListPage.addEventListener("click", async function (event) {
     event.preventDefault();
     const id = event.target.getAttribute("identifier");
@@ -1767,14 +1872,13 @@ async function displayFriendRequests() {
         await displayFriendRequests();
         break;
       case "declineFriendRequest":
-        await removeFriendRequest(id, invitee)
+        await removeFriendRequest(id, invitee);
         await displayFriendRequests();
         break;
       default:
         break;
     }
-  })
-
+  });
 }
 
 async function displayPhoto(photoSrc) {
@@ -1792,19 +1896,21 @@ async function displayPhoto(photoSrc) {
   albumPhotos.appendChild(photoDiv);
 }
 
-async function displayListOfAlbums (data, profile=false) {
-  console.log(data)
+async function displayListOfAlbums(data, profile = false) {
+  console.log(data);
   const albumList = data.Album.map((obj) => {
-    let albumName = document.createElement('p')
-    albumName.className = "text-white text-shadow shadow-black"
+    let albumName = document.createElement("p");
+    albumName.className = "text-white text-shadow shadow-black";
     albumName.textContent = obj.name;
     const circleImage = `<div class="absolute top-0 right-0 m-2 flex items-start justify-end gap-1 p2">
       <img src="${obj.circle.picture}" class="w-8 rounded-full object-cover"/>
-    </div>`
+    </div>`;
 
     return `
     <div class="w-full h-min relative album" id="${obj.id}">
-      <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.photos[0].src}"/>
+      <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${
+        obj.photos[0].src
+      }"/>
       ${profile ? circleImage : null}
       <div class="m-2 text-secondary font-semibold absolute inset-0 flex items-end justify-start">
         ${albumName.outerHTML}
@@ -1823,7 +1929,7 @@ async function displayListOfAlbums (data, profile=false) {
       </div>
     </div>`;
   });
-  return albumList
+  return albumList;
 }
 
 async function displayComments() {
@@ -1856,14 +1962,14 @@ async function displayPopup(activity) {
 
   const closeButton = document.querySelector("#popupCloseButton");
   closeButton.addEventListener("click", () => {
-      popup.classList.add("hidden");
+    popup.classList.add("hidden");
   });
 
   setTimeout(() => {
-      popup.classList.add("opacity-0", "duration-1000");
-      popup.addEventListener("transitionend", async() => {
-          await resetPopup();
-      });
+    popup.classList.add("opacity-0", "duration-1000");
+    popup.addEventListener("transitionend", async () => {
+      await resetPopup();
+    });
   }, 2000);
 
   async function resetPopup() {
