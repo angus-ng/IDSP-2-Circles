@@ -590,65 +590,16 @@ async function displaySearch() {
       }
     }
   })
-  suggestedFriends.addEventListener("click", async (event) => {
-    event.preventDefault();
-    const target = event.target;
-    const username = target.getAttribute("name");
-    const method = target.getAttribute("method");
-    let response;
-    switch (method) {
-      case "Add Friend":
-        response = await sendFriendRequest(username, currentLocalUser);
-        console.log(response);
-        await displayPopup("friend request sent");
-        await displaySearch();
-        break;
-      case "Remove Friend":
-        //MAKE USER CONFIRM IF THEY WANT TO REMOVE THIS FRIEND FIRST
-        response = await unfriend(username, currentLocalUser);
-        console.log(response);
-        await displaySearch();
-        break;
-      case "Remove Request":
-        response = await removeFriendRequest(username, currentLocalUser);
-        console.log(response);
-        await displaySearch();
-        break;
-      case "Accept Request":
-        response = await acceptFriendRequest(username, currentLocalUser);
-        console.log(response);
-        await displaySearch();
-        break;
-      default:
-        break;
-    }
-  });
 }
 
 function displayUserSearch(listOfUsers) {
   if (!listOfUsers) {
     return [];
   }
+  console.log("HERE", listOfUsers)
   let newArr = listOfUsers.map((user) => {
     if (user.username === currentLocalUser) {
       return;
-    }
-    let friendStatus = "Add Friend";
-    for (let friend of user.friendOf) {
-      if (friend.friend_1_name === currentLocalUser) {
-        method = "Remove Friend";
-        friendStatus = "Remove Friend";
-      }
-    }
-    for (let request of user.requestReceived) {
-      if (request.requester.username === currentLocalUser) {
-        friendStatus = "Remove Request";
-      }
-    }
-    for (let request of user.requestsSent) {
-      if (request.requestee.username === currentLocalUser) {
-        friendStatus = "Accept Request";
-      }
     }
     let displayName = document.createElement("h2")
     let username = document.createElement("h2")
@@ -663,11 +614,6 @@ function displayUserSearch(listOfUsers) {
       <div class="ml-8 flex-none w-207">
         ${displayName.outerHTML}
         ${username.outerHTML}
-      </div>
-      <div class="flex-none w-58">
-        <form>
-          <button name="${user.username}" method="${friendStatus}" class="">${friendStatus}</button>
-        </form>
       </div>
     </div>`;
   });
@@ -866,7 +812,32 @@ async function displayProfile(userData) {
   const albumRender = await displayListOfAlbums(userData, true);
   const addAsFriend = document.createElement("div")
   addAsFriend.className = "flex justify-center";
-  (currentLocalUser === userData.username) ? null : addAsFriend.innerHTML=`<button class="w-110 h-38 rounded-input-box bg-light-mode-accent text-white">Add friend</button>`
+  (currentLocalUser === userData.username) ? null : addAsFriend.innerHTML=`<button id="addFriendButton" class="w-110 h-38 rounded-input-box bg-light-mode-accent text-white">Add friend</button>`
+  if (currentLocalUser !== userData.username){
+  const addButton = addAsFriend.childNodes[0];
+  addButton.setAttribute("method", "Add Friend");
+  addButton.setAttribute("name", `${userData.username}`);
+
+  for (let friend of userData.friendOf) {
+    if (friend.friend_1_name === currentLocalUser) {
+      addButton.setAttribute("method", "Remove Friend");
+      addButton.textContent = "Remove Friend"
+    }
+  }
+  for (let request of userData.requestReceived) {
+    if (request.requester.username === currentLocalUser) {
+      addButton.setAttribute("method", "Remove Request");
+      addButton.textContent = "Remove Request"
+    }
+  }
+  for (let request of userData.requestsSent) {
+    if (request.requestee.username === currentLocalUser) {
+      addButton.setAttribute("method", "Accept Request");
+      addButton.textContent = "Accept Request"
+    }
+  }
+
+}
 
   pageName.textContent = userData.displayName ? userData.displayName : userData.username;
   leftHeaderButton.innerHTML = "";
@@ -1023,6 +994,60 @@ async function displayProfile(userData) {
         }
       }
     });
+
+    const addFriendButton = document.querySelector("#addFriendButton")
+  if (addFriendButton) {
+    addFriendButton.addEventListener("click", async (event) => {
+      event.preventDefault();
+      const target = event.target;
+      const username = target.getAttribute("name");
+      const method = target.getAttribute("method");
+      console.log(target, username, method)
+      let response;
+      switch (method) {
+        case "Add Friend": {
+          response = await sendFriendRequest(username, currentLocalUser);
+          console.log(response);
+          await displayPopup("friend request sent");
+          let { success, data } = await getUser(username)
+          if (success && data) {
+            await displayProfile(data);
+          }
+          break;
+        }
+        case "Remove Friend": {
+          //MAKE USER CONFIRM IF THEY WANT TO REMOVE THIS FRIEND FIRST
+          response = await unfriend(username, currentLocalUser);
+          console.log(response);
+          let { success, data } = await getUser(username)
+          if (success && data) {
+            await displayProfile(data);
+          }
+          break;
+        }
+        case "Remove Request": {
+          response = await removeFriendRequest(username, currentLocalUser);
+          console.log(response);
+          let { success, data } = await getUser(username)
+          if (success && data) {
+            await displayProfile(data);
+          }
+          break;
+        }
+        case "Accept Request": {
+          response = await acceptFriendRequest(username, currentLocalUser);
+          console.log(response);
+          let { success, data } = await getUser(username)
+          if (success && data) {
+            await displayProfile(data);
+          }
+          break;
+        }
+        default:
+          break;
+      }
+    });
+  }
   await cleanUpSectionEventListener();
 }
 
