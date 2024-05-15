@@ -1880,10 +1880,7 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
         <p class="mt-0">${comment.message}</p>
         <div class="flex items-center space-x-2">
           <a class="text-time text-11 underline replyButton w-8">Reply</a>
-          <button class="moreOptions w-5 h-5">
-            <svg viewBox="0 0 24 24" fill="#7D7E80" xmlns="http://www.w3.org/2000/svg" stroke="#7D7E80"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title></title> <g id="Complete"> <g id="F-More"> <path d="M8,12a2,2,0,1,1-2-2A2,2,0,0,1,8,12Zm10-2a2,2,0,1,0,2,2A2,2,0,0,0,18,10Zm-6,0a2,2,0,1,0,2,2A2,2,0,0,0,12,10Z" id="Horizontal"></path> </g> </g> </g>
-            </svg>
-          </button>
+          <img src="/lightmode/more_options.svg" alt="more options"/ class="moreOptions w-5 h-5">
         </div>
       </div>
       <div class="absolute right-0 top-2 flex flex-1 flex-col items-center">
@@ -1934,6 +1931,7 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
   let commentId = null;
   albumCommentSection.addEventListener("click", async function(event) {
     event.preventDefault();
+    console.log(event.target.tagName)
     switch (event.target.tagName) {
       case "A":
         if (event.target.className.includes("replyButton")){
@@ -1978,9 +1976,10 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
             console.log("like")
           }
           break;
-      case "BUTTON":
+      case "IMG":
         if (event.target.className.includes("moreOptions")) {
           console.log("more");
+          await displayConfirmationPopup("delete comment");
         }
       default:
         break;
@@ -2025,12 +2024,13 @@ async function displayPopup(activity) {
 }
 
 async function displayConfirmationPopup(activity) {
+  console.log("confirmation popup")
   const confirmationText = document.querySelector("#confirmationText");
   confirmationText.textContent = `${activity}`;
   const confirmationPopup = document.querySelector("#confirmationPopup");
   confirmationPopup.classList.remove("hidden");
 
-  confirmationPopup.addEventListener("click", () => {
+  confirmationPopup.addEventListener("click", (event) => {
     const cancelButton = event.target.closest("#cancelButton");
     const contextButton = event.target.closest("#contextButton");
     if (cancelButton) {

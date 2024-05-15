@@ -44,19 +44,23 @@
 
             </div>
             
-            <div id="popup" class="fixed inset-x-0 bottom-24 flex justify-center rounded-popup w-popup h-12 bg-light-mode-accent text-white mx-auto z-20 hidden">
+            <div id="popup" class="fixed inset-x-0 bottom-24 flex justify-center rounded-popup w-popup h-12 bg-light-mode-accent text-white mx-auto z-40 hidden">
                 <div class="flex flex-row gap-3.5 items-center">
                     <p id="notificationText" class="font-medium text-4 text-light-mode"></p>
                     <img id="popupCloseButton" class="h-3 w-3 cursor-pointer" src="/lightmode/close_icon_white.svg" alt="Close Button">
                 </div>
             </div>
 
-            <div id="confirmationPopup" class="fixed inset-x-0 bottom-24 flex justify-center rounded-popup w-312 h-270 bg-light-mode-bg text-black mx-auto z-20 hidden">
-                <div class="flex flex-row gap-3.5 items-center">
-                    <p id="confirmationText" class="font-medium text-4 text-light-mode"></p>
-                    <div class="bg-transparent border-1">
-                        <button id="cancelButton">Cancel</button>
-                        <button id="contextButton"></button>
+            <div id="confirmationPopup" class="fixed top-0 flex justify-center items-center w-screen h-screen bg-overlay-bg text-black mx-auto z-40 hidden">
+                <div class="flex flex-col gap-3.5  justify-center items-center w-312 h-270 bg-light-mode-bg rounded-12.75 mx-auto">
+                    <p id="confirmationText" class="font-bold text-h2"></p>
+                    <div class="text-center">
+                        <p class="text-14">Once these items are be deleted. This</p>
+                        <p class="text-14">can not be undone</p>
+                    </div>
+                    <div class="flex flex-row gap-2">
+                        <button id="cancelButton" class="rounded-input-box border border-black px-4 py-2">Cancel</button>
+                        <button id="contextButton" class="rounded-input-box border text-error border-error px-4 py-2">Delete</button>
                     </div>
                 </div>
             </div>
@@ -64,7 +68,7 @@
     </div>
 
 
-<div id="modal" class="fixed inset-x-0 bottom-0 bg-overlay-bg h-screen w-screen flex items-center justify-center z-50 hidden">
+<div id="modal" class="fixed inset-x-0 bottom-0 bg-overlay-bg h-screen w-screen flex items-center justify-center z-30 hidden">
     <div id="modalBox" class="bg-light-mode p-6 rounded-t-20 shadow-lg w-full absolute bottom-0">
         <div class="flex justify-center items-center">
             <button id="closeModal" class="mx-auto">

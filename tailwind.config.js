@@ -34,6 +34,7 @@ theme: {
       'like': '#FF4646',
       'onboarding-grey': 'rgba(14, 14, 14, 0.75)',
       'success': '#14AA3E',
+      'error': '#E8083E',
       'time': '#7D7E80',
       'comment-divider': '#ABABAB'
     },
