@@ -1416,7 +1416,11 @@ async function displayCircle(circleData) {
     `;
     rightHeaderButton.innerHTML = "";
     pageName.textContent = "";
+    let currentUserProfilePicture = null;
     const memberList = circleData.members.map((obj) => {
+      if (obj.user.username === currentLocalUser){
+        currentUserProfilePicture = obj.user.profilePicture
+      }
       return `<img src="${obj.user.profilePicture}" class="w-42 h-42 rounded-full object-cover"/>`;
     });
     const albumList = circleData.circle.albums.map((obj) => {
@@ -1500,7 +1504,7 @@ async function displayCircle(circleData) {
   
     if (comment) {
       console.log("comment");
-      await displayComments(albumDiv.id);
+      await displayComments(albumDiv.id, currentUserProfilePicture);
       return;
     }
 
@@ -1825,7 +1829,8 @@ async function displayListOfAlbums (data, profile=false) {
   return albumList
 }
 
-async function displayComments(albumId) {
+async function displayComments(albumId, currentUserProfilePicture) {
+  console.log("THIS", currentUserProfilePicture)
   const {success, data} = await getComments(albumId)
   
   //return early do something on error
@@ -1834,9 +1839,9 @@ async function displayComments(albumId) {
     return;
   }
   console.log(data)
-  const commentList = data.map((comment) => {
-    return `
-    <div class="comment relative flex flex-row items-center h-full my-5" id="${comment.id}">
+  const showCommentsRecursively = (comments) => {
+    const arr = comments.map((comment) => {
+      return `<div class="comment relative flex flex-row items-center h-full my-5" id="${comment.id}" user="${comment.user.displayName ? comment.user.displayName : comment.user.username}">
       <div class="flex w-58 items-center h-full">
         <img src="${comment.user.profilePicture}" class="w-47 h-47 rounded-full">
       </div>
@@ -1858,8 +1863,12 @@ async function displayComments(albumId) {
           <p class="h-3">${comment.likeCount}</p>
         </div>
       </div>
-    </div>`;
-  });
+    </div>
+    ${comment.replies ? `<div class="childComment ml-8">${showCommentsRecursively(comment.replies)}</div>`: "" }`;
+    })
+    return arr.join("")
+  }
+
   const modal = document.querySelector("#modal");
   modal.classList.remove("hidden");
   modal.classList.add("shown");
@@ -1870,7 +1879,7 @@ async function displayComments(albumId) {
       <h1 class="font-semibold text-23 text-center mb-2">Comments</p>
     </div>
     <div class="albumComments my-2">
-    ${commentList.join("")}
+    ${showCommentsRecursively(data)}
     </div>
     <div class="w-full mt-2">
       <div id="comment" class="relative w-input-box h-full rounded-input-box">
@@ -1887,25 +1896,27 @@ async function displayComments(albumId) {
   </div>`;
 
   const albumCommentSection = document.querySelector(".albumComments");
+  let commentId = null;
   albumCommentSection.addEventListener("click", async function(event) {
     event.preventDefault();
-    const commentId = event.target.closest("div.comment").id
     switch (event.target.tagName) {
       case "A":
         if (event.target.className.includes("replyButton")){
-          console.log(commentId);
           const comment =  document.querySelector("#comment");
           comment.classList.remove("bg-transparent");
           comment.classList.add("border-2", "bg-light-mode-accent");
-
+          commentId = event.target.closest("div.comment").id;
+          commentUser = event.target.closest("div.comment").getAttribute("user")
           const commentInput = document.querySelector("#commentInput");
-          commentInput.id = "replyInput";
-          commentInput.placeholder = "enter a reply";
+          if (commentInput){
+            commentInput.id = "replyInput";
+            commentInput.placeholder = "enter a reply";
+          }
           
           const replyContent = document.querySelector("#replyContent");
           replyContent.innerHTML = `
           <div class="flex justify-between items-center p-3">
-            <p class="text-white ml-1">Replying to @username</p>
+            <p class="text-white ml-1">Replying to @${commentUser}</p>
             <button id="closeReply" class="h-4 w-4 mr-2">
               <svg viewBox="0 0 24.00 24.00" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5 5L19 19M5 19L19 5" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path> </g>
               </svg>
@@ -1935,11 +1946,13 @@ async function displayComments(albumId) {
         break;
     }
   })
-  const newCommentInput = document.querySelector("#newCommentInput")
+  const newCommentInput = document.querySelector("#commentInput")
   newCommentInput.addEventListener("keydown", async function (event) {
     if (event.key === "Enter") {
       console.log(newCommentInput.value)
-      await newComment(newCommentInput.value, albumId)
+      console.log(newCommentInput)
+      console.log(albumId, commentId)
+      newCommentInput.id === "replyInput" ? await newComment(newCommentInput.value, albumId, commentId) : await newComment(newCommentInput.value, albumId);
       await displayComments(albumId);
     }
   })

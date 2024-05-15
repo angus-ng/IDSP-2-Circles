@@ -158,16 +158,38 @@ export class AlbumService implements IAlbumService {
                 }
             },
             likeCount: true,
-            replies: true
+            replies: {
+                include: {
+                    user: {
+                        select: {
+                            username: true,
+                            displayName: true,
+                            profilePicture: true
+                        }
+                    },
+                    replies: {
+                        include: {
+                            user: {
+                                select: {
+                                    username: true,
+                                    displayName: true,
+                                    profilePicture: true
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         },
         where : {
-            albumId: albumId
-        }
+            albumId: albumId,
+            repliesRelation: {none: {}}
+        },
     })
     return comment;
   }
 
-  async createComment(currentUser: string, message: string, albumId: string, circleId?:string) {
+  async createComment(currentUser: string, message: string, albumId: string, commentId?:string) {
     try {
         const newComment = await this._db.prisma.comment.create({
             data: {
@@ -176,6 +198,17 @@ export class AlbumService implements IAlbumService {
                 albumId: albumId
             }
         })
+        if (commentId && newComment) {
+            await this._db.prisma.comment.update({
+                where: {
+                    id: commentId
+                }, 
+                data: {
+                    replies: {connect: newComment} 
+                }
+            })
+            console.log(commentId)
+        }
       } catch (err) {
         throw err;
     }

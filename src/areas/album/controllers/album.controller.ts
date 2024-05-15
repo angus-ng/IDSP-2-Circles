@@ -120,7 +120,6 @@ class AlbumController implements IController {
       if (!member){
         return res.status(200).json({ success: true, data:null });
       }
-
       const comment = await this._service.createComment(loggedInUser, message, albumId, commentId);
       res.json({success: true, data: null})
     } catch (err) {
