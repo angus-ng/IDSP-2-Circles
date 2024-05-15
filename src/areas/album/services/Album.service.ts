@@ -213,4 +213,44 @@ export class AlbumService implements IAlbumService {
         throw err;
     }
     }
+
+    async deleteComment(currentUser: string, commentId: string) {
+        try {
+            const comment = await this._db.prisma.comment.findUnique({
+                where: {
+                    id: commentId,
+                    userId: currentUser
+                },
+                select: {
+                    replies: true
+                }
+            })
+
+            if (!comment) {
+                 return
+            }
+            
+            if (comment.replies.length) {
+                await this._db.prisma.comment.update({
+                    where: {
+                        id: commentId,
+                        userId: currentUser
+                    },
+                    data: {
+                        userId: null,
+                        message: null
+                    }
+                })
+            } else {
+                await this._db.prisma.comment.delete({
+                    where: {
+                        id: commentId,
+                        userId: currentUser
+                    }
+                })
+            }
+        } catch (err) {
+            throw err
+        }
+    }
 }

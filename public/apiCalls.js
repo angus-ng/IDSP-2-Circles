@@ -369,6 +369,9 @@ async function getComments(albumId) {
 
 async function newComment(message, albumId, commentId="") {
   try {
+    if (!message || !albumId) {
+      return;
+    }
     const commentObj = {
       message,
       albumId,
@@ -380,6 +383,23 @@ async function newComment(message, albumId, commentId="") {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(commentObj)
+    })
+    const jsonResponse = await response.json();
+    console.log(jsonResponse)
+    return jsonResponse
+  } catch (err) {
+
+  }
+}
+
+async function deleteComment(commentId) {
+  try {
+    const response = await fetch(`/album/comment/delete`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({commentId})
     })
     const jsonResponse = await response.json();
     console.log(jsonResponse)

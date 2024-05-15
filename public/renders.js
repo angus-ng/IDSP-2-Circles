@@ -1868,16 +1868,16 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
   console.log(data)
   const showCommentsRecursively = (comments) => {
     const arr = comments.map((comment) => {
-      return `<div class="comment relative flex flex-row items-center h-full my-5" id="${comment.id}" user="${comment.user.displayName ? comment.user.displayName : comment.user.username}">
+      return `<div class="comment relative flex flex-row items-center h-full my-5" id="${comment.id}" user="${comment.user? comment.user.displayName ? comment.user.displayName : comment.user.username: "" }">
       <div class="flex w-58 items-center h-full">
-        <img src="${comment.user.profilePicture}" class="w-47 h-47 rounded-full">
+        <img src="${comment.user ? comment.user.profilePicture : "/placeholder_image.svg"}" class="w-47 h-47 rounded-full">
       </div>
       <div class=" flex flex-col w-294 h-full my-0">
         <div class="flex flex-row gap-2">
-          <h1 class="font-bold text-secondary">${comment.user.displayName ? comment.user.displayName : comment.user.username}</h1>
+          <h1 class="font-bold text-secondary">${comment.user ? (comment.user.displayName ? comment.user.displayName : comment.user.username) : "deleted"}</h1>
           <p class="text-time text-11">${comment.createdAt}</p>
         </div>
-        <p class="mt-0">${comment.message}</p>
+        <p class="mt-0">${comment.message ? comment.message : "message removed"}</p>
         <div class="flex items-center space-x-2">
           <a class="text-time text-11 underline replyButton w-8">Reply</a>
           <img src="/lightmode/more_options.svg" alt="more options"/ class="moreOptions w-5 h-5">
@@ -1978,8 +1978,9 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
           break;
       case "IMG":
         if (event.target.className.includes("moreOptions")) {
+          commentId = event.target.closest("div.comment").id;
           console.log("more");
-          await displayConfirmationPopup("delete comment");
+          await displayConfirmationPopup("delete comment", {currentUserProfilePicture, albumId, commentId});
         }
       default:
         break;
@@ -1992,7 +1993,7 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
       console.log(newCommentInput)
       console.log(albumId, commentId)
       newCommentInput.id === "replyInput" ? await newComment(newCommentInput.value, albumId, commentId) : await newComment(newCommentInput.value, albumId);
-      await displayComments(albumId);
+      await displayComments(albumId, currentUserProfilePicture, currentLocalUser);
     }
   })
 }
@@ -2023,14 +2024,16 @@ async function displayPopup(activity) {
   }
 }
 
-async function displayConfirmationPopup(activity) {
+async function displayConfirmationPopup(activity, helperObj) {
   console.log("confirmation popup")
   const confirmationText = document.querySelector("#confirmationText");
   confirmationText.textContent = `${activity}`;
   const confirmationPopup = document.querySelector("#confirmationPopup");
   confirmationPopup.classList.remove("hidden");
+  confirmationPopup
 
-  confirmationPopup.addEventListener("click", (event) => {
+  confirmationPopup.addEventListener("click", async (event) => {
+    event.stopImmediatePropagation()
     const cancelButton = event.target.closest("#cancelButton");
     const contextButton = event.target.closest("#contextButton");
     if (cancelButton) {
@@ -2038,6 +2041,15 @@ async function displayConfirmationPopup(activity) {
     }
 
     if (contextButton) {
+      if (activity === "delete comment") {
+        await deleteComment(helperObj.commentId)
+        confirmationPopup.classList.add("hidden")
+        confirmationText.textContent = ""
+
+        console.log("HERE", helperObj)
+
+        await displayComments(helperObj.albumId, helperObj.currentUserProfilePicture, currentLocalUser);
+      }
       console.log("do something");
     }
   });

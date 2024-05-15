@@ -27,6 +27,7 @@ class AlbumController implements IController {
     this.router.post(`${this.path}/list`, ensureAuthenticated, this.getAlbumList);
     this.router.post(`${this.path}/comments`, ensureAuthenticated, this.getComments)
     this.router.post(`${this.path}/comment/new`, ensureAuthenticated, this.newComment)
+    this.router.post(`${this.path}/comment/delete`, ensureAuthenticated, this.deleteComment)
   }
 
   private uploadImages = async (req: Request, res: Response) => {
@@ -117,13 +118,25 @@ class AlbumController implements IController {
       console.log(message, albumId, commentId)
   
       const member = await this._service.checkMembership(albumId, loggedInUser)
-      if (!member){
+      if (!member || !message || message===""){
         return res.status(200).json({ success: true, data:null });
       }
       const comment = await this._service.createComment(loggedInUser, message, albumId, commentId);
       res.json({success: true, data: null})
     } catch (err) {
       res.json({success: true, data: null, error: "failed to create comment"})
+    }
+  }
+
+  private deleteComment = async (req: Request, res: Response) => {
+    let loggedInUser = req.user!.username
+    try {
+      const { commentId } = req.body
+
+      await this._service.deleteComment(loggedInUser, commentId);
+      res.json({success: true, data: null})
+    } catch (err) {
+      res.json({success: true, data: null, error: "failed to delete comment"})
     }
   }
 }
