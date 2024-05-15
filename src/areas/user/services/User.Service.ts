@@ -310,6 +310,15 @@ export class UserService implements IUserService {
         username: true,
         displayName: true,
         profilePicture: true,
+        friendOf: true,
+        requestReceived: {
+          include:{requester:{}},
+          where:{requesterName:currentUser}
+        },
+        requestsSent: {
+          include:{requestee:{}},
+          where:{requesteeName:currentUser}
+        },
         _count: {
           select: {
             friends: true
