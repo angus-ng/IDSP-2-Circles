@@ -1885,7 +1885,7 @@ async function displayComments(albumId) {
       case "A":
         if (event.target.className.includes("replyButton")){
           console.log(commentId)
-          await newComment(newCommentInput.value, albumId, commentId)
+          // await newComment(newCommentInput.value, albumId, commentId)
         }
         break;
       case "svg":
