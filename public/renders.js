@@ -810,34 +810,6 @@ async function displayProfile(userData) {
   nav.classList.remove("hidden");
   const circleRender = await displayListOfCircles(userData);
   const albumRender = await displayListOfAlbums(userData, true);
-  const addAsFriend = document.createElement("div")
-  addAsFriend.className = "flex justify-center";
-  (currentLocalUser === userData.username) ? null : addAsFriend.innerHTML=`<button id="addFriendButton" class="w-110 h-38 rounded-input-box bg-light-mode-accent text-white">Add friend</button>`
-  if (currentLocalUser !== userData.username){
-  const addButton = addAsFriend.childNodes[0];
-  addButton.setAttribute("method", "Add Friend");
-  addButton.setAttribute("name", `${userData.username}`);
-
-  for (let friend of userData.friendOf) {
-    if (friend.friend_1_name === currentLocalUser) {
-      addButton.setAttribute("method", "Remove Friend");
-      addButton.textContent = "Remove Friend"
-    }
-  }
-  for (let request of userData.requestReceived) {
-    if (request.requester.username === currentLocalUser) {
-      addButton.setAttribute("method", "Remove Request");
-      addButton.textContent = "Remove Request"
-    }
-  }
-  for (let request of userData.requestsSent) {
-    if (request.requestee.username === currentLocalUser) {
-      addButton.setAttribute("method", "Accept Request");
-      addButton.textContent = "Accept Request"
-    }
-  }
-
-}
 
   pageName.textContent = userData.displayName ? userData.displayName : userData.username;
   leftHeaderButton.innerHTML = "";
@@ -870,7 +842,9 @@ async function displayProfile(userData) {
         </div>
       </div>
     </div>
-    ${addAsFriend.outerHTML}
+    <div id="addAsFriend" class="flex justify-center">
+
+    </div>
     <div id="profileTabs" class="w-full justify-center mx-auto">
       <ul class="flex flex-row w-full justify-center -mb-px text-sm font-medium text-center text-dark-grey gap-6">
         <li id="albumTab" class="me-2 w-full mr-0">
@@ -899,6 +873,62 @@ async function displayProfile(userData) {
     </div>
     <div class="h-100"></div>
   </div>`;
+
+  const addAsFriend = document.querySelector("#addAsFriend");
+  (currentLocalUser === userData.username) ? null : addAsFriend.innerHTML = `<button id="addFriendButton" class="w-auto h-38 rounded-input-box text-white text-secondary px-4">Add Friend</button>`;
+  if (currentLocalUser !== userData.username) {
+    const addButton = addAsFriend.querySelector("#addFriendButton");
+    addButton.setAttribute("method", "Add Friend");
+    addButton.setAttribute("name", `${userData.username}`);
+
+    let isFriend = false;
+
+    for (let friend of userData.friendOf) {
+      if (friend.friend_1_name === currentLocalUser) {
+        addButton.setAttribute("method", "Remove Friend");
+        addButton.textContent = "Friend";
+        isFriend = true;
+      }
+    }
+    for (let request of userData.requestReceived) {
+      if (request.requester.username === currentLocalUser) {
+        addButton.setAttribute("method", "Remove Request");
+        addButton.textContent = "Requested";
+
+      }
+    }
+    for (let request of userData.requestsSent) {
+      if (request.requestee.username === currentLocalUser) {
+        addButton.setAttribute("method", "Accept Request");
+        addButton.textContent = "Accept Friend";
+      }
+    }
+
+    switch (addButton.getAttribute("method")) {
+      case "Remove Request":
+        addButton.classList.add("bg-dark-grey");
+        break;
+      default:
+        addButton.classList.add("bg-light-mode-accent");
+        break;
+    }
+
+    if (isFriend) {
+      addButton.addEventListener("mouseenter", () => {
+        console.log("Button method:", addButton.getAttribute("method"));
+        addButton.textContent = "Unfriend";
+        addButton.classList.remove("bg-light-mode-accent");
+        addButton.classList.add("bg-dark-grey");
+      });
+  
+      addButton.addEventListener("mouseout", () => {
+        addButton.textContent = "Friend";
+        addButton.classList.remove("bg-dark-grey");
+        addButton.classList.add("bg-light-mode-accent");
+      });
+    }
+
+}
 
   const profilePage = document.querySelector("#profilePage");
   profilePage.addEventListener("click", async(event) => {

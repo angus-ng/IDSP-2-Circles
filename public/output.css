@@ -1028,6 +1028,10 @@ select {
   margin-right: 1.5rem;
 }
 
+.mr-9 {
+  margin-right: 2.25rem;
+}
+
 .mt-0 {
   margin-top: 0px;
 }
@@ -1082,14 +1086,6 @@ select {
 
 .mt-header {
   margin-top: 105px;
-}
-
-.mr-8 {
-  margin-right: 2rem;
-}
-
-.mr-9 {
-  margin-right: 2.25rem;
 }
 
 .flex {
