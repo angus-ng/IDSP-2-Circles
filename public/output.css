@@ -1234,8 +1234,16 @@ select {
   height: 100vh;
 }
 
+.max-h-527 {
+  max-height: 527px;
+}
+
 .max-h-56 {
   max-height: 14rem;
+}
+
+.max-h-400 {
+  max-height: 400px;
 }
 
 .w-10 {
@@ -1372,6 +1380,10 @@ select {
 
 .w-screen {
   width: 100vw;
+}
+
+.max-w-430 {
+  max-width: 430px;
 }
 
 .flex-1 {

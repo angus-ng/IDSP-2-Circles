@@ -89,6 +89,9 @@ theme: {
       '47': '47px',
       '294': '294px'
     },
+    maxWidth: {
+      '430':'430px'
+    },
     height: {
       '932': '932px',
       '230': '230px',
@@ -117,7 +120,11 @@ theme: {
       '270': '270px',
       '47': '47px',
       '50': '50px',
-      '58': '58px'
+      '58': '58px',
+    },
+    maxHeight: {
+      '527': '527px',
+      '400': '400px'
     },
     boxShadow: {
       'background-shadow': 'inset 0 0 100px -30px rgba(0, 0, 0, 0.2)'

@@ -1934,11 +1934,11 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
   modal.classList.add("shown");
   const modalContent = document.querySelector("#modalContent");
   modalContent.innerHTML = `
-  <div class="flex flex-col w-full justify-center mx-auto text-black">
+  <div class="flex flex-col max-w-430 max-h-527 justify-center mx-auto text-black">
     <div class="border-b-circle border-comment-divider mb-5">
       <h1 class="font-semibold text-23 text-center mb-2">Comments</p>
     </div>
-    <div class="albumComments my-2">
+    <div class="albumComments my-2 max-h-400 overflow-y-scroll">
     ${showCommentsRecursively(data)}
     </div>
     <div class="flex w-full items-end mt-2">
