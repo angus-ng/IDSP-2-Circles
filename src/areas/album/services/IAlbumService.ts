@@ -6,5 +6,6 @@ export default interface IAlbumService {
     checkMembership(id: string, currentUser: string): Promise<boolean>
     getAlbum(id: string): Promise<Album | null>
     listAlbums(currentUser: string): Promise<{album: Album}[] | void>
-    acceptInvite(id: string, username: string): Promise<void>
+    getComments(albumId: string): Promise<any>
+    createComment(currentUser: string, message: string, albumId: string, commentId?:string): Promise<void>
 }

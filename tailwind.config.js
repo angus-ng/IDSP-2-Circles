@@ -33,7 +33,9 @@ theme: {
       'text-grey': '#484848',
       'like': '#FF4646',
       'onboarding-grey': 'rgba(14, 14, 14, 0.75)',
-      'success': '#14AA3E'
+      'success': '#14AA3E',
+      'time': '#7D7E80',
+      'comment-divider': '#ABABAB'
     },
     fontSize: {
       'onboarding': '36px',
@@ -49,7 +51,7 @@ theme: {
       '14': '14px',
       '13': '13px',
       '11': '11px',
-      '23': '23px'
+      '23': '23px',
     },
     lineHeight: {
       'h1': '40px',
@@ -82,7 +84,9 @@ theme: {
       '25': '25px',
       '43': '43px',
       '40': '40px',
-      '265': '265px'
+      '265': '265px',
+      '47': '47px',
+      '294': '294px',
     },
     height: {
       '932': '932px',
@@ -109,7 +113,10 @@ theme: {
       '25': '25px',
       '43': '43px',
       '40': '40px',
-      '270': '270px'
+      '270': '270px',
+      '47': '47px',
+      '50': '50px',
+      '58': '58px'
     },
     boxShadow: {
       'background-shadow': 'inset 0 0 100px -30px rgba(0, 0, 0, 0.2)'

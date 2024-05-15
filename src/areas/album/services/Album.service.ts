@@ -1,7 +1,7 @@
 import { name } from "ejs";
 import DBClient from "../../../PrismaClient";
 import IAlbumService from "./IAlbumService";
-import { Album } from '@prisma/client'
+import { Album, Comment } from '@prisma/client'
 
 export class AlbumService implements IAlbumService {
   readonly _db: DBClient = DBClient.getInstance();
@@ -143,37 +143,74 @@ export class AlbumService implements IAlbumService {
     })
     //return new Error("Not implemented");
   }
-  async acceptInvite(id: string, username: string): Promise<void> {
-    try {
-        const cirlceInvite = await this._db.prisma.albumInvite.findUnique({
-            where: {
-                invitee_username_albumId: {
-                    albumId: id,
-                    invitee_username: username
+  
+  async getComments(albumId: string): Promise<any> {
+    const comment = await this._db.prisma.comment.findMany({
+        select: {
+            id: true,
+            createdAt: true,
+            message: true,
+            user: {
+                select: {
+                    username: true,
+                    displayName: true,
+                    profilePicture: true,
                 }
-            }
-        })
-        if (cirlceInvite) {
-            await this._db.prisma.albumInvite.delete({
-                where: {
-                    invitee_username_albumId: {
-                        albumId: id,
-                        invitee_username: username
+            },
+            likeCount: true,
+            replies: {
+                include: {
+                    user: {
+                        select: {
+                            username: true,
+                            displayName: true,
+                            profilePicture: true
+                        }
+                    },
+                    replies: {
+                        include: {
+                            user: {
+                                select: {
+                                    username: true,
+                                    displayName: true,
+                                    profilePicture: true
+                                }
+                            }
+                        }
                     }
                 }
-            })
-            await this._db.prisma.userCircle.create({
+            }
+        },
+        where : {
+            albumId: albumId,
+            repliesRelation: {none: {}}
+        },
+    })
+    return comment;
+  }
+
+  async createComment(currentUser: string, message: string, albumId: string, commentId?:string) {
+    try {
+        const newComment = await this._db.prisma.comment.create({
+            data: {
+                message: message,
+                userId: currentUser,
+                albumId: albumId
+            }
+        })
+        if (commentId && newComment) {
+            await this._db.prisma.comment.update({
+                where: {
+                    id: commentId
+                }, 
                 data: {
-                    username: username,
-                    circleId: id
+                    replies: {connect: newComment} 
                 }
             })
-            return
-        } else {
-            throw new Error("Failed to accept album invite")
+            console.log(commentId)
         }
-      } catch (error:any) {
-        throw new Error(error)
-      }
-  }
+      } catch (err) {
+        throw err;
+    }
+    }
 }

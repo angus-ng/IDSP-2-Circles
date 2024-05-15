@@ -665,6 +665,7 @@ function displayUserSearch(listOfUsers) {
   if (!listOfUsers) {
     return [];
   }
+  console.log("HERE", listOfUsers)
   let newArr = listOfUsers.map((user) => {
     if (user.username === currentLocalUser) {
       return;
@@ -701,11 +702,6 @@ function displayUserSearch(listOfUsers) {
       <div class="ml-8 flex-none w-207">
         ${displayName.outerHTML}
         ${username.outerHTML}
-      </div>
-      <div class="flex-none w-58">
-        <form>
-          <button name="${user.username}" method="${friendStatus}" class="">${friendStatus}</button>
-        </form>
       </div>
     </div>`;
   });
@@ -918,9 +914,32 @@ async function displayProfile(userData) {
   const albumRender = await displayListOfAlbums(userData, true);
   const addAsFriend = document.createElement("div");
   addAsFriend.className = "flex justify-center";
-  currentLocalUser === userData.username
-    ? null
-    : (addAsFriend.innerHTML = `<button class="w-110 h-38 rounded-input-box bg-light-mode-accent text-white">Add friend</button>`);
+  (currentLocalUser === userData.username) ? null : addAsFriend.innerHTML=`<button id="addFriendButton" class="w-110 h-38 rounded-input-box bg-light-mode-accent text-white">Add friend</button>`
+  if (currentLocalUser !== userData.username){
+  const addButton = addAsFriend.childNodes[0];
+  addButton.setAttribute("method", "Add Friend");
+  addButton.setAttribute("name", `${userData.username}`);
+
+  for (let friend of userData.friendOf) {
+    if (friend.friend_1_name === currentLocalUser) {
+      addButton.setAttribute("method", "Remove Friend");
+      addButton.textContent = "Remove Friend"
+    }
+  }
+  for (let request of userData.requestReceived) {
+    if (request.requester.username === currentLocalUser) {
+      addButton.setAttribute("method", "Remove Request");
+      addButton.textContent = "Remove Request"
+    }
+  }
+  for (let request of userData.requestsSent) {
+    if (request.requestee.username === currentLocalUser) {
+      addButton.setAttribute("method", "Accept Request");
+      addButton.textContent = "Accept Request"
+    }
+  }
+
+}
 
   pageName.textContent = userData.displayName
     ? userData.displayName
@@ -1025,8 +1044,7 @@ async function displayProfile(userData) {
     }
 
     if (comment) {
-      console.log("comment");
-      await displayComments();
+      await displayComments(albumDiv.id);
       return;
     }
 
@@ -1090,6 +1108,60 @@ async function displayProfile(userData) {
         }
       }
     });
+
+    const addFriendButton = document.querySelector("#addFriendButton")
+  if (addFriendButton) {
+    addFriendButton.addEventListener("click", async (event) => {
+      event.preventDefault();
+      const target = event.target;
+      const username = target.getAttribute("name");
+      const method = target.getAttribute("method");
+      console.log(target, username, method)
+      let response;
+      switch (method) {
+        case "Add Friend": {
+          response = await sendFriendRequest(username, currentLocalUser);
+          console.log(response);
+          await displayPopup("friend request sent");
+          let { success, data } = await getUser(username)
+          if (success && data) {
+            await displayProfile(data);
+          }
+          break;
+        }
+        case "Remove Friend": {
+          //MAKE USER CONFIRM IF THEY WANT TO REMOVE THIS FRIEND FIRST
+          response = await unfriend(username, currentLocalUser);
+          console.log(response);
+          let { success, data } = await getUser(username)
+          if (success && data) {
+            await displayProfile(data);
+          }
+          break;
+        }
+        case "Remove Request": {
+          response = await removeFriendRequest(username, currentLocalUser);
+          console.log(response);
+          let { success, data } = await getUser(username)
+          if (success && data) {
+            await displayProfile(data);
+          }
+          break;
+        }
+        case "Accept Request": {
+          response = await acceptFriendRequest(username, currentLocalUser);
+          console.log(response);
+          let { success, data } = await getUser(username)
+          if (success && data) {
+            await displayProfile(data);
+          }
+          break;
+        }
+        default:
+          break;
+      }
+    });
+  }
   await cleanUpSectionEventListener();
 }
 
@@ -1480,16 +1552,20 @@ async function displayCircle(circleData) {
   leftHeaderButton.innerHTML = `
     <img src="/lightmode/back_button.svg" alt="Back Button" id="backButton"/>
     `;
-  rightHeaderButton.innerHTML = "";
-  pageName.textContent = "";
-  const memberList = circleData.members.map((obj) => {
-    return `<img src="${obj.user.profilePicture}" class="w-42 h-42 rounded-full object-cover"/>`;
-  });
-  const albumList = circleData.circle.albums.map((obj) => {
-    let albumName = document.createElement("p");
-    albumName.className = "text-white text-shadow shadow-black";
-    albumName.textContent = obj.name;
-    return `
+    rightHeaderButton.innerHTML = "";
+    pageName.textContent = "";
+    let currentUserProfilePicture = null;
+    const memberList = circleData.members.map((obj) => {
+      if (obj.user.username === currentLocalUser){
+        currentUserProfilePicture = obj.user.profilePicture
+      }
+      return `<img src="${obj.user.profilePicture}" class="w-42 h-42 rounded-full object-cover"/>`;
+    });
+    const albumList = circleData.circle.albums.map((obj) => {
+      let albumName = document.createElement('p')
+      albumName.className = "text-white text-shadow shadow-black"
+      albumName.textContent = obj.name;
+      return `
       <div class="w-full h-min relative album" id="${obj.id}">
         <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.photos[0].src}"/>
         <div class="m-2 text-secondary font-semibold absolute inset-0 flex items-end justify-start">
@@ -1576,7 +1652,7 @@ async function displayCircle(circleData) {
 
     if (comment) {
       console.log("comment");
-      await displayComments();
+      await displayComments(albumDiv.id, currentUserProfilePicture);
       return;
     }
 
@@ -1940,7 +2016,7 @@ async function displayListOfAlbums(data, profile = false) {
             <path d="M9.22318 16.2905L9.22174 16.2892C6.62708 13.9364 4.55406 12.0515 3.11801 10.2946C1.69296 8.55118 1 7.05624 1 5.5C1 2.96348 2.97109 1 5.5 1C6.9377 1 8.33413 1.67446 9.24117 2.73128L10 3.61543L10.7588 2.73128C11.6659 1.67446 13.0623 1 14.5 1C17.0289 1 19 2.96348 19 5.5C19 7.05624 18.307 8.55118 16.882 10.2946C15.4459 12.0515 13.3729 13.9364 10.7783 16.2892L10.7768 16.2905L10 16.9977L9.22318 16.2905Z" stroke="white" stroke-width="2"/>
           </svg>
         </div>
-        <div class="comment">
+        <div class="comment" albumid="${obj.id}">
           <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M10.5 19.125C8.79414 19.125 7.12658 18.6192 5.70821 17.6714C4.28983 16.7237 3.18434 15.3767 2.53154 13.8006C1.87873 12.2246 1.70793 10.4904 2.04073 8.81735C2.37352 7.14426 3.19498 5.60744 4.4012 4.40121C5.60743 3.19498 7.14426 2.37353 8.81735 2.04073C10.4904 1.70793 12.2246 1.87874 13.8006 2.53154C15.3767 3.18435 16.7237 4.28984 17.6714 5.70821C18.6192 7.12658 19.125 8.79414 19.125 10.5C19.125 11.926 18.78 13.2705 18.1667 14.455L19.125 19.125L14.455 18.1667C13.2705 18.78 11.925 19.125 10.5 19.125Z" stroke="#F8F4EA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
@@ -1951,26 +2027,133 @@ async function displayListOfAlbums(data, profile = false) {
   return albumList;
 }
 
-async function displayComments() {
+async function displayComments(albumId, currentUserProfilePicture) {
+  console.log("THIS", currentUserProfilePicture)
+  const {success, data} = await getComments(albumId)
+  
+  //return early do something on error
+  if (!(success && data)) {
+    console.log("could not fetch comment data")
+    return;
+  }
+  console.log(data)
+  const showCommentsRecursively = (comments) => {
+    const arr = comments.map((comment) => {
+      return `<div class="comment relative flex flex-row items-center h-full my-5" id="${comment.id}" user="${comment.user.displayName ? comment.user.displayName : comment.user.username}">
+      <div class="flex w-58 items-center h-full">
+        <img src="${comment.user.profilePicture}" class="w-47 h-47 rounded-full">
+      </div>
+      <div class=" flex flex-col w-294 h-full my-0">
+        <div class="flex flex-row gap-2">
+          <h1 class="font-bold text-secondary">${comment.user.displayName ? comment.user.displayName : comment.user.username}</h1>
+          <p class="text-time text-11">${comment.createdAt}</p>
+        </div>
+        <p class="mt-0">${comment.message}</p>
+        <a class="text-time text-11 underline replyButton w-8">Reply</a>
+      </div>
+      <div class="absolute right-0 top-2 flex flex-1 flex-col items-center">
+        <div class="like h-full">
+          <svg width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9.22318 16.6155L9.22174 16.6142C6.62708 14.2613 4.55406 12.3765 3.11801 10.6196C1.69296 8.87613 1 7.38119 1 5.82495C1 3.28843 2.97109 1.32495 5.5 1.32495C6.9377 1.32495 8.33413 1.99941 9.24117 3.05623L10 3.94038L10.7588 3.05623C11.6659 1.99941 13.0623 1.32495 14.5 1.32495C17.0289 1.32495 19 3.28843 19 5.82495C19 7.38119 18.307 8.87613 16.882 10.6196C15.4459 12.3765 13.3729 14.2613 10.7783 16.6142L10.7768 16.6155L10 17.3226L9.22318 16.6155Z" stroke="#0E0E0E" stroke-width="2"/>
+          </svg>
+        </div>
+        <div class="likeCount">
+          <p class="h-3">${comment.likeCount}</p>
+        </div>
+      </div>
+    </div>
+    ${comment.replies ? `<div class="childComment ml-8">${showCommentsRecursively(comment.replies)}</div>`: "" }`;
+    })
+    return arr.join("")
+  }
+
   const modal = document.querySelector("#modal");
   modal.classList.remove("hidden");
   modal.classList.add("shown");
-  const closeModalButton = document.querySelector("#closeModalButton");
-  closeModalButton.classList.remove("hidden");
   const modalContent = document.querySelector("#modalContent");
   modalContent.innerHTML = `
   <div class="flex flex-col w-full justify-center mx-auto text-black">
-    <div>
-      <h1 class="font-semibold text-23">Comments</p>
+    <div class="border-b-circle border-comment-divider mb-5">
+      <h1 class="font-semibold text-23 text-center mb-2">Comments</p>
     </div>
-    <div class="albumComments">
+    <div class="albumComments my-2">
+    ${showCommentsRecursively(data)}
     </div>
-    <div class="w-full">
-      <form>
-        <input for="newComment" class="w-input-box rounded-input-box border-2" placeholder="enter a commment">
-      </form>
+    <div class="w-full mt-2">
+      <div id="comment" class="relative w-input-box h-full rounded-input-box">
+        <div id="replyContent">
+        </div>
+        <div class="flex items-center mt-4">
+          <button class="absolute right-0 mr-3 bg-light-mode-accent rounded-input-box p-2">
+            <img src="/lightmode/up_arrow_icon.svg" class="h-5 w-5"/>
+          </button>
+          <input id="commentInput" class="w-full p-3 rounded-input-box border-2" placeholder="enter a comment">
+        </div>
+      </div>
     </div>
   </div>`;
+
+  const albumCommentSection = document.querySelector(".albumComments");
+  let commentId = null;
+  albumCommentSection.addEventListener("click", async function(event) {
+    event.preventDefault();
+    switch (event.target.tagName) {
+      case "A":
+        if (event.target.className.includes("replyButton")){
+          const comment =  document.querySelector("#comment");
+          comment.classList.remove("bg-transparent");
+          comment.classList.add("border-2", "bg-light-mode-accent");
+          commentId = event.target.closest("div.comment").id;
+          commentUser = event.target.closest("div.comment").getAttribute("user")
+          const commentInput = document.querySelector("#commentInput");
+          if (commentInput){
+            commentInput.id = "replyInput";
+            commentInput.placeholder = "enter a reply";
+          }
+          
+          const replyContent = document.querySelector("#replyContent");
+          replyContent.innerHTML = `
+          <div class="flex justify-between items-center p-3">
+            <p class="text-white ml-1">Replying to @${commentUser}</p>
+            <button id="closeReply" class="h-4 w-4 mr-2">
+              <svg viewBox="0 0 24.00 24.00" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5 5L19 19M5 19L19 5" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path> </g>
+              </svg>
+            </button>
+          </div>`;
+
+          comment.querySelector("#closeReply").addEventListener("click", () => {
+            comment.classList.add("bg-transparent");
+            comment.classList.remove("border-2", "bg-light-mode-accent");
+
+            const replyInput = document.querySelector("#replyInput");
+            replyInput.id = "commentInput";
+            replyInput.placeholder = "enter a comment";
+
+            replyContent.innerHTML = "";
+          });
+
+          // await newComment(newCommentInput.value, albumId, commentId)
+        }
+        break;
+      case "svg":
+          if (event.target.parentNode.tagName === "DIV" && event.target.parentNode.className.includes("like")){
+            console.log("like")
+          }
+          break;
+      default:
+        break;
+    }
+  })
+  const newCommentInput = document.querySelector("#commentInput")
+  newCommentInput.addEventListener("keydown", async function (event) {
+    if (event.key === "Enter") {
+      console.log(newCommentInput.value)
+      console.log(newCommentInput)
+      console.log(albumId, commentId)
+      newCommentInput.id === "replyInput" ? await newComment(newCommentInput.value, albumId, commentId) : await newComment(newCommentInput.value, albumId);
+      await displayComments(albumId);
+    }
+  })
 }
 
 async function displayPopup(activity) {
