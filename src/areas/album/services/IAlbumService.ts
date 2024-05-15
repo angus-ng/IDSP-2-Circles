@@ -7,4 +7,5 @@ export default interface IAlbumService {
     getAlbum(id: string): Promise<Album | null>
     listAlbums(currentUser: string): Promise<{album: Album}[] | void>
     getComments(albumId: string): Promise<any>
+    createComment(currentUser: string, message: string, albumId: string, commentId?:string): Promise<void>
 }

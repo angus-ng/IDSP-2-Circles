@@ -147,6 +147,7 @@ export class AlbumService implements IAlbumService {
   async getComments(albumId: string): Promise<any> {
     const comment = await this._db.prisma.comment.findMany({
         select: {
+            id: true,
             createdAt: true,
             message: true,
             user: {
@@ -165,4 +166,18 @@ export class AlbumService implements IAlbumService {
     })
     return comment;
   }
+
+  async createComment(currentUser: string, message: string, albumId: string, circleId?:string) {
+    try {
+        const newComment = await this._db.prisma.comment.create({
+            data: {
+                message: message,
+                userId: currentUser,
+                albumId: albumId
+            }
+        })
+      } catch (err) {
+        throw err;
+    }
+    }
 }

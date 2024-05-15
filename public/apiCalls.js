@@ -366,3 +366,25 @@ async function getComments(albumId) {
 
   }
 }
+
+async function newComment(message, albumId, commentId="") {
+  try {
+    const commentObj = {
+      message,
+      albumId,
+      commentId
+    }
+    const response = await fetch(`/album/comment/new`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(commentObj)
+    })
+    const jsonResponse = await response.json();
+    console.log(jsonResponse)
+    return jsonResponse
+  } catch (err) {
+
+  }
+}

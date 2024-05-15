@@ -1836,7 +1836,7 @@ async function displayComments(albumId) {
   console.log(data)
   const commentList = data.map((comment) => {
     return `
-    <div class="comment flex flex-row items-center h-62">
+    <div class="comment flex flex-row items-center h-62" id="${comment.id}">
     <div class="flex w-58 items-center h-full">
       <img src="${comment.user.profilePicture}" class="w-47 h-47 rounded-full">
     </div>
@@ -1846,7 +1846,7 @@ async function displayComments(albumId) {
         <p class="text-time text-11">${comment.createdAt}</p>
       </div>
       <p>${comment.message}</p>
-      <a class="text-time text-11 underline">Reply</a>
+      <p><a class="text-time text-11 underline replyButton">Reply</a></p>
     </div>
     <div class="flex flex-1 flex-col items-center gap-1">
           <div class="like h-full">
@@ -1870,14 +1870,41 @@ async function displayComments(albumId) {
       <h1 class="font-semibold text-23 text-center mb-2">Comments</p>
     </div>
     <div class="albumComments my-2">
-    ${commentList}
+    ${commentList.join("")}
     </div>
     <div class="w-full mt-2">
-      <form>
-        <input for="newComment" class="w-input-box rounded-input-box border-2" placeholder="enter a commment">
-      </form>
+      <input id="newCommentInput" class="w-input-box rounded-input-box border-2" placeholder="enter a comment">
     </div>
   </div>`;
+
+  const albumCommentSection = document.querySelector(".albumComments");
+  albumCommentSection.addEventListener("click", async function(event) {
+    event.preventDefault();
+    const commentId = event.target.closest("div.comment").id
+    switch (event.target.tagName) {
+      case "A":
+        if (event.target.className.includes("replyButton")){
+          console.log(commentId)
+          await newComment(newCommentInput.value, albumId, commentId)
+        }
+        break;
+      case "svg":
+          if (event.target.parentNode.tagName === "DIV" && event.target.parentNode.className.includes("like")){
+            console.log("like")
+          }
+          break;
+      default:
+        break;
+    }
+  })
+  const newCommentInput = document.querySelector("#newCommentInput")
+  newCommentInput.addEventListener("keydown", async function (event) {
+    if (event.key === "Enter") {
+      console.log(newCommentInput.value)
+      await newComment(newCommentInput.value, albumId)
+      await displayComments(albumId);
+    }
+  })
 }
 
 async function displayPopup(activity) {
