@@ -1880,7 +1880,6 @@ async function displayComments(albumId) {
           <button class="absolute right-0 mr-3 bg-light-mode-accent rounded-input-box p-2">
             <img src="/lightmode/up_arrow_icon.svg" class="h-5 w-5"/>
           </button>
-          <
           <input id="commentInput" class="w-full p-3 rounded-input-box border-2" placeholder="enter a comment">
         </div>
       </div>
