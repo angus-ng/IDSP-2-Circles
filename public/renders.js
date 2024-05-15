@@ -1898,16 +1898,24 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
   console.log(data)
   const showCommentsRecursively = (comments) => {
     const arr = comments.map((comment) => {
+      const posterH1 = document.createElement("h1")
+      posterH1.className = "font-bold text-secondary"
+      const poster = comment.user ? (comment.user.displayName ? `${comment.user.displayName}` : `${comment.user.username}`) : "deleted";
+      posterH1.textContent = poster;
+      const postMsg = document.createElement("p")
+      postMsg.className = "mt-0"
+      postMsg.textContent = comment.message ? comment.message : "message removed";
+
       return `<div class="comment relative flex flex-row items-center h-full my-5" id="${comment.id}" user="${comment.user? comment.user.displayName ? comment.user.displayName : comment.user.username: "" }">
       <div class="flex w-58 items-center h-full">
         <img src="${comment.user ? comment.user.profilePicture : "/placeholder_image.svg"}" class="w-47 h-47 rounded-full">
       </div>
       <div class=" flex flex-col w-294 h-full my-0">
         <div class="flex flex-row gap-2">
-          <h1 class="font-bold text-secondary">${comment.user ? (comment.user.displayName ? comment.user.displayName : comment.user.username) : "deleted"}</h1>
+          ${posterH1.outerHTML}
           <p class="text-time text-11">${comment.createdAt}</p>
         </div>
-        <p class="mt-0">${comment.message ? comment.message : "message removed"}</p>
+          ${postMsg.outerHTML}
         <div class="flex items-center space-x-2">
           <a class="text-time text-11 underline replyButton w-8">Reply</a>
           <img src="/lightmode/more_options.svg" alt="more options"/ class="moreOptions w-5 h-5">
