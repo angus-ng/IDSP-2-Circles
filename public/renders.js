@@ -1836,30 +1836,30 @@ async function displayComments(albumId) {
   console.log(data)
   const commentList = data.map((comment) => {
     return `
-    <div class="comment flex flex-row items-center h-62" id="${comment.id}">
-    <div class="flex w-58 items-center h-full">
-      <img src="${comment.user.profilePicture}" class="w-47 h-47 rounded-full">
-    </div>
-    <div class=" flex flex-col w-294 h-full">
-      <div class="flex flex-row gap-2">
-        <h1 class="font-bold text-secondary">${comment.user.displayName ? comment.user.displayName : comment.user.username}</h1>
-        <p class="text-time text-11">${comment.createdAt}</p>
+    <div class="comment relative flex flex-row items-center h-full my-5" id="${comment.id}">
+      <div class="flex w-58 items-center h-full">
+        <img src="${comment.user.profilePicture}" class="w-47 h-47 rounded-full">
       </div>
-      <p>${comment.message}</p>
-      <p><a class="text-time text-11 underline replyButton">Reply</a></p>
-    </div>
-    <div class="flex flex-1 flex-col items-center gap-1">
-          <div class="like h-full">
-            <svg width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M9.22318 16.6155L9.22174 16.6142C6.62708 14.2613 4.55406 12.3765 3.11801 10.6196C1.69296 8.87613 1 7.38119 1 5.82495C1 3.28843 2.97109 1.32495 5.5 1.32495C6.9377 1.32495 8.33413 1.99941 9.24117 3.05623L10 3.94038L10.7588 3.05623C11.6659 1.99941 13.0623 1.32495 14.5 1.32495C17.0289 1.32495 19 3.28843 19 5.82495C19 7.38119 18.307 8.87613 16.882 10.6196C15.4459 12.3765 13.3729 14.2613 10.7783 16.6142L10.7768 16.6155L10 17.3226L9.22318 16.6155Z" stroke="#0E0E0E" stroke-width="2"/>
-            </svg>
-          </div>
-          <div class="likeCount">
-            <p>${comment.likeCount}</p>
-          </div>
+      <div class=" flex flex-col w-294 h-full my-0">
+        <div class="flex flex-row gap-2">
+          <h1 class="font-bold text-secondary">${comment.user.displayName ? comment.user.displayName : comment.user.username}</h1>
+          <p class="text-time text-11">${comment.createdAt}</p>
         </div>
-      </div>`
-  })
+        <p class="mt-0">${comment.message}</p>
+        <a class="text-time text-11 underline replyButton w-8">Reply</a>
+      </div>
+      <div class="absolute right-0 top-2 flex flex-1 flex-col items-center">
+        <div class="like h-full">
+          <svg width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9.22318 16.6155L9.22174 16.6142C6.62708 14.2613 4.55406 12.3765 3.11801 10.6196C1.69296 8.87613 1 7.38119 1 5.82495C1 3.28843 2.97109 1.32495 5.5 1.32495C6.9377 1.32495 8.33413 1.99941 9.24117 3.05623L10 3.94038L10.7588 3.05623C11.6659 1.99941 13.0623 1.32495 14.5 1.32495C17.0289 1.32495 19 3.28843 19 5.82495C19 7.38119 18.307 8.87613 16.882 10.6196C15.4459 12.3765 13.3729 14.2613 10.7783 16.6142L10.7768 16.6155L10 17.3226L9.22318 16.6155Z" stroke="#0E0E0E" stroke-width="2"/>
+          </svg>
+        </div>
+        <div class="likeCount">
+          <p class="h-3">${comment.likeCount}</p>
+        </div>
+      </div>
+    </div>`;
+  });
   const modal = document.querySelector("#modal");
   modal.classList.remove("hidden");
   modal.classList.add("shown");
@@ -1873,7 +1873,17 @@ async function displayComments(albumId) {
     ${commentList.join("")}
     </div>
     <div class="w-full mt-2">
-      <input id="newCommentInput" class="w-input-box rounded-input-box border-2" placeholder="enter a comment">
+      <div id="comment" class="relative w-input-box h-full rounded-input-box">
+        <div id="replyContent">
+        </div>
+        <div class="flex items-center mt-4">
+          <button class="absolute right-0 mr-3 bg-light-mode-accent rounded-input-box p-2">
+            <img src="/lightmode/up_arrow_icon.svg" class="h-5 w-5"/>
+          </button>
+          <
+          <input id="commentInput" class="w-full p-3 rounded-input-box border-2" placeholder="enter a comment">
+        </div>
+      </div>
     </div>
   </div>`;
 
@@ -1884,7 +1894,36 @@ async function displayComments(albumId) {
     switch (event.target.tagName) {
       case "A":
         if (event.target.className.includes("replyButton")){
-          console.log(commentId)
+          console.log(commentId);
+          const comment =  document.querySelector("#comment");
+          comment.classList.remove("bg-transparent");
+          comment.classList.add("border-2", "bg-light-mode-accent");
+
+          const commentInput = document.querySelector("#commentInput");
+          commentInput.id = "replyInput";
+          commentInput.placeholder = "enter a reply";
+          
+          const replyContent = document.querySelector("#replyContent");
+          replyContent.innerHTML = `
+          <div class="flex justify-between items-center p-3">
+            <p class="text-white ml-1">Replying to @username</p>
+            <button id="closeReply" class="h-4 w-4 mr-2">
+              <svg viewBox="0 0 24.00 24.00" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5 5L19 19M5 19L19 5" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path> </g>
+              </svg>
+            </button>
+          </div>`;
+
+          comment.querySelector("#closeReply").addEventListener("click", () => {
+            comment.classList.add("bg-transparent");
+            comment.classList.remove("border-2", "bg-light-mode-accent");
+
+            const replyInput = document.querySelector("#replyInput");
+            replyInput.id = "commentInput";
+            replyInput.placeholder = "enter a comment";
+
+            replyContent.innerHTML = "";
+          });
+
           // await newComment(newCommentInput.value, albumId, commentId)
         }
         break;
