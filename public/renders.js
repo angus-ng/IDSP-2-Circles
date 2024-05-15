@@ -1417,9 +1417,11 @@ async function displayCircle(circleData) {
     rightHeaderButton.innerHTML = "";
     pageName.textContent = "";
     let currentUserProfilePicture = null;
+    let currentUserUsername = null;
     const memberList = circleData.members.map((obj) => {
       if (obj.user.username === currentLocalUser){
-        currentUserProfilePicture = obj.user.profilePicture
+        currentUserProfilePicture = obj.user.profilePicture;
+        currentUserUsername = obj.user.username;
       }
       return `<img src="${obj.user.profilePicture}" class="w-42 h-42 rounded-full object-cover"/>`;
     });
@@ -1504,7 +1506,7 @@ async function displayCircle(circleData) {
   
     if (comment) {
       console.log("comment");
-      await displayComments(albumDiv.id, currentUserProfilePicture);
+      await displayComments(albumDiv.id, currentUserProfilePicture, currentUserUsername);
       return;
     }
 
@@ -1829,13 +1831,13 @@ async function displayListOfAlbums (data, profile=false) {
   return albumList
 }
 
-async function displayComments(albumId, currentUserProfilePicture) {
-  console.log("THIS", currentUserProfilePicture)
-  const {success, data} = await getComments(albumId)
+async function displayComments(albumId, currentUserProfilePicture, currentUserUsername) {
+  console.log("THIS", currentUserProfilePicture, currentUserUsername);
+  const {success, data} = await getComments(albumId);
   
   //return early do something on error
   if (!(success && data)) {
-    console.log("could not fetch comment data")
+    console.log("could not fetch comment data");
     return;
   }
   console.log(data)
@@ -1881,10 +1883,12 @@ async function displayComments(albumId, currentUserProfilePicture) {
     <div class="albumComments my-2">
     ${showCommentsRecursively(data)}
     </div>
-    <div class="w-full mt-2">
-      <div id="comment" class="relative w-input-box h-full rounded-input-box">
-        <div id="replyContent">
-        </div>
+    <div class="flex w-full items-center mt-2">
+      <div class="relative flex flex-row items-center mr-3">
+        <img class="rounded-full h-47 w-47" src="${currentUserProfilePicture}" alt="${currentUserUsername}'s profile picture"/>
+      </div>
+      <div id="comment" class="relative flex-1 h-full rounded-input-box">
+        <div id="replyContent"></div>
         <div class="flex items-center mt-4">
           <button class="absolute right-0 mr-3 bg-light-mode-accent rounded-input-box p-2">
             <img src="/lightmode/up_arrow_icon.svg" class="h-5 w-5"/>
