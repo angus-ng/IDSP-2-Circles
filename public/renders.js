@@ -1878,7 +1878,13 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
           <p class="text-time text-11">${comment.createdAt}</p>
         </div>
         <p class="mt-0">${comment.message}</p>
-        <a class="text-time text-11 underline replyButton w-8">Reply</a>
+        <div class="flex items-center space-x-2">
+          <a class="text-time text-11 underline replyButton w-8">Reply</a>
+          <button class="moreOptions w-5 h-5">
+            <svg viewBox="0 0 24 24" fill="#7D7E80" xmlns="http://www.w3.org/2000/svg" stroke="#7D7E80"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title></title> <g id="Complete"> <g id="F-More"> <path d="M8,12a2,2,0,1,1-2-2A2,2,0,0,1,8,12Zm10-2a2,2,0,1,0,2,2A2,2,0,0,0,18,10Zm-6,0a2,2,0,1,0,2,2A2,2,0,0,0,12,10Z" id="Horizontal"></path> </g> </g> </g>
+            </svg>
+          </button>
+        </div>
       </div>
       <div class="absolute right-0 top-2 flex flex-1 flex-col items-center">
         <div class="like h-full">
@@ -1908,8 +1914,8 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
     <div class="albumComments my-2">
     ${showCommentsRecursively(data)}
     </div>
-    <div class="flex w-full items-center mt-2">
-      <div class="relative flex flex-row items-center mr-3">
+    <div class="flex w-full items-end mt-2">
+      <div class="relative flex flex-row mr-3">
         <img class="rounded-full h-47 w-47" src="${currentUserProfilePicture}" alt="${currentUserUsername}'s profile picture"/>
       </div>
       <div id="comment" class="relative flex-1 h-full rounded-input-box">
@@ -1918,7 +1924,7 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
           <button class="absolute right-0 mr-3 bg-light-mode-accent rounded-input-box p-2">
             <img src="/lightmode/up_arrow_icon.svg" class="h-5 w-5"/>
           </button>
-          <input id="commentInput" class="w-full p-3 rounded-input-box border-2" placeholder="enter a comment">
+          <input id="commentInput" class="w-full h-47 p-3 rounded-input-box border-2" placeholder="enter a comment">
         </div>
       </div>
     </div>
@@ -1961,6 +1967,7 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
             replyInput.placeholder = "enter a comment";
 
             replyContent.innerHTML = "";
+            
           });
 
           // await newComment(newCommentInput.value, albumId, commentId)
@@ -1971,6 +1978,10 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
             console.log("like")
           }
           break;
+      case "BUTTON":
+        if (event.target.className.includes("moreOptions")) {
+          console.log("more");
+        }
       default:
         break;
     }
