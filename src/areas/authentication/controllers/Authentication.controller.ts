@@ -5,6 +5,7 @@ import passport from "passport";
 import path from "node:path";
 import { User } from "@prisma/client";
 import { kindeClient, sessionManager } from "../config/kinde";
+import { randomUUID } from "node:crypto";
 
 
 class AuthenticationController implements IController {
@@ -48,10 +49,10 @@ class AuthenticationController implements IController {
       //@ts-ignore
       user = await this._service.createUser({
         id: kindeUser.id,
-        username: kindeUser.id,
+        username: kindeUser.given_name + kindeUser.family_name + randomUUID(),
         firstName: kindeUser.family_name,
         lastName: kindeUser.given_name,
-        profilePicture: kindeUser.picture || ""
+        profilePicture: kindeUser.picture || "/placeholder_image.svg"
       })
     }
     //@ts-ignore
