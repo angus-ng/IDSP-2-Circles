@@ -34,7 +34,7 @@ function displayLoginPage() {
               <img src="/lightmode/orDivider.svg" alt="Divider"/>
           </div>
           <div class="flex items-center justify-between mt-4">
-              <div class="grid grid-cols-3 gap-2.5">
+              <div class="flex flex-row space-x-4">
                   <form action="/auth/login">
                       <button>
                           <img src="/lightmode/google_icon.svg" alt="Google Icon"/>
