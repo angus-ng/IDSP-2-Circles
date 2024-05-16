@@ -1902,20 +1902,23 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
       posterH1.className = "font-bold text-secondary"
       const poster = comment.user ? (comment.user.displayName ? `${comment.user.displayName}` : `${comment.user.username}`) : "deleted";
       posterH1.textContent = poster;
-      const postMsg = document.createElement("p")
-      postMsg.className = "mt-0"
+      const postMsgContainer = document.createElement("div");
+      postMsgContainer.className = "comment-text-container flex-grow";
+      const postMsg = document.createElement("p");
+      postMsg.className = "text-wrap break-words"
       postMsg.textContent = comment.message ? comment.message : "message removed";
+      postMsgContainer.appendChild(postMsg);
 
-      return `<div class="comment relative flex flex-row items-center h-full my-5" id="${comment.id}" user="${comment.user? comment.user.displayName ? comment.user.displayName : comment.user.username: "" }">
+      return `<div class="comment relative flex flex-row items-start h-full my-5" id="${comment.id}" user="${comment.user? comment.user.displayName ? comment.user.displayName : comment.user.username: "" }">
       <div class="flex w-58 items-center h-full">
         <img src="${comment.user ? comment.user.profilePicture : "/placeholder_image.svg"}" class="w-47 h-47 rounded-full">
       </div>
-      <div class=" flex flex-col w-294 h-full my-0">
+      <div class=" flex flex-col w-294">
         <div class="flex flex-row gap-2">
           ${posterH1.outerHTML}
           <p class="text-time text-11">${comment.createdAt}</p>
         </div>
-          ${postMsg.outerHTML}
+          ${postMsgContainer.outerHTML}
         <div class="flex items-center space-x-2">
           <a class="text-time text-11 underline replyButton w-8">Reply</a>
           <img src="/lightmode/more_options.svg" alt="more options"/ class="moreOptions w-5 h-5">
