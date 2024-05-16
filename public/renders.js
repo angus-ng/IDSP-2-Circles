@@ -34,7 +34,7 @@ function displayLoginPage() {
               <img src="/lightmode/orDivider.svg" alt="Divider"/>
           </div>
           <div class="flex items-center justify-between mt-4">
-              <div class="grid grid-cols-3 gap-2.5">
+              <div class="flex flex-row space-x-4">
                   <form action="/auth/login">
                       <button>
                           <img src="/lightmode/google_icon.svg" alt="Google Icon"/>
@@ -2268,11 +2268,12 @@ async function displayComments(
       case "IMG":
         if (event.target.className.includes("moreOptions")) {
           commentId = event.target.closest("div.comment").id;
-          await displayConfirmationPopup("delete comment", {
-            currentUserProfilePicture,
-            albumId,
-            commentId,
-          });
+          console.log("COMMENTID", commentId)
+          console.log("more");
+          const helperObj = { currentUserProfilePicture, albumId, commentId }
+          console.log("HELPER OBJ OUTSIDE")
+          console.log(helperObj)
+          await displayConfirmationPopup("delete comment", helperObj);
         }
       default:
         break;
@@ -2299,7 +2300,7 @@ async function displayComments(
         like.querySelector("svg path").setAttribute("fill", "#FF4646");
         like.querySelector("svg path").setAttribute("stroke", "#FF4646");
         await likeComment(commentId);
-        await displayComments(
+        return await displayComments(
           albumId,
           currentUserProfilePicture,
           currentLocalUser
@@ -2368,7 +2369,7 @@ async function displayConfirmationPopup(activity, helperObj) {
   confirmationPopup.classList.remove("hidden");
   confirmationPopup;
 
-  confirmationPopup.addEventListener("click", async (event) => {
+  const confirmEventHandler = async (event) => {
     event.stopImmediatePropagation();
     const cancelButton = event.target.closest("#cancelButton");
     const contextButton = event.target.closest("#contextButton");
@@ -2379,11 +2380,10 @@ async function displayConfirmationPopup(activity, helperObj) {
     if (contextButton) {
       if (activity === "delete comment") {
         await deleteComment(helperObj.commentId);
+        
         confirmationPopup.classList.add("hidden");
         confirmationText.textContent = "";
-
-        console.log("HERE", helperObj);
-
+        confirmationPopup.removeEventListener("click", confirmEventHandler, true)
         await displayComments(
           helperObj.albumId,
           helperObj.currentUserProfilePicture,
@@ -2391,5 +2391,8 @@ async function displayConfirmationPopup(activity, helperObj) {
         );
       }
     }
-  });
+  }
+
+  confirmationPopup.addEventListener("click", confirmEventHandler, true)
+  
 }
