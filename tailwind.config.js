@@ -36,7 +36,8 @@ theme: {
       'success': '#14AA3E',
       'error': '#E8083E',
       'time': '#7D7E80',
-      'comment-divider': '#ABABAB'
+      'comment-divider': '#ABABAB',
+      'comment-line': 'rgba(115, 115, 115, 0.5)'
     },
     fontSize: {
       'onboarding': '36px',
