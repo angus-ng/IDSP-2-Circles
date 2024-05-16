@@ -1900,8 +1900,9 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
     const arr = comments.map((comment) => {
       const posterH1 = document.createElement("h1")
       posterH1.className = "font-bold text-secondary"
-      const poster = comment.user ? (comment.user.displayName ? `${comment.user.displayName}` : `${comment.user.username}`) : "deleted";
+      const poster = comment.user.displayName ? comment.user.displayName : comment.user.username;
       posterH1.textContent = poster;
+      posterH1.textContent ? posterH1.textContent : posterH1.textContent = "Deleted"
       const postMsgContainer = document.createElement("div");
       postMsgContainer.className = "comment-text-container flex-grow";
       const postMsg = document.createElement("p");
@@ -1909,9 +1910,9 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
       postMsg.textContent = comment.message ? comment.message : "message removed";
       postMsgContainer.appendChild(postMsg);
 
-      return `<div class="comment relative flex flex-row items-start h-full my-5" id="${comment.id}" user="${comment.user? comment.user.displayName ? comment.user.displayName : comment.user.username: "" }">
+      return `<div class="comment relative flex flex-row items-start h-full my-5" id="${comment.id}" user="${comment.user.displayName ? comment.user.displayName : comment.user.username}">
       <div class="flex w-58 items-center h-full">
-        <img src="${comment.user ? comment.user.profilePicture : "/placeholder_image.svg"}" class="w-47 h-47 rounded-full">
+        <img src="${comment.user.profilePicture ? comment.user.profilePicture : "/placeholder_image.svg"}" class="w-47 h-47 rounded-full">
       </div>
       <div class=" flex flex-col w-294">
         <div class="flex flex-row gap-2">

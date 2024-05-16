@@ -92,7 +92,8 @@ model Comment {
   album           Album     @relation(fields: [albumId], references: [id])
   albumId         String
   replies         Comment[] @relation("replies")
-  repliesRelation Comment[] @relation("replies")
+  parent Comment? @relation("replies", fields: [parentId], references: [id])
+  parentId String?
 }
 
 model Like {

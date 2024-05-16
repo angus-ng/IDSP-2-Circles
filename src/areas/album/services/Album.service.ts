@@ -145,48 +145,107 @@ export class AlbumService implements IAlbumService {
   }
   
   async getComments(albumId: string): Promise<any> {
-    const comment = await this._db.prisma.comment.findMany({
-        select: {
-            id: true,
-            createdAt: true,
-            message: true,
-            user: {
-                select: {
-                    username: true,
-                    displayName: true,
-                    profilePicture: true,
-                }
-            },
-            likeCount: true,
-            replies: {
-                include: {
-                    user: {
-                        select: {
-                            username: true,
-                            displayName: true,
-                            profilePicture: true
-                        }
-                    },
-                    replies: {
-                        include: {
-                            user: {
-                                select: {
-                                    username: true,
-                                    displayName: true,
-                                    profilePicture: true
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        where : {
-            albumId: albumId,
-            repliesRelation: {none: {}}
-        },
+    let album = await this._db.prisma.album.findUnique({
+        where: {
+            id: albumId
+        }
     })
-    return comment;
+    if (!album) {
+        return;
+    }
+    let comment: any[] = await this._db.prisma.$queryRaw`WITH RECURSIVE NestedComments AS (
+        -- Anchor member: Select top-level comments (those with NULL parentId)
+        SELECT 
+          c.id, 
+          c.createdAt, 
+          c.message, 
+          c.userId, 
+          c.likeCount, 
+          c.albumId, 
+          c.parentId,
+          1 AS level,
+          u.username,
+          u.profilePicture,
+          u.displayName
+        FROM 
+          Comment c
+        LEFT JOIN
+            User u on c.userId = u.username
+        WHERE 
+          parentId IS NULL AND albumId = ${album.id}
+        UNION ALL
+      
+        -- Recursive member: Select child comments
+        SELECT 
+          c.id, 
+          c.createdAt, 
+          c.message, 
+          c.userId, 
+          c.likeCount, 
+          c.albumId, 
+          c.parentId,
+          nc.level + 1 AS level,
+          u.username,
+          u.profilePicture,
+          u.displayName
+        FROM 
+          Comment c
+        INNER JOIN 
+          NestedComments nc ON c.parentId = nc.id
+        LEFT JOIN
+        User u ON c.userId = u.username
+      )
+      -- Final SELECT: Retrieve all comments from NestedComments CTE
+      SELECT 
+        id, 
+        createdAt, 
+        message, 
+        userId, 
+        likeCount, 
+        albumId, 
+        parentId,
+        username,
+        displayName,
+        profilePicture,
+        level
+      FROM 
+        NestedComments
+      ORDER BY 
+        createdAt;`;
+    console.log("RAW", comment)
+    comment = comment.map((comment) => {
+        comment.user = {
+            profilePicture: comment.profilePicture,
+            username: comment.username,
+            displayName: comment.displayName
+        }
+        delete comment.profilePicture;
+        delete comment.username;
+        delete comment.displayName;
+        return comment
+    })
+    const commentMap = new Map;
+    let topLevelComments: Comment[] = [];
+    comment.forEach((comment) => {
+        console.log(comment.level == 1)
+        if (comment.level == 1){
+            topLevelComments.push(comment)
+        }
+        commentMap.set(comment.id, comment)
+        if (comment.level > 1){
+            const parentComment = commentMap.get(comment.parentId);
+            if (parentComment){
+                if (!parentComment.replies){
+                    parentComment.replies = [];
+                }
+                parentComment.replies.push(comment)
+                console.log("CHILDCOMMENT", )
+            }
+        }
+        delete comment.level
+    })
+
+    return topLevelComments;
   }
 
   async createComment(currentUser: string, message: string, albumId: string, commentId?:string) {
