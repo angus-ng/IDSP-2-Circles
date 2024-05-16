@@ -2410,6 +2410,7 @@ async function displayConfirmationPopup(activity, helperObj) {
     const cancelButton = event.target.closest("#cancelButton");
     const contextButton = event.target.closest("#contextButton");
     if (cancelButton) {
+      confirmationPopup.removeEventListener("click", confirmEventHandler, true)
       confirmationPopup.classList.add("hidden");
     }
 
