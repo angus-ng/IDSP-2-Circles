@@ -337,6 +337,7 @@ pageContent.addEventListener("click", async (event) => {
   const nameNextButton = event.target.closest("#nameNext");
   const usernameNextButton = event.target.closest("#usernameNext");
   const profilePictureNextButton = event.target.closest("#profilePictureNext");
+  const logOut = event.target.closest("#logOut");
 
   if (localAuthButton) {
     handleLocalAuth();
@@ -390,6 +391,10 @@ pageContent.addEventListener("click", async (event) => {
 
   if (profilePictureNextButton) {
     await displayProfileConfirmation();
+  }
+
+  if (logOut) {
+    window.location.href = "/auth/logout";
   }
 
   // if (uploadPhotoSection) {

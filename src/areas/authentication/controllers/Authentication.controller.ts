@@ -34,12 +34,12 @@ class AuthenticationController implements IController {
     return res.redirect(loginUrl.toString());
   }
 
-  private register = async (req:Request, res:Response) => {
+  private register = async (req: Request, res: Response) => {
     const registerUrl = await kindeClient.register(sessionManager(req, res));
     return res.redirect(registerUrl.toString());
   }
 
-  private callback = async (req:Request, res:Response) => {
+  private callback = async (req: Request, res: Response) => {
     const url = new URL(`${req.protocol}://${req.get("host")}${req.url}`);
     await kindeClient.handleRedirectToApp(sessionManager(req, res), url);
     const kindeUser = await kindeClient.getUser(sessionManager(req, res))
@@ -59,12 +59,12 @@ class AuthenticationController implements IController {
     return res.redirect("/");
   }
 
-  private logout = async (req:Request, res:Response) => {
+  private logout = async (req: Request, res: Response) => {
       const logoutUrl = await kindeClient.logout(sessionManager(req, res));
-      return res.redirect(logoutUrl.toString());
+      return res.redirect("/");
   }
 
-  private getSession = async (req:Request, res:Response) => {
+  private getSession = async (req: Request, res: Response) => {
     try {
       if (req.user) {
         res.json({success: true, username: req.user?.username})
@@ -78,8 +78,8 @@ class AuthenticationController implements IController {
     }
   }
 
-  private local = (req: express.Request, res:express.Response, next:express.NextFunction) => {
-    passport.authenticate('local', function(err:any, user:any, info:any) {
+  private local = (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    passport.authenticate("local", function(err: any, user: any, info: any) {
       if (err || !user) {
         return res.status(200).json({success: true, data:null })
       }
