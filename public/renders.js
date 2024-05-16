@@ -1898,6 +1898,19 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
   console.log(data)
   const showCommentsRecursively = (comments) => {
     const arr = comments.map((comment) => {
+      const likeDiv = document.createElement("div")
+      likeDiv.className = "like h-full"
+      likeDiv.innerHTML = `          <svg width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M9.22318 16.6155L9.22174 16.6142C6.62708 14.2613 4.55406 12.3765 3.11801 10.6196C1.69296 8.87613 1 7.38119 1 5.82495C1 3.28843 2.97109 1.32495 5.5 1.32495C6.9377 1.32495 8.33413 1.99941 9.24117 3.05623L10 3.94038L10.7588 3.05623C11.6659 1.99941 13.0623 1.32495 14.5 1.32495C17.0289 1.32495 19 3.28843 19 5.82495C19 7.38119 18.307 8.87613 16.882 10.6196C15.4459 12.3765 13.3729 14.2613 10.7783 16.6142L10.7768 16.6155L10 17.3226L9.22318 16.6155Z" stroke="#0E0E0E" stroke-width="2"/>
+    </svg>`
+      // console.log(like)
+      if (comment.likedBy !== null && comment.likedBy.includes(currentUserUsername)) {
+          
+        likeDiv.querySelector("svg path").setAttribute("fill", "#FF4646");
+        likeDiv.querySelector("svg path").setAttribute("stroke", "#FF4646");
+        likeDiv.classList.add("liked");
+    }
+
       const posterH1 = document.createElement("h1")
       posterH1.className = "font-bold text-secondary"
       const poster = comment.user.displayName ? comment.user.displayName : comment.user.username;
@@ -1926,11 +1939,7 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
         </div>
       </div>
       <div class="absolute right-0 top-2 flex flex-1 flex-col items-center">
-        <div class="like h-full">
-          <svg width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M9.22318 16.6155L9.22174 16.6142C6.62708 14.2613 4.55406 12.3765 3.11801 10.6196C1.69296 8.87613 1 7.38119 1 5.82495C1 3.28843 2.97109 1.32495 5.5 1.32495C6.9377 1.32495 8.33413 1.99941 9.24117 3.05623L10 3.94038L10.7588 3.05623C11.6659 1.99941 13.0623 1.32495 14.5 1.32495C17.0289 1.32495 19 3.28843 19 5.82495C19 7.38119 18.307 8.87613 16.882 10.6196C15.4459 12.3765 13.3729 14.2613 10.7783 16.6142L10.7768 16.6155L10 17.3226L9.22318 16.6155Z" stroke="#0E0E0E" stroke-width="2"/>
-          </svg>
-        </div>
+        ${likeDiv.outerHTML}
         <div class="likeCount">
           <p class="h-3">${comment.likeCount}</p>
         </div>
