@@ -1102,7 +1102,11 @@ async function displayProfile(userData) {
     }
 
     if (comment) {
-      await displayComments(albumDiv.id);
+      await displayComments(
+        albumDiv.id,
+        userData.profilePicture,
+        currentLocalUser
+      );
       return;
     }
 
@@ -1713,10 +1717,11 @@ async function displayCircle(circleData) {
 
     if (comment) {
       console.log("comment");
+
       await displayComments(
         albumDiv.id,
         currentUserProfilePicture,
-        currentUserUsername
+        currentLocalUser
       );
       return;
     }
