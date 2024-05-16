@@ -2268,12 +2268,12 @@ async function displayComments(
       case "IMG":
         if (event.target.className.includes("moreOptions")) {
           commentId = event.target.closest("div.comment").id;
+          console.log("COMMENTID", commentId)
           console.log("more");
-          await displayConfirmationPopup("delete comment", {
-            currentUserProfilePicture,
-            albumId,
-            commentId,
-          });
+          const helperObj = { currentUserProfilePicture, albumId, commentId }
+          console.log("HELPER OBJ OUTSIDE")
+          console.log(helperObj)
+          await displayConfirmationPopup("delete comment", helperObj);
         }
       default:
         break;
@@ -2300,7 +2300,7 @@ async function displayComments(
         like.querySelector("svg path").setAttribute("fill", "#FF4646");
         like.querySelector("svg path").setAttribute("stroke", "#FF4646");
         await likeComment(commentId);
-        await displayComments(
+        return await displayComments(
           albumId,
           currentUserProfilePicture,
           currentLocalUser
@@ -2370,7 +2370,7 @@ async function displayConfirmationPopup(activity, helperObj) {
   confirmationPopup.classList.remove("hidden");
   confirmationPopup;
 
-  confirmationPopup.addEventListener("click", async (event) => {
+  const confirmEventHandler = async (event) => {
     event.stopImmediatePropagation();
     const cancelButton = event.target.closest("#cancelButton");
     const contextButton = event.target.closest("#contextButton");
@@ -2380,12 +2380,13 @@ async function displayConfirmationPopup(activity, helperObj) {
 
     if (contextButton) {
       if (activity === "delete comment") {
+        console.log("HELPEROBJECT")
+        console.log(helperObj)
         await deleteComment(helperObj.commentId);
+        
         confirmationPopup.classList.add("hidden");
         confirmationText.textContent = "";
-
-        console.log("HERE", helperObj);
-
+        confirmationPopup.removeEventListener("click", confirmEventHandler, true)
         await displayComments(
           helperObj.albumId,
           helperObj.currentUserProfilePicture,
@@ -2394,5 +2395,8 @@ async function displayConfirmationPopup(activity, helperObj) {
       }
       console.log("do something");
     }
-  });
+  }
+
+  confirmationPopup.addEventListener("click", confirmEventHandler, true)
+  
 }
