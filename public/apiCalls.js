@@ -1,3 +1,5 @@
+const { json } = require("stream/consumers");
+
 async function handleCreateCircle() {
   try {
     const circlePhoto = document.querySelector("#circleImage");
@@ -403,6 +405,24 @@ async function deleteComment(commentId) {
     })
     const jsonResponse = await response.json();
     console.log(jsonResponse)
+    return jsonResponse
+  } catch (err) {
+
+  }
+}
+
+async function likeComment(commentId) {
+  try {
+    const response = await fetch(`/album/comment/like`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({commentId})
+    });
+
+    const jsonResponse = await response.json();
+    console.log(jsonResponse);
     return jsonResponse
   } catch (err) {
 

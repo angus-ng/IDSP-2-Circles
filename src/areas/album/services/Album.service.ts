@@ -250,7 +250,62 @@ export class AlbumService implements IAlbumService {
                 })
             }
         } catch (err) {
-            throw err
+            throw err;
         }
     }
+
+    async likeComment(currentUser: string, commentId: string): Promise<void> {
+        try {
+            const existingLike = await this._db.prisma.like.findFirst({
+                where: {
+                    userId: currentUser,
+                    commentId: commentId
+                }
+            });
+    
+            if (existingLike) {
+                await this._db.prisma.like.delete({
+                    where: {
+                        id: existingLike.id
+                    }
+                });
+    
+                const updatedComment = await this._db.prisma.comment.update({
+                    where: {
+                        id: commentId
+                    },
+                    data: {
+                        likeCount: {
+                            decrement: 1
+                        }
+                    }
+                });
+    
+                console.log("Comment unliked successfully", updatedComment);
+            } else {
+                await this._db.prisma.like.create({
+                    data: {
+                        userId: currentUser,
+                        commentId: commentId
+                    }
+                });
+    
+                const updatedComment = await this._db.prisma.comment.update({
+                    where: {
+                        id: commentId
+                    },
+                    data: {
+                        likeCount: {
+                            increment: 1
+                        }
+                    }
+                });
+    
+                console.log("Comment liked successfully" , updatedComment);
+            }
+        } catch (err) {
+            throw err;
+        }
+    }
+    
 }

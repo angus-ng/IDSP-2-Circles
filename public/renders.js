@@ -1937,7 +1937,7 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
     </div>
     ${comment.replies ? `<div class="childComment ml-8">${showCommentsRecursively(comment.replies)}</div>`: "" }`;
     })
-    return arr.join("")
+    return arr.join("");
   }
 
   const modal = document.querySelector("#modal");
@@ -1972,7 +1972,7 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
   let commentId = null;
   albumCommentSection.addEventListener("click", async function(event) {
     event.preventDefault();
-    console.log(event.target.tagName)
+    console.log(event.target.tagName);
     switch (event.target.tagName) {
       case "A":
         if (event.target.className.includes("replyButton")){
@@ -1980,7 +1980,7 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
           comment.classList.remove("bg-transparent");
           comment.classList.add("border-2", "bg-light-mode-accent");
           commentId = event.target.closest("div.comment").id;
-          commentUser = event.target.closest("div.comment").getAttribute("user")
+          commentUser = event.target.closest("div.comment").getAttribute("user");
           const commentInput = document.querySelector("#commentInput");
           if (commentInput){
             commentInput.id = "replyInput";
@@ -2012,11 +2012,6 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
           // await newComment(newCommentInput.value, albumId, commentId)
         }
         break;
-      case "svg":
-          if (event.target.parentNode.tagName === "DIV" && event.target.parentNode.className.includes("like")){
-            console.log("like")
-          }
-          break;
       case "IMG":
         if (event.target.className.includes("moreOptions")) {
           commentId = event.target.closest("div.comment").id;
@@ -2026,7 +2021,26 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
       default:
         break;
     }
+
+    const like = event.target.closest(".like");
+    if (like) {
+      if (like.classList.contains("liked")) {
+        console.log("unliked");
+        like.classList.remove("liked");
+        like.querySelector("svg path").setAttribute("fill", "none");
+        like.querySelector("svg path").setAttribute("stroke", "#000000");
+        await likeComment(commentId);
+      } else {
+        like.classList.add("liked");
+        console.log("liked");
+        like.querySelector("svg path").setAttribute("fill", "#FF4646");
+        like.querySelector("svg path").setAttribute("stroke", "#FF4646");
+        await likeComment(commentId);
+      }
+      return;
+    }
   })
+
   const newCommentInput = document.querySelector("#commentInput")
   newCommentInput.addEventListener("keydown", async function (event) {
     if (event.key === "Enter") {
