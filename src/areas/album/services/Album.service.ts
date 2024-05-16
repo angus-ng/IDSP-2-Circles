@@ -23,7 +23,6 @@ export class AlbumService implements IAlbumService {
                 ownerName: newAlbumInput.creator
             }
         })
-        console.log(createdAlbum, 'LSJADLkajslkdjkasjdlkasjskla')
 
         //make the explicit album user relationship
         if (createdAlbum) {
@@ -42,29 +41,6 @@ export class AlbumService implements IAlbumService {
     return null;
   }
 
-//   async deleteAlbum(id: string, currentUser:string): Promise<void> {
-//     const user = await this._db.prisma.user.findUnique({
-//         where: {
-//             username: currentUser
-//         }
-//     })
-//     const album = await this._db.prisma.album.findUnique({
-//         where: {
-//             id: id
-//         }
-//     })
-
-//     // if (!user || !album || album.ownerId !== user.username) {
-//     //     return;
-//     // }
-
-//     // delete album
-//     await this._db.prisma.album.delete({
-//         where: {
-//             id: id,
-//         },
-//       })
-//   }
 
   async checkMembership(id: string, currentUser:string): Promise<boolean> {
     const user = await this._db.prisma.user.findUnique({
@@ -145,48 +121,159 @@ export class AlbumService implements IAlbumService {
   }
   
   async getComments(albumId: string): Promise<any> {
-    const comment = await this._db.prisma.comment.findMany({
-        select: {
-            id: true,
-            createdAt: true,
-            message: true,
-            user: {
-                select: {
-                    username: true,
-                    displayName: true,
-                    profilePicture: true,
-                }
-            },
-            likeCount: true,
-            replies: {
-                include: {
-                    user: {
-                        select: {
-                            username: true,
-                            displayName: true,
-                            profilePicture: true
-                        }
-                    },
-                    replies: {
-                        include: {
-                            user: {
-                                select: {
-                                    username: true,
-                                    displayName: true,
-                                    profilePicture: true
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        where : {
-            albumId: albumId,
-            repliesRelation: {none: {}}
-        },
+    let album = await this._db.prisma.album.findUnique({
+        where: {
+            id: albumId
+        }
     })
-    return comment;
+    if (!album) {
+        return;
+    }
+    let comment: any[] = await this._db.prisma.$queryRaw`WITH RECURSIVE NestedComments AS (
+        -- Anchor member: Select top-level comments (those with NULL parentId)
+        SELECT 
+          c.id, 
+          c.createdAt, 
+          c.message, 
+          c.userId, 
+          c.likeCount, 
+          c.albumId, 
+          c.parentId,
+          1 AS level,
+          u.username,
+          u.profilePicture,
+          u.displayName
+        FROM 
+          Comment c
+        LEFT JOIN
+            User u on c.userId = u.username
+        WHERE 
+          parentId IS NULL AND albumId = ${album.id}
+        UNION ALL
+      
+        -- Recursive member: Select child comments
+        SELECT 
+          c.id, 
+          c.createdAt, 
+          c.message, 
+          c.userId, 
+          c.likeCount, 
+          c.albumId, 
+          c.parentId,
+          nc.level + 1 AS level,
+          u.username,
+          u.profilePicture,
+          u.displayName
+        FROM 
+          Comment c
+        INNER JOIN 
+          NestedComments nc ON c.parentId = nc.id
+        LEFT JOIN
+        User u ON c.userId = u.username
+      )
+      -- Final SELECT: Retrieve all comments from NestedComments CTE
+      SELECT 
+    NestedComments.id, 
+    NestedComments.createdAt, 
+    NestedComments.message, 
+    NestedComments.userId, 
+    NestedComments.likeCount, 
+    NestedComments.albumId, 
+    NestedComments.parentId,
+    NestedComments.username,
+    NestedComments.displayName,
+    NestedComments.profilePicture,
+    NestedComments.level,
+    GROUP_CONCAT(l.userId, ",") AS likedBy
+    FROM 
+        (
+            SELECT 
+                c.id, 
+                c.createdAt, 
+                c.message, 
+                c.userId, 
+                c.likeCount, 
+                c.albumId, 
+                c.parentId,
+                1 AS level,
+                u.username,
+                u.profilePicture,
+                u.displayName
+            FROM 
+                Comment c
+            LEFT JOIN
+                User u on c.userId = u.username
+            WHERE 
+                parentId IS NULL AND albumId = ${album.id}
+            UNION ALL
+            SELECT 
+                c.id, 
+                c.createdAt, 
+                c.message, 
+                c.userId, 
+                c.likeCount, 
+                c.albumId, 
+                c.parentId,
+                nc.level + 1 AS level,
+                u.username,
+                u.profilePicture,
+                u.displayName
+            FROM 
+                Comment c
+            INNER JOIN 
+                NestedComments nc ON c.parentId = nc.id
+            LEFT JOIN
+                User u ON c.userId = u.username
+    ) AS NestedComments
+        LEFT JOIN
+            Like l ON NestedComments.id = l.commentId
+        GROUP BY
+        NestedComments.id, 
+        NestedComments.createdAt, 
+        NestedComments.message, 
+        NestedComments.userId, 
+        NestedComments.likeCount, 
+        NestedComments.albumId, 
+        NestedComments.parentId,
+        NestedComments.username,
+        NestedComments.displayName,
+        NestedComments.profilePicture,
+        NestedComments.level
+        ORDER BY 
+            NestedComments.createdAt;`
+
+    comment = comment.map((comment) => {
+        comment.user = {
+            profilePicture: comment.profilePicture,
+            username: comment.username,
+            displayName: comment.displayName
+        }
+        comment.likedBy ? comment.likedBy = comment.likedBy.split(","): comment.likedBy
+        delete comment.profilePicture;
+        delete comment.username;
+        delete comment.displayName;
+        return comment
+    })
+    const commentMap = new Map;
+    let topLevelComments: Comment[] = [];
+    comment.forEach((comment) => {
+        if (comment.level == 1){
+            topLevelComments.push(comment)
+        }
+        commentMap.set(comment.id, comment)
+        if (comment.level > 1){
+            const parentComment = commentMap.get(comment.parentId);
+            if (parentComment){
+                if (!parentComment.replies){
+                    parentComment.replies = [];
+                }
+                parentComment.replies.push(comment)
+            }
+        }
+        delete comment.level
+    })
+
+    return topLevelComments;
   }
 
   async createComment(currentUser: string, message: string, albumId: string, commentId?:string) {
@@ -213,4 +300,99 @@ export class AlbumService implements IAlbumService {
         throw err;
     }
     }
+
+    async deleteComment(currentUser: string, commentId: string) {
+        try {
+            const comment = await this._db.prisma.comment.findUnique({
+                where: {
+                    id: commentId,
+                    userId: currentUser
+                },
+                select: {
+                    replies: true
+                }
+            })
+
+            if (!comment) {
+                 return
+            }
+            
+            if (comment.replies.length) {
+                await this._db.prisma.comment.update({
+                    where: {
+                        id: commentId,
+                        userId: currentUser
+                    },
+                    data: {
+                        userId: null,
+                        message: null
+                    }
+                })
+            } else {
+                await this._db.prisma.comment.delete({
+                    where: {
+                        id: commentId,
+                        userId: currentUser
+                    }
+                })
+            }
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async likeComment(currentUser: string, commentId: string): Promise<void> {
+        try {
+            const existingLike = await this._db.prisma.like.findFirst({
+                where: {
+                    userId: currentUser,
+                    commentId: commentId
+                }
+            });
+    
+            if (existingLike) {
+                await this._db.prisma.like.delete({
+                    where: {
+                        id: existingLike.id
+                    }
+                });
+    
+                const updatedComment = await this._db.prisma.comment.update({
+                    where: {
+                        id: commentId
+                    },
+                    data: {
+                        likeCount: {
+                            decrement: 1
+                        }
+                    }
+                });
+    
+                console.log("Comment unliked successfully", updatedComment);
+            } else {
+                await this._db.prisma.like.create({
+                    data: {
+                        userId: currentUser,
+                        commentId: commentId
+                    }
+                });
+    
+                const updatedComment = await this._db.prisma.comment.update({
+                    where: {
+                        id: commentId
+                    },
+                    data: {
+                        likeCount: {
+                            increment: 1
+                        }
+                    }
+                });
+    
+                console.log("Comment liked successfully" , updatedComment);
+            }
+        } catch (err) {
+            throw err;
+        }
+    }
+    
 }

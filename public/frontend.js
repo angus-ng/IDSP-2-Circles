@@ -314,7 +314,7 @@ modal.addEventListener("click", async function (event) {
   }
 });
 
-const closeModalSwipe = document.querySelector("#modalBox");
+const closeModalSwipe = document.querySelector("#closeModal");
 closeModalSwipe.addEventListener("swiped-down", (event) => {
   modal.classList.remove("shown");
   modal.classList.add("hidden");

@@ -7,6 +7,11 @@ import { handleUpload } from "../../../helper/HandleSingleUpload";
 import multer from 'multer';
 import { handleMultipleUpload } from "../../../helper/HandleMultiplePhotos";
 import { getLocalUser } from "../../../helper/getLocalUser";
+import TimeAgo from 'javascript-time-ago';
+import en from 'javascript-time-ago/locale/en';
+
+TimeAgo.addLocale(en);
+const timeAgo = new TimeAgo("en");
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
@@ -26,8 +31,10 @@ class AlbumController implements IController {
     this.router.post(`${this.path}/upload`, ensureAuthenticated, upload.single("file"), this.uploadImages); 
     this.router.get(`${this.path}/:id`, ensureAuthenticated, this.showAlbum);
     this.router.post(`${this.path}/list`, ensureAuthenticated, this.getAlbumList);
-    this.router.post(`${this.path}/comments`, ensureAuthenticated, this.getComments)
-    this.router.post(`${this.path}/comment/new`, ensureAuthenticated, this.newComment)
+    this.router.post(`${this.path}/comments`, ensureAuthenticated, this.getComments);
+    this.router.post(`${this.path}/comment/new`, ensureAuthenticated, this.newComment);
+    this.router.post(`${this.path}/comment/delete`, ensureAuthenticated, this.deleteComment);
+    this.router.post(`${this.path}/comment/like`, ensureAuthenticated, this.likeComment);
   }
 
   private uploadImages = async (req: Request, res: Response) => {
@@ -93,38 +100,76 @@ class AlbumController implements IController {
     console.log (loggedInUser)
     const albums = await this._service.listAlbums(loggedInUser)
 
-    res.json({success: true, data: albums})
+    res.json({success: true, data: albums});
   }
 
   private getComments = async (req: Request, res: Response) => {
     let loggedInUser = await getLocalUser(req, res)
     try {
-      const { albumId } = req.body
-      const member = await this._service.checkMembership(albumId, loggedInUser)
+      const { albumId } = req.body;
+      const member = await this._service.checkMembership(albumId, loggedInUser);
       if (!member){
         return res.status(200).json({ success: true, data:null });
       }
-      const comments = await this._service.getComments(albumId);
-      res.json({success: true, data: comments})
-    } catch (err) {
+      let comments: any[] = await this._service.getComments(albumId);
+      const formatTimeStamps = (comment: any) => {
+        comment.createdAt = timeAgo.format(comment.createdAt);
+        if (comment.replies && comment.replies.length > 0) {
+          comment.replies = comment.replies.map((reply: any) => {
+            reply = formatTimeStamps(reply);
+            return reply;
+          });
+        }
+        return comment;
+      };
 
+      comments = comments.map((comment:any) => {
+        return formatTimeStamps(comment);
+      });
+      res.status(200).json({success: true, data: comments});
+    } catch (err) {
+      console.log(err)
     }
   }
 
   private newComment = async (req: Request, res: Response) => {
     let loggedInUser = await getLocalUser(req, res)
     try {
-      const { message, albumId, commentId } = req.body
-      console.log(message, albumId, commentId)
+      const { message, albumId, commentId } = req.body;
+      console.log(message, albumId, commentId);
   
-      const member = await this._service.checkMembership(albumId, loggedInUser)
-      if (!member){
+      const member = await this._service.checkMembership(albumId, loggedInUser);
+      if (!member || !message || message===""){
         return res.status(200).json({ success: true, data:null });
       }
       const comment = await this._service.createComment(loggedInUser, message, albumId, commentId);
-      res.json({success: true, data: null})
+      res.json({success: true, data: null});
     } catch (err) {
-      res.json({success: true, data: null, error: "failed to create comment"})
+      res.json({success: true, data: null, error: "failed to create comment"});
+    }
+  }
+
+  private deleteComment = async (req: Request, res: Response) => {
+    let loggedInUser = req.user!.username;
+    try {
+      const { commentId } = req.body;
+
+      await this._service.deleteComment(loggedInUser, commentId);
+      res.json({success: true, data: null});
+    } catch (err) {
+      res.json({success: true, data: null, error: "failed to delete comment"});
+    }
+  }
+
+  private likeComment = async (req: Request, res: Response) => {
+    let loggedInUser = req.user!.username;
+
+    try {
+      const { commentId } = req.body;
+      await this._service.likeComment(loggedInUser, commentId);
+      res.json({success: true, data: null});
+    } catch (err) {
+      res.json({success: true, data: null, error: "failed to like comment"});
     }
   }
 }

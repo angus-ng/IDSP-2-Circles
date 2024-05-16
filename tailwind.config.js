@@ -34,8 +34,10 @@ theme: {
       'like': '#FF4646',
       'onboarding-grey': 'rgba(14, 14, 14, 0.75)',
       'success': '#14AA3E',
+      'error': '#E8083E',
       'time': '#7D7E80',
-      'comment-divider': '#ABABAB'
+      'comment-divider': '#ABABAB',
+      'comment-line': 'rgba(115, 115, 115, 0.5)'
     },
     fontSize: {
       'onboarding': '36px',
@@ -86,7 +88,10 @@ theme: {
       '40': '40px',
       '265': '265px',
       '47': '47px',
-      '294': '294px',
+      '294': '294px'
+    },
+    maxWidth: {
+      '430':'430px'
     },
     height: {
       '932': '932px',
@@ -116,7 +121,11 @@ theme: {
       '270': '270px',
       '47': '47px',
       '50': '50px',
-      '58': '58px'
+      '58': '58px',
+    },
+    maxHeight: {
+      '527': '527px',
+      '400': '400px'
     },
     boxShadow: {
       'background-shadow': 'inset 0 0 100px -30px rgba(0, 0, 0, 0.2)'

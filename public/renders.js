@@ -1008,13 +1008,15 @@ async function displayProfile(userData) {
         </div>
       </div>
     </div>
-    ${addAsFriend.outerHTML}
+    <div id="addAsFriend" class="flex justify-center">
+
+    </div>
     <div id="profileTabs" class="w-full justify-center mx-auto">
       <ul class="flex flex-row w-full justify-center -mb-px text-sm font-medium text-center text-dark-grey gap-6">
         <li id="albumTab" class="me-2 w-full mr-0">
           <a class="w-full inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg hover:text-black hover:border-black">
             <p class="text-13 font-bold mr-2">albums</p>
-            <svg width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg" class="hover:fill-black">
               <path d="M11.55 0H2.45C1.93283 0 1.43684 0.205446 1.07114 0.571142C0.705446 0.936838 0.5 1.43283 0.5 1.95V11.05C0.5 11.5672 0.705446 12.0632 1.07114 12.4289C1.43684 12.7946 1.93283 13 2.45 13H11.55C11.6569 12.9985 11.7635 12.9876 11.8685 12.9675L12.0635 12.922H12.109H12.1415L12.382 12.831L12.4665 12.7855C12.5315 12.7465 12.603 12.714 12.668 12.6685C12.7548 12.6046 12.8373 12.5352 12.915 12.4605L12.9605 12.402C13.0243 12.3373 13.083 12.2678 13.136 12.194L13.1945 12.1095C13.2399 12.0371 13.279 11.961 13.3115 11.882C13.3293 11.8508 13.3446 11.8182 13.357 11.7845C13.3895 11.7065 13.409 11.622 13.435 11.5375V11.44C13.4719 11.313 13.4937 11.1821 13.5 11.05V1.95C13.5 1.43283 13.2946 0.936838 12.9289 0.571142C12.5632 0.205446 12.0672 0 11.55 0ZM2.45 11.7C2.27761 11.7 2.11228 11.6315 1.99038 11.5096C1.86848 11.3877 1.8 11.2224 1.8 11.05V8.2485L3.9385 6.1035C3.99893 6.04258 4.07082 5.99422 4.15002 5.96122C4.22923 5.92822 4.31419 5.91123 4.4 5.91123C4.48581 5.91123 4.57077 5.92822 4.64997 5.96122C4.72918 5.99422 4.80107 6.04258 4.8615 6.1035L10.4515 11.7H2.45ZM12.2 11.05C12.1994 11.1301 12.184 11.2095 12.1545 11.284C12.1396 11.3157 12.1223 11.3461 12.1025 11.375C12.0851 11.4025 12.0655 11.4286 12.044 11.453L8.5665 7.9755L9.1385 7.4035C9.19893 7.34258 9.27082 7.29422 9.35003 7.26122C9.42923 7.22822 9.51419 7.21123 9.6 7.21123C9.68581 7.21123 9.77077 7.22822 9.84997 7.26122C9.92918 7.29422 10.0011 7.34258 10.0615 7.4035L12.2 9.5485V11.05ZM12.2 7.709L10.978 6.5C10.606 6.14704 10.1128 5.95028 9.6 5.95028C9.08722 5.95028 8.59398 6.14704 8.222 6.5L7.65 7.072L5.778 5.2C5.40602 4.84704 4.91278 4.65028 4.4 4.65028C3.88722 4.65028 3.39398 4.84704 3.022 5.2L1.8 6.409V1.95C1.8 1.77761 1.86848 1.61228 1.99038 1.49038C2.11228 1.36848 2.27761 1.3 2.45 1.3H11.55C11.7224 1.3 11.8877 1.36848 12.0096 1.49038C12.1315 1.61228 12.2 1.77761 12.2 1.95V7.709ZM7.975 2.6C7.78216 2.6 7.59366 2.65718 7.43332 2.76432C7.27298 2.87145 7.14801 3.02373 7.07422 3.20188C7.00042 3.38004 6.98111 3.57608 7.01873 3.76521C7.05635 3.95434 7.14921 4.12807 7.28557 4.26443C7.42193 4.40079 7.59565 4.49365 7.78479 4.53127C7.97392 4.56889 8.16996 4.54958 8.34812 4.47578C8.52627 4.40199 8.67855 4.27702 8.78568 4.11668C8.89282 3.95634 8.95 3.76784 8.95 3.575C8.95 3.31641 8.84728 3.06842 8.66443 2.88557C8.48158 2.70272 8.23359 2.6 7.975 2.6Z" fill="#737373"/>
             </svg>
           </a>
@@ -1037,6 +1039,62 @@ async function displayProfile(userData) {
     </div>
     <div class="h-100"></div>
   </div>`;
+
+  const addAsFriend = document.querySelector("#addAsFriend");
+  (currentLocalUser === userData.username) ? null : addAsFriend.innerHTML = `<button id="addFriendButton" class="w-auto h-38 rounded-input-box text-white text-secondary px-4">Add Friend</button>`;
+  if (currentLocalUser !== userData.username) {
+    const addButton = addAsFriend.querySelector("#addFriendButton");
+    addButton.setAttribute("method", "Add Friend");
+    addButton.setAttribute("name", `${userData.username}`);
+
+    let isFriend = false;
+
+    for (let friend of userData.friendOf) {
+      if (friend.friend_1_name === currentLocalUser) {
+        addButton.setAttribute("method", "Remove Friend");
+        addButton.textContent = "Friend";
+        isFriend = true;
+      }
+    }
+    for (let request of userData.requestReceived) {
+      if (request.requester.username === currentLocalUser) {
+        addButton.setAttribute("method", "Remove Request");
+        addButton.textContent = "Requested";
+
+      }
+    }
+    for (let request of userData.requestsSent) {
+      if (request.requestee.username === currentLocalUser) {
+        addButton.setAttribute("method", "Accept Request");
+        addButton.textContent = "Accept Friend";
+      }
+    }
+
+    switch (addButton.getAttribute("method")) {
+      case "Remove Request":
+        addButton.classList.add("bg-dark-grey");
+        break;
+      default:
+        addButton.classList.add("bg-light-mode-accent");
+        break;
+    }
+
+    if (isFriend) {
+      addButton.addEventListener("mouseenter", () => {
+        console.log("Button method:", addButton.getAttribute("method"));
+        addButton.textContent = "Unfriend";
+        addButton.classList.remove("bg-light-mode-accent");
+        addButton.classList.add("bg-dark-grey");
+      });
+  
+      addButton.addEventListener("mouseout", () => {
+        addButton.textContent = "Friend";
+        addButton.classList.remove("bg-dark-grey");
+        addButton.classList.add("bg-light-mode-accent");
+      });
+    }
+
+}
 
   const profilePage = document.querySelector("#profilePage");
   profilePage.addEventListener("click", async (event) => {
@@ -1100,6 +1158,7 @@ async function displayProfile(userData) {
         circleList.classList.remove("hidden");
         albumList.classList.add("hidden");
       }
+      
       circleTabLink.classList.add("text-black");
       circleTabLink.classList.add("border-black");
       albumTabLink.classList.remove("text-black");
@@ -1576,20 +1635,22 @@ async function displayCircle(circleData) {
   leftHeaderButton.innerHTML = `
     <img src="/lightmode/back_button.svg" alt="Back Button" id="backButton"/>
     `;
-  rightHeaderButton.innerHTML = "";
-  pageName.textContent = "";
-  let currentUserProfilePicture = null;
-  const memberList = circleData.members.map((obj) => {
-    if (obj.user.username === currentLocalUser) {
-      currentUserProfilePicture = obj.user.profilePicture;
-    }
-    return `<img src="${obj.user.profilePicture}" class="w-42 h-42 rounded-full object-cover"/>`;
-  });
-  const albumList = circleData.circle.albums.map((obj) => {
-    let albumName = document.createElement("p");
-    albumName.className = "text-white text-shadow shadow-black";
-    albumName.textContent = obj.name;
-    return `
+    rightHeaderButton.innerHTML = "";
+    pageName.textContent = "";
+    let currentUserProfilePicture = null;
+    let currentUserUsername = null;
+    const memberList = circleData.members.map((obj) => {
+      if (obj.user.username === currentLocalUser){
+        currentUserProfilePicture = obj.user.profilePicture;
+        currentUserUsername = obj.user.username;
+      }
+      return `<img src="${obj.user.profilePicture}" class="w-42 h-42 rounded-full object-cover"/>`;
+    });
+    const albumList = circleData.circle.albums.map((obj) => {
+      let albumName = document.createElement('p')
+      albumName.className = "text-white text-shadow shadow-black"
+      albumName.textContent = obj.name;
+      return `
       <div class="w-full h-min relative album" id="${obj.id}">
         <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.photos[0].src}"/>
         <div class="m-2 text-secondary font-semibold absolute inset-0 flex items-end justify-start">
@@ -1676,7 +1737,7 @@ async function displayCircle(circleData) {
 
     if (comment) {
       console.log("comment");
-      await displayComments(albumDiv.id, currentUserProfilePicture);
+      await displayComments(albumDiv.id, currentUserProfilePicture, currentUserUsername);
       return;
     }
 
@@ -2051,10 +2112,10 @@ async function displayListOfAlbums(data, profile = false) {
   return albumList;
 }
 
-async function displayComments(albumId, currentUserProfilePicture) {
-  console.log("THIS", currentUserProfilePicture);
-  const { success, data } = await getComments(albumId);
-
+async function displayComments(albumId, currentUserProfilePicture, currentUserUsername) {
+  console.log("THIS", currentUserProfilePicture, currentUserUsername);
+  const {success, data} = await getComments(albumId);
+  
   //return early do something on error
   if (!(success && data)) {
     console.log("could not fetch comment data");
@@ -2063,73 +2124,79 @@ async function displayComments(albumId, currentUserProfilePicture) {
   console.log(data);
   const showCommentsRecursively = (comments) => {
     const arr = comments.map((comment) => {
-      return `<div class="comment relative flex flex-row items-center h-full my-5" id="${
-        comment.id
-      }" user="${
-        comment.user.displayName
-          ? comment.user.displayName
-          : comment.user.username
-      }">
-      <div class="flex w-58 items-center h-full">
-        <img src="${
-          comment.user.profilePicture
-        }" class="w-47 h-47 rounded-full">
+      const likeDiv = document.createElement("div");
+      likeDiv.className = "like h-full"
+      likeDiv.innerHTML = `<svg width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M9.22318 16.6155L9.22174 16.6142C6.62708 14.2613 4.55406 12.3765 3.11801 10.6196C1.69296 8.87613 1 7.38119 1 5.82495C1 3.28843 2.97109 1.32495 5.5 1.32495C6.9377 1.32495 8.33413 1.99941 9.24117 3.05623L10 3.94038L10.7588 3.05623C11.6659 1.99941 13.0623 1.32495 14.5 1.32495C17.0289 1.32495 19 3.28843 19 5.82495C19 7.38119 18.307 8.87613 16.882 10.6196C15.4459 12.3765 13.3729 14.2613 10.7783 16.6142L10.7768 16.6155L10 17.3226L9.22318 16.6155Z" stroke="#0E0E0E" stroke-width="2"/>
+      </svg>`;
+      if (comment.likedBy !== null && comment.likedBy.includes(currentUserUsername)) {
+        likeDiv.querySelector("svg path").setAttribute("fill", "#FF4646");
+        likeDiv.querySelector("svg path").setAttribute("stroke", "#FF4646");
+        likeDiv.classList.add("liked");
+      }
+
+      const posterH1 = document.createElement("h1")
+      posterH1.className = "font-bold text-secondary"
+      const poster = comment.user.displayName ? comment.user.displayName : comment.user.username;
+      posterH1.textContent = poster;
+      posterH1.textContent ? posterH1.textContent : posterH1.textContent = "Deleted"
+      const postMsgContainer = document.createElement("div");
+      postMsgContainer.className = "comment-text-container flex-grow";
+      const postMsg = document.createElement("p");
+      postMsg.className = "text-wrap break-words"
+      postMsg.textContent = comment.message ? comment.message : "message removed";
+      postMsgContainer.appendChild(postMsg);
+
+      return `<div class="comment relative flex flex-row items-start h-full my-4" id="${comment.id}" user="${comment.user.displayName ? comment.user.displayName : comment.user.username}">
+      <div class="flex-none w-58 items-center h-full mr-1 mt-1">
+        <img src="${comment.user.profilePicture ? comment.user.profilePicture : "/placeholder_image.svg"}" class="w-47 h-47 rounded-full">
       </div>
-      <div class=" flex flex-col w-294 h-full my-0">
+      <div class=" flex flex-col w-294">
         <div class="flex flex-row gap-2">
-          <h1 class="font-bold text-secondary">${
-            comment.user.displayName
-              ? comment.user.displayName
-              : comment.user.username
-          }</h1>
+          ${posterH1.outerHTML}
           <p class="text-time text-11">${comment.createdAt}</p>
         </div>
-        <p class="mt-0">${comment.message}</p>
-        <a class="text-time text-11 underline replyButton w-8">Reply</a>
+          ${postMsgContainer.outerHTML}
+        <div class="flex items-center space-x-2">
+          <a class="text-time text-11 underline replyButton w-8">Reply</a>
+          <img src="/lightmode/more_options.svg" alt="more options"/ class="moreOptions w-5 h-5">
+        </div>
       </div>
       <div class="absolute right-0 top-2 flex flex-1 flex-col items-center">
-        <div class="like h-full">
-          <svg width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M9.22318 16.6155L9.22174 16.6142C6.62708 14.2613 4.55406 12.3765 3.11801 10.6196C1.69296 8.87613 1 7.38119 1 5.82495C1 3.28843 2.97109 1.32495 5.5 1.32495C6.9377 1.32495 8.33413 1.99941 9.24117 3.05623L10 3.94038L10.7588 3.05623C11.6659 1.99941 13.0623 1.32495 14.5 1.32495C17.0289 1.32495 19 3.28843 19 5.82495C19 7.38119 18.307 8.87613 16.882 10.6196C15.4459 12.3765 13.3729 14.2613 10.7783 16.6142L10.7768 16.6155L10 17.3226L9.22318 16.6155Z" stroke="#0E0E0E" stroke-width="2"/>
-          </svg>
-        </div>
+        ${likeDiv.outerHTML}
         <div class="likeCount">
           <p class="h-3">${comment.likeCount}</p>
         </div>
       </div>
     </div>
-    ${
-      comment.replies
-        ? `<div class="childComment ml-8">${showCommentsRecursively(
-            comment.replies
-          )}</div>`
-        : ""
-    }`;
-    });
+    ${comment.replies ? `<div class="parentComment"><div class="childComment border-l border-comment-line pl-2 ml-3">${showCommentsRecursively(comment.replies)}</div></div>`: "" }`;
+    })
     return arr.join("");
-  };
+  }
 
   const modal = document.querySelector("#modal");
   modal.classList.remove("hidden");
   modal.classList.add("shown");
   const modalContent = document.querySelector("#modalContent");
   modalContent.innerHTML = `
-  <div class="flex flex-col w-full justify-center mx-auto text-black">
+  <div class="flex flex-col max-w-430 max-h-527 justify-center mx-auto text-black">
     <div class="border-b-circle border-comment-divider mb-5">
       <h1 class="font-semibold text-23 text-center mb-2">Comments</p>
     </div>
-    <div class="albumComments my-2">
+    <div class="albumComments my-2 max-h-400 overflow-y-scroll">
     ${showCommentsRecursively(data)}
     </div>
-    <div class="w-full mt-2">
-      <div id="comment" class="relative w-input-box h-full rounded-input-box">
-        <div id="replyContent">
-        </div>
+    <div class="flex w-full items-end mt-2">
+      <div class="relative flex flex-row mr-3">
+        <img class="rounded-full h-47 w-47" src="${currentUserProfilePicture}" alt="${currentUserUsername}'s profile picture"/>
+      </div>
+      <div id="comment" class="relative flex-1 h-full rounded-input-box">
+        <div id="replyContent"></div>
         <div class="flex items-center mt-4">
           <button class="absolute right-0 mr-3 bg-light-mode-accent rounded-input-box p-2">
             <img src="/lightmode/up_arrow_icon.svg" class="h-5 w-5"/>
           </button>
-          <input id="commentInput" class="w-full p-3 rounded-input-box border-2" placeholder="enter a comment">
+          <input id="commentInput" class="w-full h-47 p-3 rounded-input-box border-2" placeholder="enter a comment">
         </div>
       </div>
     </div>
@@ -2139,6 +2206,7 @@ async function displayComments(albumId, currentUserProfilePicture) {
   let commentId = null;
   albumCommentSection.addEventListener("click", async function (event) {
     event.preventDefault();
+    console.log(event.target.tagName);
     switch (event.target.tagName) {
       case "A":
         if (event.target.className.includes("replyButton")) {
@@ -2146,9 +2214,7 @@ async function displayComments(albumId, currentUserProfilePicture) {
           comment.classList.remove("bg-transparent");
           comment.classList.add("border-2", "bg-light-mode-accent");
           commentId = event.target.closest("div.comment").id;
-          commentUser = event.target
-            .closest("div.comment")
-            .getAttribute("user");
+          commentUser = event.target.closest("div.comment").getAttribute("user");
           const commentInput = document.querySelector("#commentInput");
           if (commentInput) {
             commentInput.id = "replyInput";
@@ -2174,33 +2240,51 @@ async function displayComments(albumId, currentUserProfilePicture) {
             replyInput.placeholder = "enter a comment";
 
             replyContent.innerHTML = "";
+            
           });
 
           // await newComment(newCommentInput.value, albumId, commentId)
         }
         break;
-      case "svg":
-        if (
-          event.target.parentNode.tagName === "DIV" &&
-          event.target.parentNode.className.includes("like")
-        ) {
-          console.log("like");
+      case "IMG":
+        if (event.target.className.includes("moreOptions")) {
+          commentId = event.target.closest("div.comment").id;
+          console.log("more");
+          await displayConfirmationPopup("delete comment", {currentUserProfilePicture, albumId, commentId});
         }
-        break;
       default:
         break;
     }
-  });
-  const newCommentInput = document.querySelector("#commentInput");
+
+    const like = event.target.closest(".like");
+    if (like) {
+      if (like.classList.contains("liked")) {
+        console.log("unliked");
+        commentId = event.target.closest("div.comment").id;
+        like.classList.remove("liked");
+        like.querySelector("svg path").setAttribute("fill", "none");
+        like.querySelector("svg path").setAttribute("stroke", "#000000");
+        await likeComment(commentId);
+      } else {
+        like.classList.add("liked");
+        commentId = event.target.closest("div.comment").id;
+        console.log("liked");
+        like.querySelector("svg path").setAttribute("fill", "#FF4646");
+        like.querySelector("svg path").setAttribute("stroke", "#FF4646");
+        await likeComment(commentId);
+      }
+      return;
+    }
+  })
+
+  const newCommentInput = document.querySelector("#commentInput")
   newCommentInput.addEventListener("keydown", async function (event) {
     if (event.key === "Enter") {
-      console.log(newCommentInput.value);
-      console.log(newCommentInput);
-      console.log(albumId, commentId);
-      newCommentInput.id === "replyInput"
-        ? await newComment(newCommentInput.value, albumId, commentId)
-        : await newComment(newCommentInput.value, albumId);
-      await displayComments(albumId);
+      console.log(newCommentInput.value)
+      console.log(newCommentInput)
+      console.log(albumId, commentId)
+      newCommentInput.id === "replyInput" ? await newComment(newCommentInput.value, albumId, commentId) : await newComment(newCommentInput.value, albumId);
+      await displayComments(albumId, currentUserProfilePicture, currentLocalUser);
     }
   });
 }
@@ -2231,13 +2315,16 @@ async function displayPopup(activity) {
   }
 }
 
-async function displayConfirmationPopup(activity) {
+async function displayConfirmationPopup(activity, helperObj) {
+  console.log("confirmation popup")
   const confirmationText = document.querySelector("#confirmationText");
   confirmationText.textContent = `${activity}`;
   const confirmationPopup = document.querySelector("#confirmationPopup");
   confirmationPopup.classList.remove("hidden");
+  confirmationPopup
 
-  confirmationPopup.addEventListener("click", () => {
+  confirmationPopup.addEventListener("click", async (event) => {
+    event.stopImmediatePropagation()
     const cancelButton = event.target.closest("#cancelButton");
     const contextButton = event.target.closest("#contextButton");
     if (cancelButton) {
@@ -2245,6 +2332,15 @@ async function displayConfirmationPopup(activity) {
     }
 
     if (contextButton) {
+      if (activity === "delete comment") {
+        await deleteComment(helperObj.commentId)
+        confirmationPopup.classList.add("hidden")
+        confirmationText.textContent = ""
+
+        console.log("HERE", helperObj)
+
+        await displayComments(helperObj.albumId, helperObj.currentUserProfilePicture, currentLocalUser);
+      }
       console.log("do something");
     }
   });
