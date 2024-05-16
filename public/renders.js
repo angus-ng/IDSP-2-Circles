@@ -935,35 +935,6 @@ async function displayProfile(userData) {
   nav.classList.remove("hidden");
   const circleRender = await displayListOfCircles(userData);
   const albumRender = await displayListOfAlbums(userData, true);
-  const addAsFriend = document.createElement("div");
-  addAsFriend.className = "flex justify-center";
-  currentLocalUser === userData.username
-    ? null
-    : (addAsFriend.innerHTML = `<button id="addFriendButton" class="w-110 h-38 rounded-input-box bg-light-mode-accent text-white">Add friend</button>`);
-  if (currentLocalUser !== userData.username) {
-    const addButton = addAsFriend.childNodes[0];
-    addButton.setAttribute("method", "Add Friend");
-    addButton.setAttribute("name", `${userData.username}`);
-
-    for (let friend of userData.friendOf) {
-      if (friend.friend_1_name === currentLocalUser) {
-        addButton.setAttribute("method", "Remove Friend");
-        addButton.textContent = "Remove Friend";
-      }
-    }
-    for (let request of userData.requestReceived) {
-      if (request.requester.username === currentLocalUser) {
-        addButton.setAttribute("method", "Remove Request");
-        addButton.textContent = "Remove Request";
-      }
-    }
-    for (let request of userData.requestsSent) {
-      if (request.requestee.username === currentLocalUser) {
-        addButton.setAttribute("method", "Accept Request");
-        addButton.textContent = "Accept Request";
-      }
-    }
-  }
 
   pageName.textContent = userData.displayName
     ? userData.displayName
