@@ -23,7 +23,6 @@ export class AlbumService implements IAlbumService {
                 ownerName: newAlbumInput.creator
             }
         })
-        console.log(createdAlbum, 'LSJADLkajslkdjkasjdlkasjskla')
 
         //make the explicit album user relationship
         if (createdAlbum) {
@@ -42,29 +41,6 @@ export class AlbumService implements IAlbumService {
     return null;
   }
 
-//   async deleteAlbum(id: string, currentUser:string): Promise<void> {
-//     const user = await this._db.prisma.user.findUnique({
-//         where: {
-//             username: currentUser
-//         }
-//     })
-//     const album = await this._db.prisma.album.findUnique({
-//         where: {
-//             id: id
-//         }
-//     })
-
-//     // if (!user || !album || album.ownerId !== user.username) {
-//     //     return;
-//     // }
-
-//     // delete album
-//     await this._db.prisma.album.delete({
-//         where: {
-//             id: id,
-//         },
-//       })
-//   }
 
   async checkMembership(id: string, currentUser:string): Promise<boolean> {
     const user = await this._db.prisma.user.findUnique({
@@ -197,28 +173,82 @@ export class AlbumService implements IAlbumService {
       )
       -- Final SELECT: Retrieve all comments from NestedComments CTE
       SELECT 
-        id, 
-        createdAt, 
-        message, 
-        userId, 
-        likeCount, 
-        albumId, 
-        parentId,
-        username,
-        displayName,
-        profilePicture,
-        level
-      FROM 
-        NestedComments
-      ORDER BY 
-        createdAt;`;
-    console.log("RAW", comment)
+    NestedComments.id, 
+    NestedComments.createdAt, 
+    NestedComments.message, 
+    NestedComments.userId, 
+    NestedComments.likeCount, 
+    NestedComments.albumId, 
+    NestedComments.parentId,
+    NestedComments.username,
+    NestedComments.displayName,
+    NestedComments.profilePicture,
+    NestedComments.level,
+    GROUP_CONCAT(l.userId, ",") AS likedBy
+    FROM 
+        (
+            SELECT 
+                c.id, 
+                c.createdAt, 
+                c.message, 
+                c.userId, 
+                c.likeCount, 
+                c.albumId, 
+                c.parentId,
+                1 AS level,
+                u.username,
+                u.profilePicture,
+                u.displayName
+            FROM 
+                Comment c
+            LEFT JOIN
+                User u on c.userId = u.username
+            WHERE 
+                parentId IS NULL AND albumId = ${album.id}
+            UNION ALL
+            SELECT 
+                c.id, 
+                c.createdAt, 
+                c.message, 
+                c.userId, 
+                c.likeCount, 
+                c.albumId, 
+                c.parentId,
+                nc.level + 1 AS level,
+                u.username,
+                u.profilePicture,
+                u.displayName
+            FROM 
+                Comment c
+            INNER JOIN 
+                NestedComments nc ON c.parentId = nc.id
+            LEFT JOIN
+                User u ON c.userId = u.username
+    ) AS NestedComments
+        LEFT JOIN
+            Like l ON NestedComments.id = l.commentId
+        GROUP BY
+        NestedComments.id, 
+        NestedComments.createdAt, 
+        NestedComments.message, 
+        NestedComments.userId, 
+        NestedComments.likeCount, 
+        NestedComments.albumId, 
+        NestedComments.parentId,
+        NestedComments.username,
+        NestedComments.displayName,
+        NestedComments.profilePicture,
+        NestedComments.level
+        ORDER BY 
+            NestedComments.createdAt;`
+
     comment = comment.map((comment) => {
         comment.user = {
             profilePicture: comment.profilePicture,
             username: comment.username,
             displayName: comment.displayName
         }
+        comment.likedBy ? comment.likedBy = comment.likedBy.split(","): comment.likedBy
         delete comment.profilePicture;
         delete comment.username;
         delete comment.displayName;
@@ -227,7 +257,6 @@ export class AlbumService implements IAlbumService {
     const commentMap = new Map;
     let topLevelComments: Comment[] = [];
     comment.forEach((comment) => {
-        console.log(comment.level == 1)
         if (comment.level == 1){
             topLevelComments.push(comment)
         }
@@ -239,7 +268,6 @@ export class AlbumService implements IAlbumService {
                     parentComment.replies = [];
                 }
                 parentComment.replies.push(comment)
-                console.log("CHILDCOMMENT", )
             }
         }
         delete comment.level

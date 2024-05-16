@@ -111,9 +111,6 @@ class AlbumController implements IController {
         return res.status(200).json({ success: true, data:null });
       }
       let comments: any[] = await this._service.getComments(albumId);
-      console.log(comments)
-      console.log(Array.isArray(comments))
-
       const formatTimeStamps = (comment: any) => {
         comment.createdAt = timeAgo.format(comment.createdAt);
         if (comment.replies && comment.replies.length > 0) {
@@ -128,7 +125,6 @@ class AlbumController implements IController {
       comments = comments.map((comment:any) => {
         return formatTimeStamps(comment);
       });
-      console.log(comments)
       res.status(200).json({success: true, data: comments});
     } catch (err) {
       console.log(err)
