@@ -35,12 +35,17 @@ function displayLoginPage() {
           </div>
           <div class="flex items-center justify-between mt-4">
               <div class="grid grid-cols-2 gap-2.5">
-                  <form action="/auth/google">
+                  <form action="/auth/login">
                       <button>
                           <img src="/lightmode/google_icon.svg" alt="Google Icon"/>
                       </button>
                   </form>
-                  <form action="/auth/facebook">
+                  <form action="/auth/login">
+                      <button>
+                          <img src="/lightmode/apple_icon.svg" alt="Apple Icon"/>
+                      </button>
+                  </form>
+                  <form action="/auth/login">
                       <button id="facebookAuth">
                           <img src="/lightmode/facebook_icon.svg" alt="Facebook Icon"/>
                       </button>
