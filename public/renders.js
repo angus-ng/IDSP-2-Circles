@@ -2162,7 +2162,11 @@ async function displayComments(
           ${postMsgContainer.outerHTML}
         <div class="flex items-center space-x-2">
           <a class="text-time text-11 underline replyButton w-8">Reply</a>
-          ${comment.user.username === currentLocalUser ? `<img src="/lightmode/more_options.svg" alt="more options"/ class="moreOptions w-5 h-5">` : ""}
+          ${
+            comment.user.username === currentLocalUser
+              ? `<img src="/lightmode/more_options.svg" alt="more options"/ class="moreOptions w-5 h-5">`
+              : ""
+          }
         </div>
       </div>
       <div class="absolute right-0 top-2 flex flex-1 flex-col items-center">
@@ -2202,7 +2206,7 @@ async function displayComments(
       <div id="comment" class="relative flex-1 h-full rounded-input-box">
         <div id="replyContent"></div>
         <div class="flex items-center mt-4">
-          <button class="absolute right-0 mr-3 bg-light-mode-accent rounded-input-box p-2">
+          <button id="submitComment" class="absolute right-0 mr-3 bg-light-mode-accent rounded-input-box p-2">
             <img src="/lightmode/up_arrow_icon.svg" class="h-5 w-5"/>
           </button>
           <input id="commentInput" class="w-full h-47 p-3 rounded-input-box border-2" placeholder="enter a comment">
@@ -2279,7 +2283,11 @@ async function displayComments(
         like.querySelector("svg path").setAttribute("fill", "none");
         like.querySelector("svg path").setAttribute("stroke", "#000000");
         await likeComment(commentId);
-        await displayComments(albumId, currentUserProfilePicture, currentLocalUser);
+        await displayComments(
+          albumId,
+          currentUserProfilePicture,
+          currentLocalUser
+        );
       } else {
         like.classList.add("liked");
         commentId = event.target.closest("div.comment").id;
@@ -2287,7 +2295,11 @@ async function displayComments(
         like.querySelector("svg path").setAttribute("fill", "#FF4646");
         like.querySelector("svg path").setAttribute("stroke", "#FF4646");
         await likeComment(commentId);
-        await displayComments(albumId, currentUserProfilePicture, currentLocalUser);
+        await displayComments(
+          albumId,
+          currentUserProfilePicture,
+          currentLocalUser
+        );
       }
       return;
     }
@@ -2308,6 +2320,14 @@ async function displayComments(
         currentLocalUser
       );
     }
+  });
+  const submitComment = document.querySelector("#submitComment");
+  submitComment.addEventListener("click", async function (event) {
+    event.preventDefault();
+    const enterKeyEvent = new KeyboardEvent("keydown", {
+      key: "Enter",
+    });
+    newCommentInput.dispatchEvent(enterKeyEvent);
   });
 }
 
