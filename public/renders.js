@@ -2130,7 +2130,7 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
           ${postMsgContainer.outerHTML}
         <div class="flex items-center space-x-2">
           <a class="text-time text-11 underline replyButton w-8">Reply</a>
-          <img src="/lightmode/more_options.svg" alt="more options"/ class="moreOptions w-5 h-5">
+          ${comment.user.username === currentLocalUser ? `<img src="/lightmode/more_options.svg" alt="more options"/ class="moreOptions w-5 h-5">` : ""}
         </div>
       </div>
       <div class="absolute right-0 top-2 flex flex-1 flex-col items-center">
@@ -2236,6 +2236,7 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
         like.querySelector("svg path").setAttribute("fill", "none");
         like.querySelector("svg path").setAttribute("stroke", "#000000");
         await likeComment(commentId);
+        await displayComments(albumId, currentUserProfilePicture, currentLocalUser);
       } else {
         like.classList.add("liked");
         commentId = event.target.closest("div.comment").id;
@@ -2243,6 +2244,7 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
         like.querySelector("svg path").setAttribute("fill", "#FF4646");
         like.querySelector("svg path").setAttribute("stroke", "#FF4646");
         await likeComment(commentId);
+        await displayComments(albumId, currentUserProfilePicture, currentLocalUser);
       }
       return;
     }
@@ -2255,6 +2257,7 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
       console.log(newCommentInput)
       console.log(albumId, commentId)
       newCommentInput.id === "replyInput" ? await newComment(newCommentInput.value, albumId, commentId) : await newComment(newCommentInput.value, albumId);
+      newCommentInput.value = ""
       await displayComments(albumId, currentUserProfilePicture, currentLocalUser);
     }
   });
