@@ -2026,12 +2026,14 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
     if (like) {
       if (like.classList.contains("liked")) {
         console.log("unliked");
+        commentId = event.target.closest("div.comment").id;
         like.classList.remove("liked");
         like.querySelector("svg path").setAttribute("fill", "none");
         like.querySelector("svg path").setAttribute("stroke", "#000000");
         await likeComment(commentId);
       } else {
         like.classList.add("liked");
+        commentId = event.target.closest("div.comment").id;
         console.log("liked");
         like.querySelector("svg path").setAttribute("fill", "#FF4646");
         like.querySelector("svg path").setAttribute("stroke", "#FF4646");
