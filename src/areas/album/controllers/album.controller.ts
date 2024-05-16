@@ -6,6 +6,7 @@ import { ensureAuthenticated } from "../../../middleware/authentication.middlewa
 import { handleUpload } from "../../../helper/HandleSingleUpload";
 import multer from 'multer';
 import { handleMultipleUpload } from "../../../helper/HandleMultiplePhotos";
+import { getLocalUser } from "../../../helper/getLocalUser";
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
@@ -39,7 +40,7 @@ class AlbumController implements IController {
 
   private createAlbum = async (req:Request, res:Response) => {
     try {
-        let loggedInUser = req.user!.username
+      let loggedInUser = await getLocalUser(req, res)
         
         const { photos, isCircle, name }  = req.body
         console.log(req.body,"logged")
@@ -72,7 +73,7 @@ class AlbumController implements IController {
       const { id } = req.params
       console.log(id)
       //ensure user is a member of the circle
-      let loggedInUser = req.user!.username
+      let loggedInUser = await getLocalUser(req, res)
       const member = await this._service.checkMembership(id, loggedInUser)
       if (!member){
         return res.status(200).json({ success: true, data:null });
@@ -88,7 +89,7 @@ class AlbumController implements IController {
   }
 
   private getAlbumList = async (req:Request, res:Response) => {
-    let loggedInUser = req.user!.username
+    let loggedInUser = await getLocalUser(req, res)
     console.log (loggedInUser)
     const albums = await this._service.listAlbums(loggedInUser)
 
@@ -96,7 +97,7 @@ class AlbumController implements IController {
   }
 
   private getComments = async (req: Request, res: Response) => {
-    let loggedInUser = req.user!.username
+    let loggedInUser = await getLocalUser(req, res)
     try {
       const { albumId } = req.body
       const member = await this._service.checkMembership(albumId, loggedInUser)
@@ -111,7 +112,7 @@ class AlbumController implements IController {
   }
 
   private newComment = async (req: Request, res: Response) => {
-    let loggedInUser = req.user!.username
+    let loggedInUser = await getLocalUser(req, res)
     try {
       const { message, albumId, commentId } = req.body
       console.log(message, albumId, commentId)

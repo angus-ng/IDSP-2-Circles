@@ -100,7 +100,11 @@ async function displaySignUpEmailPage() {
   const signUpPageAdditionalContent = document.querySelector(
     "#signUpAdditionalContent"
   );
-  const primaryButton = document.querySelector("#primaryButton");
+
+  let primaryButton = document.querySelector("#primaryButton");
+  if (primaryButton) {
+    primaryButton = document.querySelector("#emailNext")
+  }
 
   signUpTitle.textContent = "Enter your Email";
   signUpSubtitle.textContent =
@@ -110,11 +114,11 @@ async function displaySignUpEmailPage() {
   <form class="flex flex-col flex-grow">
     <div class="mb-6">
         <label for="email" class="font-medium text-h2 mb-2">Email</label>
-        <input type="email" class="w-380 py-2 border-dark-grey border-2 rounded-input-box text-14 leading-secondary mt-2" placeholder="Email"/>
+        <input id="emailInput" type="email" class="w-380 py-2 border-dark-grey border-2 rounded-input-box text-14 leading-secondary mt-2" placeholder="Email"/>
     </div>
     <div class="mt-4">
         <label for="emailConfirmation" class="font-medium text-h2 mb-4">Confirm Email</label>
-        <input type="email" class="w-380 py-2 border-dark-grey border-2 rounded-input-box text-14 leading-secondary mt-2" placeholder="Email"/>
+        <input id="confirmEmailInput" type="email" class="w-380 py-2 border-dark-grey border-2 rounded-input-box text-14 leading-secondary mt-2" placeholder="Email"/>
     </div>
     <div class="flex-grow"></div>
   </form>`;
@@ -132,7 +136,10 @@ async function displaySignUpPasswordPage() {
   const signUpPageAdditionalContent = document.querySelector(
     "#signUpAdditionalContent"
   );
-  const primaryButton = document.querySelector("#emailNext");
+  let primaryButton = document.querySelector("#emailNext");
+  if (primaryButton) {
+    primaryButton = document.querySelector("#passswordNext")
+  }
 
   signUpTitle.textContent = "Create a password";
   signUpSubtitle.textContent = "Your new password must contain:";
@@ -141,11 +148,11 @@ async function displaySignUpPasswordPage() {
   <form class="flex flex-col flex-grow">
     <div class="mb-6">
         <label for="password" class="font-medium text-h2 mb-2">Password</label>
-        <input type="password" class="w-380 py-2 border-dark-grey border-2 rounded-input-box text-14 leading-secondary mt-2" placeholder="Password"/>
+        <input id="passwordInput" type="password" class="w-380 py-2 border-dark-grey border-2 rounded-input-box text-14 leading-secondary mt-2" placeholder="Password"/>
     </div>
     <div class="mt-4">
         <label for="passwordConfirmation" class="font-medium text-h2 mb-4">Confirm Password</label>
-        <input type="password" class="w-380 py-2 border-dark-grey border-2 rounded-input-box text-14 leading-secondary mt-2" placeholder="Password"/>
+        <input id="confirmPasswordInput" type="password" class="w-380 py-2 border-dark-grey border-2 rounded-input-box text-14 leading-secondary mt-2" placeholder="Password"/>
     </div>
     <div class="flex-grow"></div>
   </form>`;
@@ -171,7 +178,10 @@ async function displaySignUpBirthdayPage() {
   const signUpPageAdditionalContent = document.querySelector(
     "#signUpAdditionalContent"
   );
-  const primaryButton = document.querySelector("#passwordNext");
+  let primaryButton = document.querySelector("#passwordNext");
+  if (primaryButton) {
+    primaryButton = document.querySelector("#birthdayNext")
+  }
 
   leftHeaderButton.id = "birthdayBack";
 
@@ -200,7 +210,10 @@ async function displaySignUpNamePage() {
   const signUpPageAdditionalContent = document.querySelector(
     "#signUpAdditionalContent"
   );
-  const primaryButton = document.querySelector("#birthdayNext");
+  let primaryButton = document.querySelector("#birthdayNext");
+  if (primaryButton) {
+    primaryButton = document.querySelector("#nameNext")
+  }
 
   leftHeaderButton.id = "nameBack";
 
@@ -232,7 +245,10 @@ async function displaySignUpUsernamePage() {
   const signUpPageAdditionalContent = document.querySelector(
     "#signUpAdditionalContent"
   );
-  const primaryButton = document.querySelector("#nameNext");
+  let primaryButton = document.querySelector("#nameNext");
+  if (primaryButton) {
+    primaryButton = document.querySelector("#usernameNext")
+  }
 
   leftHeaderButton.id = "usernameBack";
 
@@ -261,7 +277,11 @@ async function displaySignUpProfilePicturePage() {
   const signUpPageAdditionalContent = document.querySelector(
     "#signUpAdditionalContent"
   );
-  const primaryButton = document.querySelector("#usernameNext");
+  let primaryButton = document.querySelector("#usernameNext");
+  if (primaryButton) {
+    primaryButton = document.querySelector("#addProfilePicture")
+  }
+
   const secondaryButton = document.querySelector("#secondaryButton");
 
   leftHeaderButton.id = "profilePictureBack";
@@ -290,8 +310,12 @@ async function displayProfileConfirmation() {
   const signUpPageAdditionalContent = document.querySelector(
     "#signUpAdditionalContent"
   );
-  const primaryButton = document.querySelector("#addProfilePicture");
+  let primaryButton = document.querySelector("#addProfilePicture");
   const secondaryButton = document.querySelector("#profilePictureNext");
+  if (primaryButton) {
+    primaryButton = document.querySelector("#doneButton")
+  }
+
 
   leftHeaderButton.id = "profileConfirmationBack";
 
@@ -665,7 +689,7 @@ function displayUserSearch(listOfUsers) {
   if (!listOfUsers) {
     return [];
   }
-  console.log("HERE", listOfUsers)
+  console.log("HERE", listOfUsers);
   let newArr = listOfUsers.map((user) => {
     if (user.username === currentLocalUser) {
       return;
@@ -880,6 +904,7 @@ async function displayNavBar() {
     if (profileButton) {
       rightHeaderButton.innerHTML = "";
       newCircleNameInput = "";
+      console.log((await getUser(currentLocalUser)))
       const { success, data } = await getUser(currentLocalUser);
       if (success && data) {
         return await displayProfile(data);
@@ -914,32 +939,33 @@ async function displayProfile(userData) {
   const albumRender = await displayListOfAlbums(userData, true);
   const addAsFriend = document.createElement("div");
   addAsFriend.className = "flex justify-center";
-  (currentLocalUser === userData.username) ? null : addAsFriend.innerHTML=`<button id="addFriendButton" class="w-110 h-38 rounded-input-box bg-light-mode-accent text-white">Add friend</button>`
-  if (currentLocalUser !== userData.username){
-  const addButton = addAsFriend.childNodes[0];
-  addButton.setAttribute("method", "Add Friend");
-  addButton.setAttribute("name", `${userData.username}`);
+  currentLocalUser === userData.username
+    ? null
+    : (addAsFriend.innerHTML = `<button id="addFriendButton" class="w-110 h-38 rounded-input-box bg-light-mode-accent text-white">Add friend</button>`);
+  if (currentLocalUser !== userData.username) {
+    const addButton = addAsFriend.childNodes[0];
+    addButton.setAttribute("method", "Add Friend");
+    addButton.setAttribute("name", `${userData.username}`);
 
-  for (let friend of userData.friendOf) {
-    if (friend.friend_1_name === currentLocalUser) {
-      addButton.setAttribute("method", "Remove Friend");
-      addButton.textContent = "Remove Friend"
+    for (let friend of userData.friendOf) {
+      if (friend.friend_1_name === currentLocalUser) {
+        addButton.setAttribute("method", "Remove Friend");
+        addButton.textContent = "Remove Friend";
+      }
+    }
+    for (let request of userData.requestReceived) {
+      if (request.requester.username === currentLocalUser) {
+        addButton.setAttribute("method", "Remove Request");
+        addButton.textContent = "Remove Request";
+      }
+    }
+    for (let request of userData.requestsSent) {
+      if (request.requestee.username === currentLocalUser) {
+        addButton.setAttribute("method", "Accept Request");
+        addButton.textContent = "Accept Request";
+      }
     }
   }
-  for (let request of userData.requestReceived) {
-    if (request.requester.username === currentLocalUser) {
-      addButton.setAttribute("method", "Remove Request");
-      addButton.textContent = "Remove Request"
-    }
-  }
-  for (let request of userData.requestsSent) {
-    if (request.requestee.username === currentLocalUser) {
-      addButton.setAttribute("method", "Accept Request");
-      addButton.textContent = "Accept Request"
-    }
-  }
-
-}
 
   pageName.textContent = userData.displayName
     ? userData.displayName
@@ -1109,21 +1135,21 @@ async function displayProfile(userData) {
       }
     });
 
-    const addFriendButton = document.querySelector("#addFriendButton")
+  const addFriendButton = document.querySelector("#addFriendButton");
   if (addFriendButton) {
     addFriendButton.addEventListener("click", async (event) => {
       event.preventDefault();
       const target = event.target;
       const username = target.getAttribute("name");
       const method = target.getAttribute("method");
-      console.log(target, username, method)
+      console.log(target, username, method);
       let response;
       switch (method) {
         case "Add Friend": {
           response = await sendFriendRequest(username, currentLocalUser);
           console.log(response);
           await displayPopup("friend request sent");
-          let { success, data } = await getUser(username)
+          let { success, data } = await getUser(username);
           if (success && data) {
             await displayProfile(data);
           }
@@ -1133,7 +1159,7 @@ async function displayProfile(userData) {
           //MAKE USER CONFIRM IF THEY WANT TO REMOVE THIS FRIEND FIRST
           response = await unfriend(username, currentLocalUser);
           console.log(response);
-          let { success, data } = await getUser(username)
+          let { success, data } = await getUser(username);
           if (success && data) {
             await displayProfile(data);
           }
@@ -1142,7 +1168,7 @@ async function displayProfile(userData) {
         case "Remove Request": {
           response = await removeFriendRequest(username, currentLocalUser);
           console.log(response);
-          let { success, data } = await getUser(username)
+          let { success, data } = await getUser(username);
           if (success && data) {
             await displayProfile(data);
           }
@@ -1151,7 +1177,7 @@ async function displayProfile(userData) {
         case "Accept Request": {
           response = await acceptFriendRequest(username, currentLocalUser);
           console.log(response);
-          let { success, data } = await getUser(username)
+          let { success, data } = await getUser(username);
           if (success && data) {
             await displayProfile(data);
           }
@@ -1552,20 +1578,20 @@ async function displayCircle(circleData) {
   leftHeaderButton.innerHTML = `
     <img src="/lightmode/back_button.svg" alt="Back Button" id="backButton"/>
     `;
-    rightHeaderButton.innerHTML = "";
-    pageName.textContent = "";
-    let currentUserProfilePicture = null;
-    const memberList = circleData.members.map((obj) => {
-      if (obj.user.username === currentLocalUser){
-        currentUserProfilePicture = obj.user.profilePicture
-      }
-      return `<img src="${obj.user.profilePicture}" class="w-42 h-42 rounded-full object-cover"/>`;
-    });
-    const albumList = circleData.circle.albums.map((obj) => {
-      let albumName = document.createElement('p')
-      albumName.className = "text-white text-shadow shadow-black"
-      albumName.textContent = obj.name;
-      return `
+  rightHeaderButton.innerHTML = "";
+  pageName.textContent = "";
+  let currentUserProfilePicture = null;
+  const memberList = circleData.members.map((obj) => {
+    if (obj.user.username === currentLocalUser) {
+      currentUserProfilePicture = obj.user.profilePicture;
+    }
+    return `<img src="${obj.user.profilePicture}" class="w-42 h-42 rounded-full object-cover"/>`;
+  });
+  const albumList = circleData.circle.albums.map((obj) => {
+    let albumName = document.createElement("p");
+    albumName.className = "text-white text-shadow shadow-black";
+    albumName.textContent = obj.name;
+    return `
       <div class="w-full h-min relative album" id="${obj.id}">
         <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.photos[0].src}"/>
         <div class="m-2 text-secondary font-semibold absolute inset-0 flex items-end justify-start">
@@ -2028,24 +2054,36 @@ async function displayListOfAlbums(data, profile = false) {
 }
 
 async function displayComments(albumId, currentUserProfilePicture) {
-  console.log("THIS", currentUserProfilePicture)
-  const {success, data} = await getComments(albumId)
-  
+  console.log("THIS", currentUserProfilePicture);
+  const { success, data } = await getComments(albumId);
+
   //return early do something on error
   if (!(success && data)) {
-    console.log("could not fetch comment data")
+    console.log("could not fetch comment data");
     return;
   }
-  console.log(data)
+  console.log(data);
   const showCommentsRecursively = (comments) => {
     const arr = comments.map((comment) => {
-      return `<div class="comment relative flex flex-row items-center h-full my-5" id="${comment.id}" user="${comment.user.displayName ? comment.user.displayName : comment.user.username}">
+      return `<div class="comment relative flex flex-row items-center h-full my-5" id="${
+        comment.id
+      }" user="${
+        comment.user.displayName
+          ? comment.user.displayName
+          : comment.user.username
+      }">
       <div class="flex w-58 items-center h-full">
-        <img src="${comment.user.profilePicture}" class="w-47 h-47 rounded-full">
+        <img src="${
+          comment.user.profilePicture
+        }" class="w-47 h-47 rounded-full">
       </div>
       <div class=" flex flex-col w-294 h-full my-0">
         <div class="flex flex-row gap-2">
-          <h1 class="font-bold text-secondary">${comment.user.displayName ? comment.user.displayName : comment.user.username}</h1>
+          <h1 class="font-bold text-secondary">${
+            comment.user.displayName
+              ? comment.user.displayName
+              : comment.user.username
+          }</h1>
           <p class="text-time text-11">${comment.createdAt}</p>
         </div>
         <p class="mt-0">${comment.message}</p>
@@ -2062,10 +2100,16 @@ async function displayComments(albumId, currentUserProfilePicture) {
         </div>
       </div>
     </div>
-    ${comment.replies ? `<div class="childComment ml-8">${showCommentsRecursively(comment.replies)}</div>`: "" }`;
-    })
-    return arr.join("")
-  }
+    ${
+      comment.replies
+        ? `<div class="childComment ml-8">${showCommentsRecursively(
+            comment.replies
+          )}</div>`
+        : ""
+    }`;
+    });
+    return arr.join("");
+  };
 
   const modal = document.querySelector("#modal");
   modal.classList.remove("hidden");
@@ -2095,22 +2139,24 @@ async function displayComments(albumId, currentUserProfilePicture) {
 
   const albumCommentSection = document.querySelector(".albumComments");
   let commentId = null;
-  albumCommentSection.addEventListener("click", async function(event) {
+  albumCommentSection.addEventListener("click", async function (event) {
     event.preventDefault();
     switch (event.target.tagName) {
       case "A":
-        if (event.target.className.includes("replyButton")){
-          const comment =  document.querySelector("#comment");
+        if (event.target.className.includes("replyButton")) {
+          const comment = document.querySelector("#comment");
           comment.classList.remove("bg-transparent");
           comment.classList.add("border-2", "bg-light-mode-accent");
           commentId = event.target.closest("div.comment").id;
-          commentUser = event.target.closest("div.comment").getAttribute("user")
+          commentUser = event.target
+            .closest("div.comment")
+            .getAttribute("user");
           const commentInput = document.querySelector("#commentInput");
-          if (commentInput){
+          if (commentInput) {
             commentInput.id = "replyInput";
             commentInput.placeholder = "enter a reply";
           }
-          
+
           const replyContent = document.querySelector("#replyContent");
           replyContent.innerHTML = `
           <div class="flex justify-between items-center p-3">
@@ -2136,24 +2182,29 @@ async function displayComments(albumId, currentUserProfilePicture) {
         }
         break;
       case "svg":
-          if (event.target.parentNode.tagName === "DIV" && event.target.parentNode.className.includes("like")){
-            console.log("like")
-          }
-          break;
+        if (
+          event.target.parentNode.tagName === "DIV" &&
+          event.target.parentNode.className.includes("like")
+        ) {
+          console.log("like");
+        }
+        break;
       default:
         break;
     }
-  })
-  const newCommentInput = document.querySelector("#commentInput")
+  });
+  const newCommentInput = document.querySelector("#commentInput");
   newCommentInput.addEventListener("keydown", async function (event) {
     if (event.key === "Enter") {
-      console.log(newCommentInput.value)
-      console.log(newCommentInput)
-      console.log(albumId, commentId)
-      newCommentInput.id === "replyInput" ? await newComment(newCommentInput.value, albumId, commentId) : await newComment(newCommentInput.value, albumId);
+      console.log(newCommentInput.value);
+      console.log(newCommentInput);
+      console.log(albumId, commentId);
+      newCommentInput.id === "replyInput"
+        ? await newComment(newCommentInput.value, albumId, commentId)
+        : await newComment(newCommentInput.value, albumId);
       await displayComments(albumId);
     }
-  })
+  });
 }
 
 async function displayPopup(activity) {

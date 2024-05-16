@@ -5,6 +5,7 @@ import { Circle } from '@prisma/client'
 import { ensureAuthenticated } from "../../../middleware/authentication.middleware";
 import { handleUpload } from "../../../helper/HandleSingleUpload";
 import multer from 'multer';
+import { getLocalUser } from "../../../helper/getLocalUser";
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
@@ -40,7 +41,7 @@ class CircleController implements IController {
 
   private createCircle = async (req:Request, res:Response) => {
     try {
-        let loggedInUser = req.user!.username
+      let loggedInUser = await getLocalUser(req, res)
         
         const { circleName, picturePath } = req.body
         
@@ -70,7 +71,7 @@ class CircleController implements IController {
 
   private deleteCircle = async (req:Request, res:Response) => {
     try {
-      let loggedInUser = req.user!.username
+      let loggedInUser = await getLocalUser(req, res)
 
         const { id } = req.params
         await this._service.deleteCircle(id, loggedInUser) //this method also checks if its the owner of the circle, maybe a check should be done separately
@@ -84,7 +85,7 @@ class CircleController implements IController {
       const { id } = req.params
 
       //ensure user is a member of the circle
-      let loggedInUser = req.user!.username
+      let loggedInUser = await getLocalUser(req, res)
       const member = await this._service.checkMembership(id, loggedInUser)
       if (!member) {
         return res.status(200).json({success: true, data: null});
@@ -113,7 +114,7 @@ class CircleController implements IController {
   }
 
   private getCircleList = async (req:Request, res:Response) => {
-    let loggedInUser = req.user!.username
+    let loggedInUser = await getLocalUser(req, res)
     const circles = await this._service.listCircles(loggedInUser)
 
     res.json({success: true, data: circles})
@@ -121,7 +122,7 @@ class CircleController implements IController {
   
   private acceptInvite = async (req: Request, res: Response) => {
     const { id, invitee } = req.body
-    let loggedInUser = req.user!.username
+    let loggedInUser = await getLocalUser(req, res)
     try {
       if (loggedInUser === invitee) {
         await this._service.acceptInvite(id, invitee)
@@ -134,7 +135,7 @@ class CircleController implements IController {
 
   private removeCircleInvite = async (req: Request, res: Response) => {
     try {
-      let loggedInUser = req.user!.username
+      let loggedInUser = await getLocalUser(req, res)
       const { id, invitee } = req.body
       if (loggedInUser === invitee) {
         await this._service.removeRequest(id, invitee)

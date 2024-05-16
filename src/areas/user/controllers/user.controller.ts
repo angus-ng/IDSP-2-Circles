@@ -2,6 +2,8 @@ import express, { Request, Response, NextFunction } from "express";
 import IController from "../../../interfaces/controller.interface";
 import IUserService from "../services/IUserService";
 import { ensureAuthenticated } from "../../../middleware/authentication.middleware";
+import { kindeClient, sessionManager } from "../../../areas/authentication/config/kinde";
+import { getLocalUser } from "../../../helper/getLocalUser";
 
 class UserController implements IController {
   public path = "/user";
@@ -22,11 +24,11 @@ class UserController implements IController {
     this.router.post(`${this.path}/removeRequest`, ensureAuthenticated, this.removeFriendRequest)
     this.router.get(`${this.path}/search/:input(*)`, ensureAuthenticated, this.search)
     this.router.get(`${this.path}/searchAll`, ensureAuthenticated, this.searchAll)
-    this.router.post(`${this.path}/`, ensureAuthenticated, this.getUser);
+    this.router.post(`${this.path}/get`, ensureAuthenticated, this.getUser);
   }
   private friend = async (req: Request, res: Response) => {
     try {
-      let loggedInUser = req.user!.username
+      let loggedInUser = await getLocalUser(req, res)
       const { requestee } = req.body
         await this._service.friend(loggedInUser, requestee)
         res.status(200).json({success:true, data: null})
@@ -36,7 +38,7 @@ class UserController implements IController {
   }
   private unfriend = async (req: Request, res: Response) => {
     try {
-      let loggedInUser = req.user!.username
+      let loggedInUser = await getLocalUser(req, res)
       const { requester, requestee } = req.body
       if (loggedInUser === requester) {
         const message = await this._service.unfriend(requester, requestee)
@@ -50,7 +52,7 @@ class UserController implements IController {
   }
   private getFriends = async (req: Request, res: Response) => {
     try {
-    let loggedInUser = req.user!.username
+      let loggedInUser = await getLocalUser(req, res)
       const { username } = req.body
       console.log(username)
       console.log(req.body)
@@ -63,7 +65,7 @@ class UserController implements IController {
 
   private getActivities = async (req: Request, res: Response) => {
     try {
-      let loggedInUser = req.user!.username
+      let loggedInUser = await getLocalUser(req, res)
         const activities = await this._service.getActivities(loggedInUser)
         res.status(200).json({success:true, data: activities})
       } catch (error: any) {
@@ -73,7 +75,7 @@ class UserController implements IController {
 
   private acceptFriendRequest = async (req: Request, res: Response) => {
     try {
-      let loggedInUser = req.user!.username
+      let loggedInUser = await getLocalUser(req, res)
       const { requester, requestee } = req.body
       if (loggedInUser === requestee) {
         await this._service.acceptRequest(requester, requestee)
@@ -88,7 +90,7 @@ class UserController implements IController {
 
   private removeFriendRequest = async (req: Request, res: Response) => {
     try {
-      let loggedInUser = req.user!.username
+      let loggedInUser = await getLocalUser(req, res)
       const { user1, user2 } = req.body
       if (loggedInUser === user2 || loggedInUser === user1) {
         await this._service.removeRequest(user1, user2)
@@ -103,7 +105,7 @@ class UserController implements IController {
   
   private search = async (req: Request, res: Response) => {
     try {
-      let loggedInUser = req.user!.username
+      let loggedInUser = await getLocalUser(req, res)
       const input = decodeURIComponent(req.params.input).slice(0, -1)
       console.log(input)
       const output = await this._service.search(input, loggedInUser)
@@ -114,7 +116,7 @@ class UserController implements IController {
   }
   private searchAll = async (req: Request, res: Response) => {
     try {
-      let loggedInUser = req.user!.username
+      let loggedInUser = await getLocalUser(req, res)
       const output = await this._service.search("", loggedInUser)
       res.status(200).json({success:true, data: output})
     } catch (error: any) {
@@ -122,15 +124,18 @@ class UserController implements IController {
     }
   }
   private getUser = async (req: Request, res: Response) => {
+    console.log("getting user")
     try {
-      let loggedInUser = req.user!.username
+      let loggedInUser = await getLocalUser(req, res)
       let { username } = req.body
+      console.log(username, loggedInUser)
 
       const profileObj = await this._service.getUser(username, loggedInUser)
       console.log(loggedInUser, username)
       console.log(profileObj)
       res.status(200).json({success: true, data: profileObj})
     } catch (err) {
+      console.log(err)
       res.status(200).json({success: true, data: null, error:err})
     }
   }

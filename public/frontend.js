@@ -12,11 +12,17 @@ let circleImgSrc;
 let albumPhotos = [];
 let albumObj = {};
 let checkedFriends = [];
+let signUpData = {
+  email: "",
+  confirmEmail: "",
+  password: "",
+  confirmPassword: "",
+};
 
 async function initiatePage() {
   const username = await getSessionFromBackend();
   currentLocalUser = username;
-  console.log(username);
+  console.log("current User:", username);
   if (!currentLocalUser) {
     await displayLoginPage();
   } else {
@@ -36,13 +42,17 @@ header.addEventListener("click", async (event) => {
   const nextButton = event.target.closest("#nextButton");
   const backButton = event.target.closest("#backButton");
   const circleBackButton = event.target.closest("#circleBackButton");
-  const circlePreviewBackButton = event.target.closest("#circlePreviewBackButton");
+  const circlePreviewBackButton = event.target.closest(
+    "#circlePreviewBackButton"
+  );
   const createCircleButton = event.target.closest("#createCircleButton");
   const closeButton = event.target.closest("#closeButton");
   const albumNextButton = event.target.closest("#albumNext");
   const backButtonAlbum = event.target.closest("#backButtonAlbum");
   const createAlbumButton = event.target.closest("#createAlbum");
-  const albumConfirmationBackButton = event.target.closest("#albumConfirmationBackButton");
+  const albumConfirmationBackButton = event.target.closest(
+    "#albumConfirmationBackButton"
+  );
   const addCircleBackButton = event.target.closest("#addCircleBackButton");
   const toActivity = event.target.closest("#toActivity");
   const emailBackButton = event.target.closest("#emailBack");
@@ -51,7 +61,9 @@ header.addEventListener("click", async (event) => {
   const nameBackButton = event.target.closest("#nameBack");
   const usernameBackButton = event.target.closest("#usernameBack");
   const profilePictureBackButton = event.target.closest("#profilePictureBack");
-  const profileConfirmationBackButton = event.target.closest("#profileConfirmationBack");
+  const profileConfirmationBackButton = event.target.closest(
+    "#profileConfirmationBack"
+  );
   const friendsBackButton = event.target.closest("#friendsBackButton");
 
   if (emailBackButton) {
@@ -95,7 +107,6 @@ header.addEventListener("click", async (event) => {
   }
 
   if (profileConfirmationBackButton) {
-
     const primaryButton = document.querySelector("#doneButton");
     primaryButton.textContent = "Add Picture";
     primaryButton.id = "addProfilePicture";
@@ -127,7 +138,7 @@ header.addEventListener("click", async (event) => {
 
   if (createCircleButton) {
     isPrivacyPublic = document.querySelector("#privacyCheckbox").checked;
-    const { success, data, error} = await handleCreateCircle();
+    const { success, data, error } = await handleCreateCircle();
     if (error) {
       if (error === "Missing circle name") {
         await displayPopup("Please add a title to your circle");
@@ -137,11 +148,14 @@ header.addEventListener("click", async (event) => {
     }
     const circleId = data;
     if (success && data) {
-      console.log(circleId)
+      console.log(circleId);
       for (let friend of checkedFriends) {
-        console.log(circleId)
+        console.log(circleId);
         console.log("FRIEND", friend);
-        const { success, data } = await handleSendCircleRequest(friend, circleId);
+        const { success, data } = await handleSendCircleRequest(
+          friend,
+          circleId
+        );
       }
       checkedFriends = [];
       const { success, data, error } = await getCircle(circleId);
@@ -165,9 +179,10 @@ header.addEventListener("click", async (event) => {
     const circleName = document.querySelector("#circleName");
     document.querySelector("#privacyCheckbox").checked = isPrivacyPublic;
     document.querySelector("#circleImage").src = circleImgSrc;
-    const addPictureButton = document.querySelector("#addPicture")
+    const addPictureButton = document.querySelector("#addPicture");
     addPictureButton.textContent = "Change Picture";
-    addPictureButton.className = "w-380 h-45 bg-white border-2 border-dark-grey text-dark-grey rounded-input-box fixed bottom-8";
+    addPictureButton.className =
+      "w-380 h-45 bg-white border-2 border-dark-grey text-dark-grey rounded-input-box fixed bottom-8";
     circleName.value = newCircleNameInput;
     await updateCheckbox();
     return;
@@ -253,7 +268,7 @@ header.addEventListener("click", async (event) => {
   }
 
   if (toActivity) {
-    await displayActivity()
+    await displayActivity();
   }
 
   if (friendsBackButton) {
@@ -269,8 +284,12 @@ const modal = document.querySelector("#modal");
 modal.addEventListener("click", async function (event) {
   event.preventDefault();
   const closeModalButton = event.target.closest("#closeModalButton");
-  const createAlbumModalButton = event.target.closest("#createAlbumModalButton");
-  const createCircleModalButton = event.target.closest("#createCircleModalButton");
+  const createAlbumModalButton = event.target.closest(
+    "#createAlbumModalButton"
+  );
+  const createCircleModalButton = event.target.closest(
+    "#createCircleModalButton"
+  );
   if (closeModalButton) {
     if (modal.classList.contains("shown")) {
       modal.classList.remove("shown");
@@ -304,13 +323,13 @@ closeModalSwipe.addEventListener("swiped-down", (event) => {
 async function handleLocalAuth() {
   let { success, data, error } = await localAuth();
   if (success && data) {
-    console.log(data);
+    console.log("local auth user is", data);
     currentLocalUser = data;
     await displayExplore();
   }
 }
 
-pageContent.addEventListener("click", async(event) => {
+pageContent.addEventListener("click", async (event) => {
   const localAuthButton = event.target.closest("#localAuth");
   const emailNextButton = event.target.closest("#emailNext");
   const passwordNextButton = event.target.closest("#passwordNext");
@@ -324,6 +343,7 @@ pageContent.addEventListener("click", async(event) => {
   }
 
   if (emailNextButton) {
+    console.log(signUpData)
     await displaySignUpPasswordPage();
   }
 

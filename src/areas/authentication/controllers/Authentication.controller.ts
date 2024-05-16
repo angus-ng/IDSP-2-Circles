@@ -44,20 +44,19 @@ class AuthenticationController implements IController {
     const url = new URL(`${req.protocol}://${req.get("host")}${req.url}`);
     await kindeClient.handleRedirectToApp(sessionManager(req, res), url);
     const kindeUser = await kindeClient.getUser(sessionManager(req, res))
-    const user = await this._service.getUserById(kindeUser.id)
+    let user = await this._service.getUserById(kindeUser.id)
     if (!user) {
-      if (!kindeUser.picture) {
-        kindeUser.picture = ""
-      }
       //@ts-ignore
-      await this._service.createUser({
+      user = await this._service.createUser({
         id: kindeUser.id,
         username: kindeUser.id,
         firstName: kindeUser.family_name,
         lastName: kindeUser.given_name,
-        profilePicture: kindeUser.picture
+        profilePicture: kindeUser.picture || ""
       })
     }
+    //@ts-ignore
+    req.user = user
     return res.redirect("/");
   }
 
@@ -68,10 +67,13 @@ class AuthenticationController implements IController {
 
   private getSession = async (req:Request, res:Response) => {
     try {
-      const user = await kindeClient.getUser(sessionManager(req, res))
-      console.log(user, "got user session:")
+      if (req.user) {
+        res.json({success: true, username: req.user?.username})
+      } else {
+        const user = await kindeClient.getUser(sessionManager(req, res))
+        res.json({success: true, username: user.id})
+      }
       // make this return the user family name igven name picture email id whatvere u want or make user make a new name.
-      res.json({success: true, username: user.id})
     } catch (error) {
       res.json({success: false, errorMessage: "Not logged in"})
     }

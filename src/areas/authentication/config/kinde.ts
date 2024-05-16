@@ -10,6 +10,7 @@ export const kindeClient = createKindeServerClient(GrantType.AUTHORIZATION_CODE,
   logoutRedirectURL: process.env.KINDE_LOGOUT_REDIRECT_URI!
 });
 
+
   
 export const sessionManager = (req: Request, res: Response): SessionManager => ({
     async getSessionItem(key: string) {

@@ -4,13 +4,13 @@ async function handleCreateCircle() {
     const circleName = document.querySelector("#circleName").value;
 
     if (!circleName) {
-      return { success: true, data: null, error: "Missing circle name"};
+      return { success: true, data: null, error: "Missing circle name" };
     }
-    
+
     const formData = new FormData();
     formData.append("picturePath", circlePhoto.src);
     formData.append("circleName", circleName);
-    formData.append("isPublic", isPrivacyPublic)
+    formData.append("isPublic", isPrivacyPublic);
     const response = await fetch("/circle/create", {
       method: "POST",
       body: formData,
@@ -103,6 +103,7 @@ async function getSessionFromBackend() {
   try {
     const response = await fetch("/auth/getSession");
     const jsonResponse = await response.json();
+    console.log(jsonResponse);
     return jsonResponse.username;
   } catch (error) {}
 }
@@ -149,13 +150,12 @@ async function handleCreateAlbum(albumObj) {
 }
 
 async function getFriends(username) {
-  console.log("GET", username)
   const response = await fetch(`/user/getFriends/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({username})
+    body: JSON.stringify({ username }),
   });
   const responseJson = await response.json();
   return responseJson.data;
@@ -299,13 +299,13 @@ async function getSearchResult(input) {
       const response = await fetch(`/user/searchAll`);
 
       const jsonResponse = await response.json();
-      console.log(jsonResponse)
+      console.log(jsonResponse);
       return jsonResponse;
     }
     const response = await fetch(`/user/search/${input.trim()}/`);
 
     const jsonResponse = await response.json();
-    console.log(jsonResponse)
+    console.log(jsonResponse);
     return jsonResponse;
   } catch (err) {
     return { success: true, data: null, error: err };
@@ -335,18 +335,17 @@ async function sendFriendRequest(requestee, requester) {
 
 async function getUser(username) {
   try {
-    const response = await fetch(`/user/`, {
+    const response = await fetch(`/user/get`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({username})
-    })
+      body: JSON.stringify({ username }),
+    });
     const jsonResponse = await response.json();
-    console.log(jsonResponse)
-    return jsonResponse
+    return jsonResponse;
   } catch (err) {
-
+    console.log(err);
   }
 }
 
@@ -357,34 +356,30 @@ async function getComments(albumId) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({albumId})
-    })
+      body: JSON.stringify({ albumId }),
+    });
     const jsonResponse = await response.json();
-    console.log(jsonResponse)
-    return jsonResponse
-  } catch (err) {
-
-  }
+    console.log(jsonResponse);
+    return jsonResponse;
+  } catch (err) {}
 }
 
-async function newComment(message, albumId, commentId="") {
+async function newComment(message, albumId, commentId = "") {
   try {
     const commentObj = {
       message,
       albumId,
-      commentId
-    }
+      commentId,
+    };
     const response = await fetch(`/album/comment/new`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(commentObj)
-    })
+      body: JSON.stringify(commentObj),
+    });
     const jsonResponse = await response.json();
-    console.log(jsonResponse)
-    return jsonResponse
-  } catch (err) {
-
-  }
+    console.log(jsonResponse);
+    return jsonResponse;
+  } catch (err) {}
 }
