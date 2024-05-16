@@ -497,9 +497,7 @@ function saveCheckedFriends() {
 
 async function displayCreateCirclePreview() {
   nav.classList.add("hidden");
-  leftHeaderButton.innerHTML = `
-      <img src="/lightmode/back_button.svg" alt="Back Button" id="circlePreviewBackButton"/>
-      `;
+  leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="circlePreviewBackButton"/>`;
 
   pageName.textContent = "New Circle";
 
@@ -508,52 +506,52 @@ async function displayCreateCirclePreview() {
   next.src = "/lightmode/create_button.svg";
 
   pageContent.innerHTML = `
-      <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full">
-            <div class="flex-shrink-0 mt-14 mb-4">
-                <img id="circleImage" src="/placeholder_image.svg" alt="Placeholder Image" class="object-cover w-234 h-230 rounded-full cursor-pointer"/>                     
+    <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full">
+        <div class="flex-shrink-0 mt-14 mb-4">
+            <img id="circleImage" src="/placeholder_image.svg" alt="Placeholder Image" class="object-cover w-234 h-230 rounded-full cursor-pointer"/>                     
+        </div>
+        <div class="flex justify-center my-5 relative w-full">
+            <input
+                type="text"
+                placeholder="add a name to your circle"
+                id="circleName"
+                class="bg-transparent text-24 font-bold border-none text-center w-auto px-0"
+            />
+            <button id="editButton" class="mr-1">
+                <img src="/lightmode/edit_icon.svg" alt="Edit Icon" />
+            </button>
+        </div>
+        <div id="divider" class="mb-2">
+            <img src="/lightmode/divider.svg" alt="Divider"/>                          
+        </div>
+        <input id="fileUpload" type="file" class="hidden" multiple=false/>
+        <div class="flex items-center justify-between w-full">
+            <div>
+                <p class="font-medium text-h2 leading-h2">Private or Public</p>
+                <p class="text-body leading-tertiary text-dark-grey">Make new circle private or public</p>
             </div>
-            <div class="flex justify-center my-5 relative w-full">
-                <input
-                    type="text"
-                    placeholder="add a name to your circle"
-                    id="circleName"
-                    class="bg-transparent text-24 font-bold border-none text-center w-auto px-0"
-                />
-                <button id="editButton" class="mr-1">
-                    <img src="/lightmode/edit_icon.svg" alt="Edit Icon" />
-                </button>
+            <div>
+                <label class="inline-flex items-center cursor-pointer">
+                    <input id="privacyCheckbox" type="checkbox" value="" class="sr-only peer">
+                    <img id="privacyIcon" src="/lightmode/lock_icon.svg" alt="Lock icon" class="mr-4">
+                    <span id="privacyLabel" class="text-sm font-medium leading-body text-14 mr-4 w-12">Private</span>
+                    <div class="peer relative h-5 w-10 rounded-full outline outline-1 outline-black after:absolute after:start-[2px] after:top-0 after:h-4 after:w-4 after:rounded-full after:border after:border-black after:bg-black after:transition-all after:content-[''] peer-checked:bg-cover peer-checked:bg-black border-2 peer-checked:outline-black peer-checked:after:translate-x-5 peer-checked:after:border-white peer-checked:after:border-opacity-80 peer-checked:after:border-2 peer-checked:after:bg-black rtl:peer-checked:after:-translate-x-full"></div>
+                    </label>
             </div>
-            <div id="divider" class="mb-2">
-                <img src="/lightmode/divider.svg" alt="Divider"/>                          
-            </div>
-            <input id="fileUpload" type="file" class="hidden" multiple=false/>
-            <div class="flex items-center justify-between w-full">
-                <div>
-                    <p class="font-medium text-h2 leading-h2">Private or Public</p>
-                    <p class="text-body leading-tertiary text-dark-grey">Make new circle private or public</p>
-                </div>
-                <div>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input id="privacyCheckbox" type="checkbox" value="" class="sr-only peer">
-                        <img id="privacyIcon" src="/lightmode/lock_icon.svg" alt="Lock icon" class="mr-4">
-                        <span id="privacyLabel" class="text-sm font-medium leading-body text-14 mr-4 w-12">Private</span>
-                        <div class="peer relative h-5 w-10 rounded-full outline outline-1 outline-black after:absolute after:start-[2px] after:top-0 after:h-4 after:w-4 after:rounded-full after:border after:border-black after:bg-black after:transition-all after:content-[''] peer-checked:bg-cover peer-checked:bg-black border-2 peer-checked:outline-black peer-checked:after:translate-x-5 peer-checked:after:border-white peer-checked:after:border-opacity-80 peer-checked:after:border-2 peer-checked:after:bg-black rtl:peer-checked:after:-translate-x-full"></div>
-                        </label>
-                </div>
-            </div>
-            <div class="flex items-center justify-between w-full hidden">
-              <div class="mt-10">
-                <p class="font-bold text-26 leading-h2">added friends</p>
-              </div>
-            </div>
-            <div class="flex items-center justify-between w-full hidden">
-              <div class="mt-10">
-                <p class="text-body leading-tertiary">Most Recent Activity with:</p>
-              </div>
-            </div>
-            </form>
+        </div>
+        <div class="flex items-center justify-between w-full hidden">
+          <div class="mt-10">
+            <p class="font-bold text-26 leading-h2">added friends</p>
           </div>
-      </div>`;
+        </div>
+        <div class="flex items-center justify-between w-full hidden">
+          <div class="mt-10">
+            <p class="text-body leading-tertiary">Most Recent Activity with:</p>
+          </div>
+        </div>
+        </form>
+      </div>
+  </div>`;
 
   const editButton = document.querySelector("#editButton");
   const circleNameInput = document.querySelector("#circleName");
@@ -594,10 +592,7 @@ async function displayExplore() {
   pageName.textContent = "Explore";
   leftHeaderButton.innerHTML = "";
   rightHeaderButton.innerHTML = `<img src="/lightmode/map_icon.svg" alt="Map Icon"/>`;
-  pageContent.innerHTML = `
-    <div id="explorePage" class="flex flex-col justify-center py-2 w-full h-screen">
-    </div>
-    `;
+  pageContent.innerHTML = `<div id="explorePage" class="flex flex-col justify-center py-2 w-full h-screen"></div>`;
   header.classList.remove("hidden");
   await displayNavBar();
 }
@@ -951,17 +946,11 @@ async function displayProfile(userData) {
   username.textContent = `@${userData.username}`;
   pageContent.innerHTML = `
   <div id="profilePage" class="relative pt-2 pb-16 mb-4 w-full">
-    ${
-      currentLocalUser === userData.username
-        ? `<div id="settings" class="absolute top-0 right-0 w-6 h-6">
-      <img src="/lightmode/settings_icon.svg">
-    </div>`
-        : ""
-    }
+    ${currentLocalUser === userData.username 
+      ? `<div id="settings" class="absolute top-0 right-0 w-6 h-6"><img src="/lightmode/settings_icon.svg"></div>`
+      : ""}
     <div class="flex justify-center mb-4">
-      <img id="profilePicture" src="${
-        userData.profilePicture
-      }" class="w-110 h-110 object-cover rounded-full"/>
+      <img id="profilePicture" src="${userData.profilePicture}" class="w-110 h-110 object-cover rounded-full"/>
     </div>
     <div class="flex justify-center mt-2">
       ${username.outerHTML}
@@ -969,17 +958,13 @@ async function displayProfile(userData) {
     <div class="w-180 mt-6 mb-6 m-auto grid grid-cols-2 gap-4">
       <div class="gap-0 justify-center">
         <div id="circles">
-          <h2 class="text-base font-bold text-center">${
-            userData._count.UserCircle
-          }</h2>
+          <h2 class="text-base font-bold text-center">${userData._count.UserCircle}</h2>
           <h2 class="text-secondary text-center">Circles</h2>
         </div>
       </div>
       <div class="gap-0 justify-center">
         <div id="friends" class="cursor-pointer">
-          <h2 class="text-base font-bold text-center" id="friendCounter">${
-            userData._count.friends
-          }</h2>
+          <h2 class="text-base font-bold text-center" id="friendCounter">${userData._count.friends}</h2>
           <h2 class="text-secondary text-center">Friends</h2>
         </div>
       </div>
@@ -1155,6 +1140,7 @@ async function displayProfile(userData) {
 
     if (settings) {
       console.log("no settings xd");
+      await displaySettings();
     }
   });
 
@@ -1226,6 +1212,55 @@ async function displayProfile(userData) {
     });
   }
   await cleanUpSectionEventListener();
+
+  async function displaySettings() {
+    pageName.textContent = "Settings";
+    leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="settingsBackButton"/>`;
+    rightHeaderButton.innerHTML = "";
+
+    pageContent.innerHTML = `
+    <div id="profilePage" class="relative pt-2 pb-16 mb-4 w-full">
+      <div class="flex justify-center mb-4">
+        <img id="profilePicture" src="${userData.profilePicture}" class="w-110 h-110 object-cover rounded-full"/>
+      </div>
+      <div class="flex justify-center mt-2">
+        ${username.outerHTML}
+      </div>
+      <div class="flex w-full">
+        <div class="w-full">
+          <h2 class="text-light-mode-accent text-secondary">Albums</h2>
+          <div class="flex flex-col bg-settings-bg rounded-13">
+            <div class="flex flex-row items-center justify-between w-full">
+              <div class="flex flex-row p-3.5 gap-2">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M11.7719 17.614V14.1053M16.1579 9.7193V6.38596C16.1579 5.22273 15.6958 4.10715 14.8733 3.28462C14.0507 2.46209 12.9352 2 11.7719 2C10.6087 2 9.49311 2.46209 8.67058 3.28462C7.84806 4.10715 7.38596 5.22273 7.38596 6.38596V9.7193M3 20.2456V11.4737C3 11.0084 3.18484 10.5622 3.51385 10.2331C3.84286 9.90413 4.28909 9.7193 4.75439 9.7193H11.7719H18.7895C19.2548 9.7193 19.701 9.90413 20.03 10.2331C20.359 10.5622 20.5439 11.0084 20.5439 11.4737V20.2456C20.5439 20.7109 20.359 21.1571 20.03 21.4862C19.701 21.8152 19.2548 22 18.7895 22H4.75439C4.28909 22 3.84286 21.8152 3.51385 21.4862C3.18484 21.1571 3 20.7109 3 20.2456Z" stroke="#67696B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <p class="text-17">Privacy</p>
+              </div>
+              <div class="flex flex-row p-3.5">
+                <svg width="9" height="16" viewBox="0 0 9 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M1.5 1.5L8 8L1.5 14.5" stroke="#0E0E0E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+            <div class="flex flex-row items-center justify-between w-full">
+              <div class="flex flex-row p-3.5 gap-2">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M5.04039 9.36922C5.04039 7.41478 5.81679 5.54039 7.19879 4.15839C8.58078 2.7764 10.4552 2 12.4096 2C14.364 2 16.2384 2.7764 17.6204 4.15839C19.0024 5.54039 19.7788 7.41478 19.7788 9.36922V13.3318L21.6969 17.168C21.7852 17.3445 21.8269 17.5407 21.8181 17.7379C21.8092 17.9352 21.75 18.1268 21.6462 18.2948C21.5425 18.4627 21.3975 18.6013 21.225 18.6974C21.0526 18.7935 20.8584 18.844 20.661 18.8439H16.4879C16.2538 19.7474 15.7262 20.5476 14.9881 21.1188C14.2499 21.6901 13.343 22 12.4096 22C11.4762 22 10.5693 21.6901 9.83116 21.1188C9.09301 20.5476 8.56544 19.7474 8.33127 18.8439H4.15819C3.96078 18.844 3.76663 18.7935 3.5942 18.6974C3.42177 18.6013 3.27677 18.4627 3.17297 18.2948C3.06918 18.1268 3.01004 17.9352 3.00117 17.7379C2.9923 17.5407 3.03399 17.3445 3.12229 17.168L5.04039 13.3318V9.36922ZM10.5863 18.8439C10.7711 19.164 11.0368 19.4297 11.3569 19.6145C11.677 19.7993 12.04 19.8966 12.4096 19.8966C12.7792 19.8966 13.1422 19.7993 13.4623 19.6145C13.7824 19.4297 14.0482 19.164 14.233 18.8439H10.5863ZM12.4096 4.10549C11.0136 4.10549 9.67473 4.66006 8.68759 5.6472C7.70045 6.63434 7.14588 7.97319 7.14588 9.36922V13.3318C7.14586 13.6585 7.06981 13.9807 6.92375 14.2729L5.69204 16.7384H19.1282L17.8965 14.2729C17.7501 13.9807 17.6737 13.6585 17.6733 13.3318V9.36922C17.6733 7.97319 17.1188 6.63434 16.1316 5.6472C15.1445 4.66006 13.8056 4.10549 12.4096 4.10549Z" fill="#737373"/>
+                </svg>
+                <p class="text-17">Notification</p>
+              </div>
+              <div class="flex flex-row p-3.5">
+                <svg width="9" height="16" viewBox="0 0 9 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M1.5 1.5L8 8L1.5 14.5" stroke="#0E0E0E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }
 }
 
 async function displayListOfCircles(data) {

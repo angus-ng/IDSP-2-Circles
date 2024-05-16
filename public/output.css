@@ -1504,10 +1504,6 @@ select {
   gap: 0.5rem;
 }
 
-.gap-2\.5 {
-  gap: 0.625rem;
-}
-
 .gap-3 {
   gap: 0.75rem;
 }
@@ -1530,6 +1526,12 @@ select {
   margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
 }
 
+.space-x-4 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(1rem * var(--tw-space-x-reverse));
+  margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
 .space-x-6 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-x-reverse: 0;
   margin-right: calc(1.5rem * var(--tw-space-x-reverse));
@@ -1546,12 +1548,6 @@ select {
   --tw-space-y-reverse: 0;
   margin-top: calc(1rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(1rem * var(--tw-space-y-reverse));
-}
-
-.space-x-4 > :not([hidden]) ~ :not([hidden]) {
-  --tw-space-x-reverse: 0;
-  margin-right: calc(1rem * var(--tw-space-x-reverse));
-  margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
 }
 
 .justify-self-start {
@@ -1600,6 +1596,10 @@ select {
 
 .rounded-xl {
   border-radius: 0.75rem;
+}
+
+.rounded-13 {
+  border-radius: 13px;
 }
 
 .rounded-t-20 {
@@ -1738,6 +1738,10 @@ select {
   background-color: rgba(0, 0, 0, 0.6);
 }
 
+.bg-settings-bg {
+  background-color: rgba(115, 115, 115, 0.2);
+}
+
 .bg-transparent {
   background-color: transparent;
 }
@@ -1785,6 +1789,10 @@ select {
 
 .p-6 {
   padding: 1.5rem;
+}
+
+.p-3\.5 {
+  padding: 0.875rem;
 }
 
 .px-0 {

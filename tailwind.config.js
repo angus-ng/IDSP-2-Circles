@@ -37,7 +37,8 @@ theme: {
       'error': '#E8083E',
       'time': '#7D7E80',
       'comment-divider': '#ABABAB',
-      'comment-line': 'rgba(115, 115, 115, 0.5)'
+      'comment-line': 'rgba(115, 115, 115, 0.5)',
+      'settings-bg': 'rgba(115, 115, 115, 0.2)'
     },
     fontSize: {
       'onboarding': '36px',
@@ -135,7 +136,8 @@ theme: {
       'input-box': '28px',
       'checkbox': '3px',
       '12.75': '12.75px',
-      'popup': '15px'
+      'popup': '15px',
+      '13': '13px'
     },
     borderWidth: {
       'circle': '0.75px',
