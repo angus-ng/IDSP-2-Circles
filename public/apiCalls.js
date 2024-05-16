@@ -381,5 +381,35 @@ async function newComment(message, albumId, commentId = "") {
     const jsonResponse = await response.json();
     console.log(jsonResponse);
     return jsonResponse;
-  } catch (err) {}
+  } catch (err) {
+    return { success: true, data: null, error: err };
+  }
+}
+
+async function isEmailValid(email) {
+  try {
+    if (email.trim() === "") {
+      return { error: "Do not leave email blank" };
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (emailRegex.test(email)) {
+      const response = await fetch(`/user/ifEmailTaken/${email}`);
+      const responseJson = await response.json();
+      return responseJson;
+    } else {
+      return { error: "incorrect email format" };
+    }
+  } catch (err) {
+    console.log(err)
+    return { error: "Email already in database" };
+  }
+}
+
+function isPasswordValid(password) {
+  if (password.trim() === "") {
+    return { error: "Do not leave password blank" };
+  }
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d|.*[!@#$%^&*()\-_=+\\|[\]{};:'",<.>/?]).{8,}$/;
+  return { success: passwordRegex.test(password) };
 }

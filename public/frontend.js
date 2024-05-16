@@ -343,15 +343,40 @@ pageContent.addEventListener("click", async (event) => {
   }
 
   if (emailNextButton) {
-    console.log(signUpData)
-    await displaySignUpPasswordPage();
+    const emailInput = document.querySelector("#emailInput");
+    const confirmEmailInput = document.querySelector("#confirmEmailInput");
+    const validEmailInput = await isEmailValid(emailInput.value);
+    const validConfirmEmailInput = await isEmailValid(confirmEmailInput.value);
+    if (!validEmailInput.success || !validConfirmEmailInput.success) {
+      alert(validEmailInput.error);
+      return;
+    }
+    signUpData.email = emailInput.value;
+    signUpData.confirmEmail = confirmEmailInput.value;
+    if (signUpData.email === signUpData.confirmEmail) {
+      await displaySignUpPasswordPage();
+    }
   }
 
   if (passwordNextButton) {
-    await displaySignUpBirthdayPage();
+    const passwordInput = document.querySelector("#passwordInput");
+    let confirmPasswordInput = document.querySelector("#confirmPasswordInput");
+    const validPassword = isPasswordValid(passwordInput.value);
+    const validConfirmPassword = isPasswordValid(confirmPasswordInput.value);
+    if (!validPassword.success || !validConfirmPassword.success) {
+      alert(validPassword.error);
+      return;
+    }
+    signUpData.password = passwordInput.value;
+    signUpData.confirmPassword = confirmPasswordInput.value;
+    if (signUpData.password === signUpData.confirmPassword) {
+      await displaySignUpBirthdayPage();
+    }
   }
 
   if (birthdayNextButton) {
+    const birthdayInput = document.querySelector("#birthdayInput");
+    console.log(birthdayInput.value);
     await displaySignUpNamePage();
   }
 

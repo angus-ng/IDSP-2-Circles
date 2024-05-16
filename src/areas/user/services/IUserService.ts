@@ -11,4 +11,5 @@ export default interface IUserService {
     removeRequest(user1: string, user2: string) :Promise<void>
     search(input: string, currentUser: string): Promise<User[]>
     getUser(username:string, currentUser: string): Promise<any>
+    ifEmailTaken(email:string): Promise<boolean>
 }

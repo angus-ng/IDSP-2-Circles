@@ -378,4 +378,14 @@ export class UserService implements IUserService {
     
     return compiledObj;
   }
+  async ifEmailTaken(email: string): Promise<boolean> {
+    const user = await this._db.prisma.user.findUnique({
+      where: {email: email}
+    })
+    if (!user) {
+      return true
+    } else {
+      return false
+    }
+  }
 }

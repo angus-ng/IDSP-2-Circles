@@ -1,7 +1,8 @@
+import { kindeClient, sessionManager } from "../areas/authentication/config/kinde";
 import { NextFunction, Request, Response } from "express";
 
-export const ensureAuthenticated = (req:Request, res:Response, next:NextFunction) => {
-  if (req.isAuthenticated()) {
+export const ensureAuthenticated = async (req:Request, res:Response, next:NextFunction) => {
+  if (req.isAuthenticated() || await kindeClient.isAuthenticated(sessionManager(req,res))) {
     return next();
   }
   res.redirect("/");

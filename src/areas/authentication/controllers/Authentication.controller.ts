@@ -5,7 +5,6 @@ import passport from "passport";
 import path from "node:path";
 import { User } from "@prisma/client";
 import { kindeClient, sessionManager } from "../config/kinde";
-import { SessionManager } from "@kinde-oss/kinde-typescript-sdk";
 
 
 class AuthenticationController implements IController {

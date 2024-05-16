@@ -102,23 +102,22 @@ async function displaySignUpEmailPage() {
   );
 
   let primaryButton = document.querySelector("#primaryButton");
-  if (primaryButton) {
-    primaryButton = document.querySelector("#emailNext")
+  if (!primaryButton) {
+    primaryButton = document.querySelector("#emailNext");
   }
 
   signUpTitle.textContent = "Enter your Email";
   signUpSubtitle.textContent =
     "Enter the email where you can be contacted. No one will see this on your profile.";
-
   signUpPageContent.innerHTML = `
   <form class="flex flex-col flex-grow">
     <div class="mb-6">
         <label for="email" class="font-medium text-h2 mb-2">Email</label>
-        <input id="emailInput" type="email" class="w-380 py-2 border-dark-grey border-2 rounded-input-box text-14 leading-secondary mt-2" placeholder="Email"/>
+        <input id="emailInput" value="${signUpData.email}" type="email" class="w-380 py-2 border-dark-grey border-2 rounded-input-box text-14 leading-secondary mt-2" placeholder="Email"/>
     </div>
     <div class="mt-4">
         <label for="emailConfirmation" class="font-medium text-h2 mb-4">Confirm Email</label>
-        <input id="confirmEmailInput" type="email" class="w-380 py-2 border-dark-grey border-2 rounded-input-box text-14 leading-secondary mt-2" placeholder="Email"/>
+        <input id="confirmEmailInput" value="${signUpData.confirmEmail}" type="email" class="w-380 py-2 border-dark-grey border-2 rounded-input-box text-14 leading-secondary mt-2" placeholder="Email"/>
     </div>
     <div class="flex-grow"></div>
   </form>`;
@@ -137,8 +136,8 @@ async function displaySignUpPasswordPage() {
     "#signUpAdditionalContent"
   );
   let primaryButton = document.querySelector("#emailNext");
-  if (primaryButton) {
-    primaryButton = document.querySelector("#passswordNext")
+  if (!primaryButton) {
+    primaryButton = document.querySelector("#passwordNext");
   }
 
   signUpTitle.textContent = "Create a password";
@@ -148,11 +147,11 @@ async function displaySignUpPasswordPage() {
   <form class="flex flex-col flex-grow">
     <div class="mb-6">
         <label for="password" class="font-medium text-h2 mb-2">Password</label>
-        <input id="passwordInput" type="password" class="w-380 py-2 border-dark-grey border-2 rounded-input-box text-14 leading-secondary mt-2" placeholder="Password"/>
+        <input id="passwordInput" value="${signUpData.password}" type="password" class="w-380 py-2 border-dark-grey border-2 rounded-input-box text-14 leading-secondary mt-2" placeholder="Password"/>
     </div>
     <div class="mt-4">
         <label for="passwordConfirmation" class="font-medium text-h2 mb-4">Confirm Password</label>
-        <input id="confirmPasswordInput" type="password" class="w-380 py-2 border-dark-grey border-2 rounded-input-box text-14 leading-secondary mt-2" placeholder="Password"/>
+        <input id="confirmPasswordInput" value="${signUpData.confirmPassword}"  type="password" class="w-380 py-2 border-dark-grey border-2 rounded-input-box text-14 leading-secondary mt-2" placeholder="Password"/>
     </div>
     <div class="flex-grow"></div>
   </form>`;
@@ -179,8 +178,8 @@ async function displaySignUpBirthdayPage() {
     "#signUpAdditionalContent"
   );
   let primaryButton = document.querySelector("#passwordNext");
-  if (primaryButton) {
-    primaryButton = document.querySelector("#birthdayNext")
+  if (!primaryButton) {
+    primaryButton = document.querySelector("#birthdayNext");
   }
 
   leftHeaderButton.id = "birthdayBack";
@@ -193,7 +192,7 @@ async function displaySignUpBirthdayPage() {
   <form class="flex flex-col flex-grow">
     <div class="mb-6">
         <label for="date" class="font-medium text-h2 mb-2">Birthday</label>
-        <input type="date" class="w-380 py-2 border-dark-grey border-2 rounded-input-box text-14 leading-secondary mt-2" placeholder="April 4 2024"/>
+        <input id="birthdayInput" type="date" class="w-380 py-2 border-dark-grey border-2 rounded-input-box text-14 leading-secondary mt-2" placeholder="April 4 2024"/>
     </div>
     <div class="flex-grow"></div>
   </form>`;
@@ -211,8 +210,8 @@ async function displaySignUpNamePage() {
     "#signUpAdditionalContent"
   );
   let primaryButton = document.querySelector("#birthdayNext");
-  if (primaryButton) {
-    primaryButton = document.querySelector("#nameNext")
+  if (!primaryButton) {
+    primaryButton = document.querySelector("#nameNext");
   }
 
   leftHeaderButton.id = "nameBack";
@@ -246,8 +245,8 @@ async function displaySignUpUsernamePage() {
     "#signUpAdditionalContent"
   );
   let primaryButton = document.querySelector("#nameNext");
-  if (primaryButton) {
-    primaryButton = document.querySelector("#usernameNext")
+  if (!primaryButton) {
+    primaryButton = document.querySelector("#usernameNext");
   }
 
   leftHeaderButton.id = "usernameBack";
@@ -278,8 +277,8 @@ async function displaySignUpProfilePicturePage() {
     "#signUpAdditionalContent"
   );
   let primaryButton = document.querySelector("#usernameNext");
-  if (primaryButton) {
-    primaryButton = document.querySelector("#addProfilePicture")
+  if (!primaryButton) {
+    primaryButton = document.querySelector("#addProfilePicture");
   }
 
   const secondaryButton = document.querySelector("#secondaryButton");
@@ -312,10 +311,9 @@ async function displayProfileConfirmation() {
   );
   let primaryButton = document.querySelector("#addProfilePicture");
   const secondaryButton = document.querySelector("#profilePictureNext");
-  if (primaryButton) {
-    primaryButton = document.querySelector("#doneButton")
+  if (!primaryButton) {
+    primaryButton = document.querySelector("#addProfilePicture");
   }
-
 
   leftHeaderButton.id = "profileConfirmationBack";
 
@@ -904,7 +902,7 @@ async function displayNavBar() {
     if (profileButton) {
       rightHeaderButton.innerHTML = "";
       newCircleNameInput = "";
-      console.log((await getUser(currentLocalUser)))
+      console.log(await getUser(currentLocalUser));
       const { success, data } = await getUser(currentLocalUser);
       if (success && data) {
         return await displayProfile(data);

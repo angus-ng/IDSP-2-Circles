@@ -25,6 +25,8 @@ class UserController implements IController {
     this.router.get(`${this.path}/search/:input(*)`, ensureAuthenticated, this.search)
     this.router.get(`${this.path}/searchAll`, ensureAuthenticated, this.searchAll)
     this.router.post(`${this.path}/get`, ensureAuthenticated, this.getUser);
+    this.router.get(`${this.path}/ifEmailTaken/:email`, this.ifEmailTaken);
+
   }
   private friend = async (req: Request, res: Response) => {
     try {
@@ -128,15 +130,25 @@ class UserController implements IController {
     try {
       let loggedInUser = await getLocalUser(req, res)
       let { username } = req.body
-      console.log(username, loggedInUser)
 
       const profileObj = await this._service.getUser(username, loggedInUser)
       console.log(loggedInUser, username)
       console.log(profileObj)
       res.status(200).json({success: true, data: profileObj})
-    } catch (err) {
-      console.log(err)
-      res.status(200).json({success: true, data: null, error:err})
+    } catch (error) {
+      console.log(error)
+      res.status(200).json({success: true, data: null, error:error})
+    }
+  }
+  private ifEmailTaken = async (req: Request, res: Response) => {
+    try {
+      const { email } = req.params
+      console.log(email)
+      const emailTaken = await this._service.ifEmailTaken(email)
+      res.status(200).json({ success: emailTaken })
+    } catch (error) {
+      console.log(error)
+      res.status(200).json({ error: error })
     }
   }
 }
