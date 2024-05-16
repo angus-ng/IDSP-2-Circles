@@ -452,3 +452,13 @@ async function likeComment(commentId) {
 
   }
 }
+
+async function getCurrentUserProfilePicture () {
+  try {
+    const response = await fetch(`/user/profilePicture`)
+    const jsonResponse = await response.json()
+    return jsonResponse
+  } catch (err) {
+
+  }
+}

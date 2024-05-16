@@ -26,6 +26,7 @@ class UserController implements IController {
     this.router.get(`${this.path}/searchAll`, ensureAuthenticated, this.searchAll)
     this.router.post(`${this.path}/get`, ensureAuthenticated, this.getUser);
     this.router.get(`${this.path}/ifEmailTaken/:email`, this.ifEmailTaken);
+    this.router.get(`${this.path}/profilePicture`, ensureAuthenticated, this.profilePicture);
 
   }
   private friend = async (req: Request, res: Response) => {
@@ -149,6 +150,15 @@ class UserController implements IController {
     } catch (error) {
       console.log(error)
       res.status(200).json({ error: error })
+    }
+  }
+  private profilePicture = async (req: Request, res:Response) => {
+    try {
+      let loggedInUser = await getLocalUser(req, res)
+      const src = await this._service.getProfilePicture(loggedInUser)
+      res.status(200).json({success: true, data:src})
+    } catch (err) {
+      res.status(200).json({success: true, data: null})
     }
   }
 }
