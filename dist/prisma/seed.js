@@ -31,7 +31,7 @@ function main() {
                 email: 'b@b.com',
                 username: "B_B",
                 password: yield (0, bcrypt_1.hash)("b", 12),
-                profilePicture: "https://static.wikia.nocookie.net/character-catalogue/images/c/c2/Takoyaki_Cat.png/revision/latest?cb=20230810135739",
+                profilePicture: "https://static.wikia.nocookie.net/character-catalogue/images/c/c2/Takoyaki_Cat.png",
             },
         });
         const c = yield prisma.user.upsert({

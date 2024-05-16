@@ -9,27 +9,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setCurrentUser = exports.forwardAuthenticated = exports.ensureAuthenticated = void 0;
+exports.getLocalUser = void 0;
 const kinde_1 = require("../areas/authentication/config/kinde");
-const ensureAuthenticated = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    if (req.isAuthenticated() || (yield kinde_1.kindeClient.isAuthenticated((0, kinde_1.sessionManager)(req, res)))) {
-        return next();
-    }
-    res.redirect("/");
-    return;
-});
-exports.ensureAuthenticated = ensureAuthenticated;
-const forwardAuthenticated = (req, res, next) => {
-    if (!req.isAuthenticated()) {
-        res.redirect("/");
-    }
-    return next();
-};
-exports.forwardAuthenticated = forwardAuthenticated;
-const setCurrentUser = (req, res, next) => {
-    if (req.isAuthenticated()) {
-        res.locals.currentUser = req.user;
-    }
-    next();
-};
-exports.setCurrentUser = setCurrentUser;
+const kinde_2 = require("../areas/authentication/config/kinde");
+function getLocalUser(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let loggedInUser;
+        if (req.user)
+            (loggedInUser = req.user.username);
+        if (!loggedInUser) {
+            loggedInUser = (yield kinde_2.kindeClient.getUser((0, kinde_1.sessionManager)(req, res))).id;
+        }
+        console.log(loggedInUser);
+        return loggedInUser;
+    });
+}
+exports.getLocalUser = getLocalUser;

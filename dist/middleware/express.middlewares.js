@@ -7,12 +7,14 @@ const express_1 = __importDefault(require("express"));
 const express_session_1 = __importDefault(require("express-session"));
 const morgan_1 = __importDefault(require("morgan"));
 const ioredis_1 = __importDefault(require("ioredis"));
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const RedisStore = require("connect-redis").default;
 module.exports = (app) => {
     app.use(express_1.default.static("public"));
     app.use(express_1.default.urlencoded({ extended: true }));
     app.use(express_1.default.json());
     app.use((0, morgan_1.default)("tiny"));
+    app.use((0, cookie_parser_1.default)());
     if (process.env.NODE_ENV === "production") {
         const redisClient = new ioredis_1.default({
             port: Number(process.env.REDIS_PORT),

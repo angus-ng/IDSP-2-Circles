@@ -70,8 +70,13 @@ class AuthenticationService {
                 if (user.password) {
                     user.password = yield (0, bcrypt_1.hash)(user.password, salt);
                 }
+                let id = (0, crypto_1.randomUUID)();
+                if (user.id) {
+                    //@ts-ignore
+                    id = user.id;
+                }
                 const User = yield this._db.prisma.user.create({
-                    data: Object.assign(Object.assign({ id: (0, crypto_1.randomUUID)() }, user), { profilePicture: "" })
+                    data: Object.assign(Object.assign({}, user), { id: id, profilePicture: "" })
                 });
                 return User;
             }
@@ -118,6 +123,9 @@ class AuthenticationService {
             });
             if (user) {
                 return user;
+            }
+            if (!profile._json.picture) {
+                profile._json.picture = "put default photo here";
             }
             const newUser = yield this._db.prisma.user.create({
                 data: {

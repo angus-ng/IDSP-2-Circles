@@ -12,20 +12,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.config = void 0;
 const express_1 = require("express");
 const authentication_middleware_1 = require("../../../middleware/authentication.middleware");
 const HandleSingleUpload_1 = require("../../../helper/HandleSingleUpload");
 const multer_1 = __importDefault(require("multer"));
+const getLocalUser_1 = require("../../../helper/getLocalUser");
 const storage = multer_1.default.memoryStorage();
 const upload = (0, multer_1.default)({ storage });
 class CircleController {
     constructor(circleService) {
         this.path = "/circle";
         this.router = (0, express_1.Router)();
-        this.showDashboard = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            res.render('circle/views/dashboard');
-        });
         this.uploadImage = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const b64 = Buffer.from(req.file.buffer).toString('base64');
             const dataURI = `data:${req.file.mimetype};base64,${b64}`;
@@ -34,28 +31,31 @@ class CircleController {
         });
         this.createCircle = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
-                let loggedInUser = req.user.username;
+                let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
                 const { circleName, picturePath } = req.body;
-                console.log(req.body, "logged");
+                let isPublic = false;
+                if (req.body.isPublic === "true") {
+                    isPublic = true;
+                }
                 const newCircleInput = {
                     creator: loggedInUser,
                     name: circleName,
-                    picturePath: picturePath
+                    picturePath: picturePath,
+                    isPublic: isPublic
                 };
-                //validate the input before passing it to our db
                 const newCircle = yield this._service.createCircle(newCircleInput);
                 if (!newCircle) {
-                    return res.status(200).json({ success: true, data: null });
+                    return res.status(200).json({ success: true, data: newCircle });
                 }
                 res.status(200).json({ success: true, data: newCircle.id });
             }
             catch (err) {
-                //throw err;
+                return res.status(200).json({ success: true, data: null, error: "failed to create circle" });
             }
         });
         this.deleteCircle = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
-                let loggedInUser = req.user.username;
+                let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
                 const { id } = req.params;
                 yield this._service.deleteCircle(id, loggedInUser); //this method also checks if its the owner of the circle, maybe a check should be done separately
                 res.redirect("/");
@@ -68,7 +68,7 @@ class CircleController {
             try {
                 const { id } = req.params;
                 //ensure user is a member of the circle
-                let loggedInUser = req.user.username;
+                let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
                 const member = yield this._service.checkMembership(id, loggedInUser);
                 if (!member) {
                     return res.status(200).json({ success: true, data: null });
@@ -83,45 +83,59 @@ class CircleController {
                 throw err;
             }
         });
-        this.showInvite = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const { id } = req.params;
-            //ensure user is a member of the circle
-            let loggedInUser = req.user.username;
-            const member = yield this._service.checkMembership(id, loggedInUser);
-            if (!member) {
-                return res.redirect("/");
-            }
-            res.render('circle/views/invite');
-        });
         this.circleInvite = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            let loggedInUser = req.user.username;
-            console.log(req.body);
+            const { requestee, circleId } = req.body;
+            console.log("inviting", requestee, "to", circleId, "...");
+            this._service.inviteToCircle(requestee, circleId);
             //change to verify selected are friends of current user
-            res.redirect("/");
+            return res.status(200).json({ success: true, data: null });
         });
         this.getCircleList = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            let loggedInUser = req.user.username;
-            console.log(loggedInUser);
+            let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
             const circles = yield this._service.listCircles(loggedInUser);
             res.json({ success: true, data: circles });
+        });
+        this.acceptInvite = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const { id, invitee } = req.body;
+            let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
+            try {
+                if (loggedInUser === invitee) {
+                    yield this._service.acceptInvite(id, invitee);
+                }
+                return res.status(200).json({ success: true, data: null });
+            }
+            catch (error) {
+                return res.status(200).json({ success: false, error: "failed to accept invite" });
+            }
+        });
+        this.removeCircleInvite = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
+                const { id, invitee } = req.body;
+                if (loggedInUser === invitee) {
+                    yield this._service.removeRequest(id, invitee);
+                    res.status(200).json({ success: true, data: null });
+                }
+                else {
+                    res.status(400).json({ success: false, error: "Failed to accept friend request" });
+                }
+            }
+            catch (error) {
+                throw new Error(error);
+            }
         });
         this.initializeRoutes();
         this._service = circleService;
     }
     initializeRoutes() {
-        this.router.get(`${this.path}/create`, authentication_middleware_1.ensureAuthenticated, this.showDashboard);
         this.router.post(`${this.path}/create`, authentication_middleware_1.ensureAuthenticated, upload.none(), this.createCircle);
         this.router.post(`${this.path}/upload`, authentication_middleware_1.ensureAuthenticated, upload.single("file"), this.uploadImage);
         this.router.get(`${this.path}/:id`, authentication_middleware_1.ensureAuthenticated, this.getCircle);
         this.router.get(`${this.path}/:id/delete`, authentication_middleware_1.ensureAuthenticated, this.deleteCircle);
-        this.router.get(`${this.path}/:id/invite`, authentication_middleware_1.ensureAuthenticated, this.showInvite);
-        this.router.post(`${this.path}/:id/invite`, authentication_middleware_1.ensureAuthenticated, this.circleInvite);
+        this.router.post(`${this.path}/invite`, authentication_middleware_1.ensureAuthenticated, this.circleInvite);
         this.router.post(`${this.path}/list`, authentication_middleware_1.ensureAuthenticated, this.getCircleList);
+        this.router.post(`${this.path}/accept`, authentication_middleware_1.ensureAuthenticated, this.acceptInvite);
+        this.router.post(`${this.path}/decline`, authentication_middleware_1.ensureAuthenticated, this.removeCircleInvite);
     }
 }
 exports.default = CircleController;
-exports.config = {
-    api: {
-        bodyParser: false,
-    },
-};

@@ -1,5 +1,3 @@
-const { json } = require("stream/consumers");
-
 async function handleCreateCircle() {
   try {
     const circlePhoto = document.querySelector("#circleImage");
