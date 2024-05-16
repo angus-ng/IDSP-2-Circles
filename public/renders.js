@@ -2268,7 +2268,6 @@ async function displayComments(
       case "IMG":
         if (event.target.className.includes("moreOptions")) {
           commentId = event.target.closest("div.comment").id;
-          console.log("more");
           await displayConfirmationPopup("delete comment", {
             currentUserProfilePicture,
             albumId,
@@ -2363,7 +2362,6 @@ async function displayPopup(activity) {
 }
 
 async function displayConfirmationPopup(activity, helperObj) {
-  console.log("confirmation popup");
   const confirmationText = document.querySelector("#confirmationText");
   confirmationText.textContent = `${activity}`;
   const confirmationPopup = document.querySelector("#confirmationPopup");
@@ -2392,7 +2390,6 @@ async function displayConfirmationPopup(activity, helperObj) {
           currentLocalUser
         );
       }
-      console.log("do something");
     }
   });
 }
