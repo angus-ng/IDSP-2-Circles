@@ -2051,7 +2051,7 @@ function displayFriendsList(friends) {
     displayName.textContent = friend.displayName ? friend.displayName : friend.username;
     username.textContent = `@${friend.username}`;
     return `
-      <div class="flex items-center my-5">
+      <div class="flex items-center my-5" username="${friend.username}">
         <div class="flex-none w-58">
           <img class="rounded-full w-58 h-58" src="${friend.profilePicture}" alt="${friend.username}'s profile picture"/>
         </div>
