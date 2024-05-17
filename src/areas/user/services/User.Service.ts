@@ -388,4 +388,18 @@ export class UserService implements IUserService {
       return false
     }
   }
+  async getProfilePicture(username: string): Promise<string> {
+    const user = await this._db.prisma.user.findUnique({
+      where: {
+        username: username
+      }, 
+      select: {
+        profilePicture: true
+      }
+    })
+    if (!user) {
+      return "/placeholder_image.svg"
+    }
+    return user.profilePicture
+  }
 }

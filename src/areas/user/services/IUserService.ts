@@ -12,4 +12,5 @@ export default interface IUserService {
     search(input: string, currentUser: string): Promise<User[]>
     getUser(username:string, currentUser: string): Promise<any>
     ifEmailTaken(email:string): Promise<boolean>
+    getProfilePicture(username: string): Promise<string>
 }
