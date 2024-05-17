@@ -622,9 +622,12 @@ async function displaySearch() {
   await initializeSearch();
 
   searchBox.addEventListener("input", (event) => {
-    const filteredResults = storedSearchResults.filter((user) =>
-      user.username.toLowerCase().includes(searchBox.value.toLowerCase())
-    );
+    const filteredResults = storedSearchResults.filter((user) => {
+      if (user.displayName){
+        return (user.username.toLowerCase().includes(searchBox.value.toLowerCase()) || user.displayName.toLowerCase().includes(searchBox.value.toLowerCase()))
+      }
+        return user.username.toLowerCase().includes(searchBox.value.toLowerCase())
+    })
     updateSuggestedFriends(filteredResults);
   });
 
