@@ -42,17 +42,13 @@ header.addEventListener("click", async (event) => {
   const nextButton = event.target.closest("#nextButton");
   const backButton = event.target.closest("#backButton");
   const circleBackButton = event.target.closest("#circleBackButton");
-  const circlePreviewBackButton = event.target.closest(
-    "#circlePreviewBackButton"
-  );
+  const circlePreviewBackButton = event.target.closest("#circlePreviewBackButton");
   const createCircleButton = event.target.closest("#createCircleButton");
   const closeButton = event.target.closest("#closeButton");
   const albumNextButton = event.target.closest("#albumNext");
   const backButtonAlbum = event.target.closest("#backButtonAlbum");
   const createAlbumButton = event.target.closest("#createAlbum");
-  const albumConfirmationBackButton = event.target.closest(
-    "#albumConfirmationBackButton"
-  );
+  const albumConfirmationBackButton = event.target.closest("#albumConfirmationBackButton");
   const addCircleBackButton = event.target.closest("#addCircleBackButton");
   const toActivity = event.target.closest("#toActivity");
   const emailBackButton = event.target.closest("#emailBack");
@@ -61,10 +57,10 @@ header.addEventListener("click", async (event) => {
   const nameBackButton = event.target.closest("#nameBack");
   const usernameBackButton = event.target.closest("#usernameBack");
   const profilePictureBackButton = event.target.closest("#profilePictureBack");
-  const profileConfirmationBackButton = event.target.closest(
-    "#profileConfirmationBack"
-  );
+  const profileConfirmationBackButton = event.target.closest("#profileConfirmationBack");
   const friendsBackButton = event.target.closest("#friendsBackButton");
+  const circleViewBackButton = event.target.closest("#circleViewBackButton");
+  const profileBackButton = event.target.closest("#profileBackButton");
 
   if (emailBackButton) {
     await displayLoginPage();
@@ -276,6 +272,22 @@ header.addEventListener("click", async (event) => {
     if (success && data) {
       return await displayProfile(data);
     }
+  }
+
+  if (circleViewBackButton) {
+    const span = event.target.closest("span");
+    if (span) {
+      if (span.hasAttribute("id")) {
+        let { success, data, error } = await getUser(span.id);
+        if (success && data) {
+          await displayProfile(data);
+        }
+      }
+    }
+  }
+
+  if (profileBackButton) {
+    await displaySearch();
   }
 });
 

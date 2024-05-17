@@ -687,7 +687,7 @@ function displayUserSearch(listOfUsers) {
   if (!listOfUsers) {
     return [];
   }
-  console.log("HERE", listOfUsers);
+  
   let newArr = listOfUsers.map((user) => {
     if (user.username === currentLocalUser) {
       return;
@@ -775,9 +775,8 @@ async function displayActivity() {
       : friendRequests[i].requester.username;
     altText = altText + "'s profile picture";
     friendImg.alt = altText;
-    friendImg.className =
-      "w-8 h-8 rounded-full object-cover border-2 border-white border-solid";
-    i > 0 ? friendImg.classList.add("ml-neg12") : null;
+    friendImg.className = "w-8 h-8 rounded-full object-cover border-2 border-white border-solid";i > 0 
+      ? friendImg.classList.add("ml-neg12") : null;
     friendRequestsPreviews.push(friendImg.outerHTML);
   }
 
@@ -933,13 +932,17 @@ async function displayNewModal() {
 
 async function displayProfile(userData) {
   nav.classList.remove("hidden");
+  console.log("here", userData);
   const circleRender = await displayListOfCircles(userData);
   const albumRender = await displayListOfAlbums(userData, true);
+
+  if (currentLocalUser !== userData.username) {
+    leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="profileBackButton"/>`;
+  }
 
   pageName.textContent = userData.displayName
     ? userData.displayName
     : userData.username;
-  leftHeaderButton.innerHTML = "";
   const username = document.createElement("h2");
   username.id = "username";
   username.className = "text-base text-center";
@@ -1152,7 +1155,7 @@ async function displayProfile(userData) {
         if (circleDiv.hasAttribute("id")) {
           let { success, data, error } = await getCircle(circleDiv.id);
           if (success && data) {
-            await displayCircle(data);
+            await displayCircle(data, userData.username);
           }
         }
       }
@@ -1316,15 +1319,6 @@ async function displayProfile(userData) {
         </div>
       </div>
     </div>`;
-
-    const settingsPage = document.querySelector("#settingsPage");
-    settingsPage.addEventListener("click", (event) => {
-      const logOut = event.target.closest("#logOut");
-
-      if (logout) {
-
-      }
-    });
   }
 }
 
@@ -1711,10 +1705,11 @@ async function displayAlbumConfirmation() {
   );
 }
 
-async function displayCircle(circleData) {
+async function displayCircle(circleData, user) {
   leftHeaderButton.innerHTML = `
-    <img src="/lightmode/back_button.svg" alt="Back Button" id="backButton"/>
-    `;
+  <span id="${user}">
+    <img src="/lightmode/back_button.svg" alt="Back Button" id="circleViewBackButton"/>
+  </span>`;
   rightHeaderButton.innerHTML = "";
   pageName.textContent = "";
   let currentUserProfilePicture = null;
@@ -1754,11 +1749,9 @@ async function displayCircle(circleData) {
   circleName.className = "text-center text-20 font-bold";
   circleName.textContent = circleData.circle.name;
   pageContent.innerHTML = `
-    <div class="w-full px-0 mx-0">
+    <div id="circlePage" class="w-full px-0 mx-0">
       <div class="flex justify-center mt-6 mb-1.5">
-        <img src="${
-          circleData.circle.picture
-        }" class="rounded-full w-180 h-180 object-cover"/>
+        <img src="${circleData.circle.picture}" class="rounded-full w-180 h-180 object-cover"/>
       </div>
       <div class="mb-3">
         <p class="text-center text-20 font-bold">${circleName.outerHTML}</p>
@@ -1892,7 +1885,7 @@ async function displayAlbum(albumData) {
     <img src="/lightmode/back_button.svg" alt="Back Button" id="backButtonAlbum">
     </span
     `;
-  rightHeaderButton.innerHTML = `<img src="/lightmode/share_icon.svg" alt="Back Button" id="backButtonAlbum">`;
+  rightHeaderButton.innerHTML = `<img src="/lightmode/share_icon.svg" alt="Share Button" id="shareAlbum">`;
   pageName.textContent = `${albumData.name}`;
 
   const memberList = [];
