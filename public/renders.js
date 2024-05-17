@@ -1876,7 +1876,8 @@ async function displayAlbum(albumData) {
 
   const albumConfirmationBackButton = document.querySelector("#albumConfirmationBackButton");
   if (albumConfirmationBackButton) {
-    leftHeaderButton.innerHTML = "";
+    albumConfirmationBackButton.id = "newAlbumToCircleButton";
+    albumConfirmationBackButton.setAttribute("circleId", `${albumData.circle.id}`);
   }
   
   rightHeaderButton.innerHTML = `<img src="/lightmode/share_icon.svg" alt="Share Button" id="shareAlbum">`;

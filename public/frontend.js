@@ -65,6 +65,7 @@ header.addEventListener("click", async (event) => {
   const albumToProfileButton = event.target.closest("#albumToProfileButton");
   const circleToProfileButton = event.target.closest("#circleToProfileButton");
   const albumToCircleButton = event.target.closest("#albumToCircleButton");
+  const newAlbumToCircleButton = event.target.closest("#newAlbumToCircleButton");
 
   if (emailBackButton) {
     await displayLoginPage();
@@ -313,6 +314,14 @@ header.addEventListener("click", async (event) => {
     const { success, data } = await getCircle(circleId);
     const backSpan = document.querySelector(".backSpan");
     backSpan.removeAttribute("circleId");
+    if (success && data) {
+      return await displayCircle(data);
+    }
+  }
+
+  if (newAlbumToCircleButton) {
+    const circleId = event.target.closest("img").getAttribute("circleId");
+    const { success, data } = await getCircle(circleId);
     if (success && data) {
       return await displayCircle(data);
     }
