@@ -359,14 +359,13 @@ async function getComments(albumId) {
       body: JSON.stringify({ albumId }),
     });
     const jsonResponse = await response.json();
-    console.log(jsonResponse);
     return jsonResponse;
   } catch (err) {}
 }
 
 async function newComment(message, albumId, commentId = "") {
   try {
-    if (!message || !albumId) {
+    if (!message.trim() || !albumId) {
       return;
     }
     const commentObj = {
@@ -382,7 +381,6 @@ async function newComment(message, albumId, commentId = "") {
       body: JSON.stringify(commentObj),
     });
     const jsonResponse = await response.json();
-    console.log(jsonResponse);
     return jsonResponse;
   } catch (err) {
     return { success: true, data: null, error: err };
@@ -403,7 +401,7 @@ async function isEmailValid(email) {
       return { error: "incorrect email format" };
     }
   } catch (err) {
-    console.log(err)
+    console.log(err);
     return { error: "Email already in database" };
   }
 }
@@ -417,7 +415,6 @@ function isPasswordValid(password) {
   return { success: passwordRegex.test(password) };
 }
 
-
 async function deleteComment(commentId) {
   try {
     const response = await fetch(`/album/comment/delete`, {
@@ -425,14 +422,12 @@ async function deleteComment(commentId) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({commentId})
-    })
+      body: JSON.stringify({ commentId }),
+    });
     const jsonResponse = await response.json();
-    console.log(jsonResponse)
-    return jsonResponse
-  } catch (err) {
-
-  }
+    console.log(jsonResponse);
+    return jsonResponse;
+  } catch (err) {}
 }
 
 async function likeComment(commentId) {
@@ -442,13 +437,11 @@ async function likeComment(commentId) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({commentId})
+      body: JSON.stringify({ commentId }),
     });
 
     const jsonResponse = await response.json();
     console.log(jsonResponse);
-    return jsonResponse
-  } catch (err) {
-
-  }
+    return jsonResponse;
+  } catch (err) {}
 }

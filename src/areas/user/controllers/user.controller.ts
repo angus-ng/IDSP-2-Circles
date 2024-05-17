@@ -32,6 +32,9 @@ class UserController implements IController {
     try {
       let loggedInUser = await getLocalUser(req, res)
       const { requestee } = req.body
+      if (!loggedInUser) {
+        throw new Error("Not logged in")
+      }
         await this._service.friend(loggedInUser, requestee)
         res.status(200).json({success:true, data: null})
     } catch (error: any) {
@@ -68,6 +71,9 @@ class UserController implements IController {
   private getActivities = async (req: Request, res: Response) => {
     try {
       let loggedInUser = await getLocalUser(req, res)
+      if (!loggedInUser) {
+        throw new Error("Not logged in")
+      }
         const activities = await this._service.getActivities(loggedInUser)
         res.status(200).json({success:true, data: activities})
       } catch (error: any) {
@@ -109,7 +115,6 @@ class UserController implements IController {
     try {
       let loggedInUser = await getLocalUser(req, res)
       const input = decodeURIComponent(req.params.input).slice(0, -1)
-      console.log(input)
       const output = await this._service.search(input, loggedInUser)
       res.status(200).json({success:true, data: output})
     } catch (error: any) {
@@ -126,7 +131,6 @@ class UserController implements IController {
     }
   }
   private getUser = async (req: Request, res: Response) => {
-    console.log("getting user")
     try {
       let loggedInUser = await getLocalUser(req, res)
       let { username } = req.body

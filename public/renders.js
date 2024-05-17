@@ -636,8 +636,15 @@ async function displaySearch() {
   await initializeSearch();
 
   searchBox.addEventListener("input", (event) => {
-    const filteredResults = storedSearchResults.filter((user) =>
-      user.username.toLowerCase().includes(searchBox.value.toLowerCase())
+    const searchTerm = searchBox.value.toLowerCase();
+    if (!searchTerm.trim()) {
+      updateSuggestedFriends(storedSearchResults);
+      return;
+    }
+    const filteredResults = storedSearchResults.filter(
+      (user) =>
+        user.username.toLowerCase().includes(searchTerm) ||
+        user.displayName.toLowerCase().includes(searchTerm)
     );
     updateSuggestedFriends(filteredResults);
   });
@@ -1951,7 +1958,7 @@ async function displayFriends(username) {
   searchBox.addEventListener("input", (event) => {
     const searchTerm = searchBox.value.toLowerCase();
     const filteredResults = friendsList.filter((user) =>
-      user.username.toLowerCase().includes(searchTerm)
+      user.username.toLowerCase().includes(searchTerm) || user.displayName.toLowerCase().includes(searchTerm)
     );
     updateSuggestedFriends(filteredResults);
   });
@@ -2268,11 +2275,11 @@ async function displayComments(
       case "IMG":
         if (event.target.className.includes("moreOptions")) {
           commentId = event.target.closest("div.comment").id;
-          console.log("COMMENTID", commentId)
+          console.log("COMMENTID", commentId);
           console.log("more");
-          const helperObj = { currentUserProfilePicture, albumId, commentId }
-          console.log("HELPER OBJ OUTSIDE")
-          console.log(helperObj)
+          const helperObj = { currentUserProfilePicture, albumId, commentId };
+          console.log("HELPER OBJ OUTSIDE");
+          console.log(helperObj);
           await displayConfirmationPopup("delete comment", helperObj);
         }
       default:
@@ -2374,17 +2381,21 @@ async function displayConfirmationPopup(activity, helperObj) {
     const cancelButton = event.target.closest("#cancelButton");
     const contextButton = event.target.closest("#contextButton");
     if (cancelButton) {
-      confirmationPopup.removeEventListener("click", confirmEventHandler, true)
+      confirmationPopup.removeEventListener("click", confirmEventHandler, true);
       confirmationPopup.classList.add("hidden");
     }
 
     if (contextButton) {
       if (activity === "delete comment") {
         await deleteComment(helperObj.commentId);
-        
+
         confirmationPopup.classList.add("hidden");
         confirmationText.textContent = "";
-        confirmationPopup.removeEventListener("click", confirmEventHandler, true)
+        confirmationPopup.removeEventListener(
+          "click",
+          confirmEventHandler,
+          true
+        );
         await displayComments(
           helperObj.albumId,
           helperObj.currentUserProfilePicture,
@@ -2392,8 +2403,7 @@ async function displayConfirmationPopup(activity, helperObj) {
         );
       }
     }
-  }
+  };
 
-  confirmationPopup.addEventListener("click", confirmEventHandler, true)
-  
+  confirmationPopup.addEventListener("click", confirmEventHandler, true);
 }
