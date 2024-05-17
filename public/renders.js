@@ -1,5 +1,3 @@
-const { profile } = require("console");
-
 function displayLoginPage() {
   pageContent.innerHTML = `
     <div id="loginPage" class="flex flex-col items-center rounded-lg w-full z-10">
@@ -1693,27 +1691,23 @@ async function displayAlbumConfirmation() {
   );
 }
 
-async function displayCircle(circleData, user) {
-  console.log("User:", user);
-  console.log("hello", circleData)
-  const backSpan = document.querySelector(".backSpan");
-  console.log(backSpan)
-  const circleId = backSpan.getAttribute("circleId");
-  console.log(circleId)
+async function displayCircle(circleData) {
   const imgElement = document.querySelector("#profileBackButton");
-  console.log("back", imgElement);
   if (imgElement) {
     imgElement.classList.remove("hidden");
     imgElement.id = "circleToProfileButton"
   }
-  console.log(imgElement);
-
-  if (circleId === null) {
-    const imgElement = document.querySelector("#albumToCircleButton");
-    if (imgElement) {
-      imgElement.id = "circleToProfileButton";
+  const backSpan = document.querySelector(".backSpan");
+  if (backSpan) {
+    const circleId = backSpan.getAttribute("circleId");
+    if (circleId === null) {
+      const imgElement = document.querySelector("#albumToCircleButton");
+      if (imgElement) {
+        imgElement.id = "circleToProfileButton";
+      }
     }
   }
+
 
 
   rightHeaderButton.innerHTML = "";
@@ -1817,7 +1811,6 @@ async function displayCircle(circleData, user) {
       if (albumDiv.hasAttribute("id")) {
         let { success, data, error } = await getAlbum(albumDiv.id);
         if (success && data) {
-          console.log("album");
           await displayAlbum(data);
         }
       }
@@ -1875,16 +1868,12 @@ async function displayAlbum(albumData) {
   const backSpan = document.querySelector(".backSpan");
   backSpan.setAttribute("circleId", `${albumData.circle.id}`);
   const leftButtonImg = document.querySelector("#leftButton img");
-  console.log(leftButtonImg)
   leftButtonImg.classList.remove("hidden");
   const profileBackButton = document.querySelector("#profileBackButton");
-  console.log("profileback", profileBackButton)
 
   const albumId = document.querySelector(".album").getAttribute("id");
-  console.log("albumId", albumId);
   
   const circleId = backSpan.getAttribute("circleId");
-  console.log("circleId", circleId);
   const imgElement = document.querySelector("#circleToProfileButton");
   if ((!circleId) || (albumId)){
     if (profileBackButton) {
@@ -2137,7 +2126,6 @@ async function displayPhoto(photoSrc) {
 }
 
 async function displayListOfAlbums(data, user, profile = false) {
-  console.log("HELLO", data, user);
   const albumList = data.Album.map((obj) => {
     let albumName = document.createElement("p");
     albumName.className = "text-white text-shadow shadow-black";
