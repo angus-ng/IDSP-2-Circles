@@ -102,9 +102,7 @@ async function displaySignUpEmailPage() {
   const signUpTitle = document.querySelector("#signUpTitle");
   const signUpSubtitle = document.querySelector("#signUpSubtitle");
   const signUpPageContent = document.querySelector("#signUpPageContent");
-  const signUpPageAdditionalContent = document.querySelector(
-    "#signUpAdditionalContent"
-  );
+  const signUpPageAdditionalContent = document.querySelector("#signUpAdditionalContent");
 
   let primaryButton = document.querySelector("#primaryButton");
   if (!primaryButton) {
@@ -179,9 +177,7 @@ async function displaySignUpBirthdayPage() {
   const signUpTitle = document.querySelector("#signUpTitle");
   const signUpSubtitle = document.querySelector("#signUpSubtitle");
   const signUpPageContent = document.querySelector("#signUpPageContent");
-  const signUpPageAdditionalContent = document.querySelector(
-    "#signUpAdditionalContent"
-  );
+  const signUpPageAdditionalContent = document.querySelector("#signUpAdditionalContent");
   let primaryButton = document.querySelector("#passwordNext");
   if (!primaryButton) {
     primaryButton = document.querySelector("#birthdayNext");
@@ -278,9 +274,7 @@ async function displaySignUpProfilePicturePage() {
   const signUpTitle = document.querySelector("#signUpTitle");
   const signUpSubtitle = document.querySelector("#signUpSubtitle");
   const signUpPageContent = document.querySelector("#signUpPageContent");
-  const signUpPageAdditionalContent = document.querySelector(
-    "#signUpAdditionalContent"
-  );
+  const signUpPageAdditionalContent = document.querySelector("#signUpAdditionalContent");
   let primaryButton = document.querySelector("#usernameNext");
   if (!primaryButton) {
     primaryButton = document.querySelector("#addProfilePicture");
@@ -311,9 +305,7 @@ async function displayProfileConfirmation() {
   const signUpTitle = document.querySelector("#signUpTitle");
   const signUpSubtitle = document.querySelector("#signUpSubtitle");
   const signUpPageContent = document.querySelector("#signUpPageContent");
-  const signUpPageAdditionalContent = document.querySelector(
-    "#signUpAdditionalContent"
-  );
+  const signUpPageAdditionalContent = document.querySelector("#signUpAdditionalContent");
   let primaryButton = document.querySelector("#addProfilePicture");
   const secondaryButton = document.querySelector("#profilePictureNext");
   if (!primaryButton) {
@@ -413,8 +405,7 @@ async function displayCreateCircle() {
     }
 
     addPictureButton.textContent = "Change Picture";
-    addPictureButton.className =
-      "w-380 h-45 bg-white border-2 border-dark-grey text-dark-grey rounded-input-box fixed bottom-8";
+    addPictureButton.className = "w-380 h-45 bg-white border-2 border-dark-grey text-dark-grey rounded-input-box fixed bottom-8";
   });
 
   privacyCheckbox.addEventListener("change", async function () {
@@ -433,11 +424,10 @@ async function displayListOfFriends(friends) {
     let username = document.createElement("h2");
     displayName.className = "font-medium text-14 leading-tertiary";
     username.className = "font-light text-14 text-dark-grey";
-    displayName.textContent = friend.displayName
-      ? friend.displayName
-      : friend.username;
+    displayName.textContent = friend.displayName ? friend.displayName : friend.username;
     username.textContent = `@${friend.username}`;
-    return `<div class="flex items-center my-5">
+    return `
+    <div class="flex items-center my-5">
     <div class="flex-none w-58">
       <img class="rounded-full w-58 h-58" src="${friend.profilePicture}" alt="${friend.username}'s profile picture"/>
     </div>
@@ -497,9 +487,7 @@ function saveCheckedFriends() {
 
 async function displayCreateCirclePreview() {
   nav.classList.add("hidden");
-  leftHeaderButton.innerHTML = `
-      <img src="/lightmode/back_button.svg" alt="Back Button" id="circlePreviewBackButton"/>
-      `;
+  leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="circlePreviewBackButton"/>`;
 
   pageName.textContent = "New Circle";
 
@@ -508,52 +496,52 @@ async function displayCreateCirclePreview() {
   next.src = "/lightmode/create_button.svg";
 
   pageContent.innerHTML = `
-      <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full">
-            <div class="flex-shrink-0 mt-14 mb-4">
-                <img id="circleImage" src="/placeholder_image.svg" alt="Placeholder Image" class="object-cover w-234 h-230 rounded-full cursor-pointer"/>                     
-            </div>
-            <div class="flex justify-center my-5 relative w-full">
-                <input
-                    type="text"
-                    placeholder="add a name to your circle"
-                    id="circleName"
-                    class="bg-transparent text-24 font-bold border-none text-center w-auto px-0"
-                />
-                <button id="editButton" class="mr-1">
-                    <img src="/lightmode/edit_icon.svg" alt="Edit Icon" />
-                </button>
-            </div>
-            <div id="divider" class="mb-2">
-                <img src="/lightmode/divider.svg" alt="Divider"/>                          
-            </div>
-            <input id="fileUpload" type="file" class="hidden" multiple=false/>
-            <div class="flex items-center justify-between w-full">
-                <div>
-                    <p class="font-medium text-h2 leading-h2">Private or Public</p>
-                    <p class="text-body leading-tertiary text-dark-grey">Make new circle private or public</p>
-                </div>
-                <div>
-                    <label class="inline-flex items-center cursor-pointer">
-                        <input id="privacyCheckbox" type="checkbox" value="" class="sr-only peer">
-                        <img id="privacyIcon" src="/lightmode/lock_icon.svg" alt="Lock icon" class="mr-4">
-                        <span id="privacyLabel" class="text-sm font-medium leading-body text-14 mr-4 w-12">Private</span>
-                        <div class="peer relative h-5 w-10 rounded-full outline outline-1 outline-black after:absolute after:start-[2px] after:top-0 after:h-4 after:w-4 after:rounded-full after:border after:border-black after:bg-black after:transition-all after:content-[''] peer-checked:bg-cover peer-checked:bg-black border-2 peer-checked:outline-black peer-checked:after:translate-x-5 peer-checked:after:border-white peer-checked:after:border-opacity-80 peer-checked:after:border-2 peer-checked:after:bg-black rtl:peer-checked:after:-translate-x-full"></div>
-                        </label>
-                </div>
-            </div>
-            <div class="flex items-center justify-between w-full hidden">
-              <div class="mt-10">
-                <p class="font-bold text-26 leading-h2">added friends</p>
-              </div>
-            </div>
-            <div class="flex items-center justify-between w-full hidden">
-              <div class="mt-10">
-                <p class="text-body leading-tertiary">Most Recent Activity with:</p>
-              </div>
-            </div>
-            </form>
+    <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full">
+          <div class="flex-shrink-0 mt-14 mb-4">
+              <img id="circleImage" src="/placeholder_image.svg" alt="Placeholder Image" class="object-cover w-234 h-230 rounded-full cursor-pointer"/>                     
           </div>
-      </div>`;
+          <div class="flex justify-center my-5 relative w-full">
+              <input
+                  type="text"
+                  placeholder="add a name to your circle"
+                  id="circleName"
+                  class="bg-transparent text-24 font-bold border-none text-center w-auto px-0"
+              />
+              <button id="editButton" class="mr-1">
+                  <img src="/lightmode/edit_icon.svg" alt="Edit Icon" />
+              </button>
+          </div>
+          <div id="divider" class="mb-2">
+              <img src="/lightmode/divider.svg" alt="Divider"/>                          
+          </div>
+          <input id="fileUpload" type="file" class="hidden" multiple=false/>
+          <div class="flex items-center justify-between w-full">
+              <div>
+                  <p class="font-medium text-h2 leading-h2">Private or Public</p>
+                  <p class="text-body leading-tertiary text-dark-grey">Make new circle private or public</p>
+              </div>
+              <div>
+                  <label class="inline-flex items-center cursor-pointer">
+                      <input id="privacyCheckbox" type="checkbox" value="" class="sr-only peer">
+                      <img id="privacyIcon" src="/lightmode/lock_icon.svg" alt="Lock icon" class="mr-4">
+                      <span id="privacyLabel" class="text-sm font-medium leading-body text-14 mr-4 w-12">Private</span>
+                      <div class="peer relative h-5 w-10 rounded-full outline outline-1 outline-black after:absolute after:start-[2px] after:top-0 after:h-4 after:w-4 after:rounded-full after:border after:border-black after:bg-black after:transition-all after:content-[''] peer-checked:bg-cover peer-checked:bg-black border-2 peer-checked:outline-black peer-checked:after:translate-x-5 peer-checked:after:border-white peer-checked:after:border-opacity-80 peer-checked:after:border-2 peer-checked:after:bg-black rtl:peer-checked:after:-translate-x-full"></div>
+                      </label>
+              </div>
+          </div>
+          <div class="flex items-center justify-between w-full hidden">
+            <div class="mt-10">
+              <p class="font-bold text-26 leading-h2">added friends</p>
+            </div>
+          </div>
+          <div class="flex items-center justify-between w-full hidden">
+            <div class="mt-10">
+              <p class="text-body leading-tertiary">Most Recent Activity with:</p>
+            </div>
+          </div>
+          </form>
+        </div>
+    </div>`;
 
   const editButton = document.querySelector("#editButton");
   const circleNameInput = document.querySelector("#circleName");
@@ -564,12 +552,11 @@ async function displayCreateCirclePreview() {
 
   const fileInput = document.querySelector("#fileUpload");
   const circlePhoto = document.querySelector("#circleImage");
-  document
-    .querySelector("#circleImage")
-    .addEventListener("click", async function (event) {
-      event.preventDefault();
-      await fileInput.click();
-    });
+  document.querySelector("#circleImage").addEventListener("click", async function (event) {
+    event.preventDefault();
+    await fileInput.click();
+  });
+
   fileInput.addEventListener("input", async function (event) {
     event.preventDefault();
     const res = await handleSelectFile();
@@ -596,8 +583,7 @@ async function displayExplore() {
   rightHeaderButton.innerHTML = `<img src="/lightmode/map_icon.svg" alt="Map Icon"/>`;
   pageContent.innerHTML = `
     <div id="explorePage" class="flex flex-col justify-center py-2 w-full h-screen">
-    </div>
-    `;
+    </div>`;
   header.classList.remove("hidden");
   await displayNavBar();
 }
@@ -718,9 +704,7 @@ function displayUserSearch(listOfUsers) {
     let username = document.createElement("h2");
     displayName.className = "font-medium text-14 leading-tertiary";
     username.className = "font-light text-14 text-dark-grey";
-    displayName.textContent = user.displayName
-      ? user.displayName
-      : user.username;
+    displayName.textContent = user.displayName ? user.displayName : user.username;
     username.textContent = `@${user.username}`;
     return `<div class="flex items-center my-3 user" id="${user.username}">
       <div class="flex-none w-58">
@@ -747,7 +731,8 @@ async function displayActivity() {
   for (i = 0; i < circleInvites.length; i++) {
     if (i > 3) {
       const count = circleInvites.length - 4;
-      const andMore = `<div class="w-8 h-8 rounded-full border-2 border-white border-solid ml-neg12 flex justify-center items-center bg-dark-grey">
+      const andMore = `
+      <div class="w-8 h-8 rounded-full border-2 border-white border-solid ml-neg12 flex justify-center items-center bg-dark-grey">
         <p class="text-secondary text-white font-bold">+${count}</p>
       </div>`;
       circleInvitePreviews.push(andMore);
@@ -756,8 +741,7 @@ async function displayActivity() {
     const circleImg = document.createElement("img");
     circleImg.src = circleInvites[i].circle.picture;
     circleImg.alt = `${circleInvites[i].circle.name}'s picture`;
-    circleImg.className =
-      "w-8 h-8 rounded-full object-cover border-2 border-white border-solid";
+    circleImg.className = "w-8 h-8 rounded-full object-cover border-2 border-white border-solid";
     i > 0 ? circleImg.classList.add("ml-neg12") : null;
     circleInvitePreviews.push(circleImg.outerHTML);
   }
@@ -775,13 +759,10 @@ async function displayActivity() {
     }
     const friendImg = document.createElement("img");
     friendImg.src = friendRequests[i].requester.profilePicture;
-    let altText = friendRequests[i].requester.displayName
-      ? friendRequests[i].requester.displayName
-      : friendRequests[i].requester.username;
+    let altText = friendRequests[i].requester.displayName ? friendRequests[i].requester.displayName : friendRequests[i].requester.username;
     altText = altText + "'s profile picture";
     friendImg.alt = altText;
-    friendImg.className = "w-8 h-8 rounded-full object-cover border-2 border-white border-solid";i > 0 
-      ? friendImg.classList.add("ml-neg12") : null;
+    friendImg.className = "w-8 h-8 rounded-full object-cover border-2 border-white border-solid";i > 0 ? friendImg.classList.add("ml-neg12") : null;
     friendRequestsPreviews.push(friendImg.outerHTML);
   }
 
@@ -793,11 +774,7 @@ async function displayActivity() {
             </div>
             <div id="circleInvites" class="flex w-full">
                 <div class="flex w-180 h-33 items-center">
-                    ${
-                      circleInvites.length
-                        ? circleInvitePreviews.join("")
-                        : noCircleInvites
-                    }
+                    ${circleInvites.length ? circleInvitePreviews.join("") : noCircleInvites}
                 </div>
                 <div class="flex w-2 h-33 items-center ml-auto">
                     <svg width="9" height="15" viewBox="0 0 9 15" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -812,11 +789,7 @@ async function displayActivity() {
             </div>
             <div id="friendRequests" class="flex w-full">
               <div class="flex w-180 h-33 items-center">
-                  ${
-                    friendRequests.length
-                      ? friendRequestsPreviews.join("")
-                      : noFriendRequests
-                  }
+                  ${friendRequests.length ? friendRequestsPreviews.join("") : noFriendRequests}
               </div>
               <div class="flex w-2 h-33 items-center ml-auto">
                   <svg width="9" height="15" viewBox="0 0 9 15" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -951,22 +924,14 @@ async function displayProfile(userData) {
     leftHeaderButton.innerHTML = "";
   }
 
-  pageName.textContent = userData.displayName
-    ? userData.displayName
-    : userData.username;
+  pageName.textContent = userData.displayName ? userData.displayName : userData.username;
   const username = document.createElement("h2");
   username.id = "username";
   username.className = "text-base text-center";
   username.textContent = `@${userData.username}`;
   pageContent.innerHTML = `
   <div id="profilePage" class="relative pt-2 pb-16 mb-4 w-full">
-    ${
-      currentLocalUser === userData.username
-        ? `<div id="settings" class="absolute top-0 right-0 w-6 h-6">
-      <img src="/lightmode/settings_icon.svg">
-    </div>`
-        : ""
-    }
+    ${currentLocalUser === userData.username ? `<div id="settings" class="absolute top-0 right-0 w-6 h-6"><img src="/lightmode/settings_icon.svg"></div>` : ""}
     <div class="flex justify-center mb-4">
       <img id="profilePicture" src="${userData.profilePicture}" class="w-110 h-110 object-cover rounded-full"/>
     </div>
@@ -1432,9 +1397,7 @@ function displayCreateAlbumPreview(albumPhotos) {
   albumObj.photos = mappedPhotos;
 
   mappedPhotos.forEach((photo, index) => {
-    console.log(
-      `Creating slide ${index + 1} for photo with src: ${photo.photoSrc}`
-    );
+    console.log(`Creating slide ${index + 1} for photo with src: ${photo.photoSrc}`);
 
     const slideDiv = document.createElement("div");
     slideDiv.className = "keen-slider__slide";
@@ -1607,42 +1570,42 @@ async function displayAlbumConfirmation() {
   });
 
   pageContent.innerHTML = `
-      <div id="albumConfirmation" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full">
-        <div id="albumCarousel" class="flex-1 flex flex-col justify-between w-full px-4 m-40">
-          <div class="w-full">
-          
+    <div id="albumConfirmation" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full">
+      <div id="albumCarousel" class="flex-1 flex flex-col justify-between w-full px-4 m-40">
+        <div class="w-full">
+        
+        </div>
+      </div>
+      <div id="albumCircle"class="flex flex-row justify-center items-center ml-4 w-full">
+        <img id="circleImage" class="w-62 h-62 rounded-full" src="/placeholder_image.svg"/>
+        <div class="flex flex-col ml-4">
+          <h2 id="circleName" class="text-20 font-medium mr-2.5"></h2>
+          <button id="editButton">
+            <p class="text-light-mode-accent underline text-secondary">Edit<p>
+          </button>
+        </div>
+      </div>
+      <div class="flex-1 flex flex-col justify-between w-full px-4 mt-40">
+        <form class="flex flex-col" onkeydown="return event.key != 'Enter';">
+          <div class="flex items-center mt-4 mb-28">
+              <label for="albumName" class="font-medium text-h2 mr-6">Title</label>
+              <input
+              type="text"
+              placeholder="add a title to your album"
+              id="albumName"
+              class="w-full bg-transparent text-h2 text-text-grey font-light items-end border-none"
+              required
+              />
           </div>
+        </form>
+      </div>
+      <div class="flex items-center justify-between w-full">
+        <div class="mt-10">
+          <p class="font-bold text-26 leading-h2 hidden">Edit</p>
         </div>
-        <div id="albumCircle"class="flex flex-row justify-center items-center ml-4 w-full">
-          <img id="circleImage" class="w-62 h-62 rounded-full" src="/placeholder_image.svg"/>
-          <div class="flex flex-col ml-4">
-            <h2 id="circleName" class="text-20 font-medium mr-2.5"></h2>
-            <button id="editButton">
-              <p class="text-light-mode-accent underline text-secondary">Edit<p>
-            </button>
-          </div>
-        </div>
-        <div class="flex-1 flex flex-col justify-between w-full px-4 mt-40">
-          <form class="flex flex-col" onkeydown="return event.key != 'Enter';">
-            <div class="flex items-center mt-4 mb-28">
-                <label for="albumName" class="font-medium text-h2 mr-6">Title</label>
-                <input
-                type="text"
-                placeholder="add a title to your album"
-                id="albumName"
-                class="w-full bg-transparent text-h2 text-text-grey font-light items-end border-none"
-                required
-                />
-            </div>
-          </form>
-        </div>
-        <div class="flex items-center justify-between w-full">
-          <div class="mt-10">
-            <p class="font-bold text-26 leading-h2 hidden">Edit</p>
-          </div>
-        </div>
-        </div>
-      </div>`;
+      </div>
+      </div>
+    </div>`;
 
   const circleImage = document.querySelector("#circleImage");
   console.log(albumObj.circleSrc);
@@ -1752,6 +1715,7 @@ async function displayCircle(circleData, user) {
         </div>
       </div>`;
   });
+
   let circleName = document.createElement("p");
   circleName.className = "text-center text-20 font-bold";
   circleName.textContent = circleData.circle.name;
@@ -1765,20 +1729,14 @@ async function displayCircle(circleData, user) {
       </div>
       <div class="grid grid-cols-1 place-items-center">
         <label class="inline-flex items-center cursor-pointer">
-            <img id="privacyIcon" src="${
-              circleData.circle.isPublic
-                ? "/lightmode/globe_icon.svg"
-                : "/lightmode/lock_icon.svg"
-            }" alt="Lock icon" class="mr-4">
-            <span id="privacyLabel" class="text-sm font-medium leading-body text-14 mr-4 w-12">${
-              circleData.circle.isPublic ? "Public" : "Private"
-            }</span>
+            <img id="privacyIcon" src="${circleData.circle.isPublic ? "/lightmode/globe_icon.svg" : "/lightmode/lock_icon.svg"}" alt="Lock icon" class="mr-4">
+            <span id="privacyLabel" class="text-sm font-medium leading-body text-14 mr-4 w-12">
+              ${circleData.circle.isPublic ? "Public" : "Private"}
+            </span>
         </label>
       </div>
       <div class="grid grid-cols-5 place-items-center mt-12 mb-2">
-        <p class="grid-span-1 text-base font-medium">${
-          circleData.members.length
-        } Friends</p>
+        <p class="grid-span-1 text-base font-medium">${circleData.members.length} Friends</p>
       </div>
       <div class="flex gap-2">
         ${memberList.join("")}
@@ -1819,8 +1777,7 @@ async function displayCircle(circleData, user) {
     }
 
     if (albumDiv) {
-
-      console.log("albumDiv found:", albumDiv);
+      console.log("hep");
 
       if (albumDiv.hasAttribute("username")) {
         console.log("hello");
@@ -1843,31 +1800,28 @@ async function displayCircleInvites() {
   pageName.textContent = "Circle Invites";
   leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="toActivity">`;
   const { circleInvites } = await getActivities(currentLocalUser);
-  let circleInviteList = circleInvites
-    .map((invite) => {
-      let circleName = document.createElement("h2");
-      circleName.className = "font-medium text-14 leading-tertiary";
-      circleName.textContent = invite.circle.name;
-      return `
-      <div class="flex items-center my-3">
-        <div class="flex-none w-58">
-          <img class="rounded-input-box w-58 h-58" src="${invite.circle.picture}" alt="${invite.circle.name}'s picture">
-        </div>
-        <div class="ml-8 flex-none w-110">
-          ${circleName.outerHTML}
-        </div>
-        <div class="ml-auto w-166">
-          <form class="flex text-white gap-2">
-            <button identifier="${invite.circle.id}" sentTo="${invite.invitee_username}" name="acceptCircleInvite" class="w-request h-request rounded-input-box bg-light-mode-accent">accept</button>
-            <button identifier="${invite.circle.id}" sentTo="${invite.invitee_username}" name="declineCircleInvite" class="w-request h-request rounded-input-box bg-dark-grey">decline</button>
-          </form>
-        </div>
-      </div>`;
-    })
-    .join("");
-  pageContent.innerHTML = `<div id="circleInviteList" class="flex flex-col pb-200">
-  ${circleInviteList}
-  </div>`;
+  let circleInviteList = circleInvites.map((invite) => {
+    let circleName = document.createElement("h2");
+    circleName.className = "font-medium text-14 leading-tertiary";
+    circleName.textContent = invite.circle.name;
+    return `
+    <div class="flex items-center my-3">
+      <div class="flex-none w-58">
+        <img class="rounded-input-box w-58 h-58" src="${invite.circle.picture}" alt="${invite.circle.name}'s picture">
+      </div>
+      <div class="ml-8 flex-none w-110">
+        ${circleName.outerHTML}
+      </div>
+      <div class="ml-auto w-166">
+        <form class="flex text-white gap-2">
+          <button identifier="${invite.circle.id}" sentTo="${invite.invitee_username}" name="acceptCircleInvite" class="w-request h-request rounded-input-box bg-light-mode-accent">accept</button>
+          <button identifier="${invite.circle.id}" sentTo="${invite.invitee_username}" name="declineCircleInvite" class="w-request h-request rounded-input-box bg-dark-grey">decline</button>
+        </form>
+      </div>
+    </div>`;
+  }).join("");
+
+  pageContent.innerHTML = `<div id="circleInviteList" class="flex flex-col pb-200">${circleInviteList}</div>`;
   const circleInviteListPage = document.querySelector("#circleInviteList");
   circleInviteListPage.addEventListener("click", async function (event) {
     event.preventDefault();
@@ -1890,10 +1844,9 @@ async function displayCircleInvites() {
 
 async function displayAlbum(albumData) {
   leftHeaderButton.innerHTML = `
-    <span id="${albumData.circle.id}">
+  <span id="${albumData.circle.id}">
     <img src="/lightmode/back_button.svg" alt="Back Button" id="backButtonAlbum">
-    </span
-    `;
+  </span`;
   rightHeaderButton.innerHTML = `<img src="/lightmode/share_icon.svg" alt="Share Button" id="shareAlbum">`;
   pageName.textContent = `${albumData.name}`;
 
@@ -1907,16 +1860,13 @@ async function displayAlbum(albumData) {
       memberList.push(andMore);
       break;
     }
-    memberList.push(
-      `<img id="user${i + 1}" src="${
-        albumData.circle.UserCircle[i].user.profilePicture
-      }" class="grid-item rounded-full object-cover">`
-    );
+    memberList.push(`<img id="user${i + 1}" src="${albumData.circle.UserCircle[i].user.profilePicture}" class="grid-item rounded-full object-cover">`);
   }
 
   console.log(memberList);
   const photoList = albumData.photos.map((obj) => {
-    return `<div id="photo" class="w-full h-min relative photo" albumId="${obj.id}">
+    return `
+    <div id="photo" class="w-full h-min relative photo" albumId="${obj.id}">
       <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.src}"/>
     </div>`;
   });
@@ -1924,24 +1874,22 @@ async function displayAlbum(albumData) {
   circleName.className = "flex justify-center font-medium text-lg";
   circleName.textContent = albumData.circle.name;
   pageContent.innerHTML = `
-      <div id="albumPhotos">
-        <div id="memberList" class="grid grid-rows-2 grid-cols-3 mt-8 mx-auto items-center justify-center w-265 gap-2 h-84">
-          ${memberList.join("")}
+    <div id="albumPhotos">
+      <div id="memberList" class="grid grid-rows-2 grid-cols-3 mt-8 mx-auto items-center justify-center w-265 gap-2 h-84">
+        ${memberList.join("")}
+      </div>
+      <div class="mt-4">
+        ${circleName.outerHTML}
+      </div>
+      <div class="grid grid-cols-5 place-items-center mt-12 mb-2 mr-0">
+        <p class="grid-span-1 text-base font-medium">${albumData.photos.length} Photos</p>
+      </div>
+      <div id="photoList" class="pb-28 w-full">
+        <div class="columns-2 gap-4 space-y-4 grid-flow-row">
+          ${photoList.join("")}
         </div>
-        <div class="mt-4">
-         ${circleName.outerHTML}
-        </div>
-        <div class="grid grid-cols-5 place-items-center mt-12 mb-2 mr-0">
-          <p class="grid-span-1 text-base font-medium">${
-            albumData.photos.length
-          } Photos</p>
-        </div>
-        <div id="photoList" class="pb-28 w-full">
-          <div class="columns-2 gap-4 space-y-4 grid-flow-row">
-            ${photoList.join("")}
-          </div>
-        </div>
-    </div>`;
+      </div>
+  </div>`;
 
   // album user display layout
   const user1 = document.querySelector("#user1");
@@ -1949,35 +1897,18 @@ async function displayAlbum(albumData) {
 
   const user2 = document.querySelector("#user2");
   if (user2) {
-    user2.classList.add(
-      "h-43",
-      "w-43",
-      "col-start-1",
-      "row-start-1",
-      "justify-self-end"
-    );
+    user2.classList.add("h-43", "w-43", "col-start-1", "row-start-1", "justify-self-end");
   }
 
   const user3 = document.querySelector("#user3");
   if (user3) {
     user3.classList.add(
-      "h-40",
-      "w-40",
-      "col-start-3",
-      "row-start-2",
-      "justify-self-start"
-    );
+      "h-40", "w-40", "col-start-3", "row-start-2", "justify-self-start");
   }
 
   const user4 = document.querySelector("#user4");
   if (user4) {
-    user4.classList.add(
-      "h-5",
-      "w-5",
-      "col-start-1",
-      "row-start-2",
-      "justify-self-end"
-    );
+    user4.classList.add("h-5", "w-5", "col-start-1", "row-start-2", "justify-self-end");
   }
 
   const albumPhotos = document.querySelector("#albumPhotos");
@@ -2024,8 +1955,7 @@ async function displayFriends(username) {
         <h1 id="friendCount" class="font-bold text-20 leading-body"></h1>
         <div id="friendsDiv"></div>
       </div>
-    </div>
-  `;
+    </div>`;
 
   const searchBox = document.querySelector("#searchFriendsBox");
   const friendsDiv = document.querySelector("#friendsDiv");
@@ -2065,9 +1995,7 @@ function displayFriendsList(friends) {
     let username = document.createElement("h2");
     displayName.className = "font-medium text-14 leading-tertiary";
     username.className = "font-light text-14 text-dark-grey";
-    displayName.textContent = friend.displayName
-      ? friend.displayName
-      : friend.username;
+    displayName.textContent = friend.displayName ? friend.displayName : friend.username;
     username.textContent = `@${friend.username}`;
     return `
       <div class="flex items-center my-5">
@@ -2094,37 +2022,34 @@ async function displayFriendRequests() {
   leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="toActivity"/>`;
   const { friendRequests } = await getActivities(currentLocalUser);
 
-  let friendRequestsList = friendRequests
-    .map((request) => {
-      let username = document.createElement("h2");
-      username.className = "font-medium text-14 leading-tertiary";
-      username.textContent = `@${request.requester.username}`;
-      const displayName = username.cloneNode(true);
-      request.requester.displayName
-        ? (displayName.textContent = request.requester.displayName)
-        : (displayName.textContent = request.requester.username);
-      return `
-      <div class="flex items-center my-5">
-      <div class="flex-none w-58">
-        <img class="rounded-full w-58 h-58" src="${request.requester.profilePicture}" alt="${request.requester.username}'s profile picture"/>
+  let friendRequestsList = friendRequests.map((request) => {
+    let username = document.createElement("h2");
+    username.className = "font-medium text-14 leading-tertiary";
+    username.textContent = `@${request.requester.username}`;
+    const displayName = username.cloneNode(true);
+    request.requester.displayName ? (displayName.textContent = request.requester.displayName) : (displayName.textContent = request.requester.username);
+    return `
+    <div class="flex items-center my-5">
+    <div class="flex-none w-58">
+      <img class="rounded-full w-58 h-58" src="${request.requester.profilePicture}" alt="${request.requester.username}'s profile picture"/>
+    </div>
+    <div class="ml-8 flex-none w-110 grid grid-rows-2">
+      <div>
+        ${displayName.outerHTML}
       </div>
-      <div class="ml-8 flex-none w-110 grid grid-rows-2">
-        <div>
-          ${displayName.outerHTML}
-        </div>
-        <div>
-          ${username.outerHTML}
-        </div>
+      <div>
+        ${username.outerHTML}
       </div>
-      <div class="ml-auto w-166">
-        <form class="flex text-white gap-2">
-          <button identifier="${request.requesterName}" sentTo="${request.requesteeName}" name="acceptFriendRequest" class="w-request h-request rounded-input-box bg-light-mode-accent">accept</button>
-          <button identifier="${request.requesterName}" sentTo="${request.requesteeName}" name="declineFriendRequest" class="w-request h-request rounded-input-box bg-dark-grey">decline</button>
-        </form>
-      </div>
-    </div>`;
-    })
-    .join("");
+    </div>
+    <div class="ml-auto w-166">
+      <form class="flex text-white gap-2">
+        <button identifier="${request.requesterName}" sentTo="${request.requesteeName}" name="acceptFriendRequest" class="w-request h-request rounded-input-box bg-light-mode-accent">accept</button>
+        <button identifier="${request.requesterName}" sentTo="${request.requesteeName}" name="declineFriendRequest" class="w-request h-request rounded-input-box bg-dark-grey">decline</button>
+      </form>
+    </div>
+  </div>`;
+  }).join("");
+
   pageContent.innerHTML = `<div id="friendRequestsList" class="flex flex-col pb-200">
     ${friendRequestsList}
   </div>`;
@@ -2218,8 +2143,9 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
     const arr = comments.map((comment) => {
       const likeDiv = document.createElement("div");
       likeDiv.className = "like h-full";
-      likeDiv.innerHTML = `<svg width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M9.22318 16.6155L9.22174 16.6142C6.62708 14.2613 4.55406 12.3765 3.11801 10.6196C1.69296 8.87613 1 7.38119 1 5.82495C1 3.28843 2.97109 1.32495 5.5 1.32495C6.9377 1.32495 8.33413 1.99941 9.24117 3.05623L10 3.94038L10.7588 3.05623C11.6659 1.99941 13.0623 1.32495 14.5 1.32495C17.0289 1.32495 19 3.28843 19 5.82495C19 7.38119 18.307 8.87613 16.882 10.6196C15.4459 12.3765 13.3729 14.2613 10.7783 16.6142L10.7768 16.6155L10 17.3226L9.22318 16.6155Z" stroke="#0E0E0E" stroke-width="2"/>
+      likeDiv.innerHTML = `
+      <svg width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9.22318 16.6155L9.22174 16.6142C6.62708 14.2613 4.55406 12.3765 3.11801 10.6196C1.69296 8.87613 1 7.38119 1 5.82495C1 3.28843 2.97109 1.32495 5.5 1.32495C6.9377 1.32495 8.33413 1.99941 9.24117 3.05623L10 3.94038L10.7588 3.05623C11.6659 1.99941 13.0623 1.32495 14.5 1.32495C17.0289 1.32495 19 3.28843 19 5.82495C19 7.38119 18.307 8.87613 16.882 10.6196C15.4459 12.3765 13.3729 14.2613 10.7783 16.6142L10.7768 16.6155L10 17.3226L9.22318 16.6155Z" stroke="#0E0E0E" stroke-width="2"/>
       </svg>`;
       if (
         comment.likedBy !== null &&
@@ -2232,35 +2158,19 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
 
       const posterH1 = document.createElement("h1");
       posterH1.className = "font-bold text-secondary";
-      const poster = comment.user.displayName
-        ? comment.user.displayName
-        : comment.user.username;
+      const poster = comment.user.displayName ? comment.user.displayName : comment.user.username;
       posterH1.textContent = poster;
-      posterH1.textContent
-        ? posterH1.textContent
-        : (posterH1.textContent = "Deleted");
+      posterH1.textContent ? posterH1.textContent : (posterH1.textContent = "Deleted");
       const postMsgContainer = document.createElement("div");
       postMsgContainer.className = "comment-text-container flex-grow";
       const postMsg = document.createElement("p");
       postMsg.className = "text-wrap break-words";
-      postMsg.textContent = comment.message
-        ? comment.message
-        : "message removed";
+      postMsg.textContent = comment.message ? comment.message : "message removed";
       postMsgContainer.appendChild(postMsg);
 
-      return `<div class="comment relative flex flex-row items-start h-full my-4" id="${
-        comment.id
-      }" user="${
-        comment.user.displayName
-          ? comment.user.displayName
-          : comment.user.username
-      }">
+      return `<div class="comment relative flex flex-row items-start h-full my-4" id="${comment.id}" user="${comment.user.displayName ? comment.user.displayName : comment.user.username}">
       <div class="flex-none w-58 items-center h-full mr-1 mt-1">
-        <img src="${
-          comment.user.profilePicture
-            ? comment.user.profilePicture
-            : "/placeholder_image.svg"
-        }" class="w-47 h-47 rounded-full">
+        <img src="${comment.user.profilePicture ? comment.user.profilePicture : "/placeholder_image.svg"}" class="w-47 h-47 rounded-full">
       </div>
       <div class=" flex flex-col w-294">
         <div class="flex flex-row gap-2">
@@ -2270,11 +2180,7 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
           ${postMsgContainer.outerHTML}
         <div class="flex items-center space-x-2">
           <a class="text-time text-11 underline replyButton w-8">Reply</a>
-          ${
-            comment.user.username === currentLocalUser
-              ? `<img src="/lightmode/more_options.svg" alt="more options"/ class="moreOptions w-5 h-5">`
-              : ""
-          }
+          ${comment.user.username === currentLocalUser ? `<img src="/lightmode/more_options.svg" alt="more options"/ class="moreOptions w-5 h-5">` : ""}
         </div>
       </div>
       <div class="absolute right-0 top-2 flex flex-1 flex-col items-center">
@@ -2284,13 +2190,7 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
         </div>
       </div>
     </div>
-    ${
-      comment.replies
-        ? `<div class="parentComment"><div class="childComment border-l border-comment-line pl-2 ml-3">${showCommentsRecursively(
-            comment.replies
-          )}</div></div>`
-        : ""
-    }`;
+    ${comment.replies ? `<div class="parentComment"><div class="childComment border-l border-comment-line pl-2 ml-3">${showCommentsRecursively(comment.replies)}</div></div>` : ""}`;
     });
     return arr.join("");
   };
@@ -2335,9 +2235,7 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
           comment.classList.remove("bg-transparent");
           comment.classList.add("border-2", "bg-light-mode-accent");
           commentId = event.target.closest("div.comment").id;
-          commentUser = event.target
-            .closest("div.comment")
-            .getAttribute("user");
+          commentUser = event.target.closest("div.comment").getAttribute("user");
           const commentInput = document.querySelector("#commentInput");
           if (commentInput) {
             commentInput.id = "replyInput";
@@ -2385,29 +2283,19 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
     const like = event.target.closest(".like");
     if (like) {
       if (like.classList.contains("liked")) {
-        console.log("unliked");
         commentId = event.target.closest("div.comment").id;
         like.classList.remove("liked");
         like.querySelector("svg path").setAttribute("fill", "none");
         like.querySelector("svg path").setAttribute("stroke", "#000000");
         await likeComment(commentId);
-        await displayComments(
-          albumId,
-          currentUserProfilePicture,
-          currentLocalUser
-        );
+        await displayComments(albumId, currentUserProfilePicture, currentLocalUser);
       } else {
         like.classList.add("liked");
         commentId = event.target.closest("div.comment").id;
-        console.log("liked");
         like.querySelector("svg path").setAttribute("fill", "#FF4646");
         like.querySelector("svg path").setAttribute("stroke", "#FF4646");
         await likeComment(commentId);
-        return await displayComments(
-          albumId,
-          currentUserProfilePicture,
-          currentLocalUser
-        );
+        return await displayComments(albumId, currentUserProfilePicture, currentLocalUser);
       }
       return;
     }
@@ -2422,19 +2310,13 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
       newCommentInput.id === "replyInput"
         ? await newComment(newCommentInput.value, albumId, commentId)
         : await newComment(newCommentInput.value, albumId);
-      await displayComments(
-        albumId,
-        currentUserProfilePicture,
-        currentLocalUser
-      );
+      await displayComments(albumId, currentUserProfilePicture, currentLocalUser);
     }
   });
   const submitComment = document.querySelector("#submitComment");
   submitComment.addEventListener("click", async function (event) {
     event.preventDefault();
-    const enterKeyEvent = new KeyboardEvent("keydown", {
-      key: "Enter",
-    });
+    const enterKeyEvent = new KeyboardEvent("keydown", { key: "Enter" });
     newCommentInput.dispatchEvent(enterKeyEvent);
   });
 }
@@ -2497,7 +2379,6 @@ async function displayConfirmationPopup(activity, helperObj) {
           currentLocalUser
         );
       }
-      console.log("do something");
     }
   }
 
