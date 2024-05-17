@@ -465,16 +465,6 @@ async function updateCheckbox() {
   }
 }
 
-async function getListOfCircles() {
-  const response = await fetch("/circle/list", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  return await response.json();
-}
-
 async function getAlbumName() {
   const albumNameInput = document.querySelector("#albumName");
 
