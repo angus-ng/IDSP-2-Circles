@@ -1692,7 +1692,8 @@ async function displayCircle(circleData) {
   }
 
   const circlePreviewBackButton = document.querySelector("#circlePreviewBackButton");
-  if (circlePreviewBackButton) {
+  const newAlbumToCircleButton = document.querySelector("#newAlbumToCircleButton");
+  if (circlePreviewBackButton || newAlbumToCircleButton) {
     leftHeaderButton.innerHTML = "";
   }
 
@@ -2014,10 +2015,12 @@ async function displayFriends(username) {
   await initializeSearch();
 
   searchBox.addEventListener("input", (event) => {
-    const searchTerm = searchBox.value.toLowerCase();
-    const filteredResults = friendsList.filter((user) =>
-      user.username.toLowerCase().includes(searchTerm)
-    );
+    const filteredResults = storedSearchResults.filter((user) => {
+      if (user.displayName){
+        return (user.username.toLowerCase().includes(searchBox.value.toLowerCase()) || user.displayName.toLowerCase().includes(searchBox.value.toLowerCase()))
+      }
+        return user.username.toLowerCase().includes(searchBox.value.toLowerCase())
+    });
     updateSuggestedFriends(filteredResults);
   });
 }
