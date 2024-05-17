@@ -310,8 +310,6 @@ header.addEventListener("click", async (event) => {
 
   if (albumToCircleButton) {
     const circleId = event.target.closest("span").getAttribute("circleId");
-    console.log(circleId);
-    console.log(event.target.closest("#leftButton"));
     const { success, data } = await getCircle(circleId);
     const backSpan = document.querySelector(".backSpan");
     backSpan.removeAttribute("circleId");
