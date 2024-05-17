@@ -910,12 +910,9 @@ async function displayNewModal() {
 
 async function displayProfile(userData) {
   nav.classList.remove("hidden");
-  console.log("here", userData);
   const user = userData.username;
-
   const circleRender = await displayListOfCircles(userData, user);
   const albumRender = await displayListOfAlbums(userData, user, true);
-
   const backSpan = document.createElement("span");
   backSpan.className = "backSpan";
   const imgElement = document.createElement("img");
@@ -1310,13 +1307,13 @@ async function displayProfile(userData) {
   }
 }
 
-async function displayListOfCircles(data, user) {
+async function displayListOfCircles(data) {
   let circleListArr = data.UserCircle.map((obj) => {
     let circleName = document.createElement("p");
     circleName.className = "text-center text-secondary";
     circleName.textContent = obj.circle.name;
     return `
-      <div id="${obj.circle.id}" userId="${user}" class="circle">
+      <div id="${obj.circle.id}" class="circle">
         <div class="flex justify-center">
           <img src="${obj.circle.picture}" class="rounded-full w-100 h-100 object-cover cursor-pointer border-circle border-black"/>
         </div>
@@ -1706,6 +1703,11 @@ async function displayCircle(circleData) {
         imgElement.id = "circleToProfileButton";
       }
     }
+  }
+
+  const circlePreviewBackButton = document.querySelector("#circlePreviewBackButton");
+  if (circlePreviewBackButton) {
+    leftHeaderButton.innerHTML = "";
   }
 
 
@@ -2125,14 +2127,11 @@ async function displayPhoto(photoSrc) {
   albumPhotos.appendChild(photoDiv);
 }
 
-async function displayListOfAlbums(data, user, profile = false) {
+async function displayListOfAlbums(data, profile = false) {
   const albumList = data.Album.map((obj) => {
     let albumName = document.createElement("p");
     albumName.className = "text-white text-shadow shadow-black";
     albumName.textContent = obj.name;
-    let userSpan = document.createElement("span");
-    userSpan.className = "user";
-    userSpan.setAttribute("username", `${user}`);
     const circleImage = `
     <div class="absolute top-0 right-0 m-2 flex items-start justify-end gap-1 p2">
       <img src="${obj.circle.picture}" class="w-8 rounded-full object-cover"/>
@@ -2140,7 +2139,6 @@ async function displayListOfAlbums(data, user, profile = false) {
 
     return `
     <div class="w-full h-min relative album" id="${obj.id}">
-      ${userSpan.outerHTML}
       <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.photos[0].src}"/>
       ${profile ? circleImage : null}
       <div class="m-2 text-secondary font-semibold absolute inset-0 flex items-end justify-start">
@@ -2386,7 +2384,6 @@ async function displayPopup(activity) {
 }
 
 async function displayConfirmationPopup(activity, helperObj) {
-  console.log("confirmation popup");
   const confirmationText = document.querySelector("#confirmationText");
   confirmationText.textContent = `${activity}`;
   const confirmationPopup = document.querySelector("#confirmationPopup");
