@@ -1860,7 +1860,9 @@ async function displayAlbum(albumData) {
     backSpan.setAttribute("circleId", `${albumData.circle.id}`);
   }
   const leftButtonImg = document.querySelector("#leftButton img");
-  leftButtonImg.classList.remove("hidden");
+  if (leftButtonImg) {
+    leftButtonImg.classList.remove("hidden");
+  }
   
   const album = document.querySelector(".album");
   if (album) {
