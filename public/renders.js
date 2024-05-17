@@ -641,11 +641,15 @@ async function displaySearch() {
       updateSuggestedFriends(storedSearchResults);
       return;
     }
-    const filteredResults = storedSearchResults.filter(
-      (user) =>
-        user.username.toLowerCase().includes(searchTerm) ||
-        user.displayName.toLowerCase().includes(searchTerm)
-    );
+    const filteredResults = storedSearchResults.filter((user) => {
+      if (user.displayName) {
+        return (
+          user.username.toLowerCase().includes(searchTerm) ||
+          user.displayName.toLowerCase().includes(searchTerm)
+        );
+      }
+      return user.username.toLowerCase().includes(searchTerm);
+    });
     updateSuggestedFriends(filteredResults);
   });
 
@@ -1957,9 +1961,15 @@ async function displayFriends(username) {
 
   searchBox.addEventListener("input", (event) => {
     const searchTerm = searchBox.value.toLowerCase();
-    const filteredResults = friendsList.filter((user) =>
-      user.username.toLowerCase().includes(searchTerm) || user.displayName.toLowerCase().includes(searchTerm)
-    );
+    const filteredResults = friendsList.filter((user) => {
+      if (user.displayName) {
+        return (
+          user.username.toLowerCase().includes(searchTerm) ||
+          user.displayName.toLowerCase().includes(searchTerm)
+        );
+      }
+      return user.username.toLowerCase().includes(searchTerm);
+    });
     updateSuggestedFriends(filteredResults);
   });
 }
