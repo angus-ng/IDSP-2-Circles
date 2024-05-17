@@ -1064,13 +1064,11 @@ async function displayProfile(userData) {
 
     if (like) {
       if (like.classList.contains("liked")) {
-        console.log("unliked");
         like.classList.remove("liked");
         like.querySelector("svg path").setAttribute("fill", "none");
         like.querySelector("svg path").setAttribute("stroke", "#FFFFFF");
       } else {
         like.classList.add("liked");
-        console.log("liked");
         like.querySelector("svg path").setAttribute("fill", "#FF4646");
         like.querySelector("svg path").setAttribute("stroke", "#FF4646");
       }
@@ -1135,7 +1133,6 @@ async function displayProfile(userData) {
 
   document.querySelector("#circleList").addEventListener("click", async function (event) {
     const circleDiv = event.target.closest("div.circle");
-    console.log("circle", userData)
     if (circleDiv) {
       if (circleDiv.hasAttribute("id")) {
         let { success, data, error } = await getCircle(circleDiv.id);
@@ -1388,10 +1385,7 @@ async function displayCreateAlbum() {
 }
 
 function displayCreateAlbumPreview(albumPhotos) {
-  console.log(albumPhotos);
-
   pageName.textContent = "New Album";
-
   leftHeaderButton.innerHTML = `<img src="/lightmode/close_icon.svg" alt="Close Button" id="closeButton">`;
   rightHeaderButton.innerHTML = `<img src="/lightmode/next_button.svg" alt="Next Button" id="albumNext">`;
 
@@ -1404,12 +1398,10 @@ function displayCreateAlbumPreview(albumPhotos) {
       photoSrc: obj.data,
     };
   });
-  console.log("Mapped photos:", mappedPhotos);
-  console.log(albumPhotos);
+
   albumObj.photos = mappedPhotos;
 
   mappedPhotos.forEach((photo, index) => {
-    console.log(`Creating slide ${index + 1} for photo with src: ${photo.photoSrc}`);
 
     const slideDiv = document.createElement("div");
     slideDiv.className = "keen-slider__slide";
@@ -1551,7 +1543,6 @@ function displayCreateAlbumPreview(albumPhotos) {
 
 async function displayAlbumConfirmation() {
   nav.classList.add("hidden");
-  console.log(albumObj);
 
   leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="albumConfirmationBackButton"/>`;
 
@@ -1564,10 +1555,6 @@ async function displayAlbumConfirmation() {
   carouselDiv.className = "keen-slider overflow-hidden";
 
   albumObj.photos.forEach((photo, index) => {
-    console.log(
-      `Creating slide ${index + 1} for photo with src: ${photo.photoSrc}`
-    );
-
     const slideDiv = document.createElement("div");
     slideDiv.className = "keen-slider__slide";
 
@@ -1870,21 +1857,26 @@ async function displayAlbum(albumData) {
   }
   const leftButtonImg = document.querySelector("#leftButton img");
   leftButtonImg.classList.remove("hidden");
-  const profileBackButton = document.querySelector("#profileBackButton");
-
+  
   const album = document.querySelector(".album");
   if (album) {
     const albumId = album.getAttribute("id");
     if (albumId) {
+      const profileBackButton = document.querySelector("#profileBackButton");
       if (profileBackButton) {
         profileBackButton.id = "albumToProfileButton";
       }
     }
   }
-  
+
   const imgElement = document.querySelector("#circleToProfileButton");
   if (imgElement) {
     imgElement.id = "albumToCircleButton";
+  }
+
+  const albumConfirmationBackButton = document.querySelector("#albumConfirmationBackButton");
+  if (albumConfirmationBackButton) {
+    leftHeaderButton.innerHTML = "";
   }
   
   rightHeaderButton.innerHTML = `<img src="/lightmode/share_icon.svg" alt="Share Button" id="shareAlbum">`;
