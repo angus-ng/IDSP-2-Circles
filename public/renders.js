@@ -1,3 +1,5 @@
+const { profile } = require("console");
+
 function displayLoginPage() {
   pageContent.innerHTML = `
     <div id="loginPage" class="flex flex-col items-center rounded-lg w-full z-10">
@@ -916,13 +918,24 @@ async function displayProfile(userData) {
   const circleRender = await displayListOfCircles(userData, user);
   const albumRender = await displayListOfAlbums(userData, user, true);
 
-  if (currentLocalUser !== userData.username) {
-    leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="profileBackButton"/>`;
-  }
+  const backSpan = document.createElement("span");
+  backSpan.className = "backSpan";
+  const imgElement = document.createElement("img");
+  imgElement.src = "/lightmode/back_button.svg";
+  imgElement.alt = "Back Button";
+  imgElement.id = "profileBackButton";
+  backSpan.removeAttribute("circleId");
 
   if (currentLocalUser === userData.username) {
-    leftHeaderButton.innerHTML = "";
+    imgElement.classList.add("hidden");
   }
+
+  backSpan.appendChild(imgElement);
+
+  leftHeaderButton.innerHTML = "";
+  leftHeaderButton.appendChild(backSpan);
+
+  backSpan.setAttribute("username", `${user}`);
 
   pageName.textContent = userData.displayName ? userData.displayName : userData.username;
   const username = document.createElement("h2");
@@ -1075,14 +1088,18 @@ async function displayProfile(userData) {
     }
 
     if (albumDiv) {
-      const user = event.target.closest("span.user");
-      console.log("user", user)
-      if (albumDiv.hasAttribute("id")) {
-        let { success, data, error } = await getAlbum(albumDiv.id);
-        if (success && data) {
-          await displayAlbum(data);
+      const user = document.querySelector("span.user").getAttribute("username");
+      console.log("user", user);
+
+      if (user) {
+        if (albumDiv.hasAttribute("id")) {
+          let { success, data, error } = await getAlbum(albumDiv.id);
+          if (success && data) {
+            await displayAlbum(data);
+          }
         }
       }
+
     }
 
     if (albumTab) {
@@ -1124,6 +1141,7 @@ async function displayProfile(userData) {
 
   document.querySelector("#circleList").addEventListener("click", async function (event) {
     const circleDiv = event.target.closest("div.circle");
+    console.log("circle", userData)
     if (circleDiv) {
       if (circleDiv.hasAttribute("id")) {
         let { success, data, error } = await getCircle(circleDiv.id);
@@ -1676,10 +1694,28 @@ async function displayAlbumConfirmation() {
 }
 
 async function displayCircle(circleData, user) {
-  leftHeaderButton.innerHTML = `
-  <span id="${user}">
-    <img src="/lightmode/back_button.svg" alt="Back Button" id="circleViewBackButton"/>
-  </span>`;
+  console.log("User:", user);
+  console.log("hello", circleData)
+  const backSpan = document.querySelector(".backSpan");
+  console.log(backSpan)
+  const circleId = backSpan.getAttribute("circleId");
+  console.log(circleId)
+  const imgElement = document.querySelector("#profileBackButton");
+  console.log("back", imgElement);
+  if (imgElement) {
+    imgElement.classList.remove("hidden");
+    imgElement.id = "circleToProfileButton"
+  }
+  console.log(imgElement);
+
+  if (circleId === null) {
+    const imgElement = document.querySelector("#albumToCircleButton");
+    if (imgElement) {
+      imgElement.id = "circleToProfileButton";
+    }
+  }
+
+
   rightHeaderButton.innerHTML = "";
   pageName.textContent = "";
   let currentUserProfilePicture = null;
@@ -1777,13 +1813,6 @@ async function displayCircle(circleData, user) {
     }
 
     if (albumDiv) {
-      console.log("hep");
-
-      if (albumDiv.hasAttribute("username")) {
-        console.log("hello");
-      } else {
-        console.log("userId attribute not found");
-      }
 
       if (albumDiv.hasAttribute("id")) {
         let { success, data, error } = await getAlbum(albumDiv.id);
@@ -1843,10 +1872,30 @@ async function displayCircleInvites() {
 }
 
 async function displayAlbum(albumData) {
-  leftHeaderButton.innerHTML = `
-  <span id="${albumData.circle.id}">
-    <img src="/lightmode/back_button.svg" alt="Back Button" id="backButtonAlbum">
-  </span`;
+  const backSpan = document.querySelector(".backSpan");
+  backSpan.setAttribute("circleId", `${albumData.circle.id}`);
+  const leftButtonImg = document.querySelector("#leftButton img");
+  console.log(leftButtonImg)
+  leftButtonImg.classList.remove("hidden");
+  const profileBackButton = document.querySelector("#profileBackButton");
+  console.log("profileback", profileBackButton)
+
+  const albumId = document.querySelector(".album").getAttribute("id");
+  console.log("albumId", albumId);
+  
+  const circleId = backSpan.getAttribute("circleId");
+  console.log("circleId", circleId);
+  const imgElement = document.querySelector("#circleToProfileButton");
+  if ((!circleId) || (albumId)){
+    if (profileBackButton) {
+      profileBackButton.id = "albumToProfileButton";
+    }
+  }
+
+  if (imgElement) {
+    imgElement.id = "albumToCircleButton";
+  }
+  
   rightHeaderButton.innerHTML = `<img src="/lightmode/share_icon.svg" alt="Share Button" id="shareAlbum">`;
   pageName.textContent = `${albumData.name}`;
 
@@ -2094,6 +2143,7 @@ async function displayListOfAlbums(data, user, profile = false) {
     albumName.className = "text-white text-shadow shadow-black";
     albumName.textContent = obj.name;
     let userSpan = document.createElement("span");
+    userSpan.className = "user";
     userSpan.setAttribute("username", `${user}`);
     const circleImage = `
     <div class="absolute top-0 right-0 m-2 flex items-start justify-end gap-1 p2">
@@ -2102,6 +2152,7 @@ async function displayListOfAlbums(data, user, profile = false) {
 
     return `
     <div class="w-full h-min relative album" id="${obj.id}">
+      ${userSpan.outerHTML}
       <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.photos[0].src}"/>
       ${profile ? circleImage : null}
       <div class="m-2 text-secondary font-semibold absolute inset-0 flex items-end justify-start">
@@ -2117,7 +2168,6 @@ async function displayListOfAlbums(data, user, profile = false) {
           <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M10.5 19.125C8.79414 19.125 7.12658 18.6192 5.70821 17.6714C4.28983 16.7237 3.18434 15.3767 2.53154 13.8006C1.87873 12.2246 1.70793 10.4904 2.04073 8.81735C2.37352 7.14426 3.19498 5.60744 4.4012 4.40121C5.60743 3.19498 7.14426 2.37353 8.81735 2.04073C10.4904 1.70793 12.2246 1.87874 13.8006 2.53154C15.3767 3.18435 16.7237 4.28984 17.6714 5.70821C18.6192 7.12658 19.125 8.79414 19.125 10.5C19.125 11.926 18.78 13.2705 18.1667 14.455L19.125 19.125L14.455 18.1667C13.2705 18.78 11.925 19.125 10.5 19.125Z" stroke="#F8F4EA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          ${userSpan.outerHTML}
         </div>
       </div>
     </div>`;
