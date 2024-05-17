@@ -61,6 +61,7 @@ header.addEventListener("click", async (event) => {
   const friendsBackButton = event.target.closest("#friendsBackButton");
   const circleViewBackButton = event.target.closest("#circleViewBackButton");
   const profileBackButton = event.target.closest("#profileBackButton");
+  const settingsBackButton = event.target.closest("#settingsBackButton");
 
   if (emailBackButton) {
     await displayLoginPage();
@@ -288,6 +289,13 @@ header.addEventListener("click", async (event) => {
 
   if (profileBackButton) {
     await displaySearch();
+  }
+
+  if (settingsBackButton) {
+    const { success, data } = await getUser(currentLocalUser);
+    if (success && data) {
+      return await displayProfile(data);
+    }
   }
 });
 
