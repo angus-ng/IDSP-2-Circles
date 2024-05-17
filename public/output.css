@@ -1087,6 +1087,10 @@ select {
   margin-top: 105px;
 }
 
+.block {
+  display: block;
+}
+
 .flex {
   display: flex;
 }
@@ -1231,6 +1235,10 @@ select {
 
 .h-screen {
   height: 100vh;
+}
+
+.h-22 {
+  height: 22px;
 }
 
 .max-h-400 {
@@ -1381,6 +1389,14 @@ select {
   width: 100vw;
 }
 
+.w-22 {
+  width: 22px;
+}
+
+.w-44 {
+  width: 44px;
+}
+
 .max-w-430 {
   max-width: 430px;
 }
@@ -1462,6 +1478,10 @@ select {
 
 .flex-wrap {
   flex-wrap: wrap;
+}
+
+.flex-nowrap {
+  flex-wrap: nowrap;
 }
 
 .place-items-center {
