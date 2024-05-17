@@ -278,7 +278,6 @@ header.addEventListener("click", async (event) => {
   }
 
   if (circleViewBackButton) {
-    console.log("circle to profile")
     const user = event.target.closest("span").getAttribute("username");
     const { success, data } = await getUser(user);
     if (success && data) {
@@ -294,7 +293,6 @@ header.addEventListener("click", async (event) => {
     const backSpan = document.querySelector(".backSpan");
     const username = backSpan.getAttribute("username");
     const { success, data } = await getUser(username);
-    console.log("user", data)
     if (success && data) {
       backSpan.removeAttribute("circleId");
       await displayProfile(data);
@@ -302,9 +300,7 @@ header.addEventListener("click", async (event) => {
   }
 
   if (albumToProfileButton) {
-    console.log("album to profile")
     const user = event.target.closest("span").getAttribute("username");
-
     const { success, data } = await getUser(user);
     if (success && data) {
       return await displayProfile(data);

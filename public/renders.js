@@ -1084,7 +1084,6 @@ async function displayProfile(userData) {
 
     if (albumDiv) {
       const user = document.querySelector("span.user").getAttribute("username");
-      console.log("user", user);
 
       if (user) {
         if (albumDiv.hasAttribute("id")) {
@@ -1710,8 +1709,6 @@ async function displayCircle(circleData) {
     leftHeaderButton.innerHTML = "";
   }
 
-
-
   rightHeaderButton.innerHTML = "";
   pageName.textContent = "";
   let currentUserProfilePicture = null;
@@ -1868,21 +1865,24 @@ async function displayCircleInvites() {
 
 async function displayAlbum(albumData) {
   const backSpan = document.querySelector(".backSpan");
-  backSpan.setAttribute("circleId", `${albumData.circle.id}`);
+  if (backSpan) {
+    backSpan.setAttribute("circleId", `${albumData.circle.id}`);
+  }
   const leftButtonImg = document.querySelector("#leftButton img");
   leftButtonImg.classList.remove("hidden");
   const profileBackButton = document.querySelector("#profileBackButton");
 
-  const albumId = document.querySelector(".album").getAttribute("id");
-  
-  const circleId = backSpan.getAttribute("circleId");
-  const imgElement = document.querySelector("#circleToProfileButton");
-  if ((!circleId) || (albumId)){
-    if (profileBackButton) {
-      profileBackButton.id = "albumToProfileButton";
+  const album = document.querySelector(".album");
+  if (album) {
+    const albumId = album.getAttribute("id");
+    if (albumId) {
+      if (profileBackButton) {
+        profileBackButton.id = "albumToProfileButton";
+      }
     }
   }
-
+  
+  const imgElement = document.querySelector("#circleToProfileButton");
   if (imgElement) {
     imgElement.id = "albumToCircleButton";
   }
@@ -2127,11 +2127,14 @@ async function displayPhoto(photoSrc) {
   albumPhotos.appendChild(photoDiv);
 }
 
-async function displayListOfAlbums(data, profile = false) {
+async function displayListOfAlbums(data, user, profile = false) {
   const albumList = data.Album.map((obj) => {
     let albumName = document.createElement("p");
     albumName.className = "text-white text-shadow shadow-black";
     albumName.textContent = obj.name;
+    let userSpan = document.createElement("span");
+    userSpan.className = "user";
+    userSpan.setAttribute("username", `${user}`);
     const circleImage = `
     <div class="absolute top-0 right-0 m-2 flex items-start justify-end gap-1 p2">
       <img src="${obj.circle.picture}" class="w-8 rounded-full object-cover"/>
@@ -2139,6 +2142,7 @@ async function displayListOfAlbums(data, profile = false) {
 
     return `
     <div class="w-full h-min relative album" id="${obj.id}">
+      ${userSpan.outerHTML}
       <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.photos[0].src}"/>
       ${profile ? circleImage : null}
       <div class="m-2 text-secondary font-semibold absolute inset-0 flex items-end justify-start">
