@@ -1678,6 +1678,7 @@ async function displayAlbumConfirmation() {
 }
 
 async function displayCircle(circleData) {
+  console.log(circleData);
   const imgElement = document.querySelector("#profileBackButton");
   if (imgElement) {
     imgElement.classList.remove("hidden");
@@ -1688,10 +1689,24 @@ async function displayCircle(circleData) {
     const circleId = backSpan.getAttribute("circleId");
     if (circleId === null) {
       const imgElement = document.querySelector("#albumToCircleButton");
-      if (imgElement) {
+      if (backSpan.getAttribute("username") === null) {
+        leftHeaderButton.innerHTML = "";
+      } else if (imgElement) {
         imgElement.id = "circleToProfileButton";
       }
     }
+  } else {
+    const circleId = circleData.circle.id;
+    const backSpan = document.createElement("span");
+    backSpan.className = "backSpan";
+    const imgElement = document.createElement("img");
+    imgElement.id = "albumToCircleButton";
+    imgElement.src = "/lightmode/back_button.svg";
+    imgElement.alt = "Back Button";
+    
+    backSpan.setAttribute("circleId", circleId);
+    backSpan.appendChild(imgElement);
+    leftHeaderButton.appendChild(backSpan);
   }
 
   const circlePreviewBackButton = document.querySelector("#circlePreviewBackButton");
@@ -1856,15 +1871,18 @@ async function displayCircleInvites() {
 
 async function displayAlbum(albumData) {
   const backSpan = document.querySelector(".backSpan");
+  const leftButtonImg = document.querySelector("#leftButton img");
+  const album = document.querySelector(".album");
+  const imgElement = document.querySelector("#circleToProfileButton");
+  const albumConfirmationBackButton = document.querySelector("#albumConfirmationBackButton");
   if (backSpan) {
     backSpan.setAttribute("circleId", `${albumData.circle.id}`);
-  }
-  const leftButtonImg = document.querySelector("#leftButton img");
+  } 
+  
   if (leftButtonImg) {
     leftButtonImg.classList.remove("hidden");
   }
   
-  const album = document.querySelector(".album");
   if (album) {
     const albumId = album.getAttribute("id");
     if (albumId) {
@@ -1873,17 +1891,26 @@ async function displayAlbum(albumData) {
         profileBackButton.id = "albumToProfileButton";
       }
     }
-  }
-
-  const imgElement = document.querySelector("#circleToProfileButton");
+  } 
+  
   if (imgElement) {
     imgElement.id = "albumToCircleButton";
-  }
-
-  const albumConfirmationBackButton = document.querySelector("#albumConfirmationBackButton");
+  } 
   if (albumConfirmationBackButton) {
     albumConfirmationBackButton.id = "newAlbumToCircleButton";
     albumConfirmationBackButton.setAttribute("circleId", `${albumData.circle.id}`);
+  }
+
+  const span = document.createElement("span");
+  span.className = "backSpan";
+  if (!imgElement && !albumConfirmationBackButton) {
+    const imgElement = document.createElement("img");
+    imgElement.id = "albumToCircleButton";
+    imgElement.src = "/lightmode/back_button.svg";
+    imgElement.alt = "Back Button";
+    span.setAttribute("circleId", `${albumData.circle.id}`);
+    span.appendChild(imgElement);
+    leftHeaderButton.appendChild(span);
   }
   
   rightHeaderButton.innerHTML = `<img src="/lightmode/share_icon.svg" alt="Share Button" id="shareAlbum">`;
