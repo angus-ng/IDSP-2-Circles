@@ -131,7 +131,7 @@ class AlbumController {
             }
         });
         this.deleteComment = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            let loggedInUser = req.user.username;
+            let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
             try {
                 const { commentId } = req.body;
                 yield this._service.deleteComment(loggedInUser, commentId);
@@ -142,7 +142,7 @@ class AlbumController {
             }
         });
         this.likeComment = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            let loggedInUser = req.user.username;
+            let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
             try {
                 const { commentId } = req.body;
                 yield this._service.likeComment(loggedInUser, commentId);

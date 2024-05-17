@@ -419,5 +419,21 @@ class UserService {
             }
         });
     }
+    getProfilePicture(username) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const user = yield this._db.prisma.user.findUnique({
+                where: {
+                    username: username
+                },
+                select: {
+                    profilePicture: true
+                }
+            });
+            if (!user) {
+                return "/placeholder_image.svg";
+            }
+            return user.profilePicture;
+        });
+    }
 }
 exports.UserService = UserService;
