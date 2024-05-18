@@ -472,3 +472,21 @@ async function getCurrentUserProfilePicture () {
 
   }
 }
+
+async function updateCircle (circleObj) {
+  try {
+    const response = await fetch(`/circle/update`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(circleObj)
+    });
+
+    const jsonResponse = await response.json();
+    console.log(jsonResponse);
+    return jsonResponse
+  } catch (err) {
+
+  }
+}
