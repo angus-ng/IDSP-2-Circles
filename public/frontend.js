@@ -386,6 +386,7 @@ async function handleLocalAuth() {
   }
 }
 
+
 pageContent.addEventListener("click", async (event) => {
   const localAuthButton = event.target.closest("#localAuth");
   const emailNextButton = event.target.closest("#emailNext");
@@ -453,10 +454,6 @@ pageContent.addEventListener("click", async (event) => {
   if (logOut) {
     window.location.href = "/auth/logout";
   }
-
-  // if (uploadPhotoSection) {
-  //   displayCreateAlbumPreview();
-  // }
 });
 
 async function updateCheckbox() {

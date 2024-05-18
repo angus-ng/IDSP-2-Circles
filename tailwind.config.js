@@ -168,6 +168,9 @@ theme: {
       lg: '0 8px 16px var(--tw-shadow-color)',
     },
   },
+  variants: {
+      fill: ['hover', 'focus']
+  }
 },
 plugins: [
   require('@tailwindcss/forms'),
