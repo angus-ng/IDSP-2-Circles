@@ -79,9 +79,9 @@ class AlbumController implements IController {
   private updateAlbum = async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
-      const { newPhotos } = req.body;
-  
-      if (!Array.isArray(newPhotos)) {
+      const { photos } = req.body;
+      console.log(photos)
+      if (!Array.isArray(photos) || photos.length === 0) {
         return res.status(400).json({ success: false, error: "Invalid photos array" });
       }
   
@@ -93,7 +93,7 @@ class AlbumController implements IController {
         return res.status(403).json({ success: false, error: "User is not a member of this album" });
       }
   
-      const updatedAlbum = await this._service.updateAlbum(loggedInUser, id, newPhotos);
+      const updatedAlbum = await this._service.updateAlbum(loggedInUser, id, photos);
       if (!updatedAlbum) {
         return res.status(404).json({ success: false, error: "Album not found" });
       }
