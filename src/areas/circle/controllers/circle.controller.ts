@@ -154,7 +154,7 @@ class CircleController implements IController {
       let loggedInUser = await getLocalUser(req, res)
       const { circleId, circleImg, circleName, isPublic } = req.body
       console.log(req.body)
-      if (!circleId || !circleImg || !circleName || !isPublic) {
+      if (!circleId || !circleImg || !circleName || typeof isPublic !== "boolean") {
         return res.status(200).json({success:true, data:null, error:"missing parameters"})
       }
       const circleObj = {
