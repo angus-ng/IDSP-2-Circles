@@ -1087,10 +1087,6 @@ select {
   margin-top: 105px;
 }
 
-.block {
-  display: block;
-}
-
 .flex {
   display: flex;
 }
@@ -1126,6 +1122,10 @@ select {
 
 .h-180 {
   height: 180px;
+}
+
+.h-22 {
+  height: 22px;
 }
 
 .h-230 {
@@ -1235,10 +1235,6 @@ select {
 
 .h-screen {
   height: 100vh;
-}
-
-.h-22 {
-  height: 22px;
 }
 
 .max-h-400 {
@@ -1387,14 +1383,6 @@ select {
 
 .w-screen {
   width: 100vw;
-}
-
-.w-22 {
-  width: 22px;
-}
-
-.w-44 {
-  width: 44px;
 }
 
 .max-w-430 {
@@ -1861,6 +1849,10 @@ select {
   padding-bottom: 200px;
 }
 
+.pb-24 {
+  padding-bottom: 6rem;
+}
+
 .pb-28 {
   padding-bottom: 7rem;
 }
@@ -2151,8 +2143,8 @@ select {
   border-color: rgb(0 0 0 / var(--tw-border-opacity));
 }
 
-.hover\:fill-black:hover {
-  fill: #000;
+.hover\:fill-current:hover {
+  fill: currentColor;
 }
 
 .hover\:text-black:hover {

@@ -67,6 +67,15 @@ function displayLoginPage() {
       await displaySignUpPage();
       await displaySignUpEmailPage();
     }
+    const passwordInput = document.querySelector("#passwordInput");
+    passwordInput.addEventListener("keypress", (event) => {
+      if (event.key === "Enter") {
+        console.log("f you")
+        event.preventDefault();
+        const localAuthButton = document.querySelector("#localAuth");
+        localAuthButton.click();
+      }
+    });
   });
 }
 
@@ -467,7 +476,7 @@ async function displayInviteFriends() {
         </div>
         <div class="shrink-0 mt-10 mb-6 justify-center w-full">
           <h1 class="font-bold text-20 leading-body">Suggested Friends</h1>
-          <div id="suggestedFriends"></div>
+          <div id="suggestedFriends" class="flex"></div>
         </div>
       </div>
       `;
@@ -593,16 +602,18 @@ async function displaySearch() {
   rightHeaderButton.innerHTML = "";
   leftHeaderButton.innerHTML = "";
   pageContent.innerHTML = `
-    <div id="searchPage" class="py-2 w-full h-full">
-      <div class="relative w-full h-9 mt-8">
-        <input type="text" id="searchBox" class="w-380 px-10 py-2 border-grey border-2 rounded-input-box text-secondary leading-secondary" placeholder="search account">
-        <img src="/lightmode/search_icon_grey.svg" alt="search icon" class="absolute left-3 top-search w-25 h-25"/>
-      </div>
-      <div class="flex flex-col shrink-0 mt-10 mb-6 justify-center w-full">
-        <div id="suggestedFriends"></div>
-      </div>
+  <div id="searchPage" class="py-2 w-full h-full bg-light-mode">
+  <div class="relative w-full h-9 mt-8 bg-light-mode">
+    <div class="fixed w-full">
+      <input type="text" id="searchBox" class="w-380 px-10 py-2 border-grey border-2 rounded-input-box text-secondary leading-secondary bg-light-mode" placeholder="search account">
+      <img src="/lightmode/search_icon_grey.svg" alt="search icon" class="absolute left-3 top-search w-25 h-25"/>
     </div>
-    `;
+  </div>
+  <div class="flex flex-col shrink-0 mt-10 mb-6 justify-center w-full bg-light-mode">
+    <div id="suggestedFriends" class="flex flex-col pb-48"></div>
+  </div>
+</div>`;
+
   const searchBox = document.querySelector("#searchBox");
 
   // this is to show all users when the page first loads
@@ -612,6 +623,8 @@ async function displaySearch() {
   async function initializeSearch() {
     const initialSearchResult = await getSearchResult(searchBox.value);
     storedSearchResults = initialSearchResult.data;
+
+    console.log(storedSearchResults)
     updateSuggestedFriends(storedSearchResults);
   }
 
@@ -971,7 +984,7 @@ async function displayProfile(userData) {
         <li id="albumTab" class="me-2 w-full mr-0">
           <a class="w-full inline-flex items-center justify-center p-4 border-b-2 rounded-t-lg hover:text-black hover:border-black">
             <p class="text-13 font-bold mr-2">albums</p>
-            <svg width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg" class="hover:fill-black">
+            <svg width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg" class="hover:fill-current hover:text-black">
               <path d="M11.55 0H2.45C1.93283 0 1.43684 0.205446 1.07114 0.571142C0.705446 0.936838 0.5 1.43283 0.5 1.95V11.05C0.5 11.5672 0.705446 12.0632 1.07114 12.4289C1.43684 12.7946 1.93283 13 2.45 13H11.55C11.6569 12.9985 11.7635 12.9876 11.8685 12.9675L12.0635 12.922H12.109H12.1415L12.382 12.831L12.4665 12.7855C12.5315 12.7465 12.603 12.714 12.668 12.6685C12.7548 12.6046 12.8373 12.5352 12.915 12.4605L12.9605 12.402C13.0243 12.3373 13.083 12.2678 13.136 12.194L13.1945 12.1095C13.2399 12.0371 13.279 11.961 13.3115 11.882C13.3293 11.8508 13.3446 11.8182 13.357 11.7845C13.3895 11.7065 13.409 11.622 13.435 11.5375V11.44C13.4719 11.313 13.4937 11.1821 13.5 11.05V1.95C13.5 1.43283 13.2946 0.936838 12.9289 0.571142C12.5632 0.205446 12.0672 0 11.55 0ZM2.45 11.7C2.27761 11.7 2.11228 11.6315 1.99038 11.5096C1.86848 11.3877 1.8 11.2224 1.8 11.05V8.2485L3.9385 6.1035C3.99893 6.04258 4.07082 5.99422 4.15002 5.96122C4.22923 5.92822 4.31419 5.91123 4.4 5.91123C4.48581 5.91123 4.57077 5.92822 4.64997 5.96122C4.72918 5.99422 4.80107 6.04258 4.8615 6.1035L10.4515 11.7H2.45ZM12.2 11.05C12.1994 11.1301 12.184 11.2095 12.1545 11.284C12.1396 11.3157 12.1223 11.3461 12.1025 11.375C12.0851 11.4025 12.0655 11.4286 12.044 11.453L8.5665 7.9755L9.1385 7.4035C9.19893 7.34258 9.27082 7.29422 9.35003 7.26122C9.42923 7.22822 9.51419 7.21123 9.6 7.21123C9.68581 7.21123 9.77077 7.22822 9.84997 7.26122C9.92918 7.29422 10.0011 7.34258 10.0615 7.4035L12.2 9.5485V11.05ZM12.2 7.709L10.978 6.5C10.606 6.14704 10.1128 5.95028 9.6 5.95028C9.08722 5.95028 8.59398 6.14704 8.222 6.5L7.65 7.072L5.778 5.2C5.40602 4.84704 4.91278 4.65028 4.4 4.65028C3.88722 4.65028 3.39398 4.84704 3.022 5.2L1.8 6.409V1.95C1.8 1.77761 1.86848 1.61228 1.99038 1.49038C2.11228 1.36848 2.27761 1.3 2.45 1.3H11.55C11.7224 1.3 11.8877 1.36848 12.0096 1.49038C12.1315 1.61228 12.2 1.77761 12.2 1.95V7.709ZM7.975 2.6C7.78216 2.6 7.59366 2.65718 7.43332 2.76432C7.27298 2.87145 7.14801 3.02373 7.07422 3.20188C7.00042 3.38004 6.98111 3.57608 7.01873 3.76521C7.05635 3.95434 7.14921 4.12807 7.28557 4.26443C7.42193 4.40079 7.59565 4.49365 7.78479 4.53127C7.97392 4.56889 8.16996 4.54958 8.34812 4.47578C8.52627 4.40199 8.67855 4.27702 8.78568 4.11668C8.89282 3.95634 8.95 3.76784 8.95 3.575C8.95 3.31641 8.84728 3.06842 8.66443 2.88557C8.48158 2.70272 8.23359 2.6 7.975 2.6Z" fill="#737373"/>
             </svg>
           </a>
@@ -1713,14 +1726,16 @@ async function displayCircle(circleData) {
   if (circlePreviewBackButton || newAlbumToCircleButton) {
     leftHeaderButton.innerHTML = "";
   }
+
   rightHeaderButton.innerHTML = `
-  <div class="flex flex-row flex-nowrap gap-2 w-full h-22">
-    <div class="flex gap-2">
-      <button id="circleEditButton" class="${circleData.circle.ownerId === currentLocalUser ? "" : "hidden"}">
-        <img src="/lightmode/edit_icon.svg"></img>
-        <span circleid=${circleData.circle.id}></span>
+  <div class="flex flex-row flex-nowrap gap-2 w-full h-22>
+    <div class="flex">
+      <button id="editButton" class="hidden">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22 5.76359C22.0008 5.61883 21.9731 5.47533 21.9183 5.34132C21.8636 5.20731 21.7829 5.08542 21.681 4.98265L17.017 0.318995C16.9142 0.217053 16.7923 0.136401 16.6583 0.0816639C16.5243 0.026927 16.3808 -0.000818536 16.236 1.83843e-05C16.0912 -0.000818536 15.9477 0.026927 15.8137 0.0816639C15.6797 0.136401 15.5578 0.217053 15.455 0.318995L12.342 3.43176L0.319018 15.4539C0.217068 15.5566 0.136411 15.6785 0.0816699 15.8125C0.0269289 15.9466 -0.000818595 16.09 1.83857e-05 16.2348V20.8985C1.83857e-05 21.1902 0.115911 21.4699 0.3222 21.6762C0.52849 21.8825 0.808279 21.9984 1.10002 21.9984H5.76401C5.91793 22.0067 6.07189 21.9827 6.21591 21.9277C6.35993 21.8728 6.49079 21.7882 6.60001 21.6794L18.557 9.6573L21.681 6.59953C21.7814 6.49292 21.8632 6.37023 21.923 6.23655C21.9336 6.14888 21.9336 6.06025 21.923 5.97257C21.9281 5.92137 21.9281 5.86978 21.923 5.81858L22 5.76359ZM5.31301 19.7985H2.20001V16.6858L13.123 5.76359L16.236 8.87636L5.31301 19.7985ZM17.787 7.32547L14.674 4.2127L16.236 2.66182L19.338 5.76359L17.787 7.32547Z" fill="#0E0E0E"/>
+        </svg>
       </button>
-      <button id="circleShareButton">
+      <button id="shareButton">
         <svg width="22" height="22" viewBox="0 0 21 18" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M9.52237 14.4666C9.62361 14.5669 9.70395 14.6862 9.75876 14.8174C9.81357 14.9487 9.84179 15.0895 9.84179 15.2316C9.84179 15.3737 9.81357 15.5145 9.75876 15.6458C9.70395 15.777 9.62361 15.8963 9.52237 15.9966L9.059 16.4574C8.56713 16.9483 7.98226 17.3375 7.33823 17.6022C6.69419 17.867 6.00375 18.0022 5.30685 18C4.25734 18.0003 3.23132 17.6911 2.35858 17.1114C1.48584 16.5317 0.805602 15.7076 0.403928 14.7434C0.00225372 13.7792 -0.102809 12.7181 0.102032 11.6945C0.306874 10.6709 0.812414 9.73068 1.55469 8.99285L4.69959 5.86537C5.36851 5.20026 6.20404 4.72503 7.11968 4.48888C8.03532 4.25274 8.99778 4.26427 9.90744 4.52227C10.8171 4.78027 11.6409 5.27537 12.2935 5.95632C12.9461 6.63726 13.4039 7.4793 13.6193 8.39525C13.655 8.53452 13.6624 8.67947 13.641 8.82161C13.6197 8.96375 13.57 9.10022 13.4949 9.22302C13.4198 9.34582 13.3209 9.45248 13.2038 9.53676C13.0867 9.62104 12.9539 9.68123 12.8132 9.71381C12.6724 9.74639 12.5265 9.75071 12.3841 9.72651C12.2416 9.70231 12.1055 9.65008 11.9836 9.57287C11.8617 9.49567 11.7565 9.39505 11.6742 9.27691C11.5919 9.15876 11.5342 9.02547 11.5043 8.88485C11.3765 8.34416 11.1057 7.84725 10.72 7.44547C10.3344 7.0437 9.84782 6.75166 9.31065 6.59953C8.77347 6.4474 8.20519 6.4407 7.66454 6.58014C7.12389 6.71958 6.63051 7.00008 6.23539 7.39266L3.09049 10.5201C2.65211 10.9557 2.35348 11.5108 2.23235 12.1152C2.11122 12.7196 2.17304 13.3461 2.40999 13.9156C2.64694 14.485 3.04838 14.9718 3.56354 15.3143C4.0787 15.6569 4.68443 15.8398 5.30413 15.84C5.71589 15.8411 6.12379 15.7611 6.50422 15.6044C6.88466 15.4478 7.23008 15.2177 7.52049 14.9274L7.98295 14.4666C8.08386 14.3658 8.20381 14.2858 8.3359 14.2312C8.46799 14.1766 8.60962 14.1485 8.75266 14.1485C8.8957 14.1485 9.03734 14.1766 9.16943 14.2312C9.30151 14.2858 9.42146 14.3658 9.52237 14.4666ZM19.4458 1.54541C18.4504 0.555883 17.1006 0 15.6932 0C14.2857 0 12.9359 0.555883 11.9405 1.54541L11.4781 2.00531C11.2741 2.2082 11.1595 2.48337 11.1595 2.7703C11.1595 3.05723 11.2741 3.3324 11.4781 3.53529C11.6821 3.73818 11.9588 3.85216 12.2473 3.85216C12.5359 3.85216 12.8126 3.73818 13.0166 3.53529L13.48 3.0745C14.068 2.4897 14.8656 2.16116 15.6972 2.16116C16.5289 2.16116 17.3264 2.4897 17.9145 3.0745C18.5025 3.6593 18.8329 4.45245 18.8329 5.27948C18.8329 6.10651 18.5025 6.89966 17.9145 7.48446L14.7642 10.6074C14.4738 10.8978 14.1284 11.128 13.7479 11.2846C13.3675 11.4413 12.9596 11.5213 12.5478 11.52C11.8414 11.5195 11.156 11.2817 10.6025 10.8452C10.0491 10.4087 9.66018 9.79912 9.49884 9.11525C9.43355 8.83622 9.25948 8.5944 9.01491 8.44301C8.77034 8.29161 8.47531 8.24303 8.19473 8.30795C7.91414 8.37288 7.67098 8.54599 7.51874 8.7892C7.3665 9.03242 7.31765 9.32581 7.38293 9.60484C7.65544 10.763 8.31338 11.7957 9.25005 12.5354C10.1867 13.2751 11.3472 13.6784 12.5433 13.68H12.5478C13.245 13.6819 13.9357 13.5463 14.5799 13.2811C15.2241 13.0158 15.809 12.6262 16.3009 12.1347L19.4458 9.00725C19.9385 8.51733 20.3294 7.93569 20.5961 7.29553C20.8627 6.65538 21 5.96925 21 5.27633C21 4.58341 20.8627 3.89728 20.5961 3.25713C20.3294 2.61697 19.9385 2.03532 19.4458 1.54541Z" fill="black"/>
         </svg>
@@ -1767,28 +1782,24 @@ async function displayCircle(circleData) {
   circleName.textContent = circleData.circle.name;
   pageContent.innerHTML = `
     <div id="circlePage" class="w-full px-0 mx-0">
-      <div id="circleImage" class="flex justify-center mt-6 mb-1.5">
+      <div class="flex justify-center mt-6 mb-1.5">
         <img src="${circleData.circle.picture}" class="rounded-full w-180 h-180 object-cover"/>
       </div>
-      <div id="circleName" class="mb-3 flex justify-center">
-        ${circleName.outerHTML}
+      <div class="mb-3">
+        <p class="text-center text-20 font-bold">${circleName.outerHTML}</p>
       </div>
       <div class="grid grid-cols-1 place-items-center">
-        <span class="privacyState">
-            <label class="inline-flex items-center cursor-pointer">
-            <input id="privacyCheckbox" type="checkbox" value="" class="sr-only peer">
+        <label class="inline-flex items-center cursor-pointer">
             <img id="privacyIcon" src="${circleData.circle.isPublic ? "/lightmode/globe_icon.svg" : "/lightmode/lock_icon.svg"}" alt="Lock icon" class="mr-4">
             <span id="privacyLabel" class="text-sm font-medium leading-body text-14 mr-4 w-12">
               ${circleData.circle.isPublic ? "Public" : "Private"}
             </span>
-            <div class="hidden privacyCheckboxDiv peer relative h-5 w-10 rounded-full outline outline-1 outline-black after:absolute after:start-[2px] after:top-0 after:h-4 after:w-4 after:rounded-full after:bg-black after:border after:border-black after:transition-all after:content-[''] peer-checked:bg-cover peer-checked:bg-black border-2 peer-checked:outline-black peer-checked:after:translate-x-5 peer-checked:after:border-white peer-checked:after:border-opacity-80 peer-checked:after:border-2 peer-checked:after:bg-black rtl:peer-checked:after:-translate-x-full"></div>
-        </span>
         </label>
       </div>
       <div class="grid grid-cols-5 place-items-center mt-12 mb-2">
         <p class="grid-span-1 text-base font-medium">${circleData.members.length} Friends</p>
       </div>
-      <div class="flex gap-2 memberList">
+      <div class="flex gap-2">
         ${memberList.join("")}
       </div>
       <div id="albumList" class="pb-48 w-full">
@@ -1800,8 +1811,7 @@ async function displayCircle(circleData) {
         </div>
       </div>
     </div>`;
-  const privacyCheckbox = document.querySelector("#privacyCheckbox")
-  circleData.circle.isPublic ? privacyCheckbox.setAttribute("checked", true) : privacyCheckbox.removeAttribute("checked")
+
   const albumListTarget = document.querySelector("#albumList");
   albumListTarget.addEventListener("click", async function (event) {
     event.preventDefault();
@@ -2034,20 +2044,22 @@ async function displayFriends(username) {
   rightHeaderButton.innerHTML = "";
 
   pageContent.innerHTML = `
-    <div class="font-light text-11 justify-center text-center text-dark-grey w-full">
-      <p>We don’t send notifications when you edit</p>
-      <p>your Friends List.</p>
+    <div class="font-light text-11 justify-center text-center text-dark-grey w-full bg-light-mode">
+      <div class="fixed mx-auto bg-light-mode">
+        <p>We don’t send notifications when you edit</p>
+        <p>your Friends List.</p>
+        <div class="relative mt-8">
+          <form onkeydown="return event.key != 'Enter';">
+            <input id="searchFriendsBox" class="w-380 px-10 py-2 border-grey border-2 rounded-input-box text-secondary leading-secondary bg-light-mode" placeholder="search friends"/>
+            <img src="/lightmode/search_icon_grey.svg" alt="search icon" class="absolute left-3 top-search w-25 h-25"/>
+          </form>
+        </div>
+      </div>
     </div>
     <div id="allFriendsList" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full">
-      <div class="relative w-full h-9 mt-8">
-        <form onkeydown="return event.key != 'Enter';">
-          <input id="searchFriendsBox" class="w-380 px-10 py-2 border-grey border-2 rounded-input-box text-secondary leading-secondary" placeholder="search friends"/>
-          <img src="/lightmode/search_icon_grey.svg" alt="search icon" class="absolute left-3 top-search w-25 h-25"/>
-        </form>
-      </div>
-      <div class="shrink-0 mt-10 mb-6 justify-center w-full">
+      <div class="flex flex-col shrink-0 mt-10 mb-6 justify-center w-full">
         <h1 id="friendCount" class="font-bold text-20 leading-body"></h1>
-        <div id="friendsDiv"></div>
+        <div id="friendsDiv" class="mt-8 pt-6 pb-24"></div>
       </div>
     </div>`;
 
