@@ -522,11 +522,11 @@ async function displayCreateCirclePreview() {
               </div>
               <div>
                   <label class="inline-flex items-center cursor-pointer">
-                      <input id="privacyCheckbox" type="checkbox" value="" class="sr-only peer">
-                      <img id="privacyIcon" src="/lightmode/lock_icon.svg" alt="Lock icon" class="mr-4">
-                      <span id="privacyLabel" class="text-sm font-medium leading-body text-14 mr-4 w-12">Private</span>
-                      <div class="peer relative h-5 w-10 rounded-full outline outline-1 outline-black after:absolute after:start-[2px] after:top-0 after:h-4 after:w-4 after:rounded-full after:border after:border-black after:bg-black after:transition-all after:content-[''] peer-checked:bg-cover peer-checked:bg-black border-2 peer-checked:outline-black peer-checked:after:translate-x-5 peer-checked:after:border-white peer-checked:after:border-opacity-80 peer-checked:after:border-2 peer-checked:after:bg-black rtl:peer-checked:after:-translate-x-full"></div>
-                      </label>
+                  <input id="privacyCheckbox" type="checkbox" value="" class="sr-only peer">
+                  <img id="privacyIcon" src="/lightmode/lock_icon.svg" alt="Lock icon" class="mr-4">
+                  <span id="privacyLabel" class="text-sm font-medium leading-body text-14 mr-4 w-12">Private</span>
+                  <div class="peer relative h-5 w-10 rounded-full outline outline-1 outline-black after:absolute after:start-[2px] after:top-0 after:h-4 after:w-4 after:rounded-full after:border after:border-black after:bg-black after:transition-all after:content-[''] peer-checked:bg-cover peer-checked:bg-black border-2 peer-checked:outline-black peer-checked:after:translate-x-5 peer-checked:after:border-white peer-checked:after:border-opacity-80 peer-checked:after:border-2 peer-checked:after:bg-black rtl:peer-checked:after:-translate-x-full"></div>
+                  </label>
               </div>
           </div>
           <div class="flex items-center justify-between w-full hidden">
@@ -581,9 +581,7 @@ async function displayExplore() {
   pageName.textContent = "Explore";
   leftHeaderButton.innerHTML = "";
   rightHeaderButton.innerHTML = `<img src="/lightmode/map_icon.svg" alt="Map Icon"/>`;
-  pageContent.innerHTML = `
-    <div id="explorePage" class="flex flex-col justify-center py-2 w-full h-screen">
-    </div>`;
+  pageContent.innerHTML = `<div id="explorePage" class="flex flex-col justify-center py-2 w-full h-screen"></div>`;
   header.classList.remove("hidden");
   await displayNavBar();
 }
@@ -593,13 +591,17 @@ async function displaySearch() {
   rightHeaderButton.innerHTML = "";
   leftHeaderButton.innerHTML = "";
   pageContent.innerHTML = `
-    <div id="searchPage" class="py-2 w-full h-full">
-      <div class="relative w-full h-9 mt-8">
-        <input type="text" id="searchBox" class="w-380 px-10 py-2 border-grey border-2 rounded-input-box text-secondary leading-secondary" placeholder="search account">
-        <img src="/lightmode/search_icon_grey.svg" alt="search icon" class="absolute left-3 top-search w-25 h-25"/>
-      </div>
-      <div class="flex flex-col shrink-0 mt-10 mb-6 justify-center w-full">
-        <div id="suggestedFriends"></div>
+    <div id="searchPage" class="w-full h-full">
+      <div class="w-full h-full ml-2 bg-light-mode">
+        <div class="fixed mb-6">
+          <div class="relative w-full h-12 bg-light-mode">
+            <input type="text" id="searchBox" class="w-380 px-10 py-2 mt-2 border-grey border-2 rounded-input-box text-secondary leading-secondary" placeholder="search account">
+            <img src="/lightmode/search_icon_grey.svg" alt="search icon" class="absolute left-3 top-3.5 w-25 h-25"/>
+          </div>
+        </div>
+        <div class="flex flex-col shrink-0 justify-center w-380">
+          <div id="suggestedFriends" class="flex flex-col mt-20 pb-48"></div>
+        </div>
       </div>
     </div>
     `;
@@ -611,7 +613,9 @@ async function displaySearch() {
 
   async function initializeSearch() {
     const initialSearchResult = await getSearchResult(searchBox.value);
+    console.log(initialSearchResult)
     storedSearchResults = initialSearchResult.data;
+    
     updateSuggestedFriends(storedSearchResults);
   }
 
@@ -709,13 +713,18 @@ function displayUserSearch(listOfUsers) {
     username.className = "font-light text-14 text-dark-grey";
     displayName.textContent = user.displayName ? user.displayName : user.username;
     username.textContent = `@${user.username}`;
-    return `<div class="flex items-center my-3 user" id="${user.username}">
+    return `<div class="flex items-center my-3 user cursor-pointer" id="${user.username}">
       <div class="flex-none w-58">
         <img class="rounded-full w-58 h-58 object-cover" src="${user.profilePicture}" alt="${user.username}'s profile picture"/>
       </div>
       <div class="ml-8 flex-none w-207">
         ${displayName.outerHTML}
         ${username.outerHTML}
+      </div>
+      <div class="ml-auto w-5">
+        <svg width="9" height="15" viewBox="0 0 9 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1 1L7.5 7.5L1 14" stroke="#0E0E0E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
       </div>
     </div>`;
   });
@@ -1322,10 +1331,19 @@ async function displayListOfCircles(data) {
   return circleListArr;
 }
 
-async function displayCreateAlbum() {
-  pageName.textContent = `New Album`;
+async function displayPhotoUpload(albumData) {
+  console.log(albumData)
+  if (albumData === undefined) {
+    pageName.textContent = "New Album";
+    leftHeaderButton.innerHTML = `<img src="/lightmode/close_icon.svg" alt="Close Button" id="closeButton">`;
+  }
+  
+  if (albumData) {
+    pageName.textContent = "Add Photos";
+    leftHeaderButton.innerHTML = `<img src="/lightmode/close_icon.svg" alt="Close Button" id="backToAlbumButton">`;
+    leftButtonSpan.setAttribute("albumId", `${albumData.data.id}`);
+  }
 
-  leftHeaderButton.innerHTML = `<img src="/lightmode/close_icon.svg" alt="Close Button" id="closeButton">`;
   rightHeaderButton.innerHTML = "";
 
   pageContent.innerHTML = `
@@ -1335,7 +1353,7 @@ async function displayCreateAlbum() {
         <p>your album</p>
       </div>
   
-      <div id="createNewAlbum" class="flex-1 flex flex-col justify-start items-center w-full">
+      <div id="addPhotos" class="flex-1 flex flex-col justify-start items-center w-full">
         <div class="flex flex-col items-center">
           <form>
             <input id="fileUpload" type="file" class="hidden" multiple="false" />
@@ -1354,7 +1372,7 @@ async function displayCreateAlbum() {
       </div>
     </div>`;
 
-  const uploadSection = document.querySelector("#createNewAlbum");
+  const uploadSection = document.querySelector("#addPhotos");
 
   const fileInput = document.querySelector("#fileUpload");
 
@@ -1372,7 +1390,7 @@ async function displayCreateAlbum() {
       console.log("Files uploaded:", albumPhotos);
       console.log(files.length);
       if (files.length > 0) {
-        await displayCreateAlbumPreview(albumPhotos);
+        await displayPhotoUploadPreview(albumPhotos);
         nav.classList.add("hidden");
         await cleanUpSectionEventListener();
       }
@@ -1387,15 +1405,33 @@ async function displayCreateAlbum() {
   uploadSection.classList.remove("imageUploadSection");
 }
 
-function displayCreateAlbumPreview(albumPhotos) {
-  pageName.textContent = "New Album";
-  leftHeaderButton.innerHTML = `<img src="/lightmode/close_icon.svg" alt="Close Button" id="closeButton">`;
-  rightHeaderButton.innerHTML = `<img src="/lightmode/next_button.svg" alt="Next Button" id="albumNext">`;
+function displayPhotoUploadPreview(albumPhotos) {
+  const albumId = leftButtonSpan.getAttribute("albumId");
+  const rightButtonSpan = document.querySelector(".rightButtonSpan");
+
+  if ((albumId === undefined) || (albumId === null)) {
+    pageName.textContent = "New Album";
+    leftHeaderButton.innerHTML = `<img src="/lightmode/close_icon.svg" alt="Close Button" id="closeButton">`;
+    rightHeaderButton.textContent = "Next";
+    rightButtonSpan.id = "albumNextButton";
+    rightHeaderButton.className = "text-lg";
+  }
+  console.log(albumId)
+
+  if (albumId) {
+    pageName.textContent = "Add Photos";
+    leftHeaderButton.innerHTML = `<img src="/lightmode/close_icon.svg" alt="Close Button" id="backToAlbumButton">`;
+    rightHeaderButton.textContent = "Done";
+    rightButtonSpan.id = "updateAlbum";
+    rightHeaderButton.className = "text-lg";
+  }
 
   const carouselDiv = document.createElement("div");
   carouselDiv.id = "carousel";
   carouselDiv.className = "keen-slider overflow-hidden";
 
+
+  console.log(albumPhotos)
   const mappedPhotos = albumPhotos.map((obj) => {
     return {
       photoSrc: obj.data,
@@ -1426,7 +1462,7 @@ function displayCreateAlbumPreview(albumPhotos) {
           <p>select which photos you want to add to</p>
           <p class="">your album</p>
         </div>
-        <div id="createNewAlbum" class="flex-1 flex-col items-center bg-light-mode w-430 overflow-hidden p-2">
+        <div id="addPhotos" class="flex-1 flex-col items-center bg-light-mode w-430 overflow-hidden p-2">
           <div class="w-full">
             
           </div>
@@ -1453,8 +1489,8 @@ function displayCreateAlbumPreview(albumPhotos) {
           </div>
         </div>`;
 
-  const createNewAlbum = document.querySelector("#createNewAlbum div.w-full");
-  createNewAlbum.appendChild(carouselDiv);
+  const addPhotos = document.querySelector("#addPhotos div.w-full");
+  addPhotos.appendChild(carouselDiv);
 
   function navigation(slider) {
     let wrapper, dots;
@@ -1530,7 +1566,7 @@ function displayCreateAlbumPreview(albumPhotos) {
       console.log("Files uploaded:", albumPhotos);
       console.log(files.length);
       if (files.length > 0) {
-        await displayCreateAlbumPreview(albumPhotos);
+        await displayPhotoUploadPreview(albumPhotos);
         await cleanUpSectionEventListener();
       }
     });
@@ -1545,13 +1581,16 @@ function displayCreateAlbumPreview(albumPhotos) {
 }
 
 async function displayAlbumConfirmation() {
+  const rightButtonSpan = document.querySelector(".rightButtonSpan");
   nav.classList.add("hidden");
 
   leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="albumConfirmationBackButton"/>`;
 
   pageName.textContent = "Post";
 
-  rightHeaderButton.innerHTML = `<img src="/lightmode/create_button.svg" alt="Create Button" id="createAlbum"/>`;
+  rightHeaderButton.textContent = "Create"
+  rightButtonSpan.id = "createAlbum";
+  rightHeaderButton.className = "text-lg";
 
   const carouselDiv = document.createElement("div");
   carouselDiv.id = "carousel";
@@ -1891,6 +1930,8 @@ async function displayAlbum(albumData) {
   const album = document.querySelector(".album");
   const imgElement = document.querySelector("#circleToProfileButton");
   const albumConfirmationBackButton = document.querySelector("#albumConfirmationBackButton");
+
+  console.log("album", albumData);
   if (backSpan) {
     backSpan.setAttribute("circleId", `${albumData.circle.id}`);
   } 
@@ -1975,8 +2016,19 @@ async function displayAlbum(albumData) {
       <div class="mt-4">
         ${circleName.outerHTML}
       </div>
-      <div class="grid grid-cols-5 place-items-center mt-12 mb-2 mr-0">
-        <p class="grid-span-1 text-base font-medium">${albumData.photos.length} Photos</p>
+      <div class="grid grid-cols-2 justify-between place-items-center mt-12 mb-2 mr-0">
+        <p class="col-span-1 text-base font-medium justify-self-start">${albumData.photos.length} Photos</p>
+        <button id="addPhotos" class="col-span-1 justify-self-end w-6 h-6" albumId="${albumData.id}">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+            <g id="SVGRepo_iconCarrier">
+              <path d="M13 4H8.8C7.11984 4 6.27976 4 5.63803 4.32698C5.07354 4.6146 4.6146 5.07354 4.32698 5.63803C4 6.27976 4 7.11984 4 8.8V15.2C4 16.8802 4 17.7202 4.32698 18.362C4.6146 18.9265 5.07354 19.3854 5.63803 19.673C6.27976 20 7.11984 20 8.8 20H15.2C16.8802 20 17.7202 20 18.362 19.673C18.9265 19.3854 19.3854 18.9265 19.673 18.362C20 17.7202 20 16.8802 20 15.2V11" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+              <path d="M4 16L8.29289 11.7071C8.68342 11.3166 9.31658 11.3166 9.70711 11.7071L13 15M13 15L15.7929 12.2071C16.1834 11.8166 16.8166 11.8166 17.2071 12.2071L20 15M13 15L15.25 17.25" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+              <path d="M18.5 3V5.5M18.5 8V5.5M18.5 5.5H16M18.5 5.5H21" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+            </g>
+          </svg>
+        </button>
       </div>
       <div id="photoList" class="pb-28 w-full">
         <div class="columns-2 gap-4 space-y-4 grid-flow-row">
@@ -2005,8 +2057,18 @@ async function displayAlbum(albumData) {
     user4.classList.add("h-5", "w-5", "col-start-1", "row-start-2", "justify-self-end");
   }
 
+  const addMorePhotos = document.querySelector("#addPhotos");
+  addMorePhotos.addEventListener("click", async(event) => {
+    const albumId = addMorePhotos.getAttribute("albumId");
+    console.log("albumid:", albumId);
+    const albumData = await getAlbum(albumId);
+    console.log("albumdata:", album);
+    await displayPhotoUpload(albumData);
+
+  });
+
   const albumPhotos = document.querySelector("#albumPhotos");
-  albumPhotos.addEventListener("click", async (event) => {
+  albumPhotos.addEventListener("click", async(event) => {
     const photo = event.target.closest("#photo img");
     const overlay = event.target.closest("#photoOverlay");
     if (photo) {
@@ -2034,22 +2096,26 @@ async function displayFriends(username) {
   rightHeaderButton.innerHTML = "";
 
   pageContent.innerHTML = `
-    <div class="font-light text-11 justify-center text-center text-dark-grey w-full">
-      <p>We don’t send notifications when you edit</p>
-      <p>your Friends List.</p>
+  <div class="font-light text-11 justify-center text-center text-dark-grey w-full bg-light-mode">
+    <div class="w-380 bg-light-mode">
+      <div class="fixed ml-2 bg-light-mode">
+        <p>We don’t send notifications when you edit</p>
+        <p>your Friends List.</p>
+        <div class="h-9 bg-light-mode w-full mt-6">
+            <form onkeydown="return event.key != 'Enter';" class="h-9 bg-light-mode w-full relative">
+              <input id="searchFriendsBox" class="w-380    px-10 py-2 border-grey border-2 rounded-input-box text-secondary leading-secondary bg-white" placeholder="search friends"/>
+              <img src="/lightmode/search_icon_grey.svg" alt="search icon" class="absolute left-3 top-search w-25 h-25"/>
+            </form>
+        </div>
+      </div>
     </div>
-    <div id="allFriendsList" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full">
-      <div class="relative w-full h-9 mt-8">
-        <form onkeydown="return event.key != 'Enter';">
-          <input id="searchFriendsBox" class="w-380 px-10 py-2 border-grey border-2 rounded-input-box text-secondary leading-secondary" placeholder="search friends"/>
-          <img src="/lightmode/search_icon_grey.svg" alt="search icon" class="absolute left-3 top-search w-25 h-25"/>
-        </form>
-      </div>
-      <div class="shrink-0 mt-10 mb-6 justify-center w-full">
-        <h1 id="friendCount" class="font-bold text-20 leading-body"></h1>
-        <div id="friendsDiv"></div>
-      </div>
-    </div>`;
+  </div>
+  <div id="allFriendsList" class="flex flex-col items-center mt-20 p-4 bg-light-mode rounded-lg w-full">
+    <div class="flex flex-col shrink-0 mt-10 mb-6 justify-center w-380">
+      <h1 id="friendCount" class="font-bold text-20 leading-body"></h1>
+      <div id="friendsDiv" class="flex flex-col pb-24 w-full"></div>
+    </div>
+  </div>`;
 
   const searchBox = document.querySelector("#searchFriendsBox");
   const friendsDiv = document.querySelector("#friendsDiv");
@@ -2058,6 +2124,8 @@ async function displayFriends(username) {
   async function initializeSearch() {
     const friends = await getFriends(username);
     friendsList = friends;
+    console.log(friendsList)
+                  
     updateSuggestedFriends(friends);
   }
 
@@ -2086,6 +2154,49 @@ async function displayFriends(username) {
 }
 
 function displayFriendsList(friends) {
+  friends = [
+    {
+        "username": "<strong>A_A</strong>",
+        "displayName": null,
+        "profilePicture": "https://i.pinimg.com/550x/0a/b8/6d/0ab86dfd4bc698ce4f57a8e06a6ca6d1.jpg"
+    },
+    {
+      "username": "<strong>A_A</strong>",
+      "displayName": null,
+      "profilePicture": "https://i.pinimg.com/550x/0a/b8/6d/0ab86dfd4bc698ce4f57a8e06a6ca6d1.jpg"
+  },
+  {
+    "username": "<strong>A_A</strong>",
+    "displayName": null,
+    "profilePicture": "https://i.pinimg.com/550x/0a/b8/6d/0ab86dfd4bc698ce4f57a8e06a6ca6d1.jpg"
+},
+{
+  "username": "<strong>A_A</strong>",
+  "displayName": null,
+  "profilePicture": "https://i.pinimg.com/550x/0a/b8/6d/0ab86dfd4bc698ce4f57a8e06a6ca6d1.jpg"
+},
+{
+  "username": "<strong>A_A</strong>",
+  "displayName": null,
+  "profilePicture": "https://i.pinimg.com/550x/0a/b8/6d/0ab86dfd4bc698ce4f57a8e06a6ca6d1.jpg"
+},
+{
+  "username": "<strong>A_A</strong>",
+  "displayName": null,
+  "profilePicture": "https://i.pinimg.com/550x/0a/b8/6d/0ab86dfd4bc698ce4f57a8e06a6ca6d1.jpg"
+},
+{
+  "username": "<strong>A_A</strong>",
+  "displayName": null,
+  "profilePicture": "https://i.pinimg.com/550x/0a/b8/6d/0ab86dfd4bc698ce4f57a8e06a6ca6d1.jpg"
+},
+{
+  "username": "<strong>A_A</strong>",
+  "displayName": null,
+  "profilePicture": "https://i.pinimg.com/550x/0a/b8/6d/0ab86dfd4bc698ce4f57a8e06a6ca6d1.jpg"
+},
+
+]
   return friends.map((friend) => {
     let displayName = document.createElement("h2");
     let username = document.createElement("h2");
@@ -2102,7 +2213,7 @@ function displayFriendsList(friends) {
           ${displayName.outerHTML}
           ${username.outerHTML}
         </div>
-        <div class="flex-none w-58">
+        <div class="ml-auto pr-2">
           <div class="removeFriendIcon">
             <svg width="30" height="31" viewBox="0 0 30 31" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M17.5 10.5C17.5 7.7375 15.2625 5.5 12.5 5.5C9.7375 5.5 7.5 7.7375 7.5 10.5C7.5 13.2625 9.7375 15.5 12.5 15.5C15.2625 15.5 17.5 13.2625 17.5 10.5ZM2.5 23V24.25C2.5 24.9375 3.0625 25.5 3.75 25.5H21.25C21.9375 25.5 22.5 24.9375 22.5 24.25V23C22.5 19.675 15.8375 18 12.5 18C9.1625 18 2.5 19.675 2.5 23ZM22.5 13H27.5C28.1875 13 28.75 13.5625 28.75 14.25C28.75 14.9375 28.1875 15.5 27.5 15.5H22.5C21.8125 15.5 21.25 14.9375 21.25 14.25C21.25 13.5625 21.8125 13 22.5 13Z" fill="#0E0E0E"/>

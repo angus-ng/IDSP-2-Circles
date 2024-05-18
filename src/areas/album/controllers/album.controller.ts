@@ -29,6 +29,7 @@ class AlbumController implements IController {
   private initializeRoutes() {
     this.router.post(`${this.path}/create`, ensureAuthenticated, upload.none(), this.createAlbum); 
     this.router.post(`${this.path}/upload`, ensureAuthenticated, upload.single("file"), this.uploadImages); 
+    this.router.post(`${this.path}/:id/update`, ensureAuthenticated, this.updateAlbum);
     this.router.get(`${this.path}/:id`, ensureAuthenticated, this.showAlbum);
     this.router.post(`${this.path}/list`, ensureAuthenticated, this.getAlbumList);
     this.router.post(`${this.path}/comments`, ensureAuthenticated, this.getComments);
@@ -45,7 +46,7 @@ class AlbumController implements IController {
     res.json({ message: 'File uploaded successfully', data:cldRes.url });
   }
 
-  private createAlbum = async (req:Request, res:Response) => {
+  private createAlbum = async (req: Request, res: Response) => {
     try {
       let loggedInUser = await getLocalUser(req, res)
         
@@ -74,8 +75,41 @@ class AlbumController implements IController {
         res.status(200).json({success: true, data:null, error: "Failed to create album"})
     }
   }
+
+  private updateAlbum = async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      const { newPhotos } = req.body;
   
-  private showAlbum = async (req:Request, res:Response) => {
+      if (!Array.isArray(newPhotos)) {
+        return res.status(400).json({ success: false, error: "Invalid photos array" });
+      }
+  
+      console.log(id);
+  
+      let loggedInUser = await getLocalUser(req, res);
+      const member = await this._service.checkMembership(id, loggedInUser);
+      if (!member) {
+        return res.status(403).json({ success: false, error: "User is not a member of this album" });
+      }
+  
+      const updatedAlbum = await this._service.updateAlbum(loggedInUser, id, newPhotos);
+      if (!updatedAlbum) {
+        return res.status(404).json({ success: false, error: "Album not found" });
+      }
+  
+      console.log(updatedAlbum);
+  
+      res.status(200).json({ success: true, data: updatedAlbum });
+  
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ success: false, error: "Error updating album" });
+    }
+  }
+  
+
+  private showAlbum = async (req: Request, res: Response) => {
     try {
       const { id } = req.params
       console.log(id)

@@ -3,6 +3,7 @@ import { Album } from '@prisma/client'
 export default interface IAlbumService {
     createAlbum(newAlbumInput: any):any
     //deleteAlbum(id: string, currentUser: string): Promise<void>
+    updateAlbum(currentUser: string, albumId: string, newPhoto: any[]): Promise<Album | null>
     checkMembership(id: string, currentUser: string): Promise<boolean>
     getAlbum(id: string): Promise<Album | null>
     listAlbums(currentUser: string): Promise<{album: Album}[] | void>
