@@ -66,6 +66,9 @@ header.addEventListener("click", async (event) => {
   const circleToProfileButton = event.target.closest("#circleToProfileButton");
   const albumToCircleButton = event.target.closest("#albumToCircleButton");
   const newAlbumToCircleButton = event.target.closest("#newAlbumToCircleButton");
+  const circleEditButton = event.target.closest("#circleEditButton")
+  const circleShareButton = event.target.closest("#circleShareButton")
+  const updateCircleButton = event.target.closest("#updateCircle")
 
   if (emailBackButton) {
     await displayLoginPage();
@@ -293,6 +296,7 @@ header.addEventListener("click", async (event) => {
   if (circleToProfileButton) {
     const backSpan = document.querySelector(".backSpan");
     const username = backSpan.getAttribute("username");
+    rightHeaderButton.innerHTML = "";
     const { success, data } = await getUser(username);
     if (success && data) {
       backSpan.removeAttribute("circleId");
@@ -332,6 +336,41 @@ header.addEventListener("click", async (event) => {
     const { success, data } = await getUser(currentLocalUser);
     if (success && data) {
       return await displayProfile(data);
+    }
+  }
+
+  if (circleEditButton) {
+    const circleId = document.querySelector("#circleEditButton span").getAttribute("circleid")
+    await displayCircleEditMode(circleId)
+  }
+
+  if (circleShareButton) {
+    console.log("SHARE CIRCLE")
+  }
+
+  if (updateCircleButton) {
+    const privacyCheckbox = document.querySelector("#privacyCheckbox")
+    const circleImage = document.querySelector("#circleImage img")
+    const circleNameInput = document.querySelector("#circleNameInput")
+    const circleId = document.querySelector("#rightButton img").getAttribute("circleid")
+
+    if (!circleNameInput.value) {
+      return displayPopup("Missing circle name")
+    }
+
+    const circleObj = {
+      circleId,
+      circleImg: circleImage.src,
+      circleName: circleNameInput.value,
+      isPublic: privacyCheckbox.checked
+    }
+    const {success, data, error } = await updateCircle(circleObj)
+    let circleIdFromUpdate = data
+    if (success && data) {
+      const { success, data, error } = await getCircle(circleIdFromUpdate);
+      if (success && data) {
+        await displayCircle(data);
+      }
     }
   }
 });
@@ -575,3 +614,69 @@ const clearNewAlbum = () => {
   albumObj = {};
   albumPhotos = [];
 };
+
+const displayCircleEditMode = (circleId) => {
+  pageName.textContent = "Edit";
+  //pageName.classList.add("text-light-mode-accent")
+  
+  const backSpan = document.querySelector("span.backSpan")
+  if (backSpan) {
+    if (backSpan.getAttribute("username")) {
+      backSpan.removeAttribute("username")
+    }
+    backSpan.setAttribute("circleId", circleId)
+    backSpan.childNodes[0].id = "albumToCircleButton"
+  } else {
+    leftHeaderButton.innerHTML = `<span class="backSpan" circleid="${circleId}"><img src="/lightmode/back_button.svg" alt="Back Button" id="albumToCircleButton" class=""></span>`
+  }
+  rightHeaderButton.innerHTML = `<img src="/lightmode/save_button.svg" alt="Save Button" id="updateCircle" circleId="${circleId}">`;
+
+  const privacyCheckboxDiv = document.querySelector(".privacyCheckboxDiv")
+  privacyCheckboxDiv.classList.remove("hidden")
+
+  const privacyCheckbox = document.querySelector("#privacyCheckbox")
+  privacyCheckbox.addEventListener("change", async function () {
+    const privacyIcon = document.querySelector("#privacyIcon");
+    const privacyLabel = document.querySelector("#privacyLabel");
+    privacyIcon.src = "/lightmode/lock_icon.svg";
+    privacyLabel.innerHTML = "Private";
+    await updateCheckbox();
+  });
+
+  const circleImage = document.querySelector("#circleImage img")
+  const hiddenImageInput = document.createElement("input")
+  hiddenImageInput.id = "fileUpload"
+  hiddenImageInput.type ="file"
+  hiddenImageInput.multiple = "false"
+  hiddenImageInput.className = "hidden"
+  circleImage.parentNode.append(hiddenImageInput)
+  circleImage.addEventListener("click", async function (event) {
+    event.preventDefault();
+    await hiddenImageInput.click();
+  });
+  hiddenImageInput.addEventListener("input", async function (event) {
+    event.preventDefault();
+    const res = await handleSelectFile();
+    if (res) {
+      circleImage.src = await res.data;
+    }
+  });
+
+
+  const circleName = document.querySelector("#circleName p")
+  const circleNameInput = document.createElement("input")
+  circleNameInput.id = "circleNameInput"
+  circleNameInput.type = "text"
+  circleNameInput.placeholder = "Add a circle name"
+  circleNameInput.value = circleName.textContent
+  circleNameInput.className = "w-234 text-center bg-transparent text-h2 text-text-grey font-light items-end border-none"
+  circleName.remove();
+  document.querySelector("#circleName").append(circleNameInput)
+
+  const inviteMore = document.createElement("img")
+  inviteMore.src = "/invite_more_friends.svg"
+  inviteMore.id = "inviteMoreUsers"
+  inviteMore.className = "w-42 h-42 rounded-full object-cover"
+  document.querySelector(".memberList").append(inviteMore)
+
+}

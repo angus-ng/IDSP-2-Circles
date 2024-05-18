@@ -12,4 +12,5 @@ export default interface ICircleService {
     getMembers(id: string): Promise<{user: {username: string, profilePicture: string}}[] | null>
     acceptInvite(id: string, username: string): Promise<void>
     removeRequest(id: string, invitee: string): Promise<void>
+    updateCircle(currentUser: string, circleObj: any): Promise<Circle>
 }

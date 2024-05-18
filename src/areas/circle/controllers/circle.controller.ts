@@ -29,6 +29,7 @@ class CircleController implements IController {
     this.router.post(`${this.path}/list`, ensureAuthenticated, this.getCircleList);
     this.router.post(`${this.path}/accept`, ensureAuthenticated, this.acceptInvite)
     this.router.post(`${this.path}/decline`, ensureAuthenticated, this.removeCircleInvite)
+    this.router.post(`${this.path}/update`, ensureAuthenticated, this.updateCircle)
   }
 
   private uploadImage = async (req: Request, res: Response) => {
@@ -146,6 +147,29 @@ class CircleController implements IController {
     } catch (error: any) {
       throw new Error(error)
     }
+  }
+
+  private updateCircle = async (req: Request, res: Response) => {
+    try {
+      let loggedInUser = await getLocalUser(req, res)
+      const { circleId, circleImg, circleName, isPublic } = req.body
+      console.log(req.body)
+      if (!circleId || !circleImg || !circleName || !isPublic) {
+        return res.status(200).json({success:true, data:null, error:"missing parameters"})
+      }
+      const circleObj = {
+        circleId,
+        circleImg,
+        circleName,
+        isPublic
+      }
+      const circle = await this._service.updateCircle(loggedInUser, circleObj)
+      res.status(200).json({success:true, data:circle.id})
+    } catch (err) {
+      console.log(err)
+      res.status(200).json({success:true, data:null, error:"failed to update circle"})
+    }
+
   }
 }
 

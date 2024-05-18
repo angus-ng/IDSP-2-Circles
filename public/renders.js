@@ -624,7 +624,7 @@ async function displaySearch() {
     const initialSearchResult = await getSearchResult(searchBox.value);
     storedSearchResults = initialSearchResult.data;
 
-    storedSearchResults = 
+    console.log(storedSearchResults)
     updateSuggestedFriends(storedSearchResults);
   }
 

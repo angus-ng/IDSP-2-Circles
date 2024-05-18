@@ -215,4 +215,27 @@ export class CircleService implements ICircleService {
             return; 
         }
     }
+    
+    async updateCircle(currentUser: string, circleObj: any): Promise<Circle> {
+        const circle = await this._db.prisma.circle.findUnique({
+            where: {
+                id: circleObj.circleId,
+                ownerId: currentUser
+            }
+        })
+        if (!circle) {
+            throw new Error("insufficient permissions")
+        }
+        const updatedCircle = this._db.prisma.circle.update({
+            where: {
+                id: circleObj.circleId
+            }, 
+            data: {
+                picture: circleObj.circleImg,
+                name: circleObj.circleName,
+                isPublic: circleObj.isPublic
+            }
+        })
+        return updatedCircle;
+    }
 }
