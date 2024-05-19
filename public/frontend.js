@@ -210,9 +210,9 @@ header.addEventListener("click", async (event) => {
     const { success, data, error } = await getAlbum(albumId);
     if (success && data) {
       await displayAlbum(data);
-      backToAlbumButton.classList.add("hidden");
       nav.classList.remove("hidden");
     }
+    await cleanUpSectionEventListener();
   }
 
   if (updateAlbumButton) {
@@ -232,6 +232,7 @@ header.addEventListener("click", async (event) => {
         console.log(error);
       }
     }
+    await cleanUpSectionEventListener();
   }  
 
   if (albumNextButton) {

@@ -1926,19 +1926,24 @@ async function displayCircleInvites() {
 
 async function displayAlbum(albumData) {
   const backSpan = document.querySelector(".backSpan");
-  const leftButtonImg = document.querySelector("#leftButton img");
+  const leftButtonImg = document.querySelector(".backSpan img");
   const album = document.querySelector(".album");
   const imgElement = document.querySelector("#circleToProfileButton");
   const albumConfirmationBackButton = document.querySelector("#albumConfirmationBackButton");
+  const backToAlbumButton = document.querySelector("#backToAlbumButton");
+
+  if (backToAlbumButton) {
+    backToAlbumButton.classList.add("hidden");
+  }
+
+  if (leftButtonImg) {
+    leftButtonImg.classList.remove("hidden");
+  }
 
   console.log("album", albumData);
   if (backSpan) {
     backSpan.setAttribute("circleId", `${albumData.circle.id}`);
   } 
-  
-  if (leftButtonImg) {
-    leftButtonImg.classList.remove("hidden");
-  }
   
   if (album) {
     const albumId = album.getAttribute("id");
