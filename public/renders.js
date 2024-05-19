@@ -2441,14 +2441,14 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
   let commentId = null;
   albumCommentSection.addEventListener("click", async function (event) {
     event.preventDefault();
+    commentUser = event.target.closest("div.comment").getAttribute("user");
     switch (event.target.tagName) {
       case "A":
-        if (event.target.className.includes("replyButton")) {
+        if (event.target.className.includes("replyButton") && commentUser !== "null") {
           const comment = document.querySelector("#comment");
           comment.classList.remove("bg-transparent");
           comment.classList.add("border-2", "bg-light-mode-accent");
           commentId = event.target.closest("div.comment").id;
-          commentUser = event.target.closest("div.comment").getAttribute("user");
           const commentInput = document.querySelector("#commentInput");
           if (commentInput) {
             commentInput.id = "replyInput";
@@ -2488,7 +2488,6 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
 
     const like = event.target.closest(".like");
     if (like) {
-      commentUser = event.target.closest("div.comment").getAttribute("user");
       if (like.classList.contains("liked")) {
         commentId = event.target.closest("div.comment").id;
         like.classList.remove("liked");
