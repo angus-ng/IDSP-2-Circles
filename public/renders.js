@@ -1787,12 +1787,12 @@ async function displayCircle(circleData) {
           ${albumName.outerHTML}
         </div>
         <div class="absolute inset-0 flex items-end justify-end gap-1 p-2">
-          <div class="like">
+          <div class="like cursor-pointer">
             <svg width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M9.22318 16.2905L9.22174 16.2892C6.62708 13.9364 4.55406 12.0515 3.11801 10.2946C1.69296 8.55118 1 7.05624 1 5.5C1 2.96348 2.97109 1 5.5 1C6.9377 1 8.33413 1.67446 9.24117 2.73128L10 3.61543L10.7588 2.73128C11.6659 1.67446 13.0623 1 14.5 1C17.0289 1 19 2.96348 19 5.5C19 7.05624 18.307 8.55118 16.882 10.2946C15.4459 12.0515 13.3729 13.9364 10.7783 16.2892L10.7768 16.2905L10 16.9977L9.22318 16.2905Z" stroke="white" stroke-width="2"/>
             </svg>
           </div>
-          <div class="comment">
+          <div class="comment cursor-pointer">
             <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M10.5 19.125C8.79414 19.125 7.12658 18.6192 5.70821 17.6714C4.28983 16.7237 3.18434 15.3767 2.53154 13.8006C1.87873 12.2246 1.70793 10.4904 2.04073 8.81735C2.37352 7.14426 3.19498 5.60744 4.4012 4.40121C5.60743 3.19498 7.14426 2.37353 8.81735 2.04073C10.4904 1.70793 12.2246 1.87874 13.8006 2.53154C15.3767 3.18435 16.7237 4.28984 17.6714 5.70821C18.6192 7.12658 19.125 8.79414 19.125 10.5C19.125 11.926 18.78 13.2705 18.1667 14.455L19.125 19.125L14.455 18.1667C13.2705 18.78 11.925 19.125 10.5 19.125Z" stroke="#F8F4EA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
@@ -2321,12 +2321,12 @@ async function displayListOfAlbums(data, user, profile = false) {
         ${albumName.outerHTML}
       </div>
       <div class="absolute inset-0 flex items-end justify-end gap-1 p-2">
-        <div class="like">
+        <div class="like cursor-pointer">
           <svg width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M9.22318 16.2905L9.22174 16.2892C6.62708 13.9364 4.55406 12.0515 3.11801 10.2946C1.69296 8.55118 1 7.05624 1 5.5C1 2.96348 2.97109 1 5.5 1C6.9377 1 8.33413 1.67446 9.24117 2.73128L10 3.61543L10.7588 2.73128C11.6659 1.67446 13.0623 1 14.5 1C17.0289 1 19 2.96348 19 5.5C19 7.05624 18.307 8.55118 16.882 10.2946C15.4459 12.0515 13.3729 13.9364 10.7783 16.2892L10.7768 16.2905L10 16.9977L9.22318 16.2905Z" stroke="white" stroke-width="2"/>
           </svg>
         </div>
-        <div class="comment" albumid="${obj.id}">
+        <div class="comment cursor-pointer" albumid="${obj.id}">
           <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M10.5 19.125C8.79414 19.125 7.12658 18.6192 5.70821 17.6714C4.28983 16.7237 3.18434 15.3767 2.53154 13.8006C1.87873 12.2246 1.70793 10.4904 2.04073 8.81735C2.37352 7.14426 3.19498 5.60744 4.4012 4.40121C5.60743 3.19498 7.14426 2.37353 8.81735 2.04073C10.4904 1.70793 12.2246 1.87874 13.8006 2.53154C15.3767 3.18435 16.7237 4.28984 17.6714 5.70821C18.6192 7.12658 19.125 8.79414 19.125 10.5C19.125 11.926 18.78 13.2705 18.1667 14.455L19.125 19.125L14.455 18.1667C13.2705 18.78 11.925 19.125 10.5 19.125Z" stroke="#F8F4EA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
@@ -2354,25 +2354,21 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
   const showCommentsRecursively = (comments) => {
     const arr = comments.map((comment) => {
       const likeDiv = document.createElement("div");
-      likeDiv.className = "like h-full";
+      likeDiv.className = "like h-full cursor-pointer";
       likeDiv.innerHTML = `
       <svg width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M9.22318 16.6155L9.22174 16.6142C6.62708 14.2613 4.55406 12.3765 3.11801 10.6196C1.69296 8.87613 1 7.38119 1 5.82495C1 3.28843 2.97109 1.32495 5.5 1.32495C6.9377 1.32495 8.33413 1.99941 9.24117 3.05623L10 3.94038L10.7588 3.05623C11.6659 1.99941 13.0623 1.32495 14.5 1.32495C17.0289 1.32495 19 3.28843 19 5.82495C19 7.38119 18.307 8.87613 16.882 10.6196C15.4459 12.3765 13.3729 14.2613 10.7783 16.6142L10.7768 16.6155L10 17.3226L9.22318 16.6155Z" stroke="#0E0E0E" stroke-width="2"/>
       </svg>`;
-      if (
-        comment.likedBy !== null &&
-        comment.likedBy.includes(currentUserUsername)
-      ) {
-        likeDiv.querySelector("svg path").setAttribute("fill", "#FF4646");
-        likeDiv.querySelector("svg path").setAttribute("stroke", "#FF4646");
-        likeDiv.classList.add("liked");
-      }
 
       const posterH1 = document.createElement("h1");
-      posterH1.className = "font-bold text-secondary";
+      posterH1.className = "font-bold text-secondary cursor-pointer";
       const poster = comment.user.displayName ? comment.user.displayName : comment.user.username;
       posterH1.textContent = poster;
       posterH1.textContent ? posterH1.textContent : (posterH1.textContent = "Deleted");
+      if (posterH1.textContent === "Deleted") {
+        posterH1.className = posterH1.className.replace("cursor-pointer", "").trim();
+        likeDiv.className = likeDiv.className.replace("cursor-pointer", "").trim();
+      }
       const postMsgContainer = document.createElement("div");
       postMsgContainer.className = "comment-text-container flex-grow";
       const postMsg = document.createElement("p");
@@ -2380,9 +2376,15 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
       postMsg.textContent = comment.message ? comment.message : "message removed";
       postMsgContainer.appendChild(postMsg);
 
+      if (comment.likedBy !== null && comment.likedBy.includes(currentUserUsername) && poster !== null) {
+        likeDiv.querySelector("svg path").setAttribute("fill", "#FF4646");
+        likeDiv.querySelector("svg path").setAttribute("stroke", "#FF4646");
+        likeDiv.classList.add("liked");
+      }
+
       return `<div class="comment relative flex flex-row items-start h-full my-4" id="${comment.id}" user="${comment.user.displayName ? comment.user.displayName : comment.user.username}">
       <div class="flex-none w-58 items-center h-full mr-1 mt-1">
-        <img src="${comment.user.profilePicture ? comment.user.profilePicture : "/placeholder_image.svg"}" class="w-47 h-47 rounded-full">
+        <img src="${comment.user.profilePicture ? comment.user.profilePicture : "/placeholder_image.svg"}" class="w-47 h-47 rounded-full cursor-pointer">
       </div>
       <div class=" flex flex-col w-294">
         <div class="flex flex-row gap-2">
@@ -2391,8 +2393,8 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
         </div>
           ${postMsgContainer.outerHTML}
         <div class="flex items-center space-x-2">
-          <a class="text-time text-11 underline replyButton w-8">Reply</a>
-          ${comment.user.username === currentLocalUser ? `<img src="/lightmode/more_options.svg" alt="more options"/ class="moreOptions w-5 h-5">` : ""}
+          <a class="text-time text-11 underline replyButton w-8 cursor-pointer">Reply</a>
+          ${comment.user.username === currentLocalUser ? `<img src="/lightmode/more_options.svg" alt="more options"/ class="moreOptions w-5 h-5 cursor-pointer">` : ""}
         </div>
       </div>
       <div class="absolute right-0 top-2 flex flex-1 flex-col items-center">
@@ -2439,7 +2441,6 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
   let commentId = null;
   albumCommentSection.addEventListener("click", async function (event) {
     event.preventDefault();
-    console.log(event.target.tagName);
     switch (event.target.tagName) {
       case "A":
         if (event.target.className.includes("replyButton")) {
@@ -2471,21 +2472,14 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
             const replyInput = document.querySelector("#replyInput");
             replyInput.id = "commentInput";
             replyInput.placeholder = "enter a comment";
-
             replyContent.innerHTML = "";
           });
-
-          // await newComment(newCommentInput.value, albumId, commentId)
         }
         break;
       case "IMG":
         if (event.target.className.includes("moreOptions")) {
           commentId = event.target.closest("div.comment").id;
-          console.log("COMMENTID", commentId)
-          console.log("more");
           const helperObj = { currentUserProfilePicture, albumId, commentId }
-          console.log("HELPER OBJ OUTSIDE")
-          console.log(helperObj)
           await displayConfirmationPopup("delete comment", helperObj);
         }
       default:
@@ -2494,6 +2488,7 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
 
     const like = event.target.closest(".like");
     if (like) {
+      commentUser = event.target.closest("div.comment").getAttribute("user");
       if (like.classList.contains("liked")) {
         commentId = event.target.closest("div.comment").id;
         like.classList.remove("liked");
@@ -2501,7 +2496,7 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
         like.querySelector("svg path").setAttribute("stroke", "#000000");
         await likeComment(commentId);
         await displayComments(albumId, currentUserProfilePicture, currentLocalUser);
-      } else {
+      } else if (commentUser !== "null") {
         like.classList.add("liked");
         commentId = event.target.closest("div.comment").id;
         like.querySelector("svg path").setAttribute("fill", "#FF4646");

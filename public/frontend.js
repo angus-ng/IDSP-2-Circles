@@ -224,6 +224,7 @@ header.addEventListener("click", async (event) => {
       if (success && data) {
         const albumResponse = await getAlbum(albumId);
         if (albumResponse.success && albumResponse.data) {
+          albumPhotos = [];
           await displayAlbum(albumResponse.data);
         } else {
           console.log(albumResponse.error);
