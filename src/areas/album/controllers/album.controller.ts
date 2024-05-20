@@ -54,10 +54,12 @@ class AlbumController implements IController {
             circleId: id,
             creator: loggedInUser
           }
-          const member = await this._service.checkMembership(id, loggedInUser)
+          const member = await this._service.checkMembership(id, loggedInUser, true)
           if (!member){
+            console.log("SHIT")
             return res.status(200).json({ success: true, data:null });
           }
+          console.log(albumObj)
           const newAlbum = await this._service.createAlbum(albumObj)
           console.log(newAlbum.id)
 

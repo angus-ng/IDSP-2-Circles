@@ -7,6 +7,7 @@ export class AlbumService implements IAlbumService {
   readonly _db: DBClient = DBClient.getInstance();
 
   async createAlbum(newAlbumInput: any) {
+    console.log("I RAN")
     //find the logged in user from db
     const creator = await this._db.prisma.user.findUnique({
         where: {
@@ -42,30 +43,47 @@ export class AlbumService implements IAlbumService {
   }
 
 
-  async checkMembership(id: string, currentUser:string): Promise<boolean> {
+  async checkMembership(id: string, currentUser:string, circleId=false): Promise<boolean> {
     const user = await this._db.prisma.user.findUnique({
         where: {
             username : currentUser
         }
     })
-
-    const albumCircleId = await this._db.prisma.album.findUnique({
-        select: {
-            circleId: true
-        },
-        where: {
-            id: id
+    console.log(circleId)
+    let albumCircleId;
+    if (!circleId) {
+        const foundId = await this._db.prisma.album.findUnique({
+            select: {
+                circleId: true
+            },
+            where: {
+                id: id
+            }
+        })
+        if (foundId){
+            albumCircleId = foundId.circleId
         }
-    })
+    } else {
+        const foundId = await this._db.prisma.circle.findUnique({
+            select: {
+                id: true
+            },
+            where: {
+                id: id
+            }
+        })
+        if (foundId){
+            albumCircleId = foundId!.id
+        }
+    }
 
     if (!albumCircleId || !user) {
         return false;
     } 
-
     const membership = await this._db.prisma.userCircle.findFirst({
         where: {
             username: user.username,
-            circleId: albumCircleId.circleId
+            circleId: albumCircleId
         }
     })
 
