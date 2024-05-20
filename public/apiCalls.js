@@ -118,16 +118,6 @@ async function getCircle(circleId) {
   } catch (err) {}
 }
 
-async function getListOfCircles() {
-  const response = await fetch("/circle/list", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  return await response.json();
-}
-
 async function getAlbum(albumId) {
   try {
     const response = await fetch(`/album/${albumId}`);

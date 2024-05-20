@@ -76,6 +76,25 @@ export class AlbumService implements IAlbumService {
     return true
   }
 
+  async checkPublic(id: string): Promise<boolean> {
+    const isPublic = await this._db.prisma.album.findUnique({
+        where: {
+            id: id
+        },
+        select: {
+            circle: {
+                select: {
+                    isPublic: true
+                }
+            }
+        }
+    })
+    if (!isPublic) {
+        return false
+    }
+    return isPublic.circle.isPublic;
+  }
+
   async getAlbum (id: string): Promise<any> {
     const album = await this._db.prisma.album.findUnique({
         select: {
@@ -111,14 +130,14 @@ export class AlbumService implements IAlbumService {
     return album;
   }
 
-  async listAlbums (currentUser:string): Promise<{album: Album}[] | void> { // remove this void when implemented
-    const user = await this._db.prisma.user.findUnique({
-        where: {
-            username: currentUser
-        }
-    })
-    //return new Error("Not implemented");
-  }
+//   async listAlbums (currentUser:string): Promise<{album: Album}[] | void> { // remove this void when implemented
+//     const user = await this._db.prisma.user.findUnique({
+//         where: {
+//             username: currentUser
+//         }
+//     })
+//     //return new Error("Not implemented");
+//   }
   
   async getComments(albumId: string): Promise<any> {
     let album = await this._db.prisma.album.findUnique({
