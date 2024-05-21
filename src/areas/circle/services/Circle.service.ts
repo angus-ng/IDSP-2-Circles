@@ -113,7 +113,8 @@ export class CircleService implements ICircleService {
                         name: true,
                         photos: {
                             take: 1
-                        }
+                        },
+                        likes: true
                     }
                 }
             },

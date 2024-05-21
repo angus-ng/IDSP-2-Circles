@@ -65,6 +65,7 @@ model Album {
   owner     User      @relation(fields: [ownerName], references: [username])
   ownerName String
   name      String
+  likeCount Int @default(0)
   likes     Like[]
   photos    Photo[]
   comments  Comment[]

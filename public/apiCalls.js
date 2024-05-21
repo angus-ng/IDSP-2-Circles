@@ -142,10 +142,49 @@ async function handleCreateAlbum(albumObj) {
     });
 
     const jsonResponse = await response.json();
-
     return jsonResponse;
   } catch (err) {
     return { success: true, data: null, error: err };
+  }
+}
+
+async function likeAlbum(albumId) {
+  try {
+    const response = await fetch(`/album/like`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({albumId})
+    });
+
+    const jsonResponse = await response.json();
+    console.log(jsonResponse);
+    return jsonResponse
+  } catch (err) {
+
+  }
+}
+
+async function updateAlbum(albumId, albumObj) {
+  try {
+    if (!albumObj.photos || albumObj.photos.length === 0) {
+      return { success: false, data: null, error: "No new photos" };
+    }
+
+    console.log("albumobj:", albumObj);
+    let response = await fetch(`/album/${albumId}/update`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(albumObj),
+    });
+
+    const jsonResponse = await response.json();
+    return jsonResponse;
+  } catch (err) {
+    return { success: false, data: null, error: err.message };
   }
 }
 

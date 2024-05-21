@@ -94,6 +94,60 @@ export class AlbumService implements IAlbumService {
     return true
   }
 
+  async likeAlbum(currentUser: string, albumId: string): Promise<void> {
+    try {
+        const existingLike = await this._db.prisma.like.findFirst({
+            where: {
+                userId: currentUser,
+                albumId: albumId
+            }
+        });
+
+        if (existingLike) {
+            await this._db.prisma.like.delete({
+                where: {
+                    id: existingLike.id
+                }
+            });
+
+            await this._db.prisma.album.update({
+                where: {
+                    id: albumId
+                },
+                data: {
+                    likeCount: {
+                        decrement: 1
+                    }
+                }
+            });
+
+            console.log("Album unliked successfully");
+        } else {
+            await this._db.prisma.like.create({
+                data: {
+                    userId: currentUser,
+                    albumId: albumId
+                }
+            });
+
+            await this._db.prisma.album.update({
+                where: {
+                    id: albumId
+                },
+                data: {
+                    likeCount: {
+                        increment: 1
+                    }
+                }
+            });
+
+            console.log("Album liked successfully");
+        }
+    } catch (err) {
+        throw err;
+    }
+}
+
   async checkPublic(id: string): Promise<boolean> {
     const isPublic = await this._db.prisma.album.findUnique({
         where: {
@@ -124,6 +178,17 @@ export class AlbumService implements IAlbumService {
                     src: true,
                 }
             },
+            likes: {
+                select: {
+                    user: {
+                        select: {
+                            username: true,
+                            profilePicture: true,
+                        }
+                    }
+                }
+            },
+            likeCount: true,
             circle: {
                 select: {
                     id: true,
@@ -147,6 +212,37 @@ export class AlbumService implements IAlbumService {
     })
     return album;
   }
+
+  async updateAlbum(currentUser: string, id: string, newPhotos: any[]): Promise<any> {
+    const hasPermission = await this.checkMembership(id, currentUser);
+    if (!hasPermission) {
+      throw new Error("User does not have permission to update this album.");
+    }
+  
+    const existingAlbum = await this._db.prisma.album.findUnique({
+      where: { id },
+      include: { photos: true }
+    });
+  
+    if (!existingAlbum) {
+      throw new Error("Album not found.");
+    }
+  
+    if (newPhotos) {
+        for (let i=0; i < newPhotos.length; i++){
+            const file = await this._db.prisma.photo.create({
+                data: {
+                    src: newPhotos[i].photoSrc,
+                    userId: currentUser,
+                    albumId: id
+                }
+            })
+        }
+        return newPhotos
+    }
+  
+    return this.getAlbum(id);
+  }  
 
 //   async listAlbums (currentUser:string): Promise<{album: Album}[] | void> { // remove this void when implemented
 //     const user = await this._db.prisma.user.findUnique({
@@ -431,5 +527,4 @@ export class AlbumService implements IAlbumService {
             throw err;
         }
     }
-    
 }

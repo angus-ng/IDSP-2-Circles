@@ -1,6 +1,7 @@
 const pageName = document.querySelector("#pageName");
 const pageContent = document.querySelector("#pageContent");
 const leftHeaderButton = document.querySelector("#leftButton");
+const leftButtonSpan = document.querySelector(".leftButtonSpan");
 const rightHeaderButton = document.querySelector("#rightButton");
 
 let currentLocalUser;
@@ -45,7 +46,7 @@ header.addEventListener("click", async (event) => {
   const circlePreviewBackButton = event.target.closest("#circlePreviewBackButton");
   const createCircleButton = event.target.closest("#createCircleButton");
   const closeButton = event.target.closest("#closeButton");
-  const albumNextButton = event.target.closest("#albumNext");
+  const albumNextButton = event.target.closest("#albumNextButton");
   const backButtonAlbum = event.target.closest("#backButtonAlbum");
   const createAlbumButton = event.target.closest("#createAlbum");
   const albumConfirmationBackButton = event.target.closest("#albumConfirmationBackButton");
@@ -66,9 +67,11 @@ header.addEventListener("click", async (event) => {
   const circleToProfileButton = event.target.closest("#circleToProfileButton");
   const albumToCircleButton = event.target.closest("#albumToCircleButton");
   const newAlbumToCircleButton = event.target.closest("#newAlbumToCircleButton");
-  const circleEditButton = event.target.closest("#circleEditButton")
-  const circleShareButton = event.target.closest("#circleShareButton")
-  const updateCircleButton = event.target.closest("#updateCircle")
+  const circleEditButton = event.target.closest("#circleEditButton");
+  const circleShareButton = event.target.closest("#circleShareButton");
+  const updateCircleButton = event.target.closest("#updateCircle");
+  const backToAlbumButton = event.target.closest("#backToAlbumButton");
+  const updateAlbumButton = event.target.closest("#updateAlbum");
 
   if (emailBackButton) {
     await displayLoginPage();
@@ -201,6 +204,38 @@ header.addEventListener("click", async (event) => {
     return;
   }
 
+  if (backToAlbumButton) {
+    const albumId = leftButtonSpan.getAttribute("albumId");
+    console.log(albumId);
+    const { success, data, error } = await getAlbum(albumId);
+    if (success && data) {
+      await displayAlbum(data);
+      nav.classList.remove("hidden");
+    }
+    await cleanUpSectionEventListener();
+  }
+
+  if (updateAlbumButton) {
+    const albumId = leftButtonSpan.getAttribute("albumId");
+    console.log(albumId);
+  
+    if (albumId) {
+      const { success, data, error } = await updateAlbum(albumId, albumObj);
+      if (success && data) {
+        const albumResponse = await getAlbum(albumId);
+        if (albumResponse.success && albumResponse.data) {
+          albumPhotos = [];
+          await displayAlbum(albumResponse.data);
+        } else {
+          console.log(albumResponse.error);
+        }
+      } else {
+        console.log(error);
+      }
+    }
+    await cleanUpSectionEventListener();
+  }  
+
   if (albumNextButton) {
     const { success, data } = await getUser(currentLocalUser);
     if (success && data) {
@@ -211,7 +246,7 @@ header.addEventListener("click", async (event) => {
   }
 
   if (addCircleBackButton) {
-    await displayCreateAlbumPreview(albumPhotos);
+    await displayPhotoUploadPreview(albumPhotos);
   }
 
   if (backButtonAlbum) {
@@ -380,12 +415,8 @@ const modal = document.querySelector("#modal");
 modal.addEventListener("click", async function (event) {
   event.preventDefault();
   const closeModalButton = event.target.closest("#closeModalButton");
-  const createAlbumModalButton = event.target.closest(
-    "#createAlbumModalButton"
-  );
-  const createCircleModalButton = event.target.closest(
-    "#createCircleModalButton"
-  );
+  const createAlbumModalButton = event.target.closest("#createAlbumModalButton");
+  const createCircleModalButton = event.target.closest("#createCircleModalButton");
   if (closeModalButton) {
     if (modal.classList.contains("shown")) {
       modal.classList.remove("shown");
@@ -398,7 +429,7 @@ modal.addEventListener("click", async function (event) {
     modal.classList.remove("shown");
     modal.classList.add("hidden");
     nav.classList.add("hidden");
-    await displayCreateAlbum();
+    await displayPhotoUpload();
   }
 
   if (createCircleModalButton) {
@@ -551,7 +582,7 @@ async function dropHandler(event) {
   console.log("Files uploaded:", albumPhotos);
   console.log(files.length);
   if (files.length > 0) {
-    await displayCreateAlbumPreview(albumPhotos);
+    await displayPhotoUploadPreview(albumPhotos);
     await cleanUpSectionEventListener();
   }
 }

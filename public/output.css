@@ -824,6 +824,14 @@ select {
   top: 0.5rem;
 }
 
+.top-3 {
+  top: 0.75rem;
+}
+
+.top-3\.5 {
+  top: 0.875rem;
+}
+
 .top-search {
   top: 7px;
 }
@@ -850,6 +858,10 @@ select {
 
 .z-40 {
   z-index: 40;
+}
+
+.col-span-1 {
+  grid-column: span 1 / span 1;
 }
 
 .col-start-1 {
@@ -1053,6 +1065,10 @@ select {
 
 .mt-2 {
   margin-top: 0.5rem;
+}
+
+.mt-20 {
+  margin-top: 5rem;
 }
 
 .mt-28 {
@@ -1873,6 +1889,10 @@ select {
   padding-left: 0.5rem;
 }
 
+.pr-2 {
+  padding-right: 0.5rem;
+}
+
 .pt-2 {
   padding-top: 0.5rem;
 }
@@ -2030,6 +2050,11 @@ select {
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
+.text-like {
+  --tw-text-opacity: 1;
+  color: rgb(255 70 70 / var(--tw-text-opacity));
+}
+
 .underline {
   text-decoration-line: underline;
 }
@@ -2143,8 +2168,8 @@ select {
   border-color: rgb(0 0 0 / var(--tw-border-opacity));
 }
 
-.hover\:fill-current:hover {
-  fill: currentColor;
+.hover\:fill-black:hover {
+  fill: #000;
 }
 
 .hover\:text-black:hover {

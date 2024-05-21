@@ -28,8 +28,10 @@ class AlbumController implements IController {
 
   private initializeRoutes() {
     this.router.post(`${this.path}/create`, ensureAuthenticated, upload.none(), this.createAlbum); 
+    this.router.post(`${this.path}/:id/update`, ensureAuthenticated, this.updateAlbum);
     this.router.get(`${this.path}/:id`, ensureAuthenticated, this.showAlbum);
     // this.router.post(`${this.path}/list`, ensureAuthenticated, this.getAlbumList);
+    this.router.post(`${this.path}/like`, ensureAuthenticated, this.likeAlbum);
     this.router.post(`${this.path}/comments`, ensureAuthenticated, this.getComments);
     this.router.post(`${this.path}/comment/new`, ensureAuthenticated, this.newComment);
     this.router.post(`${this.path}/comment/delete`, ensureAuthenticated, this.deleteComment);
@@ -69,7 +71,51 @@ class AlbumController implements IController {
     }
   }
 
-  private showAlbum = async (req:Request, res:Response) => {
+  private updateAlbum = async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      const { photos } = req.body;
+      console.log(photos)
+      if (!Array.isArray(photos) || photos.length === 0) {
+        return res.status(400).json({ success: false, error: "Invalid photos array" });
+      }
+  
+      console.log(id);
+  
+      let loggedInUser = await getLocalUser(req, res);
+      const member = await this._service.checkMembership(id, loggedInUser);
+      if (!member) {
+        return res.status(403).json({ success: false, error: "User is not a member of this album" });
+      }
+  
+      const updatedAlbum = await this._service.updateAlbum(loggedInUser, id, photos);
+      if (!updatedAlbum) {
+        return res.status(404).json({ success: false, error: "Album not found" });
+      }
+  
+      console.log(updatedAlbum);
+  
+      res.status(200).json({ success: true, data: updatedAlbum });
+  
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ success: false, error: "Error updating album" });
+    }
+  }
+  
+  private likeAlbum = async (req: Request, res: Response) => {
+    let loggedInUser = req.user!.username;
+
+    try {
+      const { albumId } = req.body;
+      await this._service.likeAlbum(loggedInUser, albumId);
+      res.json({ success: true, data: null });
+    } catch (err) {
+      res.json({ success: true, data: null, error: "failed to like album" });
+    }
+  }
+
+  private showAlbum = async (req: Request, res: Response) => {
     try {
       const { id } = req.params
       //ensure its public / user is a member of the circle
@@ -83,7 +129,7 @@ class AlbumController implements IController {
       }
 
       const album = await this._service.getAlbum(id)
-      // console.log(album)
+      console.log(album)
       res.status(200).json({success: true, data:album});
 
     } catch (err) {
