@@ -887,26 +887,36 @@ async function displayNavBar() {
 
     if (exploreButton) {
       await displayExplore();
+      pageName.setAttribute("page", "explore");
       newCircleNameInput = "";
+      pageName.classList.remove("text-light-mode-accent");
     }
     if (searchButton) {
       await displaySearch();
+      pageName.setAttribute("page", "search");
       newCircleNameInput = "";
+      pageName.classList.remove("text-light-mode-accent");
     }
     if (newButton) {
       newCircleNameInput = "";
       await displayNewModal();
+      pageName.setAttribute("page", "new");
+      pageName.classList.remove("text-light-mode-accent");
     }
     if (activityButton) {
       await displayActivity();
       newCircleNameInput = "";
+      pageName.setAttribute("page", "activity");
+      pageName.classList.remove("text-light-mode-accent");
     }
     if (profileButton) {
       rightHeaderButton.innerHTML = "";
       newCircleNameInput = "";
+      pageName.classList.remove("text-light-mode-accent");
       console.log(await getUser(currentLocalUser));
       const { success, data } = await getUser(currentLocalUser);
       if (success && data) {
+        pageName.setAttribute("page", "profile");
         return await displayProfile(data);
       }
     }
@@ -1832,7 +1842,7 @@ async function displayCircle(circleData) {
       <div id="circleImage" class="flex justify-center mt-6 mb-1.5">
         <img src="${circleData.circle.picture}" class="rounded-full w-180 h-180 object-cover"/>
       </div>
-      <div id="circleName" class="mb-3 flex justify-center">
+      <div id="circleName" class="relative mb-3 flex justify-center items-center">
         ${circleName.outerHTML}
       </div>
       <div class="grid grid-cols-1 place-items-center">
@@ -2567,7 +2577,7 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
 }
 
 async function displayMap() {
-  
+
 }
 
 async function displayPopup(activity) {

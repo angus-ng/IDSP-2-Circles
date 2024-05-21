@@ -5,6 +5,7 @@ const leftButtonSpan = document.querySelector(".leftButtonSpan");
 const rightHeaderButton = document.querySelector("#rightButton");
 const rightButtonSpan = document.querySelector(".rightButtonSpan");
 rightButtonSpan.removeAttribute("fromCreateAlbum");
+pageName.setAttribute("page", "");
 
 let currentLocalUser;
 let isPrivacyPublic = false;
@@ -413,7 +414,8 @@ header.addEventListener("click", async (event) => {
   }
 
   if (circleEditButton) {
-    const circleId = document.querySelector("#circleEditButton span").getAttribute("circleid")
+    const circleId = document.querySelector("#circleEditButton span").getAttribute("circleid");
+    pageName.setAttribute("page", "circleEdit");
     await displayCircleEditMode(circleId)
   }
 
@@ -422,6 +424,7 @@ header.addEventListener("click", async (event) => {
   }
 
   if (updateCircleButton) {
+    pageName.classList.remove("text-light-mode-accent");
     const privacyCheckbox = document.querySelector("#privacyCheckbox")
     const circleImage = document.querySelector("#circleImage img")
     const circleNameInput = document.querySelector("#circleNameInput")
@@ -584,6 +587,10 @@ async function getAlbumName() {
   }
 }
 
+async function revertPageNameText() {
+  pageName.classList.remove("text-light-mode-accent");
+}
+
 async function cleanUpSectionEventListener() {
   const section = document.querySelector("section");
   section.removeEventListener("mousedown", sectionUploadClick, true);
@@ -671,7 +678,6 @@ async function showCreateOrAddToCircle(circleRender) {
     }
   });
   document.querySelector("#createNewCircle").addEventListener("click", async function (event) {
-    console.log("MAKE A NEW CIRCLE PROCESS");
     rightButtonSpan.setAttribute("fromCreateAlbum", true);
     await displayCreateCircle();
   });
@@ -684,24 +690,29 @@ const clearNewAlbum = () => {
 
 const displayCircleEditMode = (circleId) => {
   pageName.textContent = "Edit";
-  //pageName.classList.add("text-light-mode-accent")
+  const page = pageName.getAttribute("page");
+  console.log(page);
+  if (page === "circleEdit") {
+    console.log("hello")
+    pageName.classList.add("text-light-mode-accent");
+  }
   
-  const backSpan = document.querySelector("span.backSpan")
+  const backSpan = document.querySelector("span.backSpan");
   if (backSpan) {
     if (backSpan.getAttribute("username")) {
-      backSpan.removeAttribute("username")
+      backSpan.removeAttribute("username");
     }
     backSpan.setAttribute("circleId", circleId)
-    backSpan.childNodes[0].id = "albumToCircleButton"
+    backSpan.childNodes[0].id = "albumToCircleButton";
   } else {
-    leftHeaderButton.innerHTML = `<span class="backSpan" circleid="${circleId}"><img src="/lightmode/back_button.svg" alt="Back Button" id="albumToCircleButton" class=""></span>`
+    leftHeaderButton.innerHTML = `<span class="backSpan" circleid="${circleId}"><img src="/lightmode/back_button.svg" alt="Back Button" id="albumToCircleButton" class=""></span>`;
   }
   rightHeaderButton.innerHTML = `<img src="/lightmode/save_button.svg" alt="Save Button" id="updateCircle" circleId="${circleId}">`;
 
-  const privacyCheckboxDiv = document.querySelector(".privacyCheckboxDiv")
-  privacyCheckboxDiv.classList.remove("hidden")
+  const privacyCheckboxDiv = document.querySelector(".privacyCheckboxDiv");
+  privacyCheckboxDiv.classList.remove("hidden");
 
-  const privacyCheckbox = document.querySelector("#privacyCheckbox")
+  const privacyCheckbox = document.querySelector("#privacyCheckbox");
   privacyCheckbox.addEventListener("change", async function () {
     const privacyIcon = document.querySelector("#privacyIcon");
     const privacyLabel = document.querySelector("#privacyLabel");
@@ -710,13 +721,13 @@ const displayCircleEditMode = (circleId) => {
     await updateCheckbox();
   });
 
-  const circleImage = document.querySelector("#circleImage img")
-  const hiddenImageInput = document.createElement("input")
-  hiddenImageInput.id = "fileUpload"
-  hiddenImageInput.type ="file"
-  hiddenImageInput.multiple = "false"
-  hiddenImageInput.className = "hidden"
-  circleImage.parentNode.append(hiddenImageInput)
+  const circleImage = document.querySelector("#circleImage img");
+  const hiddenImageInput = document.createElement("input");
+  hiddenImageInput.id = "fileUpload";
+  hiddenImageInput.type ="file";
+  hiddenImageInput.multiple = "false";
+  hiddenImageInput.className = "hidden";
+  circleImage.parentNode.append(hiddenImageInput);
   circleImage.addEventListener("click", async function (event) {
     event.preventDefault();
     await hiddenImageInput.click();
@@ -729,21 +740,24 @@ const displayCircleEditMode = (circleId) => {
     }
   });
 
-
-  const circleName = document.querySelector("#circleName p")
-  const circleNameInput = document.createElement("input")
-  circleNameInput.id = "circleNameInput"
-  circleNameInput.type = "text"
-  circleNameInput.placeholder = "Add a circle name"
-  circleNameInput.value = circleName.textContent
-  circleNameInput.className = "w-234 text-center bg-transparent text-h2 text-text-grey font-light items-end border-none"
+  const circleName = document.querySelector("#circleName p");
+  const circleNameInput = document.createElement("input");
+  circleNameInput.id = "circleNameInput";
+  circleNameInput.type = "text";
+  circleNameInput.placeholder = "Add a circle name";
+  circleNameInput.value = circleName.textContent;
+  circleNameInput.className = "w-234 text-center bg-transparent text-h2 text-black font-light items-end border-none";
   circleName.remove();
-  document.querySelector("#circleName").append(circleNameInput)
+  document.querySelector("#circleName").append(circleNameInput);
+  const editIcon = document.createElement("img");
+  editIcon.className = "editIcon w-5 h-5";
+  editIcon.src = "/lightmode/edit_icon.svg";
+  document.querySelector("#circleName").append(editIcon);
 
-  const inviteMore = document.createElement("img")
-  inviteMore.src = "/invite_more_friends.svg"
-  inviteMore.id = "inviteMoreUsers"
-  inviteMore.className = "w-42 h-42 rounded-full object-cover"
-  document.querySelector(".memberList").append(inviteMore)
+  const inviteMore = document.createElement("img");
+  inviteMore.src = "/invite_more_friends.svg";
+  inviteMore.id = "inviteMoreUsers";
+  inviteMore.className = "w-42 h-42 rounded-full object-cover";
+  document.querySelector(".memberList").append(inviteMore);
 
 }
