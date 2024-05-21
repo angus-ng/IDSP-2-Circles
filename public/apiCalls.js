@@ -158,6 +158,24 @@ async function handleCreateAlbum(albumObj) {
   }
 }
 
+async function likeAlbum(albumId) {
+  try {
+    const response = await fetch(`/album/like`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({albumId})
+    });
+
+    const jsonResponse = await response.json();
+    console.log(jsonResponse);
+    return jsonResponse
+  } catch (err) {
+
+  }
+}
+
 async function updateAlbum(albumId, albumObj) {
   try {
     if (!albumObj.photos || albumObj.photos.length === 0) {

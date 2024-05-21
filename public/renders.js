@@ -922,6 +922,7 @@ async function displayNewModal() {
 
 async function displayProfile(userData) {
   nav.classList.remove("hidden");
+  console.log("USERDATA:", userData)
   const user = userData.username;
   const circleRender = await displayListOfCircles(userData, user);
   const albumRender = await displayListOfAlbums(userData, user, true);
@@ -1075,14 +1076,18 @@ async function displayProfile(userData) {
     const comment = event.target.closest(".comment");
 
     if (like) {
+      const albumId = event.target.closest("div.album").getAttribute("id");
+      console.log(albumId);
       if (like.classList.contains("liked")) {
         like.classList.remove("liked");
         like.querySelector("svg path").setAttribute("fill", "none");
         like.querySelector("svg path").setAttribute("stroke", "#FFFFFF");
+        await likeAlbum(albumId);
       } else {
         like.classList.add("liked");
         like.querySelector("svg path").setAttribute("fill", "#FF4646");
         like.querySelector("svg path").setAttribute("stroke", "#FF4646");
+        await likeAlbum(albumId);
       }
       return;
     }
@@ -1717,6 +1722,7 @@ async function displayAlbumConfirmation() {
 }
 
 async function displayCircle(circleData) {
+  console.log(circleData.circle.albums)
   const imgElement = document.querySelector("#profileBackButton");
   if (imgElement) {
     imgElement.classList.remove("hidden");
@@ -1776,10 +1782,16 @@ async function displayCircle(circleData) {
     }
     return `<img src="${obj.user.profilePicture}" class="w-42 h-42 rounded-full object-cover"/>`;
   });
+
   const albumList = circleData.circle.albums.map((obj) => {
     let albumName = document.createElement("p");
     albumName.className = "text-white text-shadow shadow-black";
     albumName.textContent = obj.name;
+    const userLiked = obj.likes.some(like => like.userId === currentLocalUser);
+    const likedClass = userLiked ? "liked" : "";
+    const heartColor = userLiked ? "#FF4646" : "none";
+    const heartColorStroke = userLiked ? "#FF4646" : "white";
+
     return `
       <div class="w-full h-min relative album" id="${obj.id}">
         <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.photos[0].src}"/>
@@ -1787,9 +1799,9 @@ async function displayCircle(circleData) {
           ${albumName.outerHTML}
         </div>
         <div class="absolute inset-0 flex items-end justify-end gap-1 p-2">
-          <div class="like cursor-pointer">
-            <svg width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M9.22318 16.2905L9.22174 16.2892C6.62708 13.9364 4.55406 12.0515 3.11801 10.2946C1.69296 8.55118 1 7.05624 1 5.5C1 2.96348 2.97109 1 5.5 1C6.9377 1 8.33413 1.67446 9.24117 2.73128L10 3.61543L10.7588 2.73128C11.6659 1.67446 13.0623 1 14.5 1C17.0289 1 19 2.96348 19 5.5C19 7.05624 18.307 8.55118 16.882 10.2946C15.4459 12.0515 13.3729 13.9364 10.7783 16.2892L10.7768 16.2905L10 16.9977L9.22318 16.2905Z" stroke="white" stroke-width="2"/>
+          <div class="like cursor-pointer ${likedClass}">
+            <svg width="20" height="19" viewBox="0 0 20 19" fill="${heartColor}" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9.22318 16.2905L9.22174 16.2892C6.62708 13.9364 4.55406 12.0515 3.11801 10.2946C1.69296 8.55118 1 7.05624 1 5.5C1 2.96348 2.97109 1 5.5 1C6.9377 1 8.33413 1.67446 9.24117 2.73128L10 3.61543L10.7588 2.73128C11.6659 1.67446 13.0623 1 14.5 1C17.0289 1 19 2.96348 19 5.5C19 7.05624 18.307 8.55118 16.882 10.2946C15.4459 12.0515 13.3729 13.9364 10.7783 16.2892L10.7768 16.2905L10 16.9977L9.22318 16.2905Z" stroke="${heartColorStroke}" stroke-width="2"/>
             </svg>
           </div>
           <div class="comment cursor-pointer">
@@ -1849,14 +1861,18 @@ async function displayCircle(circleData) {
     const comment = event.target.closest(".comment");
 
     if (like) {
+      const albumId = event.target.closest("div.album").getAttribute("id");
+      console.log(albumId);
       if (like.classList.contains("liked")) {
         like.classList.remove("liked");
         like.querySelector("svg path").setAttribute("fill", "none");
         like.querySelector("svg path").setAttribute("stroke", "#FFFFFF");
+        await likeAlbum(albumId);
       } else {
         like.classList.add("liked");
         like.querySelector("svg path").setAttribute("fill", "#FF4646");
         like.querySelector("svg path").setAttribute("stroke", "#FF4646");
+        await likeAlbum(albumId);
       }
       return;
     }
@@ -1871,6 +1887,7 @@ async function displayCircle(circleData) {
       if (albumDiv.hasAttribute("id")) {
         let { success, data, error } = await getAlbum(albumDiv.id);
         if (success && data) {
+          console.log(data);
           await displayAlbum(data);
         }
       }
@@ -1925,12 +1942,14 @@ async function displayCircleInvites() {
 }
 
 async function displayAlbum(albumData) {
+  console.log("current user:", currentLocalUser)
   const backSpan = document.querySelector(".backSpan");
   const leftButtonImg = document.querySelector(".backSpan img");
   const album = document.querySelector(".album");
   const imgElement = document.querySelector("#circleToProfileButton");
   const albumConfirmationBackButton = document.querySelector("#albumConfirmationBackButton");
   const backToAlbumButton = document.querySelector("#backToAlbumButton");
+  console.log("albumdata", albumData)
 
   if (backToAlbumButton) {
     backToAlbumButton.classList.add("hidden");
@@ -1988,7 +2007,7 @@ async function displayAlbum(albumData) {
       </button>
     </div>
   </div>`;
-  pageName.textContent = `${albumData.name}`;
+  pageName.textContent = albumData.circle.name;
 
   const memberList = [];
   for (i = 0; i < albumData.circle.UserCircle.length; i++) {
@@ -2004,22 +2023,41 @@ async function displayAlbum(albumData) {
   }
 
   console.log(memberList);
+  console.log("data:", albumData.likes);
   const photoList = albumData.photos.map((obj) => {
     return `
     <div id="photo" class="w-full h-min relative photo" albumId="${obj.id}">
       <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.src}"/>
     </div>`;
   });
-  let circleName = document.createElement("h2");
-  circleName.className = "flex justify-center font-medium text-lg";
-  circleName.textContent = albumData.circle.name;
+  let albumName = document.createElement("h2");
+  albumName.className = "flex justify-center font-medium text-lg";
+  albumName.textContent = albumData.name;
+  
+  let albumLikeCount = document.createElement("h3");
+  albumLikeCount.className = "flex justify-center font-medium text-lg";
+  albumLikeCount.textContent = albumData.likeCount;
+
+  const userLiked = albumData.likes.some(like => like.user.username === currentLocalUser);
+  const likedClass = userLiked ? "liked" : "";
+  const heartColor = userLiked ? "#FF4646" : "none";
+  const heartColorStroke = userLiked ? "#FF4646" : "black";
+  
   pageContent.innerHTML = `
     <div id="albumPhotos">
       <div id="memberList" class="grid grid-rows-2 grid-cols-3 mt-8 mx-auto items-center justify-center w-265 gap-2 h-84">
         ${memberList.join("")}
       </div>
       <div class="mt-4">
-        ${circleName.outerHTML}
+        ${albumName.outerHTML}
+      </div>
+      <div class="mt-4 flex flex-row items-center justify-center gap-2 mx-auto">
+        <div class="like cursor-pointer ${likedClass}" albumId=${albumData.id}>
+          <svg width="20" height="19" viewBox="0 0 20 19" fill="${heartColor}" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9.22318 16.2905L9.22174 16.2892C6.62708 13.9364 4.55406 12.0515 3.11801 10.2946C1.69296 8.55118 1 7.05624 1 5.5C1 2.96348 2.97109 1 5.5 1C6.9377 1 8.33413 1.67446 9.24117 2.73128L10 3.61543L10.7588 2.73128C11.6659 1.67446 13.0623 1 14.5 1C17.0289 1 19 2.96348 19 5.5C19 7.05624 18.307 8.55118 16.882 10.2946C15.4459 12.0515 13.3729 13.9364 10.7783 16.2892L10.7768 16.2905L10 16.9977L9.22318 16.2905Z" stroke="${heartColorStroke}" stroke-width="2"/>
+          </svg>
+        </div>
+        ${albumLikeCount.outerHTML}
       </div>
       <div class="grid grid-cols-2 justify-between place-items-center mt-12 mb-2 mr-0">
         <p class="col-span-1 text-base font-medium justify-self-start">${albumData.photos.length} Photos</p>
@@ -2062,20 +2100,12 @@ async function displayAlbum(albumData) {
     user4.classList.add("h-5", "w-5", "col-start-1", "row-start-2", "justify-self-end");
   }
 
-  const addMorePhotos = document.querySelector("#addPhotos");
-  addMorePhotos.addEventListener("click", async(event) => {
-    const albumId = addMorePhotos.getAttribute("albumId");
-    console.log("albumid:", albumId);
-    const albumData = await getAlbum(albumId);
-    console.log("albumdata:", album);
-    await displayPhotoUpload(albumData);
-
-  });
-
   const albumPhotos = document.querySelector("#albumPhotos");
   albumPhotos.addEventListener("click", async(event) => {
     const photo = event.target.closest("#photo img");
     const overlay = event.target.closest("#photoOverlay");
+    const addMorePhotos = event.target.closest("#addPhotos");
+    
     if (photo) {
       console.log(photo.src);
       await displayPhoto(photo.src);
@@ -2089,6 +2119,13 @@ async function displayAlbum(albumData) {
         overlay.remove();
       }
     }
+
+    if (addMorePhotos) {
+      const albumId = addMorePhotos.getAttribute("albumId");
+      const albumData = await getAlbum(albumId);
+      await displayPhotoUpload(albumData);
+    }
+
   });
 }
 
@@ -2300,7 +2337,9 @@ async function displayPhoto(photoSrc) {
 }
 
 async function displayListOfAlbums(data, user, profile = false) {
+  console.log("HELLO", data)
   const albumList = data.Album.map((obj) => {
+    console.log(obj)
     let albumName = document.createElement("p");
     albumName.className = "text-white text-shadow shadow-black";
     albumName.textContent = obj.name;
@@ -2311,6 +2350,12 @@ async function displayListOfAlbums(data, user, profile = false) {
     <div class="absolute top-0 right-0 m-2 flex items-start justify-end gap-1 p2">
       <img src="${obj.circle.picture}" class="w-8 rounded-full object-cover"/>
     </div>`;
+
+    // const userLiked = albumData.likes.some(like => like.user.username === currentLocalUser);
+    console.log("HI", data)
+    // const likedClass = userLiked ? "liked" : "";
+    // const heartColor = userLiked ? "#FF4646" : "none";
+    // const heartColorStroke = userLiked ? "#FF4646" : "black";
 
     return `
     <div class="w-full h-min relative album" id="${obj.id}">

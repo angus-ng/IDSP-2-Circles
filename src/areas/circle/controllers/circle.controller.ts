@@ -81,7 +81,7 @@ class CircleController implements IController {
         throw err;
     }
   }
-  private getCircle = async (req:Request, res:Response) => {
+  private getCircle = async (req: Request, res: Response) => {
     try {
       const { id } = req.params
 

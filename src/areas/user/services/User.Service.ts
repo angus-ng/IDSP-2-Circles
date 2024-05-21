@@ -295,7 +295,17 @@ export class UserService implements IUserService {
                 select: { 
                   picture: true
                 }
-              }
+              },
+              likes: {
+                select: {
+                    user: {
+                        select: {
+                            username: true,
+                            profilePicture: true,
+                        }
+                    }
+                }
+              },
             }
           }
         },

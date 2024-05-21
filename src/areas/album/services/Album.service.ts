@@ -76,6 +76,60 @@ export class AlbumService implements IAlbumService {
     return true
   }
 
+  async likeAlbum(currentUser: string, albumId: string): Promise<void> {
+    try {
+        const existingLike = await this._db.prisma.like.findFirst({
+            where: {
+                userId: currentUser,
+                albumId: albumId
+            }
+        });
+
+        if (existingLike) {
+            await this._db.prisma.like.delete({
+                where: {
+                    id: existingLike.id
+                }
+            });
+
+            await this._db.prisma.album.update({
+                where: {
+                    id: albumId
+                },
+                data: {
+                    likeCount: {
+                        decrement: 1
+                    }
+                }
+            });
+
+            console.log("Album unliked successfully");
+        } else {
+            await this._db.prisma.like.create({
+                data: {
+                    userId: currentUser,
+                    albumId: albumId
+                }
+            });
+
+            await this._db.prisma.album.update({
+                where: {
+                    id: albumId
+                },
+                data: {
+                    likeCount: {
+                        increment: 1
+                    }
+                }
+            });
+
+            console.log("Album liked successfully");
+        }
+    } catch (err) {
+        throw err;
+    }
+}
+
   async getAlbum (id: string): Promise<any> {
     const album = await this._db.prisma.album.findUnique({
         select: {
@@ -87,6 +141,17 @@ export class AlbumService implements IAlbumService {
                     src: true,
                 }
             },
+            likes: {
+                select: {
+                    user: {
+                        select: {
+                            username: true,
+                            profilePicture: true,
+                        }
+                    }
+                }
+            },
+            likeCount: true,
             circle: {
                 select: {
                     id: true,
@@ -425,5 +490,4 @@ export class AlbumService implements IAlbumService {
             throw err;
         }
     }
-    
 }

@@ -32,6 +32,7 @@ class AlbumController implements IController {
     this.router.post(`${this.path}/:id/update`, ensureAuthenticated, this.updateAlbum);
     this.router.get(`${this.path}/:id`, ensureAuthenticated, this.showAlbum);
     this.router.post(`${this.path}/list`, ensureAuthenticated, this.getAlbumList);
+    this.router.post(`${this.path}/like`, ensureAuthenticated, this.likeAlbum);
     this.router.post(`${this.path}/comments`, ensureAuthenticated, this.getComments);
     this.router.post(`${this.path}/comment/new`, ensureAuthenticated, this.newComment);
     this.router.post(`${this.path}/comment/delete`, ensureAuthenticated, this.deleteComment);
@@ -108,6 +109,17 @@ class AlbumController implements IController {
     }
   }
   
+  private likeAlbum = async (req: Request, res: Response) => {
+    let loggedInUser = req.user!.username;
+
+    try {
+      const { albumId } = req.body;
+      await this._service.likeAlbum(loggedInUser, albumId);
+      res.json({ success: true, data: null });
+    } catch (err) {
+      res.json({ success: true, data: null, error: "failed to like album" });
+    }
+  }
 
   private showAlbum = async (req: Request, res: Response) => {
     try {
@@ -121,13 +133,15 @@ class AlbumController implements IController {
       }
 
       const album = await this._service.getAlbum(id)
-      // console.log(album)
+      console.log(album)
       res.status(200).json({success: true, data:album});
 
     } catch (err) {
       throw err;
     }
   }
+
+  
 
   private getAlbumList = async (req:Request, res:Response) => {
     let loggedInUser = await getLocalUser(req, res)
