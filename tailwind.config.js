@@ -38,7 +38,8 @@ theme: {
       'time': '#7D7E80',
       'comment-divider': '#ABABAB',
       'comment-line': 'rgba(115, 115, 115, 0.5)',
-      'settings-bg': 'rgba(115, 115, 115, 0.2)'
+      'settings-bg': 'rgba(115, 115, 115, 0.2)',
+      'image-overlay': 'rgba(0, 0, 0, 0.4)'
     },
     fontSize: {
       'onboarding': '36px',

@@ -513,15 +513,15 @@ async function displayCreateCirclePreview() {
           <div class="flex-shrink-0 mt-14 mb-4">
               <img id="circleImage" src="/placeholder_image.svg" alt="Placeholder Image" class="object-cover w-234 h-230 rounded-full cursor-pointer"/>                     
           </div>
-          <div class="flex justify-center my-5 relative w-full">
+          <div class="flex justify-center my-5 relative w-full gap-2">
               <input
                   type="text"
                   placeholder="add a name to your circle"
                   id="circleName"
-                  class="bg-transparent text-24 font-bold border-none text-center w-auto px-0"
+                  class="bg-transparent text-24 font-bold border-none text-center flex-1 px-0"
               />
-              <button id="editButton" class="mr-1">
-                  <img src="/lightmode/edit_icon.svg" alt="Edit Icon" />
+              <button id="editButton" class="pl-1">
+                  <img src="/lightmode/edit_icon.svg" alt="Edit Icon"/>
               </button>
           </div>
           <div id="divider" class="mb-2">
@@ -1835,14 +1835,14 @@ async function displayCircle(circleData) {
   });
 
   let circleName = document.createElement("p");
-  circleName.className = "text-center text-20 font-bold";
+  circleName.className = "text-center text-20 font-bold break-words text-wrap max-w-[234px]";
   circleName.textContent = circleData.circle.name;
   pageContent.innerHTML = `
     <div id="circlePage" class="w-full px-0 mx-0">
-      <div id="circleImage" class="flex justify-center mt-6 mb-1.5">
+      <div id="circleImage" class="relative flex justify-center mt-6 mb-1.5">
         <img src="${circleData.circle.picture}" class="rounded-full w-180 h-180 object-cover"/>
       </div>
-      <div id="circleName" class="relative mb-3 flex justify-center items-center">
+      <div id="circleName" class="relative my-3 flex justify-center items-center max-w-full h-auto">
         ${circleName.outerHTML}
       </div>
       <div class="grid grid-cols-1 place-items-center">
