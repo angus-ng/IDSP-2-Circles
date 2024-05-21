@@ -76,6 +76,11 @@ header.addEventListener("click", async (event) => {
   const backToAlbumButton = event.target.closest("#backToAlbumButton");
   const updateAlbumButton = event.target.closest("#updateAlbum");
   const createCircleToAlbum = event.target.closest("#createCircleToAlbum");
+  const mapButton = event.target.closest("#mapButton");
+
+  if (mapButton) {
+    await displayMap();
+  }
 
   if (emailBackButton) {
     await displayLoginPage();

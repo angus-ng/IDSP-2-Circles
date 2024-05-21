@@ -593,7 +593,7 @@ async function displayCreateCirclePreview() {
 async function displayExplore() {
   pageName.textContent = "Explore";
   leftHeaderButton.innerHTML = "";
-  rightHeaderButton.innerHTML = `<img src="/lightmode/map_icon.svg" alt="Map Icon"/>`;
+  rightHeaderButton.innerHTML = `<img id="mapButton" src="/lightmode/map_icon.svg" alt="Map Icon"/>`;
   pageContent.innerHTML = `<div id="explorePage" class="flex flex-col justify-center py-2 w-full h-screen"></div>`;
   header.classList.remove("hidden");
   await displayNavBar();
@@ -2576,7 +2576,8 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
 }
 
 async function displayMap() {
-
+  pageName.textContent = "Maps";
+  
 }
 
 async function displayPopup(activity) {
