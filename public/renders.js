@@ -1743,7 +1743,6 @@ async function displayAlbumConfirmation() {
 }
 
 async function displayCircle(circleData) {
-  console.log(circleData.circle.albums)
   const imgElement = document.querySelector("#profileBackButton");
   if (imgElement) {
     imgElement.classList.remove("hidden");

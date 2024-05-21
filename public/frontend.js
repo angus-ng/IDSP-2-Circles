@@ -425,6 +425,7 @@ header.addEventListener("click", async (event) => {
 
   if (updateCircleButton) {
     pageName.classList.remove("text-light-mode-accent");
+
     const privacyCheckbox = document.querySelector("#privacyCheckbox");
     const circleImage = document.querySelector("#circleImage img");
     const circleNameInput = document.querySelector("#circleNameInput");
