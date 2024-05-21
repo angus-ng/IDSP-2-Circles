@@ -1949,7 +1949,7 @@ async function displayAlbum(albumData) {
   const imgElement = document.querySelector("#circleToProfileButton");
   const albumConfirmationBackButton = document.querySelector("#albumConfirmationBackButton");
   const backToAlbumButton = document.querySelector("#backToAlbumButton");
-  console.log("albumdata", albumData)
+  console.log("albumdata", albumData);
 
   if (backToAlbumButton) {
     backToAlbumButton.classList.add("hidden");
@@ -1959,9 +1959,11 @@ async function displayAlbum(albumData) {
     leftButtonImg.classList.remove("hidden");
   }
 
-  console.log("album", albumData);
+
   if (backSpan) {
-    backSpan.setAttribute("circleId", `${albumData.circle.id}`);
+    if (albumData.circle.id) {
+      backSpan.setAttribute("circleId", `${albumData.circle.id}`);
+    }
   } 
   
   if (album) {
@@ -2100,11 +2102,14 @@ async function displayAlbum(albumData) {
     user4.classList.add("h-5", "w-5", "col-start-1", "row-start-2", "justify-self-end");
   }
 
+  console.log(albumData)
+
   const albumPhotos = document.querySelector("#albumPhotos");
   albumPhotos.addEventListener("click", async(event) => {
     const photo = event.target.closest("#photo img");
     const overlay = event.target.closest("#photoOverlay");
     const addMorePhotos = event.target.closest("#addPhotos");
+    const like = event.target.closest(".like");
     
     if (photo) {
       console.log(photo.src);
@@ -2126,6 +2131,27 @@ async function displayAlbum(albumData) {
       await displayPhotoUpload(albumData);
     }
 
+    if (like) {
+      const albumId = event.target.closest("div.like").getAttribute("albumId");
+      console.log(albumId);
+      if (like.classList.contains("liked")) {
+        like.classList.remove("liked");
+        like.querySelector("svg path").setAttribute("fill", "none");
+        like.querySelector("svg path").setAttribute("stroke", "#000000");
+        await likeAlbum(albumId);
+        const updatedAlbumData = await getAlbum(albumId);
+        console.log(updatedAlbumData)
+        await displayAlbum(updatedAlbumData)
+      } else {
+        like.classList.add("liked");
+        like.querySelector("svg path").setAttribute("fill", "#FF4646");
+        like.querySelector("svg path").setAttribute("stroke", "#FF4646");
+        const updatedAlbumData = await getAlbum(albumId);
+        console.log(updatedAlbumData)
+        await displayAlbum(updatedAlbumData);
+      }
+      return;
+    }
   });
 }
 
@@ -2337,9 +2363,7 @@ async function displayPhoto(photoSrc) {
 }
 
 async function displayListOfAlbums(data, user, profile = false) {
-  console.log("HELLO", data)
   const albumList = data.Album.map((obj) => {
-    console.log("obj:", obj.likes)
     let albumName = document.createElement("p");
     albumName.className = "text-white text-shadow shadow-black";
     albumName.textContent = obj.name;
@@ -2386,7 +2410,7 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
   if (fetchPfp.data && fetchPfp.success) {
     currentUserProfilePicture = fetchPfp.data
   }
-  console.log("THIS", currentUserProfilePicture, currentUserUsername);
+
   const { success, data } = await getComments(albumId);
 
   //return early do something on error
@@ -2394,7 +2418,7 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
     console.log("could not fetch comment data");
     return;
   }
-  console.log(data);
+
   const showCommentsRecursively = (comments) => {
     const arr = comments.map((comment) => {
       const likeDiv = document.createElement("div");
