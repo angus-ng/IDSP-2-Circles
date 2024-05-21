@@ -716,7 +716,7 @@ const displayCircleEditMode = (circleId) => {
     const privacyIcon = document.querySelector("#privacyIcon");
     const privacyLabel = document.querySelector("#privacyLabel");
     privacyIcon.src = "/lightmode/lock_icon.svg";
-    privacyIcon.className = "h-5 w-5"
+    privacyIcon.className = "mr-4 h-5 w-5"
     privacyLabel.innerHTML = "Private";
     await updateCheckbox();
   });

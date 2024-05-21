@@ -1841,10 +1841,10 @@ async function displayCircle(circleData) {
       <div id="circleImage" class="relative flex justify-center mt-6 mb-1.5">
         <img src="${circleData.circle.picture}" class="rounded-full w-180 h-180 object-cover"/>
       </div>
-      <div id="circleName" class="relative my-3 flex justify-center items-center max-w-full h-auto">
+      <div id="circleName" class="relative my-3 flex justify-center items-center max-w-full h-11">
         ${circleName.outerHTML}
       </div>
-      <div class="grid grid-cols-1 place-items-center">
+      <div class="grid grid-cols-1 place-items-center justify-center h-8">
         <span class="privacyState">
             <label class="inline-flex items-center cursor-pointer">
             <input id="privacyCheckbox" type="checkbox" value="" class="sr-only peer">
