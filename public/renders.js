@@ -931,14 +931,14 @@ async function displayNewModal() {
   closeModalButton.classList.remove("hidden");
   const modalContent = document.querySelector("#modalContent");
   modalContent.innerHTML = `
-  <div class="flex space-x-6 justify-center text-light-mode-accent font-medium text-14">
-    <button id="createAlbumModalButton">
+  <div class="flex flex-row gap-6 justify-center text-light-mode-accent font-medium text-14 text-center">
+    <button id="createAlbumModalButton" class="ml-1 flex-col">
         <img src="/lightmode/create_album_icon.svg" alt="New Album Icon">
-        <p class="mt-3">create album</p>
-    </button>              
-    <button id="createCircleModalButton">
+        <p class="mt-3 text-center">create album</p>
+    </button>
+    <button id="createCircleModalButton" class="ml-1 flex-col">
         <img src="/lightmode/create_circle_icon.svg" alt="New Circle Icon">
-        <p class="mt-3">create circle</p>
+        <p class="mt-3 text-center">create circle</p>
     </button>                        
   </div>`;
 }
