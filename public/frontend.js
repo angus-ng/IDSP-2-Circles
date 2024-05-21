@@ -3,6 +3,7 @@ const pageContent = document.querySelector("#pageContent");
 const leftHeaderButton = document.querySelector("#leftButton");
 const leftButtonSpan = document.querySelector(".leftButtonSpan");
 const rightHeaderButton = document.querySelector("#rightButton");
+const rightButtonSpan = document.querySelector(".rightButtonSpan");
 
 let currentLocalUser;
 let isPrivacyPublic = false;
@@ -72,6 +73,7 @@ header.addEventListener("click", async (event) => {
   const updateCircleButton = event.target.closest("#updateCircle");
   const backToAlbumButton = event.target.closest("#backToAlbumButton");
   const updateAlbumButton = event.target.closest("#updateAlbum");
+  const createCircleToAlbum = event.target.closest("#createCircleToAlbum");
 
   if (emailBackButton) {
     await displayLoginPage();
@@ -155,10 +157,7 @@ header.addEventListener("click", async (event) => {
     }
     const circleId = data;
     if (success && data) {
-      console.log(circleId);
       for (let friend of checkedFriends) {
-        console.log(circleId);
-        console.log("FRIEND", friend);
         const { success, data } = await handleSendCircleRequest(
           friend,
           circleId
@@ -169,6 +168,42 @@ header.addEventListener("click", async (event) => {
       if (success && data) {
         await displayCircle(data);
       }
+      nav.classList.remove("hidden");
+    }
+    return;
+  }
+
+  if (createCircleToAlbum) {
+    isPrivacyPublic = document.querySelector("#privacyCheckbox").checked;
+    const { success, data, error } = await handleCreateCircle();
+    if (error) {
+      if (error === "Missing circle name") {
+        await displayPopup("Please add a title to your circle");
+      }
+      console.log(error);
+      return;
+    }
+    const circleId = data;
+    if (success && data) {
+      console.log(circleId);
+      for (let friend of checkedFriends) {
+        console.log(circleId);
+        console.log("FRIEND", friend);
+        const { success, data } = await handleSendCircleRequest(
+          friend,
+          circleId
+        );
+      }
+      checkedFriends = [];
+      albumObj.isCircle = true;
+      albumObj.id = circleId;
+
+      let { success, data, error } = await getCircle(circleId);
+      if (success && data) {
+        albumObj.circleSrc = data.circle.picture;
+        albumObj.circleName = data.circle.name;
+      }
+      await displayAlbumConfirmation();
       nav.classList.remove("hidden");
     }
     return;
@@ -609,36 +644,34 @@ async function showCreateOrAddToCircle(circleRender) {
   </div>`;
 
   await cleanUpSectionEventListener();
-  document
-    .querySelector("#circleList")
-    .addEventListener("click", async function (event) {
-      const circleDiv = event.target.closest("div.circle");
-      if (circleDiv) {
-        if (circleDiv.hasAttribute("id")) {
-          console.log("clicked", circleDiv.id);
-          //MODIFY THIS TO SELECT CIRCLE TO BE USED FOR POST CONFIRMATION & POST
+  document.querySelector("#circleList").addEventListener("click", async function (event) {
+    const circleDiv = event.target.closest("div.circle");
+    if (circleDiv) {
+      if (circleDiv.hasAttribute("id")) {
+        console.log("clicked", circleDiv.id);
+        //MODIFY THIS TO SELECT CIRCLE TO BE USED FOR POST CONFIRMATION & POST
 
-          albumObj.isCircle = true;
-          albumObj.id = circleDiv.id;
+        albumObj.isCircle = true;
+        albumObj.id = circleDiv.id;
 
-          console.log("Selected circle object:", albumObj);
+        console.log("Selected circle object:", albumObj);
 
-          let { success, data, error } = await getCircle(circleDiv.id);
-          if (success && data) {
-            console.log(data);
-            albumObj.circleSrc = data.circle.picture;
-            albumObj.circleName = data.circle.name;
-            console.log(albumObj);
-          }
-          await displayAlbumConfirmation();
+        let { success, data, error } = await getCircle(circleDiv.id);
+        if (success && data) {
+          console.log(data);
+          albumObj.circleSrc = data.circle.picture;
+          albumObj.circleName = data.circle.name;
+          console.log(albumObj);
         }
+        await displayAlbumConfirmation();
       }
-    });
-  document
-    .querySelector("#createNewCircle")
-    .addEventListener("click", async function (event) {
-      console.log("MAKE A NEW CIRCLE PROCESS");
-    });
+    }
+  });
+  document.querySelector("#createNewCircle").addEventListener("click", async function (event) {
+    console.log("MAKE A NEW CIRCLE PROCESS");
+    rightButtonSpan.setAttribute("fromCreateAlbum", true);
+    await displayCreateCircle();
+  });
 }
 
 const clearNewAlbum = () => {

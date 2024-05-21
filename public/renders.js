@@ -331,7 +331,13 @@ async function displayCreateCircle() {
   nav.classList.add("hidden");
   pageName.textContent = `New Circle`;
 
-  leftHeaderButton.innerHTML = `<img id="backButton" src="/lightmode/back_button.svg" alt="Back Button"/>`;
+  const fromCreateAlbum = rightButtonSpan.getAttribute("fromCreateAlbum");
+  if (fromCreateAlbum === "true") {
+    leftHeaderButton.innerHTML = `<img id="albumConfirmationBackButton" src="/lightmode/back_button.svg" alt="Back Button"/>`;
+  } else {
+    leftHeaderButton.innerHTML = `<img id="backButton" src="/lightmode/back_button.svg" alt="Back Button"/>`;
+  }
+
   rightHeaderButton.innerHTML = `<img id="nextInviteFriends" src="/lightmode/next_button.svg" alt="Next Button"/>`;
 
   const pageContent = document.querySelector("#pageContent");
@@ -491,9 +497,16 @@ async function displayCreateCirclePreview() {
 
   pageName.textContent = "New Circle";
 
+  const fromCreateAlbum = rightButtonSpan.getAttribute("fromCreateAlbum");
+  console.log(fromCreateAlbum);
   const next = document.querySelector("#nextButton");
-  next.id = "createCircleButton";
   next.src = "/lightmode/create_button.svg";
+  if (fromCreateAlbum === "true") {
+    next.id = "createCircleToAlbum";
+  } else {
+    next.id = "createCircleButton";
+  }
+
 
   pageContent.innerHTML = `
     <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full">
@@ -1611,7 +1624,6 @@ async function displayAlbumConfirmation() {
     img.alt = `image ${index}`;
 
     slideDiv.appendChild(img);
-
     carouselDiv.appendChild(slideDiv);
   });
 
@@ -1654,7 +1666,6 @@ async function displayAlbumConfirmation() {
     </div>`;
 
   const circleImage = document.querySelector("#circleImage");
-  console.log(albumObj.circleSrc);
 
   circleImage.src = albumObj.circleSrc;
   circleName.textContent = albumObj.circleName;
