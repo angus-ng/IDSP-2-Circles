@@ -2225,49 +2225,6 @@ async function displayFriends(username) {
 }
 
 function displayFriendsList(friends) {
-  friends = [
-    {
-        "username": "<strong>A_A</strong>",
-        "displayName": null,
-        "profilePicture": "https://i.pinimg.com/550x/0a/b8/6d/0ab86dfd4bc698ce4f57a8e06a6ca6d1.jpg"
-    },
-    {
-      "username": "<strong>A_A</strong>",
-      "displayName": null,
-      "profilePicture": "https://i.pinimg.com/550x/0a/b8/6d/0ab86dfd4bc698ce4f57a8e06a6ca6d1.jpg"
-  },
-  {
-    "username": "<strong>A_A</strong>",
-    "displayName": null,
-    "profilePicture": "https://i.pinimg.com/550x/0a/b8/6d/0ab86dfd4bc698ce4f57a8e06a6ca6d1.jpg"
-},
-{
-  "username": "<strong>A_A</strong>",
-  "displayName": null,
-  "profilePicture": "https://i.pinimg.com/550x/0a/b8/6d/0ab86dfd4bc698ce4f57a8e06a6ca6d1.jpg"
-},
-{
-  "username": "<strong>A_A</strong>",
-  "displayName": null,
-  "profilePicture": "https://i.pinimg.com/550x/0a/b8/6d/0ab86dfd4bc698ce4f57a8e06a6ca6d1.jpg"
-},
-{
-  "username": "<strong>A_A</strong>",
-  "displayName": null,
-  "profilePicture": "https://i.pinimg.com/550x/0a/b8/6d/0ab86dfd4bc698ce4f57a8e06a6ca6d1.jpg"
-},
-{
-  "username": "<strong>A_A</strong>",
-  "displayName": null,
-  "profilePicture": "https://i.pinimg.com/550x/0a/b8/6d/0ab86dfd4bc698ce4f57a8e06a6ca6d1.jpg"
-},
-{
-  "username": "<strong>A_A</strong>",
-  "displayName": null,
-  "profilePicture": "https://i.pinimg.com/550x/0a/b8/6d/0ab86dfd4bc698ce4f57a8e06a6ca6d1.jpg"
-},
-
-]
   return friends.map((friend) => {
     let displayName = document.createElement("h2");
     let username = document.createElement("h2");
