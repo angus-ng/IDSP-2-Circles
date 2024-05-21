@@ -1253,6 +1253,10 @@ select {
   height: 100vh;
 }
 
+.h-auto {
+  height: auto;
+}
+
 .max-h-400 {
   max-height: 400px;
 }
@@ -1399,6 +1403,10 @@ select {
 
 .w-screen {
   width: 100vw;
+}
+
+.w-14 {
+  width: 3.5rem;
 }
 
 .max-w-430 {
@@ -1600,6 +1608,10 @@ select {
 
 .break-words {
   overflow-wrap: break-word;
+}
+
+.break-all {
+  word-break: break-all;
 }
 
 .rounded-12\.75 {
