@@ -4,6 +4,7 @@ const leftHeaderButton = document.querySelector("#leftButton");
 const leftButtonSpan = document.querySelector(".leftButtonSpan");
 const rightHeaderButton = document.querySelector("#rightButton");
 const rightButtonSpan = document.querySelector(".rightButtonSpan");
+rightButtonSpan.removeAttribute("fromCreateAlbum");
 
 let currentLocalUser;
 let isPrivacyPublic = false;
@@ -203,6 +204,7 @@ header.addEventListener("click", async (event) => {
         albumObj.circleSrc = data.circle.picture;
         albumObj.circleName = data.circle.name;
       }
+      rightButtonSpan.removeAttribute("fromCreateAlbum");
       await displayAlbumConfirmation();
       nav.classList.remove("hidden");
     }
@@ -312,6 +314,7 @@ header.addEventListener("click", async (event) => {
       nav.classList.remove("hidden");
       const circleRender = await displayListOfCircles(data);
       console.log(circleRender);
+      rightButtonSpan.removeAttribute("fromCreateAlbum");
       showCreateOrAddToCircle(circleRender);
       return;
     }

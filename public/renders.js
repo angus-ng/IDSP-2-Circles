@@ -2566,6 +2566,10 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
   });
 }
 
+async function displayMap() {
+  
+}
+
 async function displayPopup(activity) {
   const notificationText = document.querySelector("#notificationText");
   notificationText.textContent = `${activity}`;
