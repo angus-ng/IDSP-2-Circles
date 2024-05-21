@@ -2139,16 +2139,19 @@ async function displayAlbum(albumData) {
         like.querySelector("svg path").setAttribute("fill", "none");
         like.querySelector("svg path").setAttribute("stroke", "#000000");
         await likeAlbum(albumId);
-        const updatedAlbumData = await getAlbum(albumId);
-        console.log(updatedAlbumData)
-        await displayAlbum(updatedAlbumData)
+        let { success, data, error } = await getAlbum(albumId);
+        if (success && data) {
+          await displayAlbum(data);
+        }
       } else {
         like.classList.add("liked");
         like.querySelector("svg path").setAttribute("fill", "#FF4646");
         like.querySelector("svg path").setAttribute("stroke", "#FF4646");
-        const updatedAlbumData = await getAlbum(albumId);
-        console.log(updatedAlbumData)
-        await displayAlbum(updatedAlbumData);
+        await likeAlbum(albumId);
+        let { success, data, error } = await getAlbum(albumId);
+        if (success && data) {
+          await displayAlbum(data);
+        }
       }
       return;
     }
