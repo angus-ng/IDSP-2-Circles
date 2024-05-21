@@ -1409,6 +1409,10 @@ select {
   width: 3.5rem;
 }
 
+.w-16 {
+  width: 4rem;
+}
+
 .max-w-430 {
   max-width: 430px;
 }
