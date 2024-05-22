@@ -88,7 +88,10 @@ header.addEventListener("click", async (event) => {
   }
 
   if (mapBackButton) {
-    await displayExplore();
+    const { success, data } = await getUser(currentLocalUser);
+    if (success && data) {
+      await displayExplore(data);
+    }
   }
 
   if (emailBackButton) {
@@ -231,7 +234,10 @@ header.addEventListener("click", async (event) => {
   if (backButton) {
     nav.classList.remove("hidden");
     newCircleNameInput = "";
-    await displayExplore();
+    const { success, data } = await getUser(currentLocalUser);
+    if (success && data) {
+      await displayExplore(data);
+    }
     return;
   }
 
@@ -250,11 +256,11 @@ header.addEventListener("click", async (event) => {
 
   if (closeButton) {
     newCircleNameInput = "";
-    pageName.innerHTML = "Explore";
-    pageContent.innerHTML = "";
-    leftHeaderButton.innerHTML = "";
-    rightHeaderButton.innerHTML = `<img src="/lightmode/map_icon.svg" alt="Map Icon"</img>`;
     nav.classList.remove("hidden");
+    const { success, data } = await getUser(currentLocalUser);
+    if (success && data) {
+      await displayExplore(data);
+    }
     return;
   }
 
@@ -279,6 +285,7 @@ header.addEventListener("click", async (event) => {
         const albumResponse = await getAlbum(albumId);
         if (albumResponse.success && albumResponse.data) {
           albumPhotos = [];
+          await displayPopup("images successfully added");
           await displayAlbum(albumResponse.data);
         } else {
           console.log(albumResponse.error);
@@ -305,7 +312,6 @@ header.addEventListener("click", async (event) => {
 
   if (backButtonAlbum) {
     const span = event.target.closest("span");
-    console.log("hep", span)
     if (span) {
       if (span.hasAttribute("id")) {
         let { success, data, error } = await getCircle(span.id);
@@ -330,7 +336,6 @@ header.addEventListener("click", async (event) => {
     if (success && data) {
       nav.classList.remove("hidden");
       const circleRender = await displayListOfCircles(data);
-      console.log(circleRender);
       rightButtonSpan.removeAttribute("fromCreateAlbum");
       showCreateOrAddToCircle(circleRender);
       return;

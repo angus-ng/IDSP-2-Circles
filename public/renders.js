@@ -635,6 +635,19 @@ async function displayExplore(userData) {
   await displayNavBar();
 
   const circleList = document.querySelector("#circleList");
+
+  circleList.addEventListener("click", async function (event) {
+    const circleDiv = event.target.closest("div.circle");
+    if (circleDiv) {
+      if (circleDiv.hasAttribute("id")) {
+        let { success, data, error } = await getCircle(circleDiv.id);
+        if (success && data) {
+          await displayCircle(data, userData.username);
+        }
+      }
+    }
+  });
+
   let isDown = false;
   let startX;
   let scrollLeft;
@@ -1042,7 +1055,7 @@ async function displayProfile(userData) {
   username.textContent = `@${userData.username}`;
   pageContent.innerHTML = `
   <div id="profilePage" class="relative pt-2 pb-16 mb-4 w-full">
-    ${currentLocalUser === userData.username ? `<div id="settings" class="absolute top-0 right-0 w-6 h-6"><img src="/lightmode/settings_icon.svg"></div>` : ""}
+    ${currentLocalUser === userData.username ? `<div id="settings" class="absolute top-0 right-0 w-6 h-6 cursor-pointer"><img src="/lightmode/settings_icon.svg"></div>` : ""}
     <div class="flex justify-center mb-4">
       <img id="profilePicture" src="${userData.profilePicture}" class="w-110 h-110 object-cover rounded-full"/>
     </div>
