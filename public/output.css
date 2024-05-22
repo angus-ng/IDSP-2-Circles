@@ -1764,6 +1764,11 @@ select {
   border-color: rgb(255 255 255 / var(--tw-border-opacity));
 }
 
+.border-light-mode-accent {
+  --tw-border-opacity: 1;
+  border-color: rgb(0 68 204 / var(--tw-border-opacity));
+}
+
 .border-x-transparent {
   border-left-color: transparent;
   border-right-color: transparent;

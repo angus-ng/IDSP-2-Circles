@@ -1434,7 +1434,7 @@ async function displayListOfCirclesHorizontally(data) {
     return `
       <div id="${obj.circle.id}" class="circle w-85 h-104">
         <div class="flex justify-center w-85 h-85">
-          <img src="${obj.circle.picture}" class="rounded-full w-85 h-85 object-cover cursor-pointer border-circle border-black"/>
+          <img src="${obj.circle.picture}" class="rounded-full w-85 h-85 object-cover cursor-pointer border-circle border-light-mode-accent"/>
         </div>
         ${circleName.outerHTML}
       </div>`;
