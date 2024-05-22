@@ -27,7 +27,7 @@ class AlbumController implements IController {
   }
 
   private initializeRoutes() {
-    this.router.post(`${this.path}/create`, ensureAuthenticated, upload.none(), this.createAlbum); 
+    this.router.post(`${this.path}/create`, ensureAuthenticated, upload.none(), this.createAlbum);
     this.router.post(`${this.path}/:id/update`, ensureAuthenticated, this.updateAlbum);
     this.router.get(`${this.path}/:id`, ensureAuthenticated, this.showAlbum);
     // this.router.post(`${this.path}/list`, ensureAuthenticated, this.getAlbumList);
@@ -37,37 +37,37 @@ class AlbumController implements IController {
     this.router.post(`${this.path}/comment/delete`, ensureAuthenticated, this.deleteComment);
     this.router.post(`${this.path}/comment/like`, ensureAuthenticated, this.likeComment);
   }
-  
-  private createAlbum = async (req:Request, res:Response) => {
+
+  private createAlbum = async (req: Request, res: Response) => {
     try {
       let loggedInUser = await getLocalUser(req, res)
-        
-        const { photos, isCircle, name }  = req.body
-        console.log(req.body,"logged")
-        console.log(isCircle)
-        if (!isCircle || !name || !photos.length) {
-          throw new Error("missing params")
-        }
-          const { id } = req.body;
-          console.log(id)
-          const albumObj = {
-            photos: photos,
-            albumName: name,
-            circleId: id,
-            creator: loggedInUser
-          }
-          const member = await this._service.checkMembership(id, loggedInUser, true)
-          if (!member){
-            console.log("SHIT")
-            return res.status(200).json({ success: true, data:null });
-          }
-          console.log(albumObj)
-          const newAlbum = await this._service.createAlbum(albumObj)
-          console.log(newAlbum.id)
 
-          return res.status(200).json({ success: true, data: newAlbum.id})
+      const { photos, isCircle, name } = req.body
+      console.log(req.body, "logged")
+      console.log(isCircle)
+      if (!isCircle || !name || !photos.length) {
+        throw new Error("missing params")
+      }
+      const { id } = req.body;
+      console.log(id)
+      const albumObj = {
+        photos: photos,
+        albumName: name,
+        circleId: id,
+        creator: loggedInUser
+      }
+      const member = await this._service.checkMembership(id, loggedInUser, true)
+      if (!member) {
+        console.log("SHIT")
+        return res.status(200).json({ success: true, data: null });
+      }
+      console.log(albumObj)
+      const newAlbum = await this._service.createAlbum(albumObj)
+      console.log(newAlbum.id)
+
+      return res.status(200).json({ success: true, data: newAlbum.id })
     } catch (err) {
-        res.status(200).json({success: true, data:null, error: "Failed to create album"})
+      res.status(200).json({ success: true, data: null, error: "Failed to create album" })
     }
   }
 
@@ -79,34 +79,33 @@ class AlbumController implements IController {
       if (!Array.isArray(photos) || photos.length === 0) {
         return res.status(400).json({ success: false, error: "Invalid photos array" });
       }
-  
+
       console.log(id);
-  
+
       let loggedInUser = await getLocalUser(req, res);
       const member = await this._service.checkMembership(id, loggedInUser);
       if (!member) {
         return res.status(403).json({ success: false, error: "User is not a member of this album" });
       }
-  
+
       const updatedAlbum = await this._service.updateAlbum(loggedInUser, id, photos);
       if (!updatedAlbum) {
         return res.status(404).json({ success: false, error: "Album not found" });
       }
-  
+
       console.log(updatedAlbum);
-  
+
       res.status(200).json({ success: true, data: updatedAlbum });
-  
+
     } catch (err) {
       console.error(err);
       res.status(500).json({ success: false, error: "Error updating album" });
     }
   }
-  
-  private likeAlbum = async (req: Request, res: Response) => {
-    let loggedInUser = req.user!.username;
 
+  private likeAlbum = async (req: Request, res: Response) => {
     try {
+      let loggedInUser = await getLocalUser(req, res)
       const { albumId } = req.body;
       await this._service.likeAlbum(loggedInUser, albumId);
       res.json({ success: true, data: null });
@@ -120,20 +119,21 @@ class AlbumController implements IController {
       const { id } = req.params
       //ensure its public / user is a member of the circle
       let loggedInUser = await getLocalUser(req, res)
+      console.log(loggedInUser, id)
       const publicStatus = await this._service.checkPublic(id)
-      if (!publicStatus){
+      if (!publicStatus) {
         const member = await this._service.checkMembership(id, loggedInUser)
-        if (!member){
-          return res.status(200).json({ success: true, data:null });
+        if (!member) {
+          return res.status(200).json({ success: true, data: null });
         }
       }
 
       const album = await this._service.getAlbum(id)
       console.log(album)
-      res.status(200).json({success: true, data:album});
+      res.status(200).json({ success: true, data: album });
 
     } catch (err) {
-      res.status(200).json({success: true, data: null, err:"Could not fetch album"})
+      res.status(200).json({ success: true, data: null, err: "Could not fetch album" })
     }
   }
 
@@ -150,10 +150,10 @@ class AlbumController implements IController {
     try {
       const { albumId } = req.body;
       const publicStatus = await this._service.checkPublic(albumId)
-      if (!publicStatus){
+      if (!publicStatus) {
         const member = await this._service.checkMembership(albumId, loggedInUser);
-        if (!member){
-          return res.status(200).json({ success: true, data:null });
+        if (!member) {
+          return res.status(200).json({ success: true, data: null });
         }
       }
       let comments: any[] = await this._service.getComments(albumId);
@@ -168,10 +168,10 @@ class AlbumController implements IController {
         return comment;
       };
 
-      comments = comments.map((comment:any) => {
+      comments = comments.map((comment: any) => {
         return formatTimeStamps(comment);
       });
-      res.status(200).json({success: true, data: comments});
+      res.status(200).json({ success: true, data: comments });
     } catch (err) {
       console.log(err)
     }
@@ -182,15 +182,15 @@ class AlbumController implements IController {
     try {
       const { message, albumId, commentId } = req.body;
       console.log(message, albumId, commentId);
-  
+
       const member = await this._service.checkMembership(albumId, loggedInUser);
-      if (!member || !message || message===""){
-        return res.status(200).json({ success: true, data:null });
+      if (!member || !message || message === "") {
+        return res.status(200).json({ success: true, data: null });
       }
       const comment = await this._service.createComment(loggedInUser, message, albumId, commentId);
-      res.json({success: true, data: null});
+      res.json({ success: true, data: null });
     } catch (err) {
-      res.json({success: true, data: null, error: "failed to create comment"});
+      res.json({ success: true, data: null, error: "failed to create comment" });
     }
   }
 
@@ -200,9 +200,9 @@ class AlbumController implements IController {
       const { commentId } = req.body;
 
       await this._service.deleteComment(loggedInUser, commentId);
-      res.json({success: true, data: null});
+      res.json({ success: true, data: null });
     } catch (err) {
-      res.json({success: true, data: null, error: "failed to delete comment"});
+      res.json({ success: true, data: null, error: "failed to delete comment" });
     }
   }
 
@@ -212,9 +212,9 @@ class AlbumController implements IController {
     try {
       const { commentId } = req.body;
       await this._service.likeComment(loggedInUser, commentId);
-      res.json({success: true, data: null});
+      res.json({ success: true, data: null });
     } catch (err) {
-      res.json({success: true, data: null, error: "failed to like comment"});
+      res.json({ success: true, data: null, error: "failed to like comment" });
     }
   }
 }

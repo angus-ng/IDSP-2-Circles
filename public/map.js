@@ -4,14 +4,21 @@ async function initMap() {
   const { Map } =  await google.maps.importLibrary("maps");
   const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
 
-
-  map = new Map(document.getElementById("map"), {
-    center: { lat: 30.0, lng: 49.2 },
-    zoom: 8,
-    mapId: "circles-421907",
-  });
   try { 
+    let markers = [];
     const data = await getMapInfo();
+    const newestAlbum = data.data.Album[0]
+    let lat = 0
+    let long = 0
+    if (newestAlbum) {
+      lat = parseFloat(newestAlbum.lat)
+      long = parseFloat(newestAlbum.long)
+    }
+    map = new Map(document.getElementById("map"), {
+      center: { lat: lat, lng: long },
+      zoom: 8,
+      mapId: "circles-421907",
+    });
     for (let album of data.data.Album) {
         console.log(album);
         const contentNode = document.createElement("div");
@@ -27,7 +34,8 @@ async function initMap() {
             content: contentNode,
             title: album.name,
         });
-    }
+        markers.push(marker)
+      }
   } catch (error) {
     console.log(error)
   }

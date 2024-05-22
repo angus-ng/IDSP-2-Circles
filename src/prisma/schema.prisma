@@ -62,10 +62,11 @@ model Circle {
 
 model Album {
   id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
   owner     User      @relation(fields: [ownerName], references: [username])
   ownerName String
   name      String
-  likeCount Int @default(0)
+  likeCount Int       @default(0)
   likes     Like[]
   photos    Photo[]
   comments  Comment[]

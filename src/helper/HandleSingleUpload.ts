@@ -1,4 +1,5 @@
 const cloudinary = require("cloudinary").v2;
+import exifr from 'exifr'
 
 export async function handleUpload(file: string) {
     try {

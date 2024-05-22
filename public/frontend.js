@@ -1,3 +1,17 @@
+const socket = new WebSocket("ws://localhost:5000");
+
+socket.onopen = () => {
+  console.log("WebSocket connected");
+};
+
+socket.onerror = (error) => {
+  console.error("WebSocket error:", error);
+};
+
+socket.onmessage = (event) => {
+  console.log("Message from server:", event.data);
+};
+
 const pageName = document.querySelector("#pageName");
 const pageContent = document.querySelector("#pageContent");
 const leftHeaderButton = document.querySelector("#leftButton");
@@ -88,8 +102,10 @@ header.addEventListener("click", async (event) => {
   }
 
   if (mapBackButton) {
-    const { data } = await getUser(currentLocalUser);    
-    await displayExplore(data);
+    const { success, data } = await getUser(currentLocalUser);
+    if (success && data) {
+      await displayExplore(data);
+    }
   }
 
   if (emailBackButton) {
@@ -183,6 +199,7 @@ header.addEventListener("click", async (event) => {
       checkedFriends = [];
       const { success, data, error } = await getCircle(circleId);
       if (success && data) {
+        await displayPopup("circle created");
         await displayCircle(data);
       }
       nav.classList.remove("hidden");
@@ -221,6 +238,7 @@ header.addEventListener("click", async (event) => {
         albumObj.circleName = data.circle.name;
       }
       rightButtonSpan.removeAttribute("fromCreateAlbum");
+      await displayPopup("circle created");
       await displayAlbumConfirmation();
       nav.classList.remove("hidden");
     }
@@ -230,8 +248,10 @@ header.addEventListener("click", async (event) => {
   if (backButton) {
     nav.classList.remove("hidden");
     newCircleNameInput = "";
-    const { data } = await getUser(currentLocalUser);    
-    await displayExplore(data);
+    const { success, data } = await getUser(currentLocalUser);
+    if (success && data) {
+      await displayExplore(data);
+    }
     return;
   }
 
@@ -250,11 +270,11 @@ header.addEventListener("click", async (event) => {
 
   if (closeButton) {
     newCircleNameInput = "";
-    pageName.innerHTML = "Explore";
-    pageContent.innerHTML = "";
-    leftHeaderButton.innerHTML = "";
-    rightHeaderButton.innerHTML = `<img src="/lightmode/map_icon.svg" alt="Map Icon"</img>`;
     nav.classList.remove("hidden");
+    const { success, data } = await getUser(currentLocalUser);
+    if (success && data) {
+      await displayExplore(data);
+    }
     return;
   }
 
@@ -279,6 +299,7 @@ header.addEventListener("click", async (event) => {
         const albumResponse = await getAlbum(albumId);
         if (albumResponse.success && albumResponse.data) {
           albumPhotos = [];
+          await displayPopup("images successfully added");
           await displayAlbum(albumResponse.data);
         } else {
           console.log(albumResponse.error);
@@ -305,7 +326,6 @@ header.addEventListener("click", async (event) => {
 
   if (backButtonAlbum) {
     const span = event.target.closest("span");
-    console.log("hep", span)
     if (span) {
       if (span.hasAttribute("id")) {
         let { success, data, error } = await getCircle(span.id);
@@ -330,7 +350,6 @@ header.addEventListener("click", async (event) => {
     if (success && data) {
       nav.classList.remove("hidden");
       const circleRender = await displayListOfCircles(data);
-      console.log(circleRender);
       rightButtonSpan.removeAttribute("fromCreateAlbum");
       showCreateOrAddToCircle(circleRender);
       return;
@@ -341,7 +360,7 @@ header.addEventListener("click", async (event) => {
     console.log("album created");
     const albumName = await getAlbumName();
     albumObj.name = albumName;
-    const { success, data, error } = await handleCreateAlbum(albumObj);
+    const { success, data, error } = await handleCreateAlbum(handleCreateAlbum);
     if (error) {
       if (error === "Missing album name") {
         await displayPopup("Please add a title to your album");
@@ -353,6 +372,7 @@ header.addEventListener("click", async (event) => {
     if (success && data) {
       const { success, data, error } = await getAlbum(albumId);
       if (success && data) {
+        await displayPopup("album created");
         await displayAlbum(data);
         nav.classList.remove("hidden");
       }
@@ -549,6 +569,7 @@ pageContent.addEventListener("click", async (event) => {
   const usernameNextButton = event.target.closest("#usernameNext");
   const profilePictureNextButton = event.target.closest("#profilePictureNext");
   const logOut = event.target.closest("#logOut");
+  const removeFriend = event.target.closest(".removeFriendIcon");
 
   if (localAuthButton) {
     handleLocalAuth();
@@ -602,6 +623,13 @@ pageContent.addEventListener("click", async (event) => {
 
   if (profilePictureNextButton) {
     await displayProfileConfirmation();
+  }
+
+  if (removeFriend) {
+    const username = document.querySelector(".username").getAttribute("username");
+    await displayPopup("friend removed");
+    await unfriend(username, currentLocalUser);
+    await displayFriends(currentLocalUser);
   }
 
   if (logOut) {

@@ -27,6 +27,7 @@ class UserController implements IController {
     this.router.post(`${this.path}/get`, ensureAuthenticated, this.getUser);
     this.router.get(`${this.path}/ifEmailTaken/:email`, this.ifEmailTaken);
     this.router.get(`${this.path}/profilePicture`, ensureAuthenticated, this.profilePicture);
+    this.router.get(`${this.path}/feed`, ensureAuthenticated, this.getFeed);
     this.router.get(`${this.path}/mapInfo`, ensureAuthenticated, this.getInfoForMap);
   }
   private friend = async (req: Request, res: Response) => {
@@ -165,6 +166,16 @@ class UserController implements IController {
       res.status(200).json({ success: true, data: info })
     } catch (error) {
       res.status(200).json({ success: true, data: null })
+    }
+  }
+
+  private getFeed = async (req: Request, res: Response) => {
+    try {
+      let loggedInUser = await getLocalUser(req, res)
+      const albumFeed = await this._service.getFeed(loggedInUser)
+      res.status(200).json({success:true, data:albumFeed})
+    } catch (err) {
+      res.status(200).json({success: true, data: null, error: "failed to get album feed"})
     }
   }
 }

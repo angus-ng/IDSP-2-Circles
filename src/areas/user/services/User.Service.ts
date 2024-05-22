@@ -424,6 +424,53 @@ export class UserService implements IUserService {
     }
     return user.profilePicture
   }
+
+  async getFeed(username: string): Promise<string> {
+    try {
+      const friends = await this._db.prisma.friend.findMany({
+        where: {
+          friend_1_name: username
+        },
+        select: {
+          friend_2_name: true
+        }
+      })
+  
+      const friendAlbums:any = [];
+      
+      for await (const friend of friends) {
+        const albums = await this._db.prisma.album.findMany({
+          where: {
+            OR: [{
+              circle: {
+                isPublic: true
+              },
+              ownerName: friend.friend_2_name
+            },
+          {circle: {
+            UserCircle: {some: {user: {username: username}}}
+          },
+        ownerName: friend.friend_2_name}]
+            },
+        orderBy: {
+          createdAt: "desc"
+        }
+        })
+        if (albums.length){
+          albums.forEach((album) => {
+            friendAlbums.push(album)
+          })
+        }
+      }
+  
+      friendAlbums.sort((a:any, b:any) => b.createdAt - a.createdAt)
+      
+      return friendAlbums
+    } catch (err) {
+      throw err;
+    }
+  
+  }
   async getInfoForMap(username: string): Promise<any> {
     const albums = await this._db.prisma.user.findUnique({
       where: {

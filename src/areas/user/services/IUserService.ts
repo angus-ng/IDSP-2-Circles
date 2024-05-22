@@ -13,5 +13,6 @@ export default interface IUserService {
     getUser(username: string, currentUser: string): Promise<any>
     ifEmailTaken(email: string): Promise<boolean>
     getProfilePicture(username: string): Promise<string>
+    getFeed(username: string): Promise<string>
     getInfoForMap(username: string): Promise<any>
 }
