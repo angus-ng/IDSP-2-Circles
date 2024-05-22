@@ -30,7 +30,10 @@ async function initiatePage() {
   if (!currentLocalUser) {
     await displayLoginPage();
   } else {
-    await displayExplore();
+    const { success, data } = await getUser(username);
+    if (success && data) {
+      await displayExplore(data);
+    }
   }
 }
 
@@ -77,9 +80,14 @@ header.addEventListener("click", async (event) => {
   const updateAlbumButton = event.target.closest("#updateAlbum");
   const createCircleToAlbum = event.target.closest("#createCircleToAlbum");
   const mapButton = event.target.closest("#mapButton");
+  const mapBackButton = event.target.closest("#mapBackButton");
 
   if (mapButton) {
     await displayMap();
+  }
+
+  if (mapBackButton) {
+    await displayExplore();
   }
 
   if (emailBackButton) {
@@ -498,9 +506,12 @@ closeModalSwipe.addEventListener("swiped-down", (event) => {
 async function handleLocalAuth() {
   let { success, data, error } = await localAuth();
   if (success && data) {
-    console.log("local auth user is", data);
     currentLocalUser = data;
-    await displayExplore();
+    console.log("local auth user is", data);
+    const { success: getUserSuccess, data: userData } = await getUser(currentLocalUser);
+    if (getUserSuccess && userData) {
+      await displayExplore(userData);
+    }
   }
 }
 

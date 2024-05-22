@@ -590,12 +590,26 @@ async function displayCreateCirclePreview() {
   circleNameInput.value = newCircleNameInput;
 }
 
-async function displayExplore() {
+async function displayExplore(userData) {
   pageName.textContent = "Explore";
+  header.classList.remove("hidden");
   leftHeaderButton.innerHTML = "";
   rightHeaderButton.innerHTML = `<img id="mapButton" src="/lightmode/map_icon.svg" alt="Map Icon"/>`;
-  pageContent.innerHTML = `<div id="explorePage" class="flex flex-col justify-center py-2 w-full h-screen"></div>`;
-  header.classList.remove("hidden");
+  const circleRender = await displayListOfCirclesHorizontally(userData, currentLocalUser);
+  pageContent.innerHTML = `
+  <div id="explorePage" class="flex flex-col py-2 w-full h-full>
+    <div id="circlesFeed">
+      <h2 class="font-medium text-17 mb-2">Your Circles</h2>
+      <div>
+      <div id="circleList" class="m-auto flex flex-row gap-4 overflow-x-auto overflow-y-hidden">
+        ${circleRender.join("")}
+      </div>
+      </div>
+    </div>
+    <div id="feed">
+      <h2 class="font-medium text-17">Your Feed</h2>
+    </div>
+  </div>`;
   await displayNavBar();
 }
 
@@ -886,7 +900,8 @@ async function displayNavBar() {
     clearNewAlbum();
 
     if (exploreButton) {
-      await displayExplore();
+      const { data } = await getUser(currentLocalUser);
+      await displayExplore(data);
       pageName.setAttribute("page", "explore");
       newCircleNameInput = "";
       pageName.classList.remove("text-light-mode-accent");
@@ -1352,6 +1367,22 @@ async function displayListOfCircles(data) {
       <div id="${obj.circle.id}" class="circle">
         <div class="flex justify-center">
           <img src="${obj.circle.picture}" class="rounded-full w-100 h-100 object-cover cursor-pointer border-circle border-black"/>
+        </div>
+        ${circleName.outerHTML}
+      </div>`;
+  });
+  return circleListArr;
+}
+
+async function displayListOfCirclesHorizontally(data) {
+  let circleListArr = data.UserCircle.map((obj) => {
+    let circleName = document.createElement("p");
+    circleName.className = "text-center text-secondary";
+    circleName.textContent = obj.circle.name;
+    return `
+      <div id="${obj.circle.id}" class="circle w-85 h-104">
+        <div class="flex justify-center w-85 h-85">
+          <img src="${obj.circle.picture}" class="rounded-full w-85 h-85 object-cover cursor-pointer border-circle border-black"/>
         </div>
         ${circleName.outerHTML}
       </div>`;
@@ -2577,7 +2608,7 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
 
 async function displayMap() {
   pageName.textContent = "Maps";
-  
+  leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="mapBackButton"/>`;
 }
 
 async function displayPopup(activity) {
