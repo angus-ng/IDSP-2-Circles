@@ -182,6 +182,7 @@ header.addEventListener("click", async (event) => {
       checkedFriends = [];
       const { success, data, error } = await getCircle(circleId);
       if (success && data) {
+        await displayPopup("circle created");
         await displayCircle(data);
       }
       nav.classList.remove("hidden");
@@ -220,6 +221,7 @@ header.addEventListener("click", async (event) => {
         albumObj.circleName = data.circle.name;
       }
       rightButtonSpan.removeAttribute("fromCreateAlbum");
+      await displayPopup("circle created");
       await displayAlbumConfirmation();
       nav.classList.remove("hidden");
     }
@@ -351,6 +353,7 @@ header.addEventListener("click", async (event) => {
     if (success && data) {
       const { success, data, error } = await getAlbum(albumId);
       if (success && data) {
+        await displayPopup("album created");
         await displayAlbum(data);
         nav.classList.remove("hidden");
       }
@@ -548,6 +551,7 @@ pageContent.addEventListener("click", async (event) => {
   const usernameNextButton = event.target.closest("#usernameNext");
   const profilePictureNextButton = event.target.closest("#profilePictureNext");
   const logOut = event.target.closest("#logOut");
+  const removeFriend = event.target.closest(".removeFriendIcon");
 
   if (localAuthButton) {
     handleLocalAuth();
@@ -601,6 +605,13 @@ pageContent.addEventListener("click", async (event) => {
 
   if (profilePictureNextButton) {
     await displayProfileConfirmation();
+  }
+
+  if (removeFriend) {
+    const username = document.querySelector(".username").getAttribute("username");
+    await displayPopup("friend removed");
+    await unfriend(username, currentLocalUser);
+    await displayFriends(currentLocalUser);
   }
 
   if (logOut) {

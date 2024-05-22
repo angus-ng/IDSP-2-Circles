@@ -2350,8 +2350,9 @@ function displayFriendsList(friends) {
   return friends.map((friend) => {
     let displayName = document.createElement("h2");
     let username = document.createElement("h2");
-    displayName.className = "font-medium text-14 leading-tertiary";
-    username.className = "font-light text-14 text-dark-grey";
+    displayName.className = "displayName font-medium text-14 leading-tertiary";
+    username.className = "username font-light text-14 text-dark-grey";
+    username.setAttribute("username", friend.username);
     displayName.textContent = friend.displayName ? friend.displayName : friend.username;
     username.textContent = `@${friend.username}`;
     return `
