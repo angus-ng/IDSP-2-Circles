@@ -613,6 +613,10 @@ async function displayCreateCirclePreview() {
 }
 
 async function displayExplore(userData) {
+  const {success, data} = await getAlbumFeed()
+  if (success && data) {
+    console.log(data)
+  }
   pageName.textContent = "Explore";
   header.classList.remove("hidden");
   leftHeaderButton.innerHTML = "";

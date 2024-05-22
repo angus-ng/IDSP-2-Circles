@@ -519,3 +519,14 @@ async function updateCircle (circleObj) {
 
   }
 }
+
+async function getAlbumFeed () {
+  try {
+    const response = await fetch(`/user/feed`);
+    const jsonResponse = await response.json();
+    console.log(jsonResponse);
+    return jsonResponse
+  } catch (err) {
+
+  }
+}

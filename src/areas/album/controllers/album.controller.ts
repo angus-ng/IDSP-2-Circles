@@ -195,7 +195,7 @@ class AlbumController implements IController {
   }
 
   private deleteComment = async (req: Request, res: Response) => {
-    let loggedInUser = req.user!.username;
+    let loggedInUser = await getLocalUser(req, res)
     try {
       const { commentId } = req.body;
 
@@ -207,7 +207,7 @@ class AlbumController implements IController {
   }
 
   private likeComment = async (req: Request, res: Response) => {
-    let loggedInUser = req.user!.username;
+    let loggedInUser = await getLocalUser(req, res)
 
     try {
       const { commentId } = req.body;

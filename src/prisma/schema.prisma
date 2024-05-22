@@ -62,10 +62,11 @@ model Circle {
 
 model Album {
   id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
   owner     User      @relation(fields: [ownerName], references: [username])
   ownerName String
   name      String
-  likeCount Int @default(0)
+  likeCount Int       @default(0)
   likes     Like[]
   photos    Photo[]
   comments  Comment[]
@@ -83,18 +84,18 @@ model Photo {
 }
 
 model Comment {
-  id              String    @id @default(cuid())
-  createdAt       DateTime  @default(now())
-  message         String?
-  user            User?      @relation(fields: [userId], references: [username])
-  userId          String?
-  likeCount       Int       @default(0)
-  likes           Like[]
-  album           Album     @relation(fields: [albumId], references: [id])
-  albumId         String
-  replies         Comment[] @relation("replies")
-  parent Comment? @relation("replies", fields: [parentId], references: [id])
-  parentId String?
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  message   String?
+  user      User?     @relation(fields: [userId], references: [username])
+  userId    String?
+  likeCount Int       @default(0)
+  likes     Like[]
+  album     Album     @relation(fields: [albumId], references: [id])
+  albumId   String
+  replies   Comment[] @relation("replies")
+  parent    Comment?  @relation("replies", fields: [parentId], references: [id])
+  parentId  String?
 }
 
 model Like {

@@ -1132,6 +1132,10 @@ select {
   height: 100px;
 }
 
+.h-104 {
+  height: 104px;
+}
+
 .h-11 {
   height: 2.75rem;
 }
@@ -1265,10 +1269,6 @@ select {
   height: 100vh;
 }
 
-.h-104 {
-  height: 104px;
-}
-
 .h-\[140px\] {
   height: 140px;
 }
@@ -1283,10 +1283,6 @@ select {
 
 .max-h-56 {
   max-height: 14rem;
-}
-
-.max-h-\[180px\] {
-  max-height: 180px;
 }
 
 .w-10 {
@@ -1624,16 +1620,8 @@ select {
   overflow-x: auto;
 }
 
-.overflow-x-hidden {
-  overflow-x: hidden;
-}
-
 .overflow-y-hidden {
   overflow-y: hidden;
-}
-
-.overflow-x-scroll {
-  overflow-x: scroll;
 }
 
 .overflow-y-scroll {
