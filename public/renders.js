@@ -451,13 +451,35 @@ async function displayListOfFriends(friends) {
   return newArr;
 }
 
-async function displayInviteFriends() {
+async function displayInviteFriends(fromCircle=false, circleId="") {
   nav.classList.add("hidden");
-  const friends = await getFriends(currentLocalUser);
+  let friends = await getFriends(currentLocalUser);
+  if (fromCircle && circleId) {
+    const {data, success} = await getCircle(circleId)
+    if (data && success) {
+      const memberList = data.members.map((userObj) => {
+        return userObj.user.username;
+      })
+      friends = friends.filter((user) => {
+        if (!memberList.includes(user.username)) {
+          return user;
+        }
+      })
+      console.log("1",memberList)
+      console.log("2",friends)
+    }
+  }
   const friendsList = await displayListOfFriends(friends);
   pageName.textContent = "Invite Friends";
   leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="circleBackButton"/>`;
   rightHeaderButton.innerHTML = `<img src="/lightmode/next_button.svg" alt="Next Button" id="nextButton"/>`;
+  if (fromCircle && circleId) {
+    leftHeaderButton.innerHTML = `<span class="backSpan" circleid="${circleId}">
+    <img src="/lightmode/back_button.svg" alt="Back Button" id="albumToCircleButton"/>
+    </span>
+    `
+    rightHeaderButton.innerHTML = `<img src="/lightmode/done_button.svg" alt="Done Button" id="inviteDoneButton"/>`;
+  }
 
   pageContent.innerHTML = `
       <div class="font-light text-11 justify-center text-center text-dark-grey w-full">
@@ -1944,6 +1966,25 @@ async function displayCircle(circleData) {
       }
     }
   });
+
+  if (circleData.circle.ownerId === currentLocalUser) {
+    const inviteMore = document.createElement("img");
+    inviteMore.src = "/invite_more_friends.svg";
+    inviteMore.id = "inviteMoreUsers";
+    inviteMore.className = "w-42 h-42 rounded-full object-cover";
+    const memberList = document.querySelector(".memberList")
+    memberList.append(inviteMore);
+
+    memberList.addEventListener("click", async function (event) {
+      const portrait = event.target.closest("img")
+      if (portrait) {
+        if (portrait.id === "inviteMoreUsers") {
+          console.log("CLICKED")
+          await displayInviteFriends(true, circleData.circle.id)
+        }
+      }
+    })
+  }
 }
 
 async function displayCircleInvites() {

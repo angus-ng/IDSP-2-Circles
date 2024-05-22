@@ -169,12 +169,20 @@ export class CircleService implements ICircleService {
   }
   async inviteToCircle(username: string, circleName: string): Promise<void> {
     try {
-        await this._db.prisma.circleInvite.create({
-          data:{
-              invitee_username: username,
-              circleId: circleName
-          }
+        const inviteExists = await this._db.prisma.circleInvite.findFirst({
+            where: {
+                invitee_username: username,
+                circleId: circleName
+            }
         })
+        if (!inviteExists){
+            await this._db.prisma.circleInvite.create({
+                data:{
+                    invitee_username: username,
+                    circleId: circleName
+                }
+              })
+        }
     } catch (error:any) {
         throw new Error(error)
     }

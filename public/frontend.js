@@ -81,6 +81,7 @@ header.addEventListener("click", async (event) => {
   const createCircleToAlbum = event.target.closest("#createCircleToAlbum");
   const mapButton = event.target.closest("#mapButton");
   const mapBackButton = event.target.closest("#mapBackButton");
+  const inviteDoneButton = event.target.closest("#inviteDoneButton");
 
   if (mapButton) {
     await displayMap();
@@ -407,6 +408,7 @@ header.addEventListener("click", async (event) => {
     const backSpan = document.querySelector(".backSpan");
     backSpan.removeAttribute("circleId");
     if (success && data) {
+      nav.classList.remove("hidden");
       return await displayCircle(data);
     }
   }
@@ -461,6 +463,27 @@ header.addEventListener("click", async (event) => {
       const { success, data, error } = await getCircle(circleIdFromUpdate);
       if (success && data) {
         await displayCircle(data);
+      }
+    }
+  }
+
+  if (inviteDoneButton) {
+    saveCheckedFriends()
+    const backSpan = document.querySelector("span.backSpan");
+    if (backSpan) {
+      const circleId = backSpan.getAttribute("circleid")
+      backSpan.removeAttribute("circleId");
+      for (let friend of checkedFriends) {
+        const { success, data } = await handleSendCircleRequest(
+          friend,
+          circleId
+        );
+      }
+      checkedFriends = [];
+      const {success, data} = await getCircle(circleId)
+      if (success && data) {
+        nav.classList.remove("hidden");
+        await displayCircle(data)
       }
     }
   }
@@ -779,11 +802,5 @@ const displayCircleEditMode = (circleId) => {
   circleNameInput.className = "max-w-full text-center bg-transparent text-20 text-black font-light border-dark-grey";
   circleName.remove();
   document.querySelector("#circleName").append(circleNameInput);
-
-  const inviteMore = document.createElement("img");
-  inviteMore.src = "/invite_more_friends.svg";
-  inviteMore.id = "inviteMoreUsers";
-  inviteMore.className = "w-42 h-42 rounded-full object-cover";
-  document.querySelector(".memberList").append(inviteMore);
 
 }
