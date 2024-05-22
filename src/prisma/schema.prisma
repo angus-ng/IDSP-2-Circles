@@ -70,6 +70,8 @@ model Album {
   comments  Comment[]
   circle    Circle    @relation(fields: [circleId], references: [id], onDelete: Cascade)
   circleId  String
+  lat       String?
+  long      String?
 }
 
 model Photo {
@@ -79,21 +81,23 @@ model Photo {
   albumId String
   poster  User   @relation(fields: [userId], references: [username])
   userId  String
+  lat     String?
+  long    String?
 }
 
 model Comment {
-  id              String    @id @default(cuid())
-  createdAt       DateTime  @default(now())
-  message         String?
-  user            User?      @relation(fields: [userId], references: [username])
-  userId          String?
-  likeCount       Int       @default(0)
-  likes           Like[]
-  album           Album     @relation(fields: [albumId], references: [id])
-  albumId         String
-  replies         Comment[] @relation("replies")
-  parent Comment? @relation("replies", fields: [parentId], references: [id])
-  parentId String?
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  message   String?
+  user      User?     @relation(fields: [userId], references: [username])
+  userId    String?
+  likeCount Int       @default(0)
+  likes     Like[]
+  album     Album     @relation(fields: [albumId], references: [id])
+  albumId   String
+  replies   Comment[] @relation("replies")
+  parent    Comment?  @relation("replies", fields: [parentId], references: [id])
+  parentId  String?
 }
 
 model Like {

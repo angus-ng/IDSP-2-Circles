@@ -593,7 +593,7 @@ async function displayCreateCirclePreview() {
 async function displayExplore() {
   pageName.textContent = "Explore";
   leftHeaderButton.innerHTML = "";
-  rightHeaderButton.innerHTML = `<img src="/lightmode/map_icon.svg" alt="Map Icon"/>`;
+  rightHeaderButton.innerHTML = `<img src="/lightmode/map_icon.svg" alt="Map Icon" id="openMapIcon"/>`;
   pageContent.innerHTML = `
     <div id="explorePage" class="flex flex-col justify-center py-2 w-full h-screen">
     </div>`;
@@ -661,39 +661,6 @@ async function displaySearch() {
       if (success && data) {
         return await displayProfile(data);
       }
-    }
-  });
-  suggestedFriends.addEventListener("click", async (event) => {
-    event.preventDefault();
-    const target = event.target;
-    const username = target.getAttribute("name");
-    const method = target.getAttribute("method");
-    let response;
-    switch (method) {
-      case "Add Friend":
-        response = await sendFriendRequest(username, currentLocalUser);
-        console.log(response);
-        await displayPopup("friend request sent");
-        await displaySearch();
-        break;
-      case "Remove Friend":
-        //MAKE USER CONFIRM IF THEY WANT TO REMOVE THIS FRIEND FIRST
-        response = await unfriend(username, currentLocalUser);
-        console.log(response);
-        await displaySearch();
-        break;
-      case "Remove Request":
-        response = await removeFriendRequest(username, currentLocalUser);
-        console.log(response);
-        await displaySearch();
-        break;
-      case "Accept Request":
-        response = await acceptFriendRequest(username, currentLocalUser);
-        console.log(response);
-        await displaySearch();
-        break;
-      default:
-        break;
     }
   });
 }
@@ -1999,7 +1966,7 @@ async function displayAlbum(albumData) {
     span.appendChild(imgElement);
     leftHeaderButton.appendChild(span);
   }
-  
+
   rightHeaderButton.innerHTML = `
   <div class="flex flex-row flex-nowrap gap-2 w-full h-22>
     <div class="flex">
@@ -2124,14 +2091,17 @@ async function displayFriends(username) {
 
   // this is to show all users when the page first loads
   pageName.textContent = "Friends";
-  leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="friendsBackButton"/>`;
+  leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" name="${username}" id="friendsBackButton"/>`;
   rightHeaderButton.innerHTML = "";
-
+  let friendlyReminder = "";
+  if (username === currentLocalUser) {
+    friendlyReminder = `<div class="font-light text-11 justify-center text-center text-dark-grey w-full">
+    <p>We don’t send notifications when you edit</p>
+    <p>your Friends List.</p>
+  </div>`;
+  }
   pageContent.innerHTML = `
-    <div class="font-light text-11 justify-center text-center text-dark-grey w-full">
-      <p>We don’t send notifications when you edit</p>
-      <p>your Friends List.</p>
-    </div>
+    ${friendlyReminder}
     <div id="allFriendsList" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full">
       <div class="relative w-full h-9 mt-8">
         <form onkeydown="return event.key != 'Enter';">
@@ -2156,7 +2126,7 @@ async function displayFriends(username) {
   }
 
   function updateSuggestedFriends(friends) {
-    friendsDiv.innerHTML = displayFriendsList(friends).join("");
+    friendsDiv.innerHTML = displayFriendsList(friends, username).join("");
     if (friends.length === 1) {
       friendCount.innerHTML = `${friends.length} friend`;
     } else if (friends.length > 1) {
@@ -2194,7 +2164,17 @@ async function displayFriends(username) {
   });
 }
 
-function displayFriendsList(friends) {
+function displayFriendsList(friends, username) {
+  let removeFriendIcon = "";
+  if (username === currentLocalUser) {
+    removeFriendIcon = `<div class="flex-none w-58">
+    <div class="removeFriendIcon">
+      <svg width="30" height="31" viewBox="0 0 30 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M17.5 10.5C17.5 7.7375 15.2625 5.5 12.5 5.5C9.7375 5.5 7.5 7.7375 7.5 10.5C7.5 13.2625 9.7375 15.5 12.5 15.5C15.2625 15.5 17.5 13.2625 17.5 10.5ZM2.5 23V24.25C2.5 24.9375 3.0625 25.5 3.75 25.5H21.25C21.9375 25.5 22.5 24.9375 22.5 24.25V23C22.5 19.675 15.8375 18 12.5 18C9.1625 18 2.5 19.675 2.5 23ZM22.5 13H27.5C28.1875 13 28.75 13.5625 28.75 14.25C28.75 14.9375 28.1875 15.5 27.5 15.5H22.5C21.8125 15.5 21.25 14.9375 21.25 14.25C21.25 13.5625 21.8125 13 22.5 13Z" fill="#0E0E0E"/>
+      </svg>
+    </div>
+  </div>`;
+  }
   return friends.map((friend) => {
     let displayName = document.createElement("h2");
     let username = document.createElement("h2");
@@ -2213,13 +2193,7 @@ function displayFriendsList(friends) {
           ${displayName.outerHTML}
           ${username.outerHTML}
         </div>
-        <div class="flex-none w-58">
-          <div class="removeFriendIcon">
-            <svg width="30" height="31" viewBox="0 0 30 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M17.5 10.5C17.5 7.7375 15.2625 5.5 12.5 5.5C9.7375 5.5 7.5 7.7375 7.5 10.5C7.5 13.2625 9.7375 15.5 12.5 15.5C15.2625 15.5 17.5 13.2625 17.5 10.5ZM2.5 23V24.25C2.5 24.9375 3.0625 25.5 3.75 25.5H21.25C21.9375 25.5 22.5 24.9375 22.5 24.25V23C22.5 19.675 15.8375 18 12.5 18C9.1625 18 2.5 19.675 2.5 23ZM22.5 13H27.5C28.1875 13 28.75 13.5625 28.75 14.25C28.75 14.9375 28.1875 15.5 27.5 15.5H22.5C21.8125 15.5 21.25 14.9375 21.25 14.25C21.25 13.5625 21.8125 13 22.5 13Z" fill="#0E0E0E"/>
-            </svg>
-          </div>
-        </div>
+        ${removeFriendIcon}
       </div>`;
   });
 }
@@ -2239,7 +2213,7 @@ async function displayFriendRequests() {
         ? (displayName.textContent = request.requester.displayName)
         : (displayName.textContent = request.requester.username);
       return `
-    <div class="flex items-center my-5">
+    <div class="flex items-center my-5 user" id="${request.requester.username}">
     <div class="flex-none w-58">
       <img class="rounded-full w-58 h-58" src="${request.requester.profilePicture}" alt="${request.requester.username}'s profile picture"/>
     </div>
@@ -2269,6 +2243,13 @@ async function displayFriendRequests() {
     event.preventDefault();
     const id = event.target.getAttribute("identifier");
     const invitee = event.target.getAttribute("sentTo");
+    const user = event.target.closest("div.user");
+    if (user) {
+      const { success, data } = await getUser(user.id);
+      if (success && data) {
+        return await displayProfile(data);
+      }
+    }
     switch (event.target.name) {
       case "acceptFriendRequest":
         await acceptFriendRequest(id, invitee);
@@ -2643,3 +2624,4 @@ async function displayConfirmationPopup(activity, helperObj) {
 
   confirmationPopup.addEventListener("click", confirmEventHandler, true);
 }
+

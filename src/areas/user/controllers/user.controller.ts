@@ -27,17 +27,14 @@ class UserController implements IController {
     this.router.post(`${this.path}/get`, ensureAuthenticated, this.getUser);
     this.router.get(`${this.path}/ifEmailTaken/:email`, this.ifEmailTaken);
     this.router.get(`${this.path}/profilePicture`, ensureAuthenticated, this.profilePicture);
-
+    this.router.get(`${this.path}/mapInfo`, ensureAuthenticated, this.getInfoForMap);
   }
   private friend = async (req: Request, res: Response) => {
     try {
       let loggedInUser = await getLocalUser(req, res)
       const { requestee } = req.body
-      if (!loggedInUser) {
-        throw new Error("Not logged in")
-      }
-        await this._service.friend(loggedInUser, requestee)
-        res.status(200).json({success:true, data: null})
+      await this._service.friend(loggedInUser, requestee)
+      res.status(200).json({ success: true, data: null })
     } catch (error: any) {
       throw new Error(error)
     }
@@ -48,11 +45,11 @@ class UserController implements IController {
       const { requester, requestee } = req.body
       if (loggedInUser === requester) {
         const message = await this._service.unfriend(requester, requestee)
-        res.status(200).json({success:true, data: message})
+        res.status(200).json({ success: true, data: message })
       } else {
-        res.status(400).json({success:false, error: "Failed to unfriend"})
+        res.status(400).json({ success: false, error: "Failed to unfriend" })
       }
-    } catch (error:any) {
+    } catch (error: any) {
       throw new Error(error)
     }
   }
@@ -60,24 +57,19 @@ class UserController implements IController {
     try {
       let loggedInUser = await getLocalUser(req, res)
       const { username } = req.body
-      console.log(username)
-      console.log(req.body)
       const friends = await this._service.getFriends(username)
-      res.status(200).json({success: true, data: friends})
+      res.status(200).json({ success: true, data: friends })
     } catch (err) {
-      return res.status(200).json({success: true, data: null, error: "failed to get friends"})
+      return res.status(200).json({ success: true, data: null, error: "failed to get friends" })
     }
   }
 
   private getActivities = async (req: Request, res: Response) => {
     try {
       let loggedInUser = await getLocalUser(req, res)
-      if (!loggedInUser) {
-        throw new Error("Not logged in")
-      }
-        const activities = await this._service.getActivities(loggedInUser)
-        res.status(200).json({success:true, data: activities})
-      } catch (error: any) {
+      const activities = await this._service.getActivities(loggedInUser)
+      res.status(200).json({ success: true, data: activities })
+    } catch (error: any) {
       throw new Error(error)
     }
   }
@@ -88,9 +80,9 @@ class UserController implements IController {
       const { requester, requestee } = req.body
       if (loggedInUser === requestee) {
         await this._service.acceptRequest(requester, requestee)
-        res.status(200).json({success:true, data: null})
+        res.status(200).json({ success: true, data: null })
       } else {
-        res.status(400).json({success:false, error: "Failed to accept friend request"})
+        res.status(400).json({ success: false, error: "Failed to accept friend request" })
       }
     } catch (error: any) {
       throw new Error(error)
@@ -103,21 +95,21 @@ class UserController implements IController {
       const { user1, user2 } = req.body
       if (loggedInUser === user2 || loggedInUser === user1) {
         await this._service.removeRequest(user1, user2)
-        res.status(200).json({success:true, data: null})
+        res.status(200).json({ success: true, data: null })
       } else {
-        res.status(400).json({success:false, error: "Failed to accept friend request"})
+        res.status(400).json({ success: false, error: "Failed to accept friend request" })
       }
     } catch (error: any) {
       throw new Error(error)
     }
   }
-  
+
   private search = async (req: Request, res: Response) => {
     try {
       let loggedInUser = await getLocalUser(req, res)
       const input = decodeURIComponent(req.params.input).slice(0, -1)
       const output = await this._service.search(input, loggedInUser)
-      res.status(200).json({success:true, data: output})
+      res.status(200).json({ success: true, data: output })
     } catch (error: any) {
       throw new Error(error)
     }
@@ -126,7 +118,7 @@ class UserController implements IController {
     try {
       let loggedInUser = await getLocalUser(req, res)
       const output = await this._service.search("", loggedInUser)
-      res.status(200).json({success:true, data: output})
+      res.status(200).json({ success: true, data: output })
     } catch (error: any) {
       throw new Error(error)
     }
@@ -139,10 +131,10 @@ class UserController implements IController {
       const profileObj = await this._service.getUser(username, loggedInUser)
       console.log(loggedInUser, username)
       console.log(profileObj)
-      res.status(200).json({success: true, data: profileObj})
+      res.status(200).json({ success: true, data: profileObj })
     } catch (error) {
       console.log(error)
-      res.status(200).json({success: true, data: null, error:error})
+      res.status(200).json({ success: true, data: null, error: error })
     }
   }
   private ifEmailTaken = async (req: Request, res: Response) => {
@@ -156,13 +148,23 @@ class UserController implements IController {
       res.status(200).json({ error: error })
     }
   }
-  private profilePicture = async (req: Request, res:Response) => {
+  private profilePicture = async (req: Request, res: Response) => {
     try {
       let loggedInUser = await getLocalUser(req, res)
       const src = await this._service.getProfilePicture(loggedInUser)
-      res.status(200).json({success: true, data:src})
+      res.status(200).json({ success: true, data: src })
     } catch (err) {
-      res.status(200).json({success: true, data: null})
+      res.status(200).json({ success: true, data: null })
+    }
+  }
+  
+  private getInfoForMap = async (req: Request, res: Response) => {
+    try {
+      let loggedInUser = await getLocalUser(req, res)
+      const info = await this._service.getInfoForMap(loggedInUser)
+      res.status(200).json({ success: true, data: info })
+    } catch (error) {
+      res.status(200).json({ success: true, data: null })
     }
   }
 }

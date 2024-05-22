@@ -18,5 +18,8 @@ export async function getLocalUser(req:Request, res:Response) {
         })
         loggedInUser = user?.username
     }
+    if(!loggedInUser) {
+        throw new Error("Not logged in")
+    }
     return loggedInUser
 }

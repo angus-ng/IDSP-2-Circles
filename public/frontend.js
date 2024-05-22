@@ -66,6 +66,8 @@ header.addEventListener("click", async (event) => {
   const circleToProfileButton = event.target.closest("#circleToProfileButton");
   const albumToCircleButton = event.target.closest("#albumToCircleButton");
   const newAlbumToCircleButton = event.target.closest("#newAlbumToCircleButton");
+  const openMapIcon = event.target.closest("#openMapIcon")
+  const mapBackButton = event.target.closest("#mapBackButton")
 
   if (emailBackButton) {
     await displayLoginPage();
@@ -272,7 +274,8 @@ header.addEventListener("click", async (event) => {
   }
 
   if (friendsBackButton) {
-    const { success, data } = await getUser(currentLocalUser);
+    const username = friendsBackButton.name
+    const { success, data } = await getUser(username);
     if (success && data) {
       return await displayProfile(data);
     }
@@ -331,6 +334,12 @@ header.addEventListener("click", async (event) => {
     if (success && data) {
       return await displayProfile(data);
     }
+  }
+  if (openMapIcon) {
+    await displayMap()
+  }
+  if (mapBackButton) {
+    await displayExplore()
   }
 });
 
@@ -576,3 +585,4 @@ const clearNewAlbum = () => {
   albumObj = {};
   albumPhotos = [];
 };
+
