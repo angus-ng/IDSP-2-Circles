@@ -230,7 +230,8 @@ header.addEventListener("click", async (event) => {
   if (backButton) {
     nav.classList.remove("hidden");
     newCircleNameInput = "";
-    await displayExplore();
+    const { data } = await getUser(currentLocalUser);    
+    await displayExplore(data);
     return;
   }
 
