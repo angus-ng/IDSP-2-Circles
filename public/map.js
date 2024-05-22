@@ -44,18 +44,26 @@ async function getMapInfo() {
 }
 
 async function displayMap() {
-    pageName.textContent = "Maps"
-    leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="mapBackButton"/>`;
-    rightHeaderButton.innerHTML = "";
-
-    const mapDiv = document.createElement("div")
-    mapDiv.id = "map"
-    mapDiv.classList.add("h-full")
-    pageContent.innerHTML = ""
-    pageContent.appendChild(mapDiv) 
-
-    const mapScript = document.createElement("script")
-    mapScript.async = true
-    mapScript.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyCwv_fm3oiMKmTtxLZ1tSUIl9ZE3CuU31w&loading=async&callback=initMap`
-    pageContent.appendChild(mapScript)
+    try {
+      const response = await fetch("/googleMapKey")
+      const responseJson = await response.json()
+      const googleMapKey = responseJson.data
+      console.log(googleMapKey)
+      pageName.textContent = "Maps"
+      leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="mapBackButton"/>`;
+      rightHeaderButton.innerHTML = "";
+  
+      const mapDiv = document.createElement("div")
+      mapDiv.id = "map"
+      mapDiv.classList.add("h-full")
+      pageContent.innerHTML = ""
+      pageContent.appendChild(mapDiv) 
+  
+      const mapScript = document.createElement("script")
+      mapScript.async = true
+      mapScript.src = `https://maps.googleapis.com/maps/api/js?key=${googleMapKey}&loading=async&callback=initMap`
+      pageContent.appendChild(mapScript)
+    } catch (error) {
+      console.log(error)
+    }
 }
