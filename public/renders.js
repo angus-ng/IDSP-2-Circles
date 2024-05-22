@@ -622,10 +622,10 @@ async function displayExplore(userData) {
   <div id="explorePage" class="flex flex-col py-2 w-full h-full>
     <div id="circlesFeed">
       <h2 class="font-medium text-17 mb-2">Your Circles</h2>
-      <div>
-      <div id="circleList" class="m-auto flex flex-row gap-4 overflow-x-auto overflow-y-hidden">
-        ${circleRender.join("")}
-      </div>
+      <div class="h-[140px]">
+        <div id="circleList" class="m-auto flex flex-row gap-4 overflow-x-auto h-full">
+          ${circleRender.join("")}
+        </div>
       </div>
     </div>
     <div id="feed">
@@ -633,6 +633,36 @@ async function displayExplore(userData) {
     </div>
   </div>`;
   await displayNavBar();
+
+  const circleList = document.querySelector("#circleList");
+  let isDown = false;
+  let startX;
+  let scrollLeft;
+
+  circleList.addEventListener("mousedown", (e) => {
+    isDown = true;
+    circleList.classList.add("active");
+    startX = e.pageX - circleList.offsetLeft;
+    scrollLeft = circleList.scrollLeft;
+  });
+
+  circleList.addEventListener("mouseleave", () => {
+    isDown = false;
+    circleList.classList.remove("active");
+  });
+
+  circleList.addEventListener("mouseup", () => {
+    isDown = false;
+    circleList.classList.remove("active");
+  });
+
+  circleList.addEventListener("mousemove", (event) => {
+    if (!isDown) return;
+    event.preventDefault();
+    const x = event.pageX - circleList.offsetLeft;
+    const walk = (x - startX) * 1.5;
+    circleList.scrollLeft = scrollLeft - walk;
+  });
 }
 
 async function displaySearch() {
@@ -1399,7 +1429,7 @@ async function displayListOfCircles(data) {
 async function displayListOfCirclesHorizontally(data) {
   let circleListArr = data.UserCircle.map((obj) => {
     let circleName = document.createElement("p");
-    circleName.className = "text-center text-secondary";
+    circleName.className = "text-center text-secondary break-words text-wrap";
     circleName.textContent = obj.circle.name;
     return `
       <div id="${obj.circle.id}" class="circle w-85 h-104">
@@ -2650,6 +2680,7 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
 async function displayMap() {
   pageName.textContent = "Maps";
   leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="mapBackButton"/>`;
+  pageContent.innerHTML = "";
 }
 
 async function displayPopup(activity) {
