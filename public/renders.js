@@ -616,13 +616,13 @@ async function displayExplore(userData) {
   pageName.textContent = "Explore";
   header.classList.remove("hidden");
   leftHeaderButton.innerHTML = "";
-  rightHeaderButton.innerHTML = `<img id="mapButton" src="/lightmode/map_icon.svg" alt="Map Icon"/>`;
+  rightHeaderButton.innerHTML = `<img id="mapButton" class="px-1" src="/lightmode/map_icon.svg" alt="Map Icon"/>`;
   const circleRender = await displayListOfCirclesHorizontally(userData, currentLocalUser);
   pageContent.innerHTML = `
   <div id="explorePage" class="flex flex-col py-2 w-full h-full>
     <div id="circlesFeed">
       <h2 class="font-medium text-17 mb-2">Your Circles</h2>
-      <div class="h-[140px]">
+      <div class="h-[150px]">
         <div id="circleList" class="m-auto flex flex-row gap-4 overflow-x-auto h-full">
           ${circleRender.join("")}
         </div>
@@ -1053,6 +1053,9 @@ async function displayProfile(userData) {
   username.id = "username";
   username.className = "text-base text-center";
   username.textContent = `@${userData.username}`;
+
+  const friendText = userData._count.friends === 1 ? "Friend" : "Friends";
+
   pageContent.innerHTML = `
   <div id="profilePage" class="relative pt-2 pb-16 mb-4 w-full">
     ${currentLocalUser === userData.username ? `<div id="settings" class="absolute top-0 right-0 w-6 h-6 cursor-pointer"><img src="/lightmode/settings_icon.svg"></div>` : ""}
@@ -1072,7 +1075,7 @@ async function displayProfile(userData) {
       <div class="gap-0 justify-center">
         <div id="friends" class="cursor-pointer">
           <h2 class="text-base font-bold text-center" id="friendCounter">${userData._count.friends}</h2>
-          <h2 class="text-secondary text-center">Friends</h2>
+          <h2 class="text-secondary text-center">${friendText}</h2>
         </div>
       </div>
     </div>
@@ -1446,7 +1449,7 @@ async function displayListOfCirclesHorizontally(data) {
     circleName.textContent = obj.circle.name;
     return `
       <div id="${obj.circle.id}" class="circle w-85 h-104">
-        <div class="flex justify-center w-85 h-85">
+        <div class="flex justify-center w-85 h-85 mb-1">
           <img src="${obj.circle.picture}" class="rounded-full w-85 h-85 object-cover cursor-pointer border-circle border-light-mode-accent"/>
         </div>
         ${circleName.outerHTML}
@@ -2342,7 +2345,7 @@ async function displayFriends(username) {
     } else if (friends.length > 1) {
       friendCount.innerHTML = `${friends.length} friends`;
     } else {
-      friendCount.innerHTML = `No friends found`;
+      friendCount.innerHTML = `0 friends`;
     }
   }
 
