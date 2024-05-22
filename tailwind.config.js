@@ -38,7 +38,8 @@ theme: {
       'time': '#7D7E80',
       'comment-divider': '#ABABAB',
       'comment-line': 'rgba(115, 115, 115, 0.5)',
-      'settings-bg': 'rgba(115, 115, 115, 0.2)'
+      'settings-bg': 'rgba(115, 115, 115, 0.2)',
+      'image-overlay': 'rgba(0, 0, 0, 0.4)'
     },
     fontSize: {
       'onboarding': '36px',
@@ -90,7 +91,9 @@ theme: {
       '265': '265px',
       '47': '47px',
       '294': '294px',
-      '44': '44px'
+      '44': '44px',
+      '366': '366px',
+      '85': '85px'
     },
     maxWidth: {
       '430':'430px'
@@ -124,7 +127,9 @@ theme: {
       '47': '47px',
       '50': '50px',
       '58': '58px',
-      '22': '22px'
+      '22': '22px',
+      '85': '85px',
+      '104': '104px'
     },
     maxHeight: {
       '527': '527px',
@@ -148,7 +153,8 @@ theme: {
       '4': '4px',
       'header': '105px',
       '40': '40px',
-      "neg12": "-12px"
+      "neg12": "-12px",
+      '17': '17px'
     },
     outline: {
       '1': '1px'
@@ -168,6 +174,9 @@ theme: {
       lg: '0 8px 16px var(--tw-shadow-color)',
     },
   },
+  variants: {
+      fill: ['hover', 'focus']
+  }
 },
 plugins: [
   require('@tailwindcss/forms'),

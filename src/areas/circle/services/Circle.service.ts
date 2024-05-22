@@ -77,20 +77,30 @@ export class CircleService implements ICircleService {
                 username : currentUser
             }
         })
-    
         const membership = await this._db.prisma.userCircle.findFirst({
             where: {
                 username: String(user!.username),
                 circleId: id
             }
         })
-    
         if (!membership) {
             return false;
         }
         return true
     } catch (error:any) {
         throw new Error(error)
+    }
+  }
+  async checkPublic(id: string): Promise<boolean> {
+    try {
+        const isPublic = await this._db.prisma.circle.findUnique({
+            where: {
+                id: id
+            }
+        })
+        return isPublic!.isPublic
+    } catch (err:any){
+        throw new Error(err)
     }
   }
   async getCircle (id: string): Promise<Circle | null> {
@@ -103,7 +113,8 @@ export class CircleService implements ICircleService {
                         name: true,
                         photos: {
                             take: 1
-                        }
+                        },
+                        likes: true
                     }
                 }
             },
@@ -117,28 +128,28 @@ export class CircleService implements ICircleService {
     }
   }
 
-  async listCircles (currentUser:string): Promise<{circle: Circle}[]> {
-    try {
-        const user = await this._db.prisma.user.findUnique({
-            where: {
-                username: currentUser
-            }
-        })
-        const circleArr = await this._db.prisma.userCircle.findMany({
-            select: {
-                circle: true
-            },
-            where: {
-                username: user!.username
-            }
-        })
-        console.log(circleArr)
+//   async listCircles (currentUser:string): Promise<{circle: Circle}[]> {
+//     try {
+//         const user = await this._db.prisma.user.findUnique({
+//             where: {
+//                 username: currentUser
+//             }
+//         })
+//         const circleArr = await this._db.prisma.userCircle.findMany({
+//             select: {
+//                 circle: true
+//             },
+//             where: {
+//                 username: user!.username
+//             }
+//         })
+//         console.log(circleArr)
     
-        return circleArr;
-    } catch (error:any) {
-        throw new Error(error)
-    }
-  }
+//         return circleArr;
+//     } catch (error:any) {
+//         throw new Error(error)
+//     }
+//   }
 
   async getMembers (circleId: string) {
     const members = await this._db.prisma.userCircle.findMany({
@@ -158,12 +169,20 @@ export class CircleService implements ICircleService {
   }
   async inviteToCircle(username: string, circleName: string): Promise<void> {
     try {
-        await this._db.prisma.circleInvite.create({
-          data:{
-              invitee_username: username,
-              circleId: circleName
-          }
+        const inviteExists = await this._db.prisma.circleInvite.findFirst({
+            where: {
+                invitee_username: username,
+                circleId: circleName
+            }
         })
+        if (!inviteExists){
+            await this._db.prisma.circleInvite.create({
+                data:{
+                    invitee_username: username,
+                    circleId: circleName
+                }
+              })
+        }
     } catch (error:any) {
         throw new Error(error)
     }
@@ -214,5 +233,28 @@ export class CircleService implements ICircleService {
         } catch (err) {
             return; 
         }
+    }
+    
+    async updateCircle(currentUser: string, circleObj: any): Promise<Circle> {
+        const circle = await this._db.prisma.circle.findUnique({
+            where: {
+                id: circleObj.circleId,
+                ownerId: currentUser
+            }
+        })
+        if (!circle) {
+            throw new Error("insufficient permissions")
+        }
+        const updatedCircle = this._db.prisma.circle.update({
+            where: {
+                id: circleObj.circleId
+            }, 
+            data: {
+                picture: circleObj.circleImg,
+                name: circleObj.circleName,
+                isPublic: circleObj.isPublic
+            }
+        })
+        return updatedCircle;
     }
 }

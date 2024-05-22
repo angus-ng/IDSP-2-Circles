@@ -26,9 +26,10 @@ class CircleController implements IController {
     this.router.get(`${this.path}/:id`, ensureAuthenticated, this.getCircle);
     this.router.get(`${this.path}/:id/delete`, ensureAuthenticated, this.deleteCircle);
     this.router.post(`${this.path}/invite`, ensureAuthenticated, this.circleInvite);
-    this.router.post(`${this.path}/list`, ensureAuthenticated, this.getCircleList);
+    // this.router.post(`${this.path}/list`, ensureAuthenticated, this.getCircleList);
     this.router.post(`${this.path}/accept`, ensureAuthenticated, this.acceptInvite)
     this.router.post(`${this.path}/decline`, ensureAuthenticated, this.removeCircleInvite)
+    this.router.post(`${this.path}/update`, ensureAuthenticated, this.updateCircle)
   }
 
   private uploadImage = async (req: Request, res: Response) => {
@@ -80,15 +81,18 @@ class CircleController implements IController {
         throw err;
     }
   }
-  private getCircle = async (req:Request, res:Response) => {
+  private getCircle = async (req: Request, res: Response) => {
     try {
       const { id } = req.params
 
       //ensure user is a member of the circle
       let loggedInUser = await getLocalUser(req, res)
-      const member = await this._service.checkMembership(id, loggedInUser)
-      if (!member) {
-        return res.status(200).json({success: true, data: null});
+      const publicStatus = await this._service.checkPublic(id)
+      if (!publicStatus) {
+        const member = await this._service.checkMembership(id, loggedInUser)
+        if (!member) {
+          return res.status(200).json({success: true, data: null});
+        }
       }
       
       const circle = await this._service.getCircle(id)
@@ -103,22 +107,26 @@ class CircleController implements IController {
   }
   
   private circleInvite = async (req:Request, res:Response) => {
+    let loggedInUser = await getLocalUser(req, res)
     const { requestee, circleId } = req.body
-
+    const member = await this._service.checkMembership(circleId, loggedInUser)
+    if (!member) {
+      return res.status(200).json({success: true, data: null});
+    }
     console.log("inviting",requestee, "to", circleId,"...")
-    this._service.inviteToCircle(requestee, circleId)
+    await this._service.inviteToCircle(requestee, circleId)
     
     //change to verify selected are friends of current user
 
     return res.status(200).json({success: true, data: null});
   }
 
-  private getCircleList = async (req:Request, res:Response) => {
-    let loggedInUser = await getLocalUser(req, res)
-    const circles = await this._service.listCircles(loggedInUser)
+  // private getCircleList = async (req:Request, res:Response) => {
+  //   let loggedInUser = await getLocalUser(req, res)
+  //   const circles = await this._service.listCircles(loggedInUser)
 
-    res.json({success: true, data: circles})
-  }
+  //   res.json({success: true, data: circles})
+  // }
   
   private acceptInvite = async (req: Request, res: Response) => {
     const { id, invitee } = req.body
@@ -146,6 +154,29 @@ class CircleController implements IController {
     } catch (error: any) {
       throw new Error(error)
     }
+  }
+
+  private updateCircle = async (req: Request, res: Response) => {
+    try {
+      let loggedInUser = await getLocalUser(req, res)
+      const { circleId, circleImg, circleName, isPublic } = req.body
+      console.log(req.body)
+      if (!circleId || !circleImg || !circleName || typeof isPublic !== "boolean") {
+        return res.status(200).json({success:true, data:null, error:"missing parameters"})
+      }
+      const circleObj = {
+        circleId,
+        circleImg,
+        circleName,
+        isPublic
+      }
+      const circle = await this._service.updateCircle(loggedInUser, circleObj) //this checks for ownership
+      res.status(200).json({success:true, data:circle.id})
+    } catch (err) {
+      console.log(err)
+      res.status(200).json({success:true, data:null, error:"failed to update circle"})
+    }
+
   }
 }
 
