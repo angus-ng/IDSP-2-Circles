@@ -2625,7 +2625,7 @@ async function displayComments(
         : "message removed";
       postMsgContainer.appendChild(postMsg);
 
-      
+
       if (comment.likedBy !== null && comment.likedBy.includes(currentUserUsername) && poster !== null) {
         likeDiv.querySelector("svg path").setAttribute("fill", "#FF4646");
         likeDiv.querySelector("svg path").setAttribute("stroke", "#FF4646");
@@ -2802,12 +2802,6 @@ async function displayComments(
     const enterKeyEvent = new KeyboardEvent("keydown", { key: "Enter" });
     newCommentInput.dispatchEvent(enterKeyEvent);
   });
-}
-
-async function displayMap() {
-  pageName.textContent = "Maps";
-  leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="mapBackButton"/>`;
-  pageContent.innerHTML = "";
 }
 
 async function displayPopup(activity) {

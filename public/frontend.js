@@ -73,7 +73,6 @@ header.addEventListener("click", async (event) => {
   const circleToProfileButton = event.target.closest("#circleToProfileButton");
   const albumToCircleButton = event.target.closest("#albumToCircleButton");
   const newAlbumToCircleButton = event.target.closest("#newAlbumToCircleButton");
-  const openMapIcon = event.target.closest("#openMapIcon")
   const circleEditButton = event.target.closest("#circleEditButton");
   const circleShareButton = event.target.closest("#circleShareButton");
   const updateCircleButton = event.target.closest("#updateCircle");
@@ -89,7 +88,8 @@ header.addEventListener("click", async (event) => {
   }
 
   if (mapBackButton) {
-    await displayExplore();
+    const { data } = await getUser(currentLocalUser);    
+    await displayExplore(data);
   }
 
   if (emailBackButton) {
@@ -426,12 +426,6 @@ header.addEventListener("click", async (event) => {
     if (success && data) {
       return await displayProfile(data);
     }
-  }
-  if (openMapIcon) {
-    await displayMap()
-  }
-  if (mapBackButton) {
-    await displayExplore()
   }
 
   if (circleEditButton) {
