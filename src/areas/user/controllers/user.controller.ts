@@ -159,6 +159,7 @@ class UserController implements IController {
     }
   }
   
+
   private getInfoForMap = async (req: Request, res: Response) => {
     try {
       let loggedInUser = await getLocalUser(req, res)

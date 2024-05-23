@@ -12,6 +12,20 @@ socket.onmessage = (event) => {
   console.log("Message from server:", event.data);
 };
 
+const socket = new WebSocket("ws://localhost:5000");
+
+socket.onopen = () => {
+  console.log("WebSocket connected");
+};
+
+socket.onerror = (error) => {
+  console.error("WebSocket error:", error);
+};
+
+socket.onmessage = (event) => {
+  console.log("Message from server:", event.data);
+};
+
 const pageName = document.querySelector("#pageName");
 const pageContent = document.querySelector("#pageContent");
 const leftHeaderButton = document.querySelector("#leftButton");
