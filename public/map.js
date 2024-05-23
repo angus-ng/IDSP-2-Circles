@@ -1,11 +1,12 @@
 let map;
+let markers = [];
 
 async function initMap() {
   const { Map } =  await google.maps.importLibrary("maps");
   const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
 
   try { 
-    let markers = [];
+    await clearMarkers()
     const data = await getMapInfo();
     const newestAlbum = data.data.Album[0]
     let lat = 0
@@ -29,7 +30,7 @@ async function initMap() {
         </div>`;
     
         const marker = new AdvancedMarkerElement({
-            map: map,
+            map,
             position: {lat: parseFloat(album.lat), lng: parseFloat(album.long)},
             content: contentNode,
             title: album.name,
@@ -56,7 +57,6 @@ async function displayMap() {
       const response = await fetch("/googleMapKey")
       const responseJson = await response.json()
       const googleMapKey = responseJson.data
-      console.log(googleMapKey)
       pageName.textContent = "Maps"
       leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="mapBackButton"/>`;
       rightHeaderButton.innerHTML = "";
@@ -65,6 +65,7 @@ async function displayMap() {
       mapDiv.id = "map"
       mapDiv.classList.add("h-full")
       pageContent.innerHTML = ""
+      console.log(pageContent.innerHTML)
       pageContent.appendChild(mapDiv) 
   
       const mapScript = document.createElement("script")
@@ -74,4 +75,25 @@ async function displayMap() {
     } catch (error) {
       console.log(error)
     }
+}
+
+
+async function clearMarkers() {
+  reload = false
+  markers.forEach(marker => {
+    console.log(marker)
+    console.log(marker.map)
+    reload = true
+    // this is suppose to get rid of marker....
+    marker.map = null;
+  });
+  if (reload) {
+    // get rid of this location.reload 
+    // right now theres a problem where if i call the map after calling it once
+    // the markers wont be placed again because they've been made before and remembered on the page
+    // refreshing works but its just not ideal.
+    location.reload(true);
+    await displayMap()
+  }
+  markers = [];
 }
