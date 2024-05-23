@@ -455,7 +455,29 @@ export class UserService implements IUserService {
                 createdAt: "desc"
               },
               include: {
-                likes: true
+                likes: {
+                  select: {
+                      user: {
+                          select: {
+                              username: true,
+                              profilePicture: true,
+                          }
+                    }
+                  }
+                },
+                owner: {
+                  select: {
+                    displayName: true,
+                    username: true,
+                    profilePicture: true
+                  }
+                },
+                circle: {
+                  select: {
+                    picture: true
+                  }
+                },
+                photos: true
               }
         })
         if (albums.length){
