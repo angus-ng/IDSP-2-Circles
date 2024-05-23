@@ -48,7 +48,7 @@ class AuthenticationController {
         });
         this.logout = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const logoutUrl = yield kinde_1.kindeClient.logout((0, kinde_1.sessionManager)(req, res));
-            return res.redirect(logoutUrl.toString());
+            return res.redirect("/");
         });
         this.getSession = (req, res) => __awaiter(this, void 0, void 0, function* () {
             var _a;
@@ -67,7 +67,7 @@ class AuthenticationController {
             }
         });
         this.local = (req, res, next) => {
-            passport_1.default.authenticate('local', function (err, user, info) {
+            passport_1.default.authenticate("local", function (err, user, info) {
                 if (err || !user) {
                     return res.status(200).json({ success: true, data: null });
                 }

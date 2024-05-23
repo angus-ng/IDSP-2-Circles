@@ -4,6 +4,11 @@ import IUserService from "../services/IUserService";
 import { ensureAuthenticated } from "../../../middleware/authentication.middleware";
 import { kindeClient, sessionManager } from "../../../areas/authentication/config/kinde";
 import { getLocalUser } from "../../../helper/getLocalUser";
+import TimeAgo from 'javascript-time-ago';
+import en from 'javascript-time-ago/locale/en';
+
+TimeAgo.addLocale(en);
+const timeAgo = new TimeAgo("en");
 
 class UserController implements IController {
   public path = "/user";
@@ -157,18 +162,25 @@ class UserController implements IController {
     try {
       let loggedInUser = await getLocalUser(req, res)
       const src = await this._service.getProfilePicture(loggedInUser)
-      res.status(200).json({success: true, data:src})
+      res.status(200).json({ success: true, data: src })
     } catch (err) {
       res.status(200).json({success: true, data: null})
     }
   }
   private getFeed = async (req: Request, res: Response) => {
     try {
-      let loggedInUser = await getLocalUser(req, res)
-      const albumFeed = await this._service.getFeed(loggedInUser)
-      res.status(200).json({success:true, data:albumFeed})
+      
+      let loggedInUser = await getLocalUser(req, res);
+      const albumFeed = await this._service.getFeed(loggedInUser);
+      if (Array.isArray(albumFeed)) {
+        const formattedAlbumFeed = albumFeed.map(album => ({
+          ...album,
+          createdAt: timeAgo.format(album.createdAt)
+        }));
+        res.status(200).json({ success: true, data: formattedAlbumFeed })
+      }
     } catch (err) {
-      res.status(200).json({success: true, data: null, error: "failed to get album feed"})
+      res.status(200).json({ success: true, data: null, error: "failed to get album feed" })
     }
   }
 }
