@@ -30,12 +30,6 @@ let circleImgSrc;
 let albumPhotos = [];
 let albumObj = {};
 let checkedFriends = [];
-let signUpData = {
-  email: "",
-  confirmEmail: "",
-  password: "",
-  confirmPassword: "",
-};
 
 async function initiatePage() {
   const username = await getSessionFromBackend();

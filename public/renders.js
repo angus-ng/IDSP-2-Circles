@@ -4,54 +4,29 @@ function displayLoginPage() {
       <div class="flex-shrink-0 mt-2 mb-6">
           <img src="/lightmode/logo_with_wordmark.svg" alt="Logo with Wordmark"/>  
       </div>
-      <div class="flex-1">
-        <form>
-          <div class="flex items-center mt-6 mb-6">
-              <label for="emailInput" class=""></label>
-              <input type="text" placeholder="Phone number, email, or username" id="emailInput" name="emailInput" class="rounded-input-box w-input-box border-dark-grey border-2 text-17 items-end">
-          </div>
-          <div class="flex items-center mt-4 mb-6">
-              <label for="password" class=""></label>
-              <input type="password" placeholder="Password" id="passwordInput" name="password" class="rounded-input-box w-input-box text-17 border-dark-grey border-2 items-end">
-          </div>
-        </form>
-          <div class="flex items-center mt-4 mb-6">
-              <div class="grid grid-cols-2 w-full">
-                  <div class="col-start-0">
-                      <input type="checkbox" name="rememberMe" id="rememberMe" class="size-5">
-                      <label for="rememberMe" class="ml-2 text-secondary">Remember Me</label>
-                  </div>
-                  <div class="justify-self-end">
-                      <a class="text-secondary leading-secondary text-light-mode-accent text-decoration-line: underline cursor-pointer">Forgot Password?</a>
-                  </div>
+      <form action="/auth/login">
+      <button>
+      <img src="/lightmode/login_button.svg" alt="Login Button"/>
+      </button>
+      </form>
+      <form action="/auth/register">
+      <button>
+      Register ( put a register button here)
+      </button>
+      </form>
+      <div class="flex items-center mt-4 mb-6">
+          <div class="grid grid-cols-2 w-full">
+              <div class="col-start-0">
+                  <input type="checkbox" name="rememberMe" id="rememberMe" class="size-5">
+                  <label for="rememberMe" class="ml-2 text-secondary">Remember Me</label>
+              </div>
+              <div class="justify-self-end">
+                  <a class="text-secondary leading-secondary text-light-mode-accent text-decoration-line: underline cursor-pointer">Forgot Password?</a>
               </div>
           </div>
-              <button id="localAuth" class="my-2 w-full">
-                  <img src="/lightmode/login_button.svg" alt="Login Button"/>
-              </button>
+      </div>
           </div>
-          <div id="divider" class="my-6">
-              <img src="/lightmode/orDivider.svg" alt="Divider"/>
-          </div>
-          <div class="flex items-center justify-between mt-4">
-              <div class="flex flex-row space-x-4">
-                  <form action="/auth/login">
-                      <button>
-                          <img src="/lightmode/google_icon.svg" alt="Google Icon"/>
-                      </button>
-                  </form>
-                  <form action="/auth/login">
-                      <button>
-                          <img src="/lightmode/apple_icon.svg" alt="Apple Icon"/>
-                      </button>
-                  </form>
-                  <form action="/auth/login">
-                      <button id="facebookAuth">
-                          <img src="/lightmode/facebook_icon.svg" alt="Facebook Icon"/>
-                      </button>
-                  </form>
-              </div>
-          </div>
+
       <div class="flex items-center justify-between mt-6 gap-1">
           <p class="text-secondary leading-secondary">Don't have an account?</p>
           <a id="signUp" class="text-secondary leading-secondary text-light-mode-accent text-decoration-line: underline cursor-pointer">Sign up</a>
@@ -1577,11 +1552,10 @@ function displayPhotoUploadPreview(albumPhotos) {
   carouselDiv.id = "carousel";
   carouselDiv.className = "keen-slider overflow-hidden";
 
-
-  console.log(albumPhotos)
   const mappedPhotos = albumPhotos.map((obj) => {
     return {
-      photoSrc: obj.data,
+      photoSrc: obj.data.url,
+      gps: obj.data.gps
     };
   });
 
@@ -1594,7 +1568,7 @@ function displayPhotoUploadPreview(albumPhotos) {
     const img = document.createElement("img");
     img.className = "rounded-12.75 h-image w-image object-cover";
     console.log(photo)
-    img.src = photo.photoSrc.url;
+    img.src = photo.photoSrc;
     img.alt = `image ${index}`;
 
     slideDiv.appendChild(img);
@@ -1750,7 +1724,7 @@ async function displayAlbumConfirmation() {
 
     const img = document.createElement("img");
     img.className = "rounded-12.75 h-image w-image object-cover";
-    img.src = photo.photoSrc.url;
+    img.src = photo.photoSrc;
     img.alt = `image ${index}`;
 
     slideDiv.appendChild(img);
@@ -1936,7 +1910,6 @@ async function displayCircle(circleData) {
     const heartColor = userLiked ? "#FF4646" : "none";
     const heartColorStroke = userLiked ? "#FF4646" : "white";
     // CHANGE ME : placeholder image 
-    console.log(obj.photos[0])
     return `
       <div class="w-full h-min relative album" id="${obj.id}">
         <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.photos[0]? obj.photos[0].src : "/placeholder_image.svg"}"/>

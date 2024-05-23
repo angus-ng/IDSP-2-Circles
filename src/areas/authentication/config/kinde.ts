@@ -14,12 +14,15 @@ export const kindeClient = createKindeServerClient(GrantType.AUTHORIZATION_CODE,
   
 export const sessionManager = (req: Request, res: Response): SessionManager => ({
     async getSessionItem(key: string) {
+      //@ts-ignore
     return req.session?.[key];
   },
   async setSessionItem(key: string, value: any) {
+          //@ts-ignore
     req.session[key] = value;
   },
   async removeSessionItem(key: string) {
+          //@ts-ignore
     delete req.session[key];
   },
   async destroySession() {

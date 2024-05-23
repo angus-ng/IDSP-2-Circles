@@ -6,20 +6,13 @@ import { PrismaClient } from "@prisma/client";
 import DBClient from "../PrismaClient";
 const db = DBClient.getInstance()
 
-export async function getLocalUser(req:Request, res:Response) {
-    let loggedInUser
-    if (req.user) (
-        loggedInUser = req.user!.username
-    )
-    if (!loggedInUser) {
-        const kindeUserId = (await kindeClient.getUser(sessionManager(req, res))).id
-        const user = await db.prisma.user.findUnique({
-            where: {id: kindeUserId}
-        })
-        loggedInUser = user?.username
-    }
-    if(!loggedInUser) {
+export async function getLocalUser(req: Request, res: Response) {
+    const kindeUserId = (await kindeClient.getUser(sessionManager(req, res))).id
+    const user = await db.prisma.user.findUnique({
+        where: { id: kindeUserId }
+    })
+    if (user) {
+        return user?.username
+    } else
         throw new Error("Not logged in")
-    }
-    return loggedInUser
 }
