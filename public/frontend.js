@@ -92,15 +92,15 @@ header.addEventListener("click", async (event) => {
   const inviteDoneButton = event.target.closest("#inviteDoneButton");
 
   if (mapButton) {
-    //await displayMap();
+    await displayMap();
     console.log("map")
   }
 
   if (mapBackButton) {
-    // const { success, data } = await getUser(currentLocalUser);
-    // if (success && data) {
-    //   await displayExplore(data);
-    // }
+    const { success, data } = await getUser(currentLocalUser);
+    if (success && data) {
+      await displayExplore(data);
+    }
   }
 
   if (emailBackButton) {
