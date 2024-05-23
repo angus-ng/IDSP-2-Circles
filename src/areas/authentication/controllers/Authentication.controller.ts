@@ -10,7 +10,6 @@ declare global {
   }
 }
 
-
 class AuthenticationController implements IController {
   public path = "/auth";
   public router = express.Router();
