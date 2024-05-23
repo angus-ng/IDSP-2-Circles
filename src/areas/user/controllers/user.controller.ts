@@ -169,6 +169,7 @@ class UserController implements IController {
   }
   private getFeed = async (req: Request, res: Response) => {
     try {
+      
       let loggedInUser = await getLocalUser(req, res);
       const albumFeed = await this._service.getFeed(loggedInUser);
       if (Array.isArray(albumFeed)) {
