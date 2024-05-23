@@ -15,6 +15,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const authentication_middleware_1 = require("../../../middleware/authentication.middleware");
 const getLocalUser_1 = require("../../../helper/getLocalUser");
+const javascript_time_ago_1 = __importDefault(require("javascript-time-ago"));
+const en_1 = __importDefault(require("javascript-time-ago/locale/en"));
+javascript_time_ago_1.default.addLocale(en_1.default);
+const timeAgo = new javascript_time_ago_1.default("en");
 class UserController {
     constructor(userService) {
         this.path = "/user";
@@ -150,6 +154,29 @@ class UserController {
                 res.status(200).json({ error: error });
             }
         });
+        this.profilePicture = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
+                const src = yield this._service.getProfilePicture(loggedInUser);
+                res.status(200).json({ success: true, data: src });
+            }
+            catch (err) {
+                res.status(200).json({ success: true, data: null });
+            }
+        });
+        this.getFeed = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
+                const albumFeed = yield this._service.getFeed(loggedInUser);
+                if (Array.isArray(albumFeed)) {
+                    const formattedAlbumFeed = albumFeed.map(album => (Object.assign(Object.assign({}, album), { createdAt: timeAgo.format(album.createdAt) })));
+                    res.status(200).json({ success: true, data: formattedAlbumFeed });
+                }
+            }
+            catch (err) {
+                res.status(200).json({ success: true, data: null, error: "failed to get album feed" });
+            }
+        });
         this.initializeRoutes();
         this._service = userService;
     }
@@ -164,6 +191,8 @@ class UserController {
         this.router.get(`${this.path}/searchAll`, authentication_middleware_1.ensureAuthenticated, this.searchAll);
         this.router.post(`${this.path}/get`, authentication_middleware_1.ensureAuthenticated, this.getUser);
         this.router.get(`${this.path}/ifEmailTaken/:email`, this.ifEmailTaken);
+        this.router.get(`${this.path}/profilePicture`, authentication_middleware_1.ensureAuthenticated, this.profilePicture);
+        this.router.get(`${this.path}/feed`, authentication_middleware_1.ensureAuthenticated, this.getFeed);
     }
 }
 exports.default = UserController;
