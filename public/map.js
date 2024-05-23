@@ -2,11 +2,10 @@ let map;
 let markers = [];
 
 async function initMap() {
+  await clearMarkers();
   const { Map } =  await google.maps.importLibrary("maps");
   const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
-
   try { 
-    await clearMarkers()
     const data = await getMapInfo();
     const newestAlbum = data.data.Album[0]
     let lat = 0
@@ -37,6 +36,12 @@ async function initMap() {
         });
         markers.push(marker)
       }
+      // for (let marker of markers) {
+      //   marker.addListener("gmp-click", (event) => { 
+      //     console.log("HI", marker)
+      //     marker.map = null;
+      //   })
+      // }
   } catch (error) {
     console.log(error)
   }
@@ -65,12 +70,11 @@ async function displayMap() {
       mapDiv.id = "map"
       mapDiv.classList.add("h-full")
       pageContent.innerHTML = ""
-      console.log(pageContent.innerHTML)
       pageContent.appendChild(mapDiv) 
   
       const mapScript = document.createElement("script")
       mapScript.async = true
-      mapScript.src = `https://maps.googleapis.com/maps/api/js?key=${googleMapKey}&loading=async&callback=initMap`
+      mapScript.src = `https://maps.googleapis.com/maps/api/js?v=beta&key=${googleMapKey}&loading=async&callback=initMap`
       pageContent.appendChild(mapScript)
     } catch (error) {
       console.log(error)
@@ -81,18 +85,15 @@ async function displayMap() {
 async function clearMarkers() {
   reload = false
   markers.forEach(marker => {
-    console.log(marker)
-    console.log(marker.map)
     reload = true
-    // this is suppose to get rid of marker....
-    marker.map = null;
+    marker.map = null;  
   });
   if (reload) {
     // get rid of this location.reload 
     // right now theres a problem where if i call the map after calling it once
     // the markers wont be placed again because they've been made before and remembered on the page
     // refreshing works but its just not ideal.
-    location.reload(true);
+    await location.reload(true);
     await displayMap()
   }
   markers = [];
