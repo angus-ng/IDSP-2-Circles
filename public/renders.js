@@ -772,6 +772,7 @@ async function displayExplore(userData) {
       if (circleDiv.hasAttribute("id")) {
         let { success, data, error } = await getCircle(circleDiv.id);
         if (success && data) {
+          leftButtonSpan.setAttribute("origin", "fromExplore");
           await displayCircle(data, userData.username);
         }
       }
@@ -1981,11 +1982,12 @@ async function displayCircle(circleData) {
     imgElement.classList.remove("hidden");
     imgElement.id = "circleToProfileButton"
   }
+  
   const backSpan = document.querySelector(".backSpan");
   if (backSpan) {
     const circleId = backSpan.getAttribute("circleId");
+    const imgElement = document.querySelector("#albumToCircleButton");
     if (circleId === null) {
-      const imgElement = document.querySelector("#albumToCircleButton");
       if (backSpan.getAttribute("username") === null) {
         leftHeaderButton.innerHTML = "";
       } else if (imgElement) {
@@ -1993,17 +1995,21 @@ async function displayCircle(circleData) {
       }
     }
   } else {
-    const circleId = circleData.circle.id;
-    const backSpan = document.createElement("span");
-    backSpan.className = "backSpan";
-    const imgElement = document.createElement("img");
-    imgElement.id = "albumToCircleButton";
-    imgElement.src = "/lightmode/back_button.svg";
-    imgElement.alt = "Back Button";
-    
-    backSpan.setAttribute("circleId", circleId);
-    backSpan.appendChild(imgElement);
-    leftHeaderButton.appendChild(backSpan);
+      const circleId = circleData.circle.id;
+      const backSpan = document.createElement("span");
+      backSpan.className = "backSpan";
+      const imgElement = document.createElement("img");
+      if (leftButtonSpan.getAttribute("origin") === "fromExplore") {
+        imgElement.id = "backToExplore";
+      } else {
+        imgElement.id = "albumToCircleButton";
+      }
+      imgElement.src = "/lightmode/back_button.svg";
+      imgElement.alt = "Back Button";
+      
+      backSpan.setAttribute("circleId", circleId);
+      backSpan.appendChild(imgElement);
+      leftHeaderButton.appendChild(backSpan);
   }
 
   const circlePreviewBackButton = document.querySelector("#circlePreviewBackButton");
