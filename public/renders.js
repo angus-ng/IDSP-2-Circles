@@ -628,8 +628,8 @@ async function displayExplore(userData) {
   <div id="explorePage" class="flex flex-col py-2 w-full h-full>
     <div id="circlesFeed">
       <h2 class="font-medium text-17 mb-2">Your Circles</h2>
-      <div class="h-[150px]">
-        <div id="circleList" class="m-auto flex flex-row gap-4 overflow-x-auto h-full">
+      <div class="h-[145px]">
+        <div id="circleList" class="m-auto flex flex-row gap-4 overflow-x-auto overflow-y-clip h-full">
           ${circleRender.join("")}
         </div>
       </div>
