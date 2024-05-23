@@ -15,7 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.config = void 0;
 const express_1 = require("express");
 const authentication_middleware_1 = require("../../../middleware/authentication.middleware");
-const HandleSingleUpload_1 = require("../../../helper/HandleSingleUpload");
 const multer_1 = __importDefault(require("multer"));
 const getLocalUser_1 = require("../../../helper/getLocalUser");
 const javascript_time_ago_1 = __importDefault(require("javascript-time-ago"));
@@ -28,12 +27,6 @@ class AlbumController {
     constructor(albumService) {
         this.path = "/album";
         this.router = (0, express_1.Router)();
-        this.uploadImages = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const b64 = Buffer.from(req.file.buffer).toString('base64');
-            const dataURI = `data:${req.file.mimetype};base64,${b64}`;
-            const cldRes = yield (0, HandleSingleUpload_1.handleUpload)(dataURI);
-            res.json({ message: 'File uploaded successfully', data: cldRes.url });
-        });
         this.createAlbum = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
@@ -43,56 +36,102 @@ class AlbumController {
                 if (!isCircle || !name || !photos.length) {
                     throw new Error("missing params");
                 }
-                if (isCircle) {
-                    const { id } = req.body;
-                    console.log(id);
-                    const albumObj = {
-                        photos: photos,
-                        albumName: name,
-                        circleId: id,
-                        creator: loggedInUser
-                    };
-                    const newAlbum = yield this._service.createAlbum(albumObj);
-                    console.log(newAlbum.id);
-                    return res.status(200).json({ success: true, data: newAlbum.id });
+                const { id } = req.body;
+                const albumObj = {
+                    photos: photos,
+                    albumName: name,
+                    circleId: id,
+                    creator: loggedInUser
+                };
+                console.log(albumObj);
+                const member = yield this._service.checkMembership(id, loggedInUser, true);
+                if (!member) {
+                    console.log("SHIT");
+                    return res.status(200).json({ success: true, data: null });
                 }
-                res.status(200).json({ success: true, data: null });
+                console.log(albumObj);
+                const newAlbum = yield this._service.createAlbum(albumObj);
+                console.log(newAlbum.id);
+                return res.status(200).json({ success: true, data: newAlbum.id });
             }
             catch (err) {
                 res.status(200).json({ success: true, data: null, error: "Failed to create album" });
             }
         });
-        this.showAlbum = (req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.updateAlbum = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const { id } = req.params;
+                const { photos } = req.body;
+                console.log(photos);
+                if (!Array.isArray(photos) || photos.length === 0) {
+                    return res.status(400).json({ success: false, error: "Invalid photos array" });
+                }
                 console.log(id);
-                //ensure user is a member of the circle
                 let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
                 const member = yield this._service.checkMembership(id, loggedInUser);
                 if (!member) {
-                    return res.status(200).json({ success: true, data: null });
+                    return res.status(403).json({ success: false, error: "User is not a member of this album" });
+                }
+                const updatedAlbum = yield this._service.updateAlbum(loggedInUser, id, photos);
+                if (!updatedAlbum) {
+                    return res.status(404).json({ success: false, error: "Album not found" });
+                }
+                console.log(updatedAlbum);
+                res.status(200).json({ success: true, data: updatedAlbum });
+            }
+            catch (err) {
+                console.error(err);
+                res.status(500).json({ success: false, error: "Error updating album" });
+            }
+        });
+        this.likeAlbum = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
+                const { albumId } = req.body;
+                yield this._service.likeAlbum(loggedInUser, albumId);
+                res.json({ success: true, data: null });
+            }
+            catch (err) {
+                res.json({ success: true, data: null, error: "failed to like album" });
+            }
+        });
+        this.showAlbum = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { id } = req.params;
+                //ensure its public / user is a member of the circle
+                let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
+                console.log(loggedInUser, id);
+                const publicStatus = yield this._service.checkPublic(id);
+                if (!publicStatus) {
+                    const member = yield this._service.checkMembership(id, loggedInUser);
+                    if (!member) {
+                        return res.status(200).json({ success: true, data: null });
+                    }
                 }
                 const album = yield this._service.getAlbum(id);
-                // console.log(album)
+                console.log(album);
                 res.status(200).json({ success: true, data: album });
             }
             catch (err) {
-                throw err;
+                res.status(200).json({ success: true, data: null, err: "Could not fetch album" });
             }
         });
-        this.getAlbumList = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
-            console.log(loggedInUser);
-            const albums = yield this._service.listAlbums(loggedInUser);
-            res.json({ success: true, data: albums });
-        });
+        // private getAlbumList = async (req:Request, res:Response) => {
+        //   let loggedInUser = await getLocalUser(req, res)
+        //   console.log (loggedInUser)
+        //   const albums = await this._service.listAlbums(loggedInUser)
+        //   res.json({success: true, data: albums});
+        // }
         this.getComments = (req, res) => __awaiter(this, void 0, void 0, function* () {
             let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
             try {
                 const { albumId } = req.body;
-                const member = yield this._service.checkMembership(albumId, loggedInUser);
-                if (!member) {
-                    return res.status(200).json({ success: true, data: null });
+                const publicStatus = yield this._service.checkPublic(albumId);
+                if (!publicStatus) {
+                    const member = yield this._service.checkMembership(albumId, loggedInUser);
+                    if (!member) {
+                        return res.status(200).json({ success: true, data: null });
+                    }
                 }
                 let comments = yield this._service.getComments(albumId);
                 const formatTimeStamps = (comment) => {
@@ -157,9 +196,10 @@ class AlbumController {
     }
     initializeRoutes() {
         this.router.post(`${this.path}/create`, authentication_middleware_1.ensureAuthenticated, upload.none(), this.createAlbum);
-        this.router.post(`${this.path}/upload`, authentication_middleware_1.ensureAuthenticated, upload.single("file"), this.uploadImages);
+        this.router.post(`${this.path}/:id/update`, authentication_middleware_1.ensureAuthenticated, this.updateAlbum);
         this.router.get(`${this.path}/:id`, authentication_middleware_1.ensureAuthenticated, this.showAlbum);
-        this.router.post(`${this.path}/list`, authentication_middleware_1.ensureAuthenticated, this.getAlbumList);
+        // this.router.post(`${this.path}/list`, ensureAuthenticated, this.getAlbumList);
+        this.router.post(`${this.path}/like`, authentication_middleware_1.ensureAuthenticated, this.likeAlbum);
         this.router.post(`${this.path}/comments`, authentication_middleware_1.ensureAuthenticated, this.getComments);
         this.router.post(`${this.path}/comment/new`, authentication_middleware_1.ensureAuthenticated, this.newComment);
         this.router.post(`${this.path}/comment/delete`, authentication_middleware_1.ensureAuthenticated, this.deleteComment);

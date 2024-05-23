@@ -19,17 +19,15 @@ const PrismaClient_1 = __importDefault(require("../PrismaClient"));
 const db = PrismaClient_1.default.getInstance();
 function getLocalUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        let loggedInUser;
-        if (req.user)
-            (loggedInUser = req.user.username);
-        if (!loggedInUser) {
-            const kindeUserId = (yield kinde_2.kindeClient.getUser((0, kinde_1.sessionManager)(req, res))).id;
-            const user = yield db.prisma.user.findUnique({
-                where: { id: kindeUserId }
-            });
-            loggedInUser = user === null || user === void 0 ? void 0 : user.username;
+        const kindeUserId = (yield kinde_2.kindeClient.getUser((0, kinde_1.sessionManager)(req, res))).id;
+        const user = yield db.prisma.user.findUnique({
+            where: { id: kindeUserId }
+        });
+        if (user) {
+            return user === null || user === void 0 ? void 0 : user.username;
         }
-        return loggedInUser;
+        else
+            throw new Error("Not logged in");
     });
 }
 exports.getLocalUser = getLocalUser;
