@@ -415,7 +415,7 @@ async function displayCreateCircle() {
     event.preventDefault();
     const res = await handleSelectFile();
     if (res) {
-      circlePhoto.src = await res.data;
+      circlePhoto.src = await res.data.url;
     }
 
     addPictureButton.textContent = "Change Picture";
@@ -609,7 +609,7 @@ async function displayCreateCirclePreview() {
     event.preventDefault();
     const res = await handleSelectFile();
     if (res) {
-      circlePhoto.src = await res.data;
+      circlePhoto.src = await res.data.url;
     }
   });
   //This needs to be implemented when SPA creates the html for the privacy toggle
@@ -1530,6 +1530,8 @@ async function displayPhotoUpload(albumData) {
       const files = event.target.files;
       for (let i = 0; i < files.length; i++) {
         const file = await uploadFile(files[i]);
+        console.log(file)
+
         albumPhotos.push(file);
       }
       console.log("Files uploaded:", albumPhotos);
@@ -1591,7 +1593,8 @@ function displayPhotoUploadPreview(albumPhotos) {
 
     const img = document.createElement("img");
     img.className = "rounded-12.75 h-image w-image object-cover";
-    img.src = photo.photoSrc;
+    console.log(photo)
+    img.src = photo.photoSrc.url;
     img.alt = `image ${index}`;
 
     slideDiv.appendChild(img);
@@ -1705,6 +1708,7 @@ function displayPhotoUploadPreview(albumPhotos) {
       const files = event.target.files;
       for (let i = 0; i < files.length; i++) {
         const file = await uploadFile(files[i]);
+        console.log(file)
         albumPhotos.push(file);
       }
       console.log("Files uploaded:", albumPhotos);
@@ -1746,7 +1750,7 @@ async function displayAlbumConfirmation() {
 
     const img = document.createElement("img");
     img.className = "rounded-12.75 h-image w-image object-cover";
-    img.src = photo.photoSrc;
+    img.src = photo.photoSrc.url;
     img.alt = `image ${index}`;
 
     slideDiv.appendChild(img);
@@ -1931,10 +1935,11 @@ async function displayCircle(circleData) {
     const likedClass = userLiked ? "liked" : "";
     const heartColor = userLiked ? "#FF4646" : "none";
     const heartColorStroke = userLiked ? "#FF4646" : "white";
-
+    // CHANGE ME : placeholder image 
+    console.log(obj.photos[0])
     return `
       <div class="w-full h-min relative album" id="${obj.id}">
-        <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.photos[0].src}"/>
+        <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.photos[0]? obj.photos[0].src : "/placeholder_image.svg"}"/>
         <div class="m-2 text-secondary font-semibold absolute inset-0 flex items-end justify-start">
           ${albumName.outerHTML}
         </div>
@@ -2302,7 +2307,7 @@ async function displayAlbum(albumData) {
     const like = event.target.closest(".like");
     
     if (photo) {
-      console.log(photo.src);
+      console.log(photo);
       await displayPhoto(photo.src);
     }
 
@@ -2567,11 +2572,11 @@ async function displayListOfAlbums(data, user, profile = false) {
     const likedClass = userLiked ? "liked" : "";
     const heartColor = userLiked ? "#FF4646" : "none";
     const heartColorStroke = userLiked ? "#FF4646" : "white";
-
+    // CHANGE ME : placeholder image 
     return `
       <div class="w-full h-min relative overflow-hidden album" id="${obj.id}">
         ${userSpan.outerHTML}
-        <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.photos[0].src}"/>
+        <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.photos[0]? obj.photos[0].src : "/placeholder_image.svg"}"/>
         ${profile ? circleImage : null}
         <div class="m-2 text-secondary font-semibold absolute inset-0 flex items-end justify-start">
           ${albumName.outerHTML}

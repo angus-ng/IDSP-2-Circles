@@ -160,6 +160,7 @@ header.addEventListener("click", async (event) => {
   }
 
   if (nextButtonInviteFriends) {
+    console.log("hello")
     const circleName = document.querySelector("#circleName");
     newCircleNameInput = circleName.value;
     circleImgSrc = document.querySelector("#circleImage").src;
@@ -360,7 +361,7 @@ header.addEventListener("click", async (event) => {
     console.log("album created");
     const albumName = await getAlbumName();
     albumObj.name = albumName;
-    const { success, data, error } = await handleCreateAlbum(handleCreateAlbum);
+    const { success, data, error } = await handleCreateAlbum(albumObj);
     if (error) {
       if (error === "Missing album name") {
         await displayPopup("Please add a title to your album");
@@ -817,7 +818,7 @@ const displayCircleEditMode = (circleId) => {
     event.preventDefault();
     const res = await handleSelectFile();
     if (res) {
-      circleImage.src = await res.data;
+      circleImage.src = await res.data.url;
     }
   });
 

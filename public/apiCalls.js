@@ -2,7 +2,6 @@ async function handleCreateCircle() {
   try {
     const circlePhoto = document.querySelector("#circleImage");
     const circleName = document.querySelector("#circleName").value;
-
     if (!circleName) {
       return { success: true, data: null, error: "Missing circle name" };
     }
@@ -48,12 +47,10 @@ async function handleSelectFile() {
   if (!file) {
     return;
   }
-
   return await uploadFile(file);
 }
 
 async function uploadFile(file) {
-  // console.log(file);
   const formData = new FormData();
   formData.append("file", file);
   try {
@@ -129,10 +126,10 @@ async function getAlbum(albumId) {
 
 async function handleCreateAlbum(albumObj) {
   try {
+    console.log(albumObj);
     if (!albumObj.name) {
       return { success: true, data: null, error: "Missing album name" };
     }
-    console.log(albumObj);
     let response = await fetch("/album/create", {
       method: "POST",
       headers: {

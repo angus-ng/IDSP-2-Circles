@@ -49,13 +49,13 @@ class AlbumController implements IController {
         throw new Error("missing params")
       }
       const { id } = req.body;
-      console.log(id)
       const albumObj = {
         photos: photos,
         albumName: name,
         circleId: id,
         creator: loggedInUser
       }
+      console.log(albumObj)
       const member = await this._service.checkMembership(id, loggedInUser, true)
       if (!member) {
         console.log("SHIT")
