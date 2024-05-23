@@ -1152,6 +1152,10 @@ select {
   height: 3rem;
 }
 
+.h-176 {
+  height: 176px;
+}
+
 .h-180 {
   height: 180px;
 }
@@ -1256,10 +1260,6 @@ select {
   height: 280px;
 }
 
-.h-auto {
-  height: auto;
-}
-
 .h-full {
   height: 100%;
 }
@@ -1287,10 +1287,6 @@ select {
 
 .h-screen {
   height: 100vh;
-}
-
-.h-176 {
-  height: 176px;
 }
 
 .max-h-400 {
@@ -1421,10 +1417,6 @@ select {
   width: 85px;
 }
 
-.w-\[200px\] {
-  width: 200px;
-}
-
 .w-auto {
   width: auto;
 }
@@ -1514,10 +1506,6 @@ select {
 
 .grid-flow-row {
   grid-auto-flow: row;
-}
-
-.grid-flow-col {
-  grid-auto-flow: column;
 }
 
 .grid-cols-1 {
@@ -1634,16 +1622,16 @@ select {
   margin-bottom: calc(0px * var(--tw-space-y-reverse));
 }
 
-.space-y-4 > :not([hidden]) ~ :not([hidden]) {
-  --tw-space-y-reverse: 0;
-  margin-top: calc(1rem * calc(1 - var(--tw-space-y-reverse)));
-  margin-bottom: calc(1rem * var(--tw-space-y-reverse));
-}
-
 .space-y-2 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-y-reverse: 0;
   margin-top: calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(0.5rem * var(--tw-space-y-reverse));
+}
+
+.space-y-4 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(1rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(1rem * var(--tw-space-y-reverse));
 }
 
 .justify-self-start {
@@ -1978,6 +1966,10 @@ select {
 
 .pb-5 {
   padding-bottom: 1.25rem;
+}
+
+.pb-\[200px\] {
+  padding-bottom: 200px;
 }
 
 .pl-1 {

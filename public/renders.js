@@ -634,9 +634,9 @@ async function displayExplore(userData) {
         </div>
       </div>
     </div>
-    <div id="feed" class="h-full max-w-full">
+    <div id="feed" class="h-full w-full">
       <h2 class="font-medium text-17">Your Feed</h2>
-      <div id="albumList" class="w-full m-auto mt-6 mb-6 grid grid-cols-2 gap-4 space-y-4 h-full">
+      <div id="albumList" class="w-full m-auto mt-6 mb-6 grid grid-cols-2 gap-4 pb-[200px]">
         ${feedRender}
       </div>
     </div>
@@ -644,41 +644,38 @@ async function displayExplore(userData) {
   await displayNavBar();
 
   async function displayFriendAlbums(data) {
+    console.log("HERE", data)
     const albumList = await Promise.all(data.map(async (obj) => {
       let albumName = document.createElement("p");
       albumName.className = "text-white text-shadow shadow-black";
       albumName.textContent = obj.name;
   
-      const { data: userData } = await getUser(obj.ownerName);
       let userDiv = document.createElement("div");
-      userDiv.setAttribute("username", obj.ownerName);
+      userDiv.setAttribute("username", obj.owner.displayName ? obj.owner.displayName : obj.owner.username);
       userDiv.className = "userInfo flex flex-row gap-2 bg-white py-4 items-center justify-start";
       let userImage = document.createElement("img");
       userImage.className = "userImage w-8 h-8 rounded-full object-cover flex-none";
-      userImage.src = userData.profilePicture;
-      userImage.alt = `${obj.ownerName}'s profile picture`;
+      userImage.src = obj.owner.profilePicture;
+      userImage.alt = `${obj.owner.username}'s profile picture`;
       userDiv.append(userImage);
       let username = document.createElement("p");
       username.className = "username text-secondary break-words";
-      username.textContent = obj.ownerName;
+      username.textContent = obj.owner.displayName ? obj.owner.displayName : obj.owner.username;
       userDiv.append(username);
 
       let creationDate = document.createElement("p");
       creationDate.className = "text-secondary text-dark-grey";
       creationDate.textContent = obj.createdAt;
   
-      const { data: circleData } = await getCircle(obj.circleId);
       let circleImage = document.createElement("img");
       circleImage.className = "circle w-8 h-8 rounded-full object-cover";
-      circleImage.src = circleData.circle.picture;
-
-      const { data: albumData } = await getAlbum(obj.id);
+      circleImage.src = obj.circle.picture;
+      
       let albumImage = document.createElement("img");
       albumImage.className = "w-176 h-176 rounded-xl object-cover";
-      albumImage.src = albumData.photos[0].src;
-      albumImage.alt = `${albumData.name}'s album cover`;
-
-      const userLiked = albumData.likes.some(like => like.user.username === currentLocalUser);
+      albumImage.src = obj.photos[0].src;
+      albumImage.alt = `${obj.name}'s album cover`;
+      const userLiked = obj.likes.some(like => like.user.username === currentLocalUser);
       const likedClass = userLiked ? "liked" : "";
       const heartColor = userLiked ? "#FF4646" : "none";
       const heartColorStroke = userLiked ? "#FF4646" : "white";
