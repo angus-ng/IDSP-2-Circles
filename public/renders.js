@@ -634,9 +634,9 @@ async function displayExplore(userData) {
         </div>
       </div>
     </div>
-    <div id="feed" class="h-full">
+    <div id="feed" class="h-full max-w-full">
       <h2 class="font-medium text-17">Your Feed</h2>
-      <div id="albumList" class="m-auto mt-6 mb-6 columns-2 gap-4 space-y-4 grid-flow-row h-full">
+      <div id="albumList" class="w-full m-auto mt-6 mb-6 grid grid-cols-2 gap-4 space-y-4 h-full">
         ${feedRender}
       </div>
     </div>
@@ -674,7 +674,7 @@ async function displayExplore(userData) {
 
       const { data: albumData } = await getAlbum(obj.id);
       let albumImage = document.createElement("img");
-      albumImage.className = "w-full w-167 h-167 h-min rounded-xl object-cover";
+      albumImage.className = "w-176 h-176 rounded-xl object-cover";
       albumImage.src = albumData.photos[0].src;
       albumImage.alt = `${albumData.name}'s album cover`;
 
@@ -684,7 +684,7 @@ async function displayExplore(userData) {
       const heartColorStroke = userLiked ? "#FF4646" : "white";
   
       return `
-      <div class="w-full flex flex-col bg-white p-3 rounded-12.75 h-[280px] overflow-hidden">
+      <div class="w-full bg-white p-3 rounded-12.75 h-[280px] overflow-hidden">
         <div class="albumCard">
             <div class="w-full h-min relative overflow-hidden album" id="${obj.id}">
             <div>${albumImage.outerHTML}</div>
