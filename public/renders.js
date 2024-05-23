@@ -459,14 +459,12 @@ async function displayInviteFriends(fromCircle=false, circleId="") {
     if (data && success) {
       const memberList = data.members.map((userObj) => {
         return userObj.user.username;
-      })
+      });
       friends = friends.filter((user) => {
         if (!memberList.includes(user.username)) {
           return user;
         }
-      })
-      console.log("1",memberList)
-      console.log("2",friends)
+      });
     }
   }
   const friendsList = await displayListOfFriends(friends);
@@ -671,7 +669,6 @@ async function displayExplore(userData) {
   
       const { data: circleData } = await getCircle(obj.circleId);
       let circleImage = document.createElement("img");
-      circleImage.setAttribute("circleId", obj.circleId);
       circleImage.className = "circle w-8 h-8 rounded-full object-cover";
       circleImage.src = circleData.circle.picture;
 
@@ -680,6 +677,11 @@ async function displayExplore(userData) {
       albumImage.className = "w-full w-167 h-167 h-min rounded-xl object-cover";
       albumImage.src = albumData.photos[0].src;
       albumImage.alt = `${albumData.name}'s album cover`;
+
+      const userLiked = albumData.likes.some(like => like.user.username === currentLocalUser);
+      const likedClass = userLiked ? "liked" : "";
+      const heartColor = userLiked ? "#FF4646" : "none";
+      const heartColorStroke = userLiked ? "#FF4646" : "white";
   
       return `
       <div class="w-full flex flex-col bg-white p-3 rounded-12.75 h-[280px] overflow-hidden">
@@ -691,9 +693,9 @@ async function displayExplore(userData) {
                 ${albumName.outerHTML}
             </div>
             <div class="absolute inset-0 flex items-end justify-end gap-1 p-2">
-                <div class="like cursor-pointer">
-                  <svg width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M9.22318 16.2905L9.22174 16.2892C6.62708 13.9364 4.55406 12.0515 3.11801 10.2946C1.69296 8.55118 1 7.05624 1 5.5C1 2.96348 2.97109 1 5.5 1C6.9377 1 8.33413 1.67446 9.24117 2.73128L10 3.61543L10.7588 2.73128C11.6659 1.67446 13.0623 1 14.5 1C17.0289 1 19 2.96348 19 5.5C19 7.05624 18.307 8.55118 16.882 10.2946C15.4459 12.0515 13.3729 13.9364 10.7783 16.2892L10.7768 16.2905L10 16.9977L9.22318 16.2905Z" stroke="white" stroke-width="2"/>
+                <div class="like cursor-pointer ${likedClass}">
+                  <svg width="20" height="19" viewBox="0 0 20 19" fill="${heartColor}" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M9.22318 16.2905L9.22174 16.2892C6.62708 13.9364 4.55406 12.0515 3.11801 10.2946C1.69296 8.55118 1 7.05624 1 5.5C1 2.96348 2.97109 1 5.5 1C6.9377 1 8.33413 1.67446 9.24117 2.73128L10 3.61543L10.7588 2.73128C11.6659 1.67446 13.0623 1 14.5 1C17.0289 1 19 2.96348 19 5.5C19 7.05624 18.307 8.55118 16.882 10.2946C15.4459 12.0515 13.3729 13.9364 10.7783 16.2892L10.7768 16.2905L10 16.9977L9.22318 16.2905Z" stroke="${heartColorStroke}" stroke-width="2"/>
                   </svg>
                 </div>
                 <div class="comment cursor-pointer" albumid="${obj.id}">
@@ -715,13 +717,11 @@ async function displayExplore(userData) {
 
   const albumList = document.querySelector("#albumList");
   albumList.addEventListener("click", async(event) => {
-    event.preventDefault();
     const like = event.target.closest(".like");
     const comment = event.target.closest(".comment");
     const username = event.target.closest(".username");
     const userImage = event.target.closest(".userImage");
     const albumDiv = event.target.closest(".album");
-    const circle = event.target.closest(".circle");
 
     if (like) {
       const albumId = event.target.closest("div.album").getAttribute("id");
@@ -745,16 +745,7 @@ async function displayExplore(userData) {
       return;
     }
 
-    if (circle) {
-      event.stopImmediatePropagation();
-      const circleId = event.target.closest(".circle").getAttribute("circleId");
-      console.log(circleId)
-      await displayCircle(circleId);
-      return;
-    }
-
     if (albumDiv) {
-      event.stopImmediatePropagation();
       if (albumDiv.hasAttribute("id")) {
         let { success, data, error } = await getAlbum(albumDiv.id);
         if (success && data) {
