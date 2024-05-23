@@ -105,6 +105,21 @@ class CircleService {
             }
         });
     }
+    checkPublic(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const isPublic = yield this._db.prisma.circle.findUnique({
+                    where: {
+                        id: id
+                    }
+                });
+                return isPublic.isPublic;
+            }
+            catch (err) {
+                throw new Error(err);
+            }
+        });
+    }
     getCircle(id) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -116,7 +131,8 @@ class CircleService {
                                 name: true,
                                 photos: {
                                     take: 1
-                                }
+                                },
+                                likes: true
                             }
                         }
                     },
@@ -131,30 +147,27 @@ class CircleService {
             }
         });
     }
-    listCircles(currentUser) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const user = yield this._db.prisma.user.findUnique({
-                    where: {
-                        username: currentUser
-                    }
-                });
-                const circleArr = yield this._db.prisma.userCircle.findMany({
-                    select: {
-                        circle: true
-                    },
-                    where: {
-                        username: user.username
-                    }
-                });
-                console.log(circleArr);
-                return circleArr;
-            }
-            catch (error) {
-                throw new Error(error);
-            }
-        });
-    }
+    //   async listCircles (currentUser:string): Promise<{circle: Circle}[]> {
+    //     try {
+    //         const user = await this._db.prisma.user.findUnique({
+    //             where: {
+    //                 username: currentUser
+    //             }
+    //         })
+    //         const circleArr = await this._db.prisma.userCircle.findMany({
+    //             select: {
+    //                 circle: true
+    //             },
+    //             where: {
+    //                 username: user!.username
+    //             }
+    //         })
+    //         console.log(circleArr)
+    //         return circleArr;
+    //     } catch (error:any) {
+    //         throw new Error(error)
+    //     }
+    //   }
     getMembers(circleId) {
         return __awaiter(this, void 0, void 0, function* () {
             const members = yield this._db.prisma.userCircle.findMany({
@@ -176,12 +189,20 @@ class CircleService {
     inviteToCircle(username, circleName) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                yield this._db.prisma.circleInvite.create({
-                    data: {
+                const inviteExists = yield this._db.prisma.circleInvite.findFirst({
+                    where: {
                         invitee_username: username,
                         circleId: circleName
                     }
                 });
+                if (!inviteExists) {
+                    yield this._db.prisma.circleInvite.create({
+                        data: {
+                            invitee_username: username,
+                            circleId: circleName
+                        }
+                    });
+                }
             }
             catch (error) {
                 throw new Error(error);
@@ -240,6 +261,30 @@ class CircleService {
             catch (err) {
                 return;
             }
+        });
+    }
+    updateCircle(currentUser, circleObj) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const circle = yield this._db.prisma.circle.findUnique({
+                where: {
+                    id: circleObj.circleId,
+                    ownerId: currentUser
+                }
+            });
+            if (!circle) {
+                throw new Error("insufficient permissions");
+            }
+            const updatedCircle = this._db.prisma.circle.update({
+                where: {
+                    id: circleObj.circleId
+                },
+                data: {
+                    picture: circleObj.circleImg,
+                    name: circleObj.circleName,
+                    isPublic: circleObj.isPublic
+                }
+            });
+            return updatedCircle;
         });
     }
 }
