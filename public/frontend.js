@@ -97,6 +97,8 @@ header.addEventListener("click", async (event) => {
   }
 
   if (mapBackButton) {
+    
+    console.log(map)
     const { success, data } = await getUser(currentLocalUser);
     if (success && data) {
       await displayExplore(data);
