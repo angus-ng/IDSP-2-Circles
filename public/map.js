@@ -8,13 +8,15 @@ async function initMap() {
   const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
 
   try { 
-    const data = await getMapInfo();
-    const newestAlbum = data.data.Album[0]
-    let lat = 0
-    let long = 0
-    if (newestAlbum) {
-      lat = parseFloat(newestAlbum.lat)
-      long = parseFloat(newestAlbum.long)
+    const response = await getMapInfo();
+    let lat = 49
+    let long = -123
+    if (response.data){
+      const newestAlbum = data.data.Album[0]
+      if (newestAlbum) {
+        lat = parseFloat(newestAlbum.lat)
+        long = parseFloat(newestAlbum.long)
+      }
     }
     if (!map){
     map = new Map(document.getElementById("map"), {
@@ -55,8 +57,10 @@ async function initMap() {
         markers.push(marker)
       }
     }
-    map.createAlbumMarkers(data)
-      storedMap = document.querySelector("#map")
+    if (response.data){
+      map.createAlbumMarkers(response)
+    }
+    storedMap = document.querySelector("#map")
   } catch (error) {
     console.log(error)
   }
