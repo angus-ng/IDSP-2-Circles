@@ -4,6 +4,8 @@ import WebSocket, { WebSocketServer } from "ws";
 import Controller from "./interfaces/controller.interface";
 import dotenv from "dotenv";
 
+export let wss: WebSocketServer;
+
 class App {
   private _app: express.Application;
   private readonly _port: number = Number(process.env.PORT) || 5000;
@@ -18,7 +20,7 @@ class App {
     this._wss = new WebSocketServer({ server: this._server });
     this.initializeMiddlewares();
     this.initializeControllers(controllers);
-    this.initializeWebSocket();
+    wss = this._wss
   }
 
   public start() {
@@ -35,21 +37,6 @@ class App {
   private initializeControllers(controllers: Controller[]) {
     controllers.forEach((controller) => {
       this._app.use("/", controller.router);
-    });
-  }
-
-  private initializeWebSocket() {
-    this._wss.on("connection", (ws: WebSocket) => {
-      console.log("New client connected");
-
-      ws.on("message", (message: string) => {
-        console.log(`Message received: ${message}`);
-        ws.send(`Message sent: ${message}`);
-      });
-
-      ws.on("close", () => {
-        console.log("Client has disconnected");
-      });
     });
   }
 }

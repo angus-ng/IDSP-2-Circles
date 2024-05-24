@@ -437,22 +437,22 @@ async function displayListOfFriends(friends) {
   return newArr;
 }
 
-async function displayInviteFriends(fromCircle=false, circleId="") {
+async function displayInviteFriends(fromCircle = false, circleId = "") {
   nav.classList.add("hidden");
   let friends = await getFriends(currentLocalUser);
   if (fromCircle && circleId) {
-    const {data, success} = await getCircle(circleId)
+    const { data, success } = await getCircle(circleId);
     if (data && success) {
       const memberList = data.members.map((userObj) => {
         return userObj.user.username;
-      })
+      });
       friends = friends.filter((user) => {
         if (!memberList.includes(user.username)) {
           return user;
         }
-      })
-      console.log("1",memberList)
-      console.log("2",friends)
+      });
+      console.log("1", memberList);
+      console.log("2", friends);
     }
   }
   const friendsList = await displayListOfFriends(friends);
@@ -463,7 +463,7 @@ async function displayInviteFriends(fromCircle=false, circleId="") {
     leftHeaderButton.innerHTML = `<span class="backSpan" circleid="${circleId}">
     <img src="/lightmode/back_button.svg" alt="Back Button" id="albumToCircleButton"/>
     </span>
-    `
+    `;
     rightHeaderButton.innerHTML = `<img src="/lightmode/done_button.svg" alt="Done Button" id="inviteDoneButton"/>`;
   }
 
@@ -514,7 +514,6 @@ async function displayCreateCirclePreview() {
   } else {
     next.id = "createCircleButton";
   }
-
 
   pageContent.innerHTML = `
     <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full">
@@ -601,15 +600,18 @@ async function displayCreateCirclePreview() {
 }
 
 async function displayExplore(userData) {
-  const {success, data} = await getAlbumFeed()
+  const { success, data } = await getAlbumFeed();
   if (success && data) {
-    console.log(data)
+    console.log(data);
   }
   pageName.textContent = "Explore";
   header.classList.remove("hidden");
   leftHeaderButton.innerHTML = "";
   rightHeaderButton.innerHTML = `<img id="mapButton" class="px-1" src="/lightmode/map_icon.svg" alt="Map Icon"/>`;
-  const circleRender = await displayListOfCirclesHorizontally(userData, currentLocalUser);
+  const circleRender = await displayListOfCirclesHorizontally(
+    userData,
+    currentLocalUser
+  );
   pageContent.innerHTML = `
   <div id="explorePage" class="flex flex-col py-2 w-full h-full>
     <div id="circlesFeed">
@@ -697,9 +699,9 @@ async function displaySearch() {
 
   async function initializeSearch() {
     const initialSearchResult = await getSearchResult(searchBox.value);
-    console.log(initialSearchResult)
+    console.log(initialSearchResult);
     storedSearchResults = initialSearchResult.data;
-    
+
     updateSuggestedFriends(storedSearchResults);
   }
 
@@ -1007,7 +1009,7 @@ async function displayNewModal() {
 
 async function displayProfile(userData) {
   nav.classList.remove("hidden");
-  console.log("USERDATA:", userData)
+  console.log("USERDATA:", userData);
   const user = userData.username;
   const circleRender = await displayListOfCircles(userData, user);
   const albumRender = await displayListOfAlbums(userData, user, true);
@@ -1042,7 +1044,11 @@ async function displayProfile(userData) {
 
   pageContent.innerHTML = `
   <div id="profilePage" class="relative pt-2 pb-16 mb-4 w-full">
-    ${currentLocalUser === userData.username ? `<div id="settings" class="absolute top-0 right-0 w-6 h-6 cursor-pointer"><img src="/lightmode/settings_icon.svg"></div>` : ""}
+    ${
+      currentLocalUser === userData.username
+        ? `<div id="settings" class="absolute top-0 right-0 w-6 h-6 cursor-pointer"><img src="/lightmode/settings_icon.svg"></div>`
+        : ""
+    }
     <div class="flex justify-center mb-4">
       <img id="profilePicture" src="${
         userData.profilePicture
@@ -1062,7 +1068,9 @@ async function displayProfile(userData) {
       </div>
       <div class="gap-0 justify-center">
         <div id="friends" class="cursor-pointer">
-          <h2 class="text-base font-bold text-center" id="friendCounter">${userData._count.friends}</h2>
+          <h2 class="text-base font-bold text-center" id="friendCounter">${
+            userData._count.friends
+          }</h2>
           <h2 class="text-secondary text-center">${friendText}</h2>
         </div>
       </div>
@@ -1452,12 +1460,12 @@ async function displayListOfCirclesHorizontally(data) {
 }
 
 async function displayPhotoUpload(albumData) {
-  console.log(albumData)
+  console.log(albumData);
   if (albumData === undefined) {
     pageName.textContent = "New Album";
     leftHeaderButton.innerHTML = `<img src="/lightmode/close_icon.svg" alt="Close Button" id="closeButton">`;
   }
-  
+
   if (albumData) {
     pageName.textContent = "Add Photos";
     leftHeaderButton.innerHTML = `<img src="/lightmode/close_icon.svg" alt="Close Button" id="backToAlbumButton">`;
@@ -1505,7 +1513,7 @@ async function displayPhotoUpload(albumData) {
       const files = event.target.files;
       for (let i = 0; i < files.length; i++) {
         const file = await uploadFile(files[i]);
-        console.log(file)
+        console.log(file);
 
         albumPhotos.push(file);
       }
@@ -1531,14 +1539,14 @@ function displayPhotoUploadPreview(albumPhotos) {
   const albumId = leftButtonSpan.getAttribute("albumId");
   const rightButtonSpan = document.querySelector(".rightButtonSpan");
 
-  if ((albumId === undefined) || (albumId === null)) {
+  if (albumId === undefined || albumId === null) {
     pageName.textContent = "New Album";
     leftHeaderButton.innerHTML = `<img src="/lightmode/close_icon.svg" alt="Close Button" id="closeButton">`;
     rightHeaderButton.textContent = "Next";
     rightButtonSpan.id = "albumNextButton";
     rightHeaderButton.className = "text-lg";
   }
-  console.log(albumId)
+  console.log(albumId);
 
   if (albumId) {
     pageName.textContent = "Add Photos";
@@ -1555,7 +1563,7 @@ function displayPhotoUploadPreview(albumPhotos) {
   const mappedPhotos = albumPhotos.map((obj) => {
     return {
       photoSrc: obj.data.url,
-      gps: obj.data.gps
+      gps: obj.data.gps,
     };
   });
 
@@ -1567,7 +1575,7 @@ function displayPhotoUploadPreview(albumPhotos) {
 
     const img = document.createElement("img");
     img.className = "rounded-12.75 h-image w-image object-cover";
-    console.log(photo)
+    console.log(photo);
     img.src = photo.photoSrc;
     img.alt = `image ${index}`;
 
@@ -1682,7 +1690,7 @@ function displayPhotoUploadPreview(albumPhotos) {
       const files = event.target.files;
       for (let i = 0; i < files.length; i++) {
         const file = await uploadFile(files[i]);
-        console.log(file)
+        console.log(file);
         albumPhotos.push(file);
       }
       console.log("Files uploaded:", albumPhotos);
@@ -1710,7 +1718,7 @@ async function displayAlbumConfirmation() {
 
   pageName.textContent = "Post";
 
-  rightHeaderButton.textContent = "Create"
+  rightHeaderButton.textContent = "Create";
   rightButtonSpan.id = "createAlbum";
   rightHeaderButton.className = "text-lg";
 
@@ -1879,7 +1887,9 @@ async function displayCircle(circleData) {
   rightHeaderButton.innerHTML = `
   <div class="flex flex-row flex-nowrap gap-2 w-full h-22">
     <div class="flex gap-2">
-      <button id="circleEditButton" class="${circleData.circle.ownerId === currentLocalUser ? "" : "hidden"}">
+      <button id="circleEditButton" class="${
+        circleData.circle.ownerId === currentLocalUser ? "" : "hidden"
+      }">
         <img src="/lightmode/edit_icon.svg"></img>
         <span circleid=${circleData.circle.id}></span>
       </button>
@@ -1905,14 +1915,18 @@ async function displayCircle(circleData) {
     let albumName = document.createElement("p");
     albumName.className = "text-white text-shadow shadow-black";
     albumName.textContent = obj.name;
-    const userLiked = obj.likes.some(like => like.userId === currentLocalUser);
+    const userLiked = obj.likes.some(
+      (like) => like.userId === currentLocalUser
+    );
     const likedClass = userLiked ? "liked" : "";
     const heartColor = userLiked ? "#FF4646" : "none";
     const heartColorStroke = userLiked ? "#FF4646" : "white";
-    // CHANGE ME : placeholder image 
+    // CHANGE ME : placeholder image
     return `
       <div class="w-full h-min relative album" id="${obj.id}">
-        <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.photos[0]? obj.photos[0].src : "/placeholder_image.svg"}"/>
+        <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${
+          obj.photos[0] ? obj.photos[0].src : "/placeholder_image.svg"
+        }"/>
         <div class="m-2 text-secondary font-semibold absolute inset-0 flex items-end justify-start">
           ${albumName.outerHTML}
         </div>
@@ -1932,12 +1946,15 @@ async function displayCircle(circleData) {
   });
 
   let circleName = document.createElement("p");
-  circleName.className = "text-center text-20 font-bold break-words text-wrap max-w-[234px]";
+  circleName.className =
+    "text-center text-20 font-bold break-words text-wrap max-w-[234px]";
   circleName.textContent = circleData.circle.name;
   pageContent.innerHTML = `
     <div id="circlePage" class="w-full px-0 mx-0">
       <div id="circleImage" class="relative flex justify-center mt-6 mb-1.5">
-        <img src="${circleData.circle.picture}" class="rounded-full w-180 h-180 object-cover"/>
+        <img src="${
+          circleData.circle.picture
+        }" class="rounded-full w-180 h-180 object-cover"/>
       </div>
       <div id="circleName" class="relative my-3 flex justify-center items-center max-w-full h-11">
         ${circleName.outerHTML}
@@ -1946,7 +1963,11 @@ async function displayCircle(circleData) {
         <span class="privacyState">
             <label class="inline-flex items-center cursor-pointer">
             <input id="privacyCheckbox" type="checkbox" value="" class="sr-only peer">
-            <img id="privacyIcon" src="${circleData.circle.isPublic ? "/lightmode/globe_icon.svg" : "/lightmode/lock_icon.svg"}" alt="Lock icon" class="mr-4">
+            <img id="privacyIcon" src="${
+              circleData.circle.isPublic
+                ? "/lightmode/globe_icon.svg"
+                : "/lightmode/lock_icon.svg"
+            }" alt="Lock icon" class="mr-4">
             <span id="privacyLabel" class="text-sm font-medium leading-body text-14 mr-4 w-12">
               ${circleData.circle.isPublic ? "Public" : "Private"}
             </span>
@@ -1971,8 +1992,10 @@ async function displayCircle(circleData) {
         </div>
       </div>
     </div>`;
-  const privacyCheckbox = document.querySelector("#privacyCheckbox")
-  circleData.circle.isPublic ? privacyCheckbox.setAttribute("checked", true) : privacyCheckbox.removeAttribute("checked")
+  const privacyCheckbox = document.querySelector("#privacyCheckbox");
+  circleData.circle.isPublic
+    ? privacyCheckbox.setAttribute("checked", true)
+    : privacyCheckbox.removeAttribute("checked");
   const albumListTarget = document.querySelector("#albumList");
   albumListTarget.addEventListener("click", async function (event) {
     event.preventDefault();
@@ -2022,18 +2045,18 @@ async function displayCircle(circleData) {
     inviteMore.src = "/invite_more_friends.svg";
     inviteMore.id = "inviteMoreUsers";
     inviteMore.className = "w-42 h-42 rounded-full object-cover";
-    const memberList = document.querySelector(".memberList")
+    const memberList = document.querySelector(".memberList");
     memberList.append(inviteMore);
 
     memberList.addEventListener("click", async function (event) {
-      const portrait = event.target.closest("img")
+      const portrait = event.target.closest("img");
       if (portrait) {
         if (portrait.id === "inviteMoreUsers") {
-          console.log("CLICKED")
-          await displayInviteFriends(true, circleData.circle.id)
+          console.log("CLICKED");
+          await displayInviteFriends(true, circleData.circle.id);
         }
       }
-    })
+    });
   }
 }
 
@@ -2086,12 +2109,14 @@ async function displayCircleInvites() {
 }
 
 async function displayAlbum(albumData) {
-  console.log("current user:", currentLocalUser)
+  console.log("current user:", currentLocalUser);
   const backSpan = document.querySelector(".backSpan");
   const leftButtonImg = document.querySelector(".backSpan img");
   const album = document.querySelector(".album");
   const imgElement = document.querySelector("#circleToProfileButton");
-  const albumConfirmationBackButton = document.querySelector("#albumConfirmationBackButton");
+  const albumConfirmationBackButton = document.querySelector(
+    "#albumConfirmationBackButton"
+  );
   const backToAlbumButton = document.querySelector("#backToAlbumButton");
   console.log("albumdata", albumData);
 
@@ -2103,13 +2128,12 @@ async function displayAlbum(albumData) {
     leftButtonImg.classList.remove("hidden");
   }
 
-
   if (backSpan) {
     if (albumData.circle.id) {
       backSpan.setAttribute("circleId", `${albumData.circle.id}`);
     }
-  } 
-  
+  }
+
   if (album) {
     const albumId = album.getAttribute("id");
     if (albumId) {
@@ -2186,16 +2210,18 @@ async function displayAlbum(albumData) {
   let albumName = document.createElement("h2");
   albumName.className = "flex justify-center font-medium text-lg";
   albumName.textContent = albumData.name;
-  
+
   let albumLikeCount = document.createElement("h3");
   albumLikeCount.className = "flex justify-center font-medium text-lg";
   albumLikeCount.textContent = albumData.likeCount;
 
-  const userLiked = albumData.likes.some(like => like.user.username === currentLocalUser);
+  const userLiked = albumData.likes.some(
+    (like) => like.user.username === currentLocalUser
+  );
   const likedClass = userLiked ? "liked" : "";
   const heartColor = userLiked ? "#FF4646" : "none";
   const heartColorStroke = userLiked ? "#FF4646" : "black";
-  
+
   pageContent.innerHTML = `
     <div id="albumPhotos">
       <div id="memberList" class="grid grid-rows-2 grid-cols-3 mt-8 mx-auto items-center justify-center w-265 gap-2 h-84">
@@ -2213,8 +2239,12 @@ async function displayAlbum(albumData) {
         ${albumLikeCount.outerHTML}
       </div>
       <div class="grid grid-cols-2 justify-between place-items-center mt-12 mb-2 mr-0">
-        <p class="col-span-1 text-base font-medium justify-self-start">${albumData.photos.length} Photos</p>
-        <button id="addPhotos" class="col-span-1 justify-self-end w-6 h-6" albumId="${albumData.id}">
+        <p class="col-span-1 text-base font-medium justify-self-start">${
+          albumData.photos.length
+        } Photos</p>
+        <button id="addPhotos" class="col-span-1 justify-self-end w-6 h-6" albumId="${
+          albumData.id
+        }">
           <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
             <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -2270,15 +2300,15 @@ async function displayAlbum(albumData) {
     );
   }
 
-  console.log(albumData)
+  console.log(albumData);
 
   const albumPhotos = document.querySelector("#albumPhotos");
-  albumPhotos.addEventListener("click", async(event) => {
+  albumPhotos.addEventListener("click", async (event) => {
     const photo = event.target.closest("#photo img");
     const overlay = event.target.closest("#photoOverlay");
     const addMorePhotos = event.target.closest("#addPhotos");
     const like = event.target.closest(".like");
-    
+
     if (photo) {
       console.log(photo);
       await displayPhoto(photo.src);
@@ -2363,8 +2393,8 @@ async function displayFriends(username) {
   async function initializeSearch() {
     const friends = await getFriends(username);
     friendsList = friends;
-    console.log(friendsList)
-                  
+    console.log(friendsList);
+
     updateSuggestedFriends(friends);
   }
 
@@ -2424,7 +2454,9 @@ function displayFriendsList(friends, username) {
     displayName.className = "displayName font-medium text-14 leading-tertiary";
     username.className = "username font-light text-14 text-dark-grey";
     username.setAttribute("username", friend.username);
-    displayName.textContent = friend.displayName ? friend.displayName : friend.username;
+    displayName.textContent = friend.displayName
+      ? friend.displayName
+      : friend.username;
     username.textContent = `@${friend.username}`;
     return `
       <div class="flex items-center my-5 user" id="${friend.username}">
@@ -2541,15 +2573,19 @@ async function displayListOfAlbums(data, user, profile = false) {
       <img src="${obj.circle.picture}" class="w-8 rounded-full object-cover"/>
     </div>`;
 
-    const userLiked = obj.likes.some(like => like.user.username === currentLocalUser);
+    const userLiked = obj.likes.some(
+      (like) => like.user.username === currentLocalUser
+    );
     const likedClass = userLiked ? "liked" : "";
     const heartColor = userLiked ? "#FF4646" : "none";
     const heartColorStroke = userLiked ? "#FF4646" : "white";
-    // CHANGE ME : placeholder image 
+    // CHANGE ME : placeholder image
     return `
       <div class="w-full h-min relative overflow-hidden album" id="${obj.id}">
         ${userSpan.outerHTML}
-        <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.photos[0]? obj.photos[0].src : "/placeholder_image.svg"}"/>
+        <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${
+          obj.photos[0] ? obj.photos[0].src : "/placeholder_image.svg"
+        }"/>
         ${profile ? circleImage : null}
         <div class="m-2 text-secondary font-semibold absolute inset-0 flex items-end justify-start">
           ${albumName.outerHTML}
@@ -2600,12 +2636,20 @@ async function displayComments(
 
       const posterH1 = document.createElement("h1");
       posterH1.className = "font-bold text-secondary cursor-pointer";
-      const poster = comment.user.displayName ? comment.user.displayName : comment.user.username;
+      const poster = comment.user.displayName
+        ? comment.user.displayName
+        : comment.user.username;
       posterH1.textContent = poster;
-      posterH1.textContent ? posterH1.textContent : (posterH1.textContent = "Deleted");
+      posterH1.textContent
+        ? posterH1.textContent
+        : (posterH1.textContent = "Deleted");
       if (posterH1.textContent === "Deleted") {
-        posterH1.className = posterH1.className.replace("cursor-pointer", "").trim();
-        likeDiv.className = likeDiv.className.replace("cursor-pointer", "").trim();
+        posterH1.className = posterH1.className
+          .replace("cursor-pointer", "")
+          .trim();
+        likeDiv.className = likeDiv.className
+          .replace("cursor-pointer", "")
+          .trim();
       }
       const postMsgContainer = document.createElement("div");
       postMsgContainer.className = "comment-text-container flex-grow";
@@ -2616,15 +2660,21 @@ async function displayComments(
         : "message removed";
       postMsgContainer.appendChild(postMsg);
 
-
-      if (comment.likedBy !== null && comment.likedBy.includes(currentUserUsername) && poster !== null) {
+      if (
+        comment.likedBy !== null &&
+        comment.likedBy.includes(currentUserUsername) &&
+        poster !== null
+      ) {
         likeDiv.querySelector("svg path").setAttribute("fill", "#FF4646");
         likeDiv.querySelector("svg path").setAttribute("stroke", "#FF4646");
         likeDiv.classList.add("liked");
       }
 
-
-      if (comment.likedBy !== null && comment.likedBy.includes(currentUserUsername) && poster !== null) {
+      if (
+        comment.likedBy !== null &&
+        comment.likedBy.includes(currentUserUsername) &&
+        poster !== null
+      ) {
         likeDiv.querySelector("svg path").setAttribute("fill", "#FF4646");
         likeDiv.querySelector("svg path").setAttribute("stroke", "#FF4646");
         likeDiv.classList.add("liked");
@@ -2638,7 +2688,11 @@ async function displayComments(
           : comment.user.username
       }">
       <div class="flex-none w-58 items-center h-full mr-1 mt-1">
-        <img src="${comment.user.profilePicture ? comment.user.profilePicture : "/placeholder_image.svg"}" class="w-47 h-47 rounded-full cursor-pointer">
+        <img src="${
+          comment.user.profilePicture
+            ? comment.user.profilePicture
+            : "/placeholder_image.svg"
+        }" class="w-47 h-47 rounded-full cursor-pointer">
       </div>
       <div class=" flex flex-col w-294">
         <div class="flex flex-row gap-2">
@@ -2648,7 +2702,11 @@ async function displayComments(
           ${postMsgContainer.outerHTML}
         <div class="flex items-center space-x-2">
           <a class="text-time text-11 underline replyButton w-8 cursor-pointer">Reply</a>
-          ${comment.user.username === currentLocalUser ? `<img src="/lightmode/more_options.svg" alt="more options"/ class="moreOptions w-5 h-5 cursor-pointer">` : ""}
+          ${
+            comment.user.username === currentLocalUser
+              ? `<img src="/lightmode/more_options.svg" alt="more options"/ class="moreOptions w-5 h-5 cursor-pointer">`
+              : ""
+          }
         </div>
       </div>
       <div class="absolute right-0 top-2 flex flex-1 flex-col items-center">
@@ -2704,7 +2762,10 @@ async function displayComments(
     commentUser = event.target.closest("div.comment").getAttribute("user");
     switch (event.target.tagName) {
       case "A":
-        if (event.target.className.includes("replyButton") && commentUser !== "null") {
+        if (
+          event.target.className.includes("replyButton") &&
+          commentUser !== "null"
+        ) {
           const comment = document.querySelector("#comment");
           comment.classList.remove("bg-transparent");
           comment.classList.add("border-2", "bg-light-mode-accent");
@@ -2739,7 +2800,7 @@ async function displayComments(
       case "IMG":
         if (event.target.className.includes("moreOptions")) {
           commentId = event.target.closest("div.comment").id;
-          const helperObj = { currentUserProfilePicture, albumId, commentId }
+          const helperObj = { currentUserProfilePicture, albumId, commentId };
           await displayConfirmationPopup("delete comment", helperObj);
         }
       default:
@@ -2754,7 +2815,11 @@ async function displayComments(
         like.querySelector("svg path").setAttribute("fill", "none");
         like.querySelector("svg path").setAttribute("stroke", "#000000");
         await likeComment(commentId);
-        await displayComments(albumId, currentUserProfilePicture, currentLocalUser);
+        await displayComments(
+          albumId,
+          currentUserProfilePicture,
+          currentLocalUser
+        );
       } else if (commentUser !== "null") {
         like.classList.add("liked");
         commentId = event.target.closest("div.comment").id;
@@ -2859,4 +2924,3 @@ async function displayConfirmationPopup(activity, helperObj) {
 
   confirmationPopup.addEventListener("click", confirmEventHandler, true);
 }
-
