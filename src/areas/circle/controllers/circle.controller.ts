@@ -40,6 +40,10 @@ class CircleController implements IController {
       const cldRes = await handleUpload(dataURI);
       try {
         let { latitude, longitude } = await exifr.gps(b64)
+        console.log("HERE", cldRes)
+        if (cldRes.format === "heic"){
+          cldRes.url = cldRes.url.split(".heic")[0] + ".jpg"
+        }
         res.json({ message: 'File uploaded successfully', data: { url: cldRes.url, gps: { lat: latitude, long: longitude }}});
       } catch (error) {
         res.json({ message: 'File uploaded successfully', data: { url: cldRes.url, gps: null}});
