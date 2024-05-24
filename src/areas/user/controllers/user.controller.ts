@@ -33,6 +33,7 @@ class UserController implements IController {
     this.router.get(`${this.path}/ifEmailTaken/:email`, this.ifEmailTaken);
     this.router.get(`${this.path}/profilePicture`, ensureAuthenticated, this.profilePicture);
     this.router.get(`${this.path}/feed`, ensureAuthenticated, this.getFeed);
+    this.router.post(`${this.path}/updateProfilePicture`, ensureAuthenticated, this.updateProfilePicture)
 
   }
   private friend = async (req: Request, res: Response) => {
@@ -181,6 +182,15 @@ class UserController implements IController {
       }
     } catch (err) {
       res.status(200).json({ success: true, data: null, error: "failed to get album feed" })
+    }
+  }
+  private updateProfilePicture = async (req: Request, res: Response) => {
+    try {
+      const { src } = req.body
+      let loggedInUser = await getLocalUser(req, res);
+      const albumFeed = await this._service.updateProfilePicture(loggedInUser, src)
+    } catch (err) {
+      res.status(200).json({ success: true, data: null, error: "failed to update profile picture" })
     }
   }
 }

@@ -495,4 +495,18 @@ export class UserService implements IUserService {
     }
   
   }
+  async updateProfilePicture(currentUser: string, src: string): Promise<void> {
+    try {
+      await this._db.prisma.user.update({
+        where: {
+          username: currentUser
+        }, 
+        data: {
+          profilePicture : src
+        }
+      })
+    } catch (err) {
+
+    }
+  }
 }

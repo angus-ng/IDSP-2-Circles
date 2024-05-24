@@ -516,3 +516,19 @@ async function getAlbumFeed () {
 
   }
 }
+async function updateProfilePicture (src) {
+  try {
+    const response = await fetch(`/user/updateProfilePicture`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({src: src})
+    });
+
+    const jsonResponse = await response.json();
+    return jsonResponse
+  } catch (err) {
+
+  }
+}
