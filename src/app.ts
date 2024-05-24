@@ -40,6 +40,7 @@ class App {
 
   private initializeWebSocket() {
     this._wss.on("connection", (ws: WebSocket) => {
+      
       console.log("New client connected");
 
       ws.on("message", (message: string) => {
