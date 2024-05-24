@@ -4,6 +4,7 @@ let markers = [];
 let scriptImported = false;
 
 async function initMap() {
+  await clearMarkers();
   const { Map } =  await google.maps.importLibrary("maps");
   const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
   try { 
