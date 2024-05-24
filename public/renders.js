@@ -8,7 +8,7 @@ function displayLoginPage() {
         <form>
           <div class="flex items-center mt-6 mb-6">
               <label for="emailInput" class=""></label>
-              <input type="text" placeholder="Phone number, email, or username" id="emailInput" name="emailInput" class="rounded-input-box w-input-box border-dark-grey border-2 text-17 items-end">
+              <input type="text" placeholder="Email" id="emailInput" name="emailInput" class="rounded-input-box w-input-box border-dark-grey border-2 text-17 items-end">
           </div>
           <div class="flex items-center mt-4 mb-6">
               <label for="password" class=""></label>

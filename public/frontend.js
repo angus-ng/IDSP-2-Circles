@@ -491,7 +491,6 @@ async function handleLocalAuth() {
   }
 }
 
-
 pageContent.addEventListener("click", async (event) => {
   const localAuthButton = event.target.closest("#localAuth");
   const logOut = event.target.closest("#logOut");
