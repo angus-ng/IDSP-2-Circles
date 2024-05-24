@@ -16,12 +16,6 @@ let circleImgSrc;
 let albumPhotos = [];
 let albumObj = {};
 let checkedFriends = [];
-let signUpData = {
-  email: "",
-  confirmEmail: "",
-  password: "",
-  confirmPassword: "",
-};
 
 async function initiatePage() {
   const username = await getSessionFromBackend();
@@ -59,12 +53,6 @@ header.addEventListener("click", async (event) => {
   const addCircleBackButton = event.target.closest("#addCircleBackButton");
   const toActivity = event.target.closest("#toActivity");
   const emailBackButton = event.target.closest("#emailBack");
-  const passwordBackButton = event.target.closest("#passwordBack");
-  const birthdayBackButton = event.target.closest("#birthdayBack");
-  const nameBackButton = event.target.closest("#nameBack");
-  const usernameBackButton = event.target.closest("#usernameBack");
-  const profilePictureBackButton = event.target.closest("#profilePictureBack");
-  const profileConfirmationBackButton = event.target.closest("#profileConfirmationBack");
   const friendsBackButton = event.target.closest("#friendsBackButton");
   const circleViewBackButton = event.target.closest("#circleViewBackButton");
   const profileBackButton = event.target.closest("#profileBackButton");
@@ -107,53 +95,6 @@ header.addEventListener("click", async (event) => {
 
   if (emailBackButton) {
     await displayLoginPage();
-  }
-
-  if (passwordBackButton) {
-    const primaryButton = document.querySelector("#passwordNext");
-    primaryButton.id = "emailNext";
-    await displaySignUpEmailPage();
-  }
-
-  if (birthdayBackButton) {
-    const primaryButton = document.querySelector("#birthdayNext");
-    primaryButton.id = "passwordNext";
-    await displaySignUpPasswordPage();
-  }
-
-  if (nameBackButton) {
-    const primaryButton = document.querySelector("#nameNext");
-    primaryButton.id = "birthdayNext";
-    await displaySignUpBirthdayPage();
-  }
-
-  if (usernameBackButton) {
-    const primaryButton = document.querySelector("#usernameNext");
-    primaryButton.id = "nameNext";
-    await displaySignUpNamePage();
-  }
-
-  if (profilePictureBackButton) {
-    const primaryButton = document.querySelector("#addProfilePicture");
-    primaryButton.classList.remove("bottom-24");
-    primaryButton.classList.add("bottom-8");
-    primaryButton.textContent = "Next";
-    primaryButton.id = "nameNext";
-    const secondaryButton = document.querySelector("#profilePictureNext");
-    secondaryButton.id = "secondaryButton";
-    secondaryButton.classList.add("hidden");
-    await displaySignUpUsernamePage();
-  }
-
-  if (profileConfirmationBackButton) {
-    const primaryButton = document.querySelector("#doneButton");
-    primaryButton.textContent = "Add Picture";
-    primaryButton.id = "addProfilePicture";
-    const secondaryButton = document.querySelector("#changeProfilePicture");
-    secondaryButton.classList.remove("hidden");
-    secondaryButton.textContent = "Skip";
-    secondaryButton.id = "profilePictureNext";
-    await displaySignUpProfilePicturePage();
   }
 
   if (nextButtonInviteFriends) {
@@ -216,10 +157,7 @@ header.addEventListener("click", async (event) => {
     }
     const circleId = data;
     if (success && data) {
-      console.log(circleId);
       for (let friend of checkedFriends) {
-        console.log(circleId);
-        console.log("FRIEND", friend);
         const { success, data } = await handleSendCircleRequest(
           friend,
           circleId
@@ -277,7 +215,6 @@ header.addEventListener("click", async (event) => {
 
   if (backToAlbumButton) {
     const albumId = leftButtonSpan.getAttribute("albumId");
-    console.log(albumId);
     const { success, data, error } = await getAlbum(albumId);
     if (success && data) {
       await displayAlbum(data);
@@ -288,7 +225,6 @@ header.addEventListener("click", async (event) => {
 
   if (updateAlbumButton) {
     const albumId = leftButtonSpan.getAttribute("albumId");
-    console.log(albumId);
   
     if (albumId) {
       const { success, data, error } = await updateAlbum(albumId, albumObj);
@@ -297,6 +233,7 @@ header.addEventListener("click", async (event) => {
         if (albumResponse.success && albumResponse.data) {
           albumPhotos = [];
           await displayPopup("images successfully added");
+          rightButtonSpan.removeAttribute("id");
           await displayAlbum(albumResponse.data);
         } else {
           console.log(albumResponse.error);
@@ -354,7 +291,6 @@ header.addEventListener("click", async (event) => {
   }
 
   if (createAlbumButton) {
-    console.log("album created");
     const albumName = await getAlbumName();
     albumObj.name = albumName;
     const { success, data, error } = await handleCreateAlbum(albumObj);
@@ -421,8 +357,6 @@ header.addEventListener("click", async (event) => {
 
   if (albumToCircleButton) {
     const circleId = event.target.closest("span").getAttribute("circleId");
-    console.log(circleId);
-    console.log(event.target.closest("#leftButton"));
     const { success, data } = await getCircle(circleId);
     const backSpan = document.querySelector(".backSpan");
     backSpan.removeAttribute("circleId");
@@ -560,67 +494,11 @@ async function handleLocalAuth() {
 
 pageContent.addEventListener("click", async (event) => {
   const localAuthButton = event.target.closest("#localAuth");
-  const emailNextButton = event.target.closest("#emailNext");
-  const passwordNextButton = event.target.closest("#passwordNext");
-  const birthdayNextButton = event.target.closest("#birthdayNext");
-  const nameNextButton = event.target.closest("#nameNext");
-  const usernameNextButton = event.target.closest("#usernameNext");
-  const profilePictureNextButton = event.target.closest("#profilePictureNext");
   const logOut = event.target.closest("#logOut");
   const removeFriend = event.target.closest(".removeFriendIcon");
 
   if (localAuthButton) {
     handleLocalAuth();
-  }
-
-  if (emailNextButton) {
-    const emailInput = document.querySelector("#emailInput");
-    const confirmEmailInput = document.querySelector("#confirmEmailInput");
-    const validEmailInput = await isEmailValid(emailInput.value);
-    const validConfirmEmailInput = await isEmailValid(confirmEmailInput.value);
-    if (!validEmailInput.success || !validConfirmEmailInput.success) {
-      alert(validEmailInput.error);
-      return;
-    }
-    signUpData.email = emailInput.value;
-    signUpData.confirmEmail = confirmEmailInput.value;
-    if (signUpData.email === signUpData.confirmEmail) {
-      await displaySignUpPasswordPage();
-    }
-  }
-
-  if (passwordNextButton) {
-    const passwordInput = document.querySelector("#passwordInput");
-    let confirmPasswordInput = document.querySelector("#confirmPasswordInput");
-    const validPassword = isPasswordValid(passwordInput.value);
-    const validConfirmPassword = isPasswordValid(confirmPasswordInput.value);
-    if (!validPassword.success || !validConfirmPassword.success) {
-      alert(validPassword.error);
-      return;
-    }
-    signUpData.password = passwordInput.value;
-    signUpData.confirmPassword = confirmPasswordInput.value;
-    if (signUpData.password === signUpData.confirmPassword) {
-      await displaySignUpBirthdayPage();
-    }
-  }
-
-  if (birthdayNextButton) {
-    const birthdayInput = document.querySelector("#birthdayInput");
-    console.log(birthdayInput.value);
-    await displaySignUpNamePage();
-  }
-
-  if (nameNextButton) {
-    await displaySignUpUsernamePage();
-  }
-
-  if (usernameNextButton) {
-    await displaySignUpProfilePicturePage();
-  }
-
-  if (profilePictureNextButton) {
-    await displayProfileConfirmation();
   }
 
   if (removeFriend) {
@@ -648,15 +526,10 @@ async function getAlbumName() {
 
   if (albumNameInput) {
     const albumName = albumNameInput.value;
-    console.log("album name:", albumName);
     return albumName;
   } else {
     return null;
   }
-}
-
-async function revertPageNameText() {
-  pageName.classList.remove("text-light-mode-accent");
 }
 
 async function cleanUpSectionEventListener() {
@@ -671,13 +544,11 @@ async function sectionUploadClick(event) {
   const fileInput = document.querySelector("#fileUpload");
   event.preventDefault();
   event.stopImmediatePropagation();
-  console.log(fileInput);
   await fileInput.click();
 }
 
 sectionDrag = async (event) => {
   event.preventDefault();
-  console.log("File(s) in drop zone");
 };
 
 sectionDrop = async (event) => {
@@ -692,8 +563,6 @@ async function dropHandler(event) {
     const file = await uploadFile(files[i]);
     albumPhotos.push(file);
   }
-  console.log("Files uploaded:", albumPhotos);
-  console.log(files.length);
   if (files.length > 0) {
     await displayPhotoUploadPreview(albumPhotos);
     await cleanUpSectionEventListener();
@@ -726,20 +595,15 @@ async function showCreateOrAddToCircle(circleRender) {
     const circleDiv = event.target.closest("div.circle");
     if (circleDiv) {
       if (circleDiv.hasAttribute("id")) {
-        console.log("clicked", circleDiv.id);
         //MODIFY THIS TO SELECT CIRCLE TO BE USED FOR POST CONFIRMATION & POST
 
         albumObj.isCircle = true;
         albumObj.id = circleDiv.id;
 
-        console.log("Selected circle object:", albumObj);
-
         let { success, data, error } = await getCircle(circleDiv.id);
         if (success && data) {
-          console.log(data);
           albumObj.circleSrc = data.circle.picture;
           albumObj.circleName = data.circle.name;
-          console.log(albumObj);
         }
         await displayAlbumConfirmation();
       }
@@ -803,11 +667,11 @@ const displayCircleEditMode = (circleId) => {
     <svg width="36" height="36" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M22 5.76359C22.0008 5.61883 21.9731 5.47533 21.9183 5.34132C21.8636 5.20731 21.7829 5.08542 21.681 4.98265L17.017 0.318995C16.9142 0.217053 16.7923 0.136401 16.6583 0.0816639C16.5243 0.026927 16.3808 -0.000818536 16.236 1.83843e-05C16.0912 -0.000818536 15.9477 0.026927 15.8137 0.0816639C15.6797 0.136401 15.5578 0.217053 15.455 0.318995L12.342 3.43176L0.319018 15.4539C0.217068 15.5566 0.136411 15.6785 0.0816699 15.8125C0.0269289 15.9466 -0.000818595 16.09 1.83857e-05 16.2348V20.8985C1.83857e-05 21.1902 0.115911 21.4699 0.3222 21.6762C0.52849 21.8825 0.808279 21.9984 1.10002 21.9984H5.76401C5.91793 22.0067 6.07189 21.9827 6.21591 21.9277C6.35993 21.8728 6.49079 21.7882 6.60001 21.6794L18.557 9.6573L21.681 6.59953C21.7814 6.49292 21.8632 6.37023 21.923 6.23655C21.9336 6.14888 21.9336 6.06025 21.923 5.97257C21.9281 5.92137 21.9281 5.86978 21.923 5.81858L22 5.76359ZM5.31301 19.7985H2.20001V16.6858L13.123 5.76359L16.236 8.87636L5.31301 19.7985ZM17.787 7.32547L14.674 4.2127L16.236 2.66182L19.338 5.76359L17.787 7.32547Z" fill="white"/>
     </svg>`;
-  overlayEditIcon.className = "absolute top-[70px] z-40";
-  circleImage.parentNode.append(overlayEditIcon);
+  overlayEditIcon.className = "absolute top-[70px] left-[70px] z-40";
+  editOverlay.append(overlayEditIcon);
 
   circleImage.parentNode.append(hiddenImageInput);
-  circleImage.addEventListener("click", async function (event) {
+  editOverlay.addEventListener("click", async function (event) {
     event.preventDefault();
     await hiddenImageInput.click();
   });

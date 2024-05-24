@@ -53,7 +53,6 @@ async function handleSelectFile() {
 }
 
 async function uploadFile(file) {
-  // console.log(file);
   const formData = new FormData();
   formData.append("file", file);
   try {
@@ -90,7 +89,6 @@ async function localAuth() {
   passwordInput.value = "";
 
   const jsonResponse = await response.json();
-  console.log(jsonResponse);
 
   if (!response.ok) {
     return { success: false, error: "Error with local auth" };
@@ -103,7 +101,6 @@ async function getSessionFromBackend() {
   try {
     const response = await fetch("/auth/getSession");
     const jsonResponse = await response.json();
-    console.log(jsonResponse);
     return jsonResponse.username;
   } catch (error) {}
 }
@@ -112,8 +109,6 @@ async function getCircle(circleId) {
   try {
     const response = await fetch(`/circle/${circleId}`);
     const responseJson = await response.json();
-
-    console.log(responseJson);
     return responseJson;
   } catch (err) {}
 }
@@ -122,8 +117,6 @@ async function getAlbum(albumId) {
   try {
     const response = await fetch(`/album/${albumId}`);
     const responseJson = await response.json();
-
-    console.log(responseJson);
     return responseJson;
   } catch (err) {
     console.error("Error fetching album:", err);
@@ -136,7 +129,6 @@ async function handleCreateAlbum(albumObj) {
     if (!albumObj.name) {
       return { success: true, data: null, error: "Missing album name" };
     }
-    console.log(albumObj);
     let response = await fetch("/album/create", {
       method: "POST",
       headers: {
@@ -163,7 +155,6 @@ async function likeAlbum(albumId) {
     });
 
     const jsonResponse = await response.json();
-    console.log(jsonResponse);
     return jsonResponse
   } catch (err) {
 
@@ -176,7 +167,6 @@ async function updateAlbum(albumId, albumObj) {
       return { success: false, data: null, error: "No new photos" };
     }
 
-    console.log("albumobj:", albumObj);
     let response = await fetch(`/album/${albumId}/update`, {
       method: "POST",
       headers: {
@@ -342,13 +332,11 @@ async function getSearchResult(input) {
       const response = await fetch(`/user/searchAll`);
 
       const jsonResponse = await response.json();
-      console.log(jsonResponse);
       return jsonResponse;
     }
     const response = await fetch(`/user/search/${input.trim()}/`);
 
     const jsonResponse = await response.json();
-    console.log(jsonResponse);
     return jsonResponse;
   } catch (err) {
     return { success: true, data: null, error: err };
@@ -402,7 +390,6 @@ async function getComments(albumId) {
       body: JSON.stringify({ albumId }),
     });
     const jsonResponse = await response.json();
-    console.log(jsonResponse);
     return jsonResponse;
   } catch (err) {}
 }
@@ -425,7 +412,6 @@ async function newComment(message, albumId, commentId = "") {
       body: JSON.stringify(commentObj),
     });
     const jsonResponse = await response.json();
-    console.log(jsonResponse);
     return jsonResponse;
   } catch (err) {
     return { success: true, data: null, error: err };
@@ -471,7 +457,6 @@ async function deleteComment(commentId) {
       body: JSON.stringify({commentId})
     })
     const jsonResponse = await response.json();
-    console.log(jsonResponse)
     return jsonResponse
   } catch (err) {
 
@@ -489,7 +474,6 @@ async function likeComment(commentId) {
     });
 
     const jsonResponse = await response.json();
-    console.log(jsonResponse);
     return jsonResponse
   } catch (err) {
 
@@ -517,7 +501,6 @@ async function updateCircle (circleObj) {
     });
 
     const jsonResponse = await response.json();
-    console.log(jsonResponse);
     return jsonResponse
   } catch (err) {
 
@@ -528,7 +511,6 @@ async function getAlbumFeed () {
   try {
     const response = await fetch(`/user/feed`);
     const jsonResponse = await response.json();
-    console.log(jsonResponse);
     return jsonResponse
   } catch (err) {
 

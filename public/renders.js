@@ -58,273 +58,6 @@ function displayLoginPage() {
       </div>
     </div>
   </div>`;
-
-  const loginPage = document.querySelector("#loginPage");
-  loginPage.addEventListener("click", async (event) => {
-    const signUp = event.target.closest("#signUp");
-
-    if (signUp) {
-      await displaySignUpPage();
-      await displaySignUpEmailPage();
-    }
-  });
-}
-
-async function displaySignUpPage() {
-  header.classList.remove("hidden");
-  leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button"/>`;
-  pageContent.innerHTML = `
-  <div id="signUpPage" class="flex flex-col items-center rounded-lg w-full h-full z-10">
-    <div id="signUpTitleSection" class="w-full mb-4 mt-6">
-        <h1 id= "signUpTitle" class="font-medium text-onboarding"></h1>
-        <p id="signUpSubtitle" class="text-body leading-body text-onboarding-grey"></p>
-    </div>
-    <div id="signUpAdditionalContent"></div>
-    <div id="signUpPageContent" class="mt-8 flex-1">
-        <form class="flex flex-col flex-grow">
-            <div id="input1" class="mb-6">
-                
-            </div>
-            <div id="input2" class="mt-4">
-               
-            </div>
-            <div class="flex-grow"></div>
-        </form>
-    </div>
-    <button id="primaryButton" class="w-380 h-45 bg-light-mode-accent text-white rounded-input-box fixed bottom-8">Next</button>
-    <button id="secondaryButton" class="w-380 h-45 bg-white text-dark-grey border-2 border-dark-grey rounded-input-box fixed bottom-8 hidden"></button>
-  </div>`;
-}
-
-async function displaySignUpEmailPage() {
-  header.classList.remove("hidden");
-  leftHeaderButton.id = "emailBack";
-  const signUpTitle = document.querySelector("#signUpTitle");
-  const signUpSubtitle = document.querySelector("#signUpSubtitle");
-  const signUpPageContent = document.querySelector("#signUpPageContent");
-  const signUpPageAdditionalContent = document.querySelector("#signUpAdditionalContent");
-
-  let primaryButton = document.querySelector("#primaryButton");
-  if (!primaryButton) {
-    primaryButton = document.querySelector("#emailNext");
-  }
-
-  signUpTitle.textContent = "Enter your Email";
-  signUpSubtitle.textContent =
-    "Enter the email where you can be contacted. No one will see this on your profile.";
-  signUpPageContent.innerHTML = `
-  <form class="flex flex-col flex-grow">
-    <div class="mb-6">
-        <label for="email" class="font-medium text-h2 mb-2">Email</label>
-        <input id="emailInput" value="${signUpData.email}" type="email" class="w-380 py-2 border-dark-grey border-2 rounded-input-box text-14 leading-secondary mt-2" placeholder="Email"/>
-    </div>
-    <div class="mt-4">
-        <label for="emailConfirmation" class="font-medium text-h2 mb-4">Confirm Email</label>
-        <input id="confirmEmailInput" value="${signUpData.confirmEmail}" type="email" class="w-380 py-2 border-dark-grey border-2 rounded-input-box text-14 leading-secondary mt-2" placeholder="Email"/>
-    </div>
-    <div class="flex-grow"></div>
-  </form>`;
-
-  signUpPageAdditionalContent.textContent = "";
-
-  primaryButton.id = "emailNext";
-}
-
-async function displaySignUpPasswordPage() {
-  leftHeaderButton.id = "passwordBack";
-  const signUpTitle = document.querySelector("#signUpTitle");
-  const signUpSubtitle = document.querySelector("#signUpSubtitle");
-  const signUpPageContent = document.querySelector("#signUpPageContent");
-  const signUpPageAdditionalContent = document.querySelector(
-    "#signUpAdditionalContent"
-  );
-  let primaryButton = document.querySelector("#emailNext");
-  if (!primaryButton) {
-    primaryButton = document.querySelector("#passwordNext");
-  }
-
-  signUpTitle.textContent = "Create a password";
-  signUpSubtitle.textContent = "Your new password must contain:";
-
-  signUpPageContent.innerHTML = `
-  <form class="flex flex-col flex-grow">
-    <div class="mb-6">
-        <label for="password" class="font-medium text-h2 mb-2">Password</label>
-        <input id="passwordInput" value="${signUpData.password}" type="password" class="w-380 py-2 border-dark-grey border-2 rounded-input-box text-14 leading-secondary mt-2" placeholder="Password"/>
-    </div>
-    <div class="mt-4">
-        <label for="passwordConfirmation" class="font-medium text-h2 mb-4">Confirm Password</label>
-        <input id="confirmPasswordInput" value="${signUpData.confirmPassword}"  type="password" class="w-380 py-2 border-dark-grey border-2 rounded-input-box text-14 leading-secondary mt-2" placeholder="Password"/>
-    </div>
-    <div class="flex-grow"></div>
-  </form>`;
-
-  const passwordRequirements = document.createElement("ul");
-  passwordRequirements.className =
-    "grid grid-cols-2 gap-1 text-secondary list-disc custom-list text-onboarding-grey";
-  passwordRequirements.innerHTML = `
-  <li>minimum 8 characters</li>
-  <li>1 lowercase character</li>
-  <li>1 uppercase character</li>
-  <li>1 number or special character</li>`;
-
-  signUpPageAdditionalContent.appendChild(passwordRequirements);
-
-  primaryButton.id = "passwordNext";
-}
-
-async function displaySignUpBirthdayPage() {
-  const signUpTitle = document.querySelector("#signUpTitle");
-  const signUpSubtitle = document.querySelector("#signUpSubtitle");
-  const signUpPageContent = document.querySelector("#signUpPageContent");
-  const signUpPageAdditionalContent = document.querySelector("#signUpAdditionalContent");
-  let primaryButton = document.querySelector("#passwordNext");
-  if (!primaryButton) {
-    primaryButton = document.querySelector("#birthdayNext");
-  }
-
-  leftHeaderButton.id = "birthdayBack";
-
-  signUpTitle.textContent = "Tell us your birthday!";
-  signUpSubtitle.textContent =
-    "Use your own birthday. No one will see this on your profile.";
-
-  signUpPageContent.innerHTML = `
-  <form class="flex flex-col flex-grow">
-    <div class="mb-6">
-        <label for="date" class="font-medium text-h2 mb-2">Birthday</label>
-        <input id="birthdayInput" type="date" class="w-380 py-2 border-dark-grey border-2 rounded-input-box text-14 leading-secondary mt-2" placeholder="April 4 2024"/>
-    </div>
-    <div class="flex-grow"></div>
-  </form>`;
-
-  signUpPageAdditionalContent.textContent = "";
-
-  primaryButton.id = "birthdayNext";
-}
-
-async function displaySignUpNamePage() {
-  const signUpTitle = document.querySelector("#signUpTitle");
-  const signUpSubtitle = document.querySelector("#signUpSubtitle");
-  const signUpPageContent = document.querySelector("#signUpPageContent");
-  const signUpPageAdditionalContent = document.querySelector(
-    "#signUpAdditionalContent"
-  );
-  let primaryButton = document.querySelector("#birthdayNext");
-  if (!primaryButton) {
-    primaryButton = document.querySelector("#nameNext");
-  }
-
-  leftHeaderButton.id = "nameBack";
-
-  signUpTitle.textContent = "What’s your name?";
-  signUpSubtitle.textContent = "Add your name so friends can find you easier.";
-
-  signUpPageContent.innerHTML = `
-  <form class="flex flex-col flex-grow">
-      <div class="mb-6">
-          <label for="text" class="font-medium text-h2 mb-2">First Name</label>
-          <input type="text" class="w-380 py-2 border-dark-grey border-2 rounded-input-box text-14 leading-secondary mt-2" placeholder="First Name"/>
-      </div>
-      <div class="mb-6">
-          <label for="text" class="font-medium text-h2 mb-2">Last Name</label>
-          <input type="text" class="w-380 py-2 border-dark-grey border-2 rounded-input-box text-14 leading-secondary mt-2" placeholder="Last Name"/>
-      </div>
-      <div class="flex-grow"></div>
-  </form>`;
-
-  signUpPageAdditionalContent.textContent = "";
-
-  primaryButton.id = "nameNext";
-}
-
-async function displaySignUpUsernamePage() {
-  const signUpTitle = document.querySelector("#signUpTitle");
-  const signUpSubtitle = document.querySelector("#signUpSubtitle");
-  const signUpPageContent = document.querySelector("#signUpPageContent");
-  const signUpPageAdditionalContent = document.querySelector(
-    "#signUpAdditionalContent"
-  );
-  let primaryButton = document.querySelector("#nameNext");
-  if (!primaryButton) {
-    primaryButton = document.querySelector("#usernameNext");
-  }
-
-  leftHeaderButton.id = "usernameBack";
-
-  signUpTitle.textContent = "Create a username";
-  signUpSubtitle.textContent =
-    "Add a username. You can change this at any time.";
-
-  signUpPageContent.innerHTML = `
-  <form class="flex flex-col flex-grow">
-      <div class="mb-6">
-          <label for="text" class="font-medium text-h2 mb-2">Username</label>
-          <input type="text" class="w-380 py-2 border-dark-grey border-2 rounded-input-box text-14 leading-secondary mt-2" placeholder="Username"/>
-      </div>
-      <div class="flex-grow"></div>
-  </form>`;
-
-  signUpPageAdditionalContent.textContent = "";
-
-  primaryButton.id = "usernameNext";
-}
-
-async function displaySignUpProfilePicturePage() {
-  const signUpTitle = document.querySelector("#signUpTitle");
-  const signUpSubtitle = document.querySelector("#signUpSubtitle");
-  const signUpPageContent = document.querySelector("#signUpPageContent");
-  const signUpPageAdditionalContent = document.querySelector("#signUpAdditionalContent");
-  let primaryButton = document.querySelector("#usernameNext");
-  if (!primaryButton) {
-    primaryButton = document.querySelector("#addProfilePicture");
-  }
-
-  const secondaryButton = document.querySelector("#secondaryButton");
-
-  leftHeaderButton.id = "profilePictureBack";
-
-  signUpTitle.textContent = "Add a profile picture";
-  signUpSubtitle.textContent =
-    "Add a profile picture so your friends know it’s you. Everyone will be able to see your picture.";
-
-  signUpPageContent.innerHTML = `<img src=/placeholder_image.svg alt="placeholder image"/>`;
-
-  signUpPageAdditionalContent.textContent = "";
-
-  primaryButton.id = "addProfilePicture";
-  primaryButton.textContent = "Add Picture";
-  primaryButton.classList.remove("bottom-8");
-  primaryButton.classList.add("bottom-24");
-  secondaryButton.classList.remove("hidden");
-  secondaryButton.id = "profilePictureNext";
-  secondaryButton.textContent = "Skip";
-}
-
-async function displayProfileConfirmation() {
-  const signUpTitle = document.querySelector("#signUpTitle");
-  const signUpSubtitle = document.querySelector("#signUpSubtitle");
-  const signUpPageContent = document.querySelector("#signUpPageContent");
-  const signUpPageAdditionalContent = document.querySelector("#signUpAdditionalContent");
-  let primaryButton = document.querySelector("#addProfilePicture");
-  const secondaryButton = document.querySelector("#profilePictureNext");
-  if (!primaryButton) {
-    primaryButton = document.querySelector("#addProfilePicture");
-  }
-
-  leftHeaderButton.id = "profileConfirmationBack";
-
-  signUpTitle.textContent = "Profile picture added";
-  signUpSubtitle.textContent = "";
-
-  signUpPageContent.innerHTML = `<img src=/placeholder_image.svg alt="placeholder image"/>`;
-
-  signUpPageAdditionalContent.textContent = "";
-
-  primaryButton.id = "doneButton";
-  primaryButton.textContent = "Done";
-  secondaryButton.id = "changeProfilePicture";
-  secondaryButton.textContent = "Change Picture";
 }
 
 async function displayCreateCircle() {
@@ -398,7 +131,6 @@ async function displayCreateCircle() {
   });
 
   addPictureButton.addEventListener("click", async function (event) {
-    console.log("clicked add picture button");
     event.preventDefault();
     await fileInput.click();
   });
@@ -514,11 +246,8 @@ function saveCheckedFriends() {
 async function displayCreateCirclePreview() {
   nav.classList.add("hidden");
   leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="circlePreviewBackButton"/>`;
-
   pageName.textContent = "New Circle";
-
   const fromCreateAlbum = rightButtonSpan.getAttribute("fromCreateAlbum");
-  console.log(fromCreateAlbum);
   const next = document.querySelector("#nextButton");
   next.src = "/lightmode/create_button.svg";
   if (fromCreateAlbum === "true") {
@@ -644,7 +373,6 @@ async function displayExplore(userData) {
   await displayNavBar();
 
   async function displayFriendAlbums(data) {
-    console.log("HERE", data)
     const albumList = await Promise.all(data.map(async (obj) => {
       let albumName = document.createElement("p");
       albumName.className = "text-white text-shadow shadow-black";
@@ -833,7 +561,6 @@ async function displaySearch() {
 
   async function initializeSearch() {
     const initialSearchResult = await getSearchResult(searchBox.value);
-    console.log(initialSearchResult)
     storedSearchResults = initialSearchResult.data;
     
     updateSuggestedFriends(storedSearchResults);
@@ -875,24 +602,19 @@ async function displaySearch() {
     switch (method) {
       case "Add Friend":
         response = await sendFriendRequest(username, currentLocalUser);
-        console.log(response);
         await displayPopup("friend request sent");
         await displaySearch();
         break;
       case "Remove Friend":
-        //MAKE USER CONFIRM IF THEY WANT TO REMOVE THIS FRIEND FIRST
         response = await unfriend(username, currentLocalUser);
-        console.log(response);
         await displaySearch();
         break;
       case "Remove Request":
         response = await removeFriendRequest(username, currentLocalUser);
-        console.log(response);
         await displaySearch();
         break;
       case "Accept Request":
         response = await acceptFriendRequest(username, currentLocalUser);
-        console.log(response);
         await displaySearch();
         break;
       default:
@@ -1121,7 +843,6 @@ async function displayNavBar() {
       rightHeaderButton.innerHTML = "";
       newCircleNameInput = "";
       pageName.classList.remove("text-light-mode-accent");
-      console.log(await getUser(currentLocalUser));
       const { success, data } = await getUser(currentLocalUser);
       if (success && data) {
         pageName.setAttribute("page", "profile");
@@ -1153,7 +874,6 @@ async function displayNewModal() {
 
 async function displayProfile(userData) {
   nav.classList.remove("hidden");
-  console.log("USERDATA:", userData)
   const user = userData.username;
   const circleRender = await displayListOfCircles(userData, user);
   const albumRender = await displayListOfAlbums(userData, user, true);
@@ -1285,7 +1005,6 @@ async function displayProfile(userData) {
 
     if (isFriend) {
       addButton.addEventListener("mouseenter", () => {
-        console.log("Button method:", addButton.getAttribute("method"));
         addButton.textContent = "Unfriend";
         addButton.classList.remove("bg-light-mode-accent");
         addButton.classList.add("bg-dark-grey");
@@ -1315,7 +1034,6 @@ async function displayProfile(userData) {
 
     if (like) {
       const albumId = event.target.closest("div.album").getAttribute("id");
-      console.log(albumId);
       if (like.classList.contains("liked")) {
         like.classList.remove("liked");
         like.querySelector("svg path").setAttribute("fill", "none");
@@ -1409,7 +1127,6 @@ async function displayProfile(userData) {
       switch (method) {
         case "Add Friend": {
           response = await sendFriendRequest(username, currentLocalUser);
-          console.log(response);
           await displayPopup("friend request sent");
           let { success, data } = await getUser(username);
           if (success && data) {
@@ -1418,9 +1135,7 @@ async function displayProfile(userData) {
           break;
         }
         case "Remove Friend": {
-          //MAKE USER CONFIRM IF THEY WANT TO REMOVE THIS FRIEND FIRST
           response = await unfriend(username, currentLocalUser);
-          console.log(response);
           let { success, data } = await getUser(username);
           if (success && data) {
             await displayProfile(data);
@@ -1429,7 +1144,6 @@ async function displayProfile(userData) {
         }
         case "Remove Request": {
           response = await removeFriendRequest(username, currentLocalUser);
-          console.log(response);
           let { success, data } = await getUser(username);
           if (success && data) {
             await displayProfile(data);
@@ -1438,7 +1152,6 @@ async function displayProfile(userData) {
         }
         case "Accept Request": {
           response = await acceptFriendRequest(username, currentLocalUser);
-          console.log(response);
           let { success, data } = await getUser(username);
           if (success && data) {
             await displayProfile(data);
@@ -1591,7 +1304,6 @@ async function displayListOfCirclesHorizontally(data) {
 }
 
 async function displayPhotoUpload(albumData) {
-  console.log(albumData)
   if (albumData === undefined) {
     pageName.textContent = "New Album";
     leftHeaderButton.innerHTML = `<img src="/lightmode/close_icon.svg" alt="Close Button" id="closeButton">`;
@@ -1646,8 +1358,6 @@ async function displayPhotoUpload(albumData) {
         const file = await uploadFile(files[i]);
         albumPhotos.push(file);
       }
-      console.log("Files uploaded:", albumPhotos);
-      console.log(files.length);
       if (files.length > 0) {
         await displayPhotoUploadPreview(albumPhotos);
         nav.classList.add("hidden");
@@ -1675,7 +1385,6 @@ function displayPhotoUploadPreview(albumPhotos) {
     rightButtonSpan.id = "albumNextButton";
     rightHeaderButton.className = "text-lg";
   }
-  console.log(albumId)
 
   if (albumId) {
     pageName.textContent = "Add Photos";
@@ -1689,8 +1398,6 @@ function displayPhotoUploadPreview(albumPhotos) {
   carouselDiv.id = "carousel";
   carouselDiv.className = "keen-slider overflow-hidden";
 
-
-  console.log(albumPhotos)
   const mappedPhotos = albumPhotos.map((obj) => {
     return {
       photoSrc: obj.data,
@@ -1822,8 +1529,7 @@ function displayPhotoUploadPreview(albumPhotos) {
         const file = await uploadFile(files[i]);
         albumPhotos.push(file);
       }
-      console.log("Files uploaded:", albumPhotos);
-      console.log(files.length);
+      
       if (files.length > 0) {
         await displayPhotoUploadPreview(albumPhotos);
         await cleanUpSectionEventListener();
@@ -2118,7 +1824,6 @@ async function displayCircle(circleData) {
 
     if (like) {
       const albumId = event.target.closest("div.album").getAttribute("id");
-      console.log(albumId);
       if (like.classList.contains("liked")) {
         like.classList.remove("liked");
         like.querySelector("svg path").setAttribute("fill", "none");
@@ -2143,7 +1848,6 @@ async function displayCircle(circleData) {
       if (albumDiv.hasAttribute("id")) {
         let { success, data, error } = await getAlbum(albumDiv.id);
         if (success && data) {
-          console.log(data);
           await displayAlbum(data);
         }
       }
@@ -2162,7 +1866,6 @@ async function displayCircle(circleData) {
       const portrait = event.target.closest("img")
       if (portrait) {
         if (portrait.id === "inviteMoreUsers") {
-          console.log("CLICKED")
           await displayInviteFriends(true, circleData.circle.id)
         }
       }
@@ -2301,8 +2004,6 @@ async function displayAlbum(albumData) {
     memberList.push(`<img id="user${i + 1}" src="${albumData.circle.UserCircle[i].user.profilePicture}" class="grid-item rounded-full object-cover">`);
   }
 
-  console.log(memberList);
-  console.log("data:", albumData.likes);
   const photoList = albumData.photos.map((obj) => {
     return `
     <div id="photo" class="w-full h-min relative photo" albumId="${obj.id}">
@@ -2379,8 +2080,6 @@ async function displayAlbum(albumData) {
     user4.classList.add("h-5", "w-5", "col-start-1", "row-start-2", "justify-self-end");
   }
 
-  console.log(albumData)
-
   const albumPhotos = document.querySelector("#albumPhotos");
   albumPhotos.addEventListener("click", async(event) => {
     const photo = event.target.closest("#photo img");
@@ -2389,7 +2088,6 @@ async function displayAlbum(albumData) {
     const like = event.target.closest(".like");
     
     if (photo) {
-      console.log(photo.src);
       await displayPhoto(photo.src);
     }
 
@@ -2410,7 +2108,6 @@ async function displayAlbum(albumData) {
 
     if (like) {
       const albumId = event.target.closest("div.like").getAttribute("albumId");
-      console.log(albumId);
       if (like.classList.contains("liked")) {
         like.classList.remove("liked");
         like.querySelector("svg path").setAttribute("fill", "none");
@@ -2472,7 +2169,6 @@ async function displayFriends(username) {
   async function initializeSearch() {
     const friends = await getFriends(username);
     friendsList = friends;
-    console.log(friendsList)
                   
     updateSuggestedFriends(friends);
   }
@@ -2650,7 +2346,6 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
   }
 
   const { success, data } = await getComments(albumId);
-
   //return early do something on error
   if (!(success && data)) {
     console.log("could not fetch comment data");
@@ -2816,9 +2511,6 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
   const newCommentInput = document.querySelector("#commentInput");
   newCommentInput.addEventListener("keydown", async function (event) {
     if (event.key === "Enter") {
-      console.log(newCommentInput.value);
-      console.log(newCommentInput);
-      console.log(albumId, commentId);
       newCommentInput.id === "replyInput"
         ? await newComment(newCommentInput.value, albumId, commentId)
         : await newComment(newCommentInput.value, albumId);
@@ -2883,10 +2575,7 @@ async function displayConfirmationPopup(activity, helperObj) {
 
     if (contextButton) {
       if (activity === "delete comment") {
-        console.log("HELPEROBJECT")
-        console.log(helperObj)
         await deleteComment(helperObj.commentId);
-        
         confirmationPopup.classList.add("hidden");
         confirmationText.textContent = "";
         confirmationPopup.removeEventListener("click", confirmEventHandler, true)
