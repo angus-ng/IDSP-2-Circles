@@ -1,3 +1,13 @@
+const socket = io();
+socket.on('connect',function(){      
+  socket.emit('join','room_one');
+  socket.emit('room_message',{hello:'hello'});
+});
+
+socket.on('room_message',function(data){
+  console.log(data);
+})   
+
 async function handleCreateCircle() {
   try {
     const circlePhoto = document.querySelector("#circleImage");

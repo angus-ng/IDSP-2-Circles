@@ -3,8 +3,7 @@ import IController from "../../../interfaces/controller.interface";
 import { IAuthenticationService } from "../services/IAuthentication.service";
 import { kindeClient, sessionManager } from "../config/kinde";
 import { User as IUser } from "@prisma/client";
-import { wss } from "../../../app";
-import { initializeWs } from "../../../helper/websocket";
+import { initializeSocket } from "../../../helper/SocketIO";
 
 declare global {
   namespace Express {
@@ -56,7 +55,7 @@ class AuthenticationController implements IController {
     }
     //@ts-ignore
     req.user = user
-    initializeWs()
+    initializeSocket()
 
     return res.redirect("/");
   }
