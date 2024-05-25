@@ -72,6 +72,8 @@ model Album {
   comments  Comment[]
   circle    Circle    @relation(fields: [circleId], references: [id], onDelete: Cascade)
   circleId  String
+  lat       String?
+  long      String?
 }
 
 model Photo {
@@ -81,6 +83,8 @@ model Photo {
   albumId String
   poster  User   @relation(fields: [userId], references: [username])
   userId  String
+  lat     String?
+  long    String?
 }
 
 model Comment {

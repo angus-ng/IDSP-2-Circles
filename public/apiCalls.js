@@ -2,7 +2,6 @@ async function handleCreateCircle() {
   try {
     const circlePhoto = document.querySelector("#circleImage");
     const circleName = document.querySelector("#circleName").value;
-
     if (!circleName) {
       return { success: true, data: null, error: "Missing circle name" };
     }
@@ -48,7 +47,6 @@ async function handleSelectFile() {
   if (!file) {
     return;
   }
-
   return await uploadFile(file);
 }
 
@@ -126,6 +124,7 @@ async function getAlbum(albumId) {
 
 async function handleCreateAlbum(albumObj) {
   try {
+    console.log(albumObj);
     if (!albumObj.name) {
       return { success: true, data: null, error: "Missing album name" };
     }
@@ -396,7 +395,7 @@ async function getComments(albumId) {
 
 async function newComment(message, albumId, commentId = "") {
   try {
-    if (!message || !albumId) {
+    if (!message.trim() || !albumId) {
       return;
     }
     const commentObj = {
@@ -432,7 +431,7 @@ async function isEmailValid(email) {
       return { error: "incorrect email format" };
     }
   } catch (err) {
-    console.log(err)
+    console.log(err);
     return { error: "Email already in database" };
   }
 }
@@ -446,7 +445,6 @@ function isPasswordValid(password) {
   return { success: passwordRegex.test(password) };
 }
 
-
 async function deleteComment(commentId) {
   try {
     const response = await fetch(`/album/comment/delete`, {
@@ -454,8 +452,8 @@ async function deleteComment(commentId) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({commentId})
-    })
+      body: JSON.stringify({ commentId }),
+    });
     const jsonResponse = await response.json();
     return jsonResponse
   } catch (err) {
@@ -470,7 +468,7 @@ async function likeComment(commentId) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({commentId})
+      body: JSON.stringify({ commentId }),
     });
 
     const jsonResponse = await response.json();
@@ -500,6 +498,42 @@ async function updateCircle (circleObj) {
       body: JSON.stringify(circleObj)
     });
 
+    const jsonResponse = await response.json();
+    return jsonResponse
+  } catch (err) {
+
+  }
+}
+
+async function getAlbumFeed () {
+  try {
+    const response = await fetch(`/user/feed`);
+    const jsonResponse = await response.json();
+    return jsonResponse
+  } catch (err) {
+
+  }
+}
+async function updateProfilePicture (src) {
+  try {
+    const response = await fetch(`/user/updateProfilePicture`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({src: src})
+    });
+
+    const jsonResponse = await response.json();
+    return jsonResponse
+  } catch (err) {
+
+  }
+}
+
+async function getAlbumFeed () {
+  try {
+    const response = await fetch(`/user/feed`);
     const jsonResponse = await response.json();
     return jsonResponse
   } catch (err) {

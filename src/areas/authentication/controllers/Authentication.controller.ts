@@ -5,6 +5,7 @@ import passport from "passport";
 import path from "node:path";
 import { User } from "@prisma/client";
 import { kindeClient, sessionManager } from "../config/kinde";
+import { randomUUID } from "node:crypto";
 
 
 class AuthenticationController implements IController {
@@ -48,10 +49,11 @@ class AuthenticationController implements IController {
       //@ts-ignore
       user = await this._service.createUser({
         id: kindeUser.id,
-        username: kindeUser.id,
+        username: kindeUser.given_name + kindeUser.family_name + Math.floor(Math.random()*100000),
         firstName: kindeUser.family_name,
         lastName: kindeUser.given_name,
-        profilePicture: kindeUser.picture || ""
+        profilePicture: kindeUser.picture || "/placeholder_image.svg",
+        displayName: kindeUser.given_name + kindeUser.family_name
       })
     }
     //@ts-ignore
@@ -69,8 +71,9 @@ class AuthenticationController implements IController {
       if (req.user) {
         res.json({success: true, username: req.user?.username})
       } else {
-        const user = await kindeClient.getUser(sessionManager(req, res))
-        res.json({success: true, username: user.id})
+        const kindeUser = await kindeClient.getUser(sessionManager(req, res))
+        const user = await this._service.getUserById(kindeUser.id)
+        res.json({success: true, username: user?.username})
       }
       // make this return the user family name igven name picture email id whatvere u want or make user make a new name.
     } catch (error) {

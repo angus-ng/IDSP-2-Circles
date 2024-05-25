@@ -462,6 +462,7 @@ class UserService {
             return user.profilePicture;
         });
     }
+<<<<<<< HEAD
     getFeed(username) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a, e_1, _b, _c;
@@ -524,5 +525,7 @@ class UserService {
             }
         });
     }
+=======
+>>>>>>> 7f1ee5d461e9ec3323ab005ce3220eae94e61e11
 }
 exports.UserService = UserService;

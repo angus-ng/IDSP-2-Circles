@@ -64,7 +64,6 @@ export class AuthenticationService implements IAuthenticationService {
         data: { 
           ...user,
           id: id,
-          profilePicture: "",
         }
       })
       return User

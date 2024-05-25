@@ -139,11 +139,12 @@ async function displayCreateCircle() {
     event.preventDefault();
     const res = await handleSelectFile();
     if (res) {
-      circlePhoto.src = await res.data;
+      circlePhoto.src = await res.data.url;
     }
 
     addPictureButton.textContent = "Change Picture";
-    addPictureButton.className = "w-380 h-45 bg-white border-2 border-dark-grey text-dark-grey rounded-input-box fixed bottom-8";
+    addPictureButton.className =
+      "w-380 h-45 bg-white border-2 border-dark-grey text-dark-grey rounded-input-box fixed bottom-8";
   });
 
   privacyCheckbox.addEventListener("change", async function () {
@@ -162,10 +163,12 @@ async function displayListOfFriends(friends) {
     let username = document.createElement("h2");
     displayName.className = "font-medium text-14 leading-tertiary";
     username.className = "font-light text-14 text-dark-grey";
-    displayName.textContent = friend.displayName ? friend.displayName : friend.username;
+    displayName.textContent = friend.displayName
+      ? friend.displayName
+      : friend.username;
     username.textContent = `@${friend.username}`;
     return `
-    <div class="flex items-center my-5">
+    <div class="flex items-center my-5 user" id="${friend.username}">
     <div class="flex-none w-58">
       <img class="rounded-full w-58 h-58" src="${friend.profilePicture}" alt="${friend.username}'s profile picture"/>
     </div>
@@ -314,16 +317,18 @@ async function displayCreateCirclePreview() {
 
   const fileInput = document.querySelector("#fileUpload");
   const circlePhoto = document.querySelector("#circleImage");
-  document.querySelector("#circleImage").addEventListener("click", async function (event) {
-    event.preventDefault();
-    await fileInput.click();
-  });
+  document
+    .querySelector("#circleImage")
+    .addEventListener("click", async function (event) {
+      event.preventDefault();
+      await fileInput.click();
+    });
 
   fileInput.addEventListener("input", async function (event) {
     event.preventDefault();
     const res = await handleSelectFile();
     if (res) {
-      circlePhoto.src = await res.data;
+      circlePhoto.src = await res.data.url;
     }
   });
 
@@ -573,12 +578,20 @@ async function displaySearch() {
   await initializeSearch();
 
   searchBox.addEventListener("input", (event) => {
+    const searchTerm = searchBox.value.toLowerCase();
+    if (!searchTerm.trim()) {
+      updateSuggestedFriends(storedSearchResults);
+      return;
+    }
     const filteredResults = storedSearchResults.filter((user) => {
-      if (user.displayName){
-        return (user.username.toLowerCase().includes(searchBox.value.toLowerCase()) || user.displayName.toLowerCase().includes(searchBox.value.toLowerCase()))
+      if (user.displayName) {
+        return (
+          user.username.toLowerCase().includes(searchTerm) ||
+          user.displayName.toLowerCase().includes(searchTerm)
+        );
       }
-        return user.username.toLowerCase().includes(searchBox.value.toLowerCase())
-    })
+      return user.username.toLowerCase().includes(searchTerm);
+    });
     updateSuggestedFriends(filteredResults);
   });
 
@@ -627,7 +640,7 @@ function displayUserSearch(listOfUsers) {
   if (!listOfUsers) {
     return [];
   }
-  
+
   let newArr = listOfUsers.map((user) => {
     if (user.username === currentLocalUser) {
       return;
@@ -653,7 +666,9 @@ function displayUserSearch(listOfUsers) {
     let username = document.createElement("h2");
     displayName.className = "font-medium text-14 leading-tertiary";
     username.className = "font-light text-14 text-dark-grey";
-    displayName.textContent = user.displayName ? user.displayName : user.username;
+    displayName.textContent = user.displayName
+      ? user.displayName
+      : user.username;
     username.textContent = `@${user.username}`;
     return `<div class="flex items-center my-3 user cursor-pointer" id="${user.username}">
       <div class="flex-none w-58">
@@ -695,7 +710,8 @@ async function displayActivity() {
     const circleImg = document.createElement("img");
     circleImg.src = circleInvites[i].circle.picture;
     circleImg.alt = `${circleInvites[i].circle.name}'s picture`;
-    circleImg.className = "w-8 h-8 rounded-full object-cover border-2 border-white border-solid";
+    circleImg.className =
+      "w-8 h-8 rounded-full object-cover border-2 border-white border-solid";
     i > 0 ? circleImg.classList.add("ml-neg12") : null;
     circleInvitePreviews.push(circleImg.outerHTML);
   }
@@ -713,10 +729,14 @@ async function displayActivity() {
     }
     const friendImg = document.createElement("img");
     friendImg.src = friendRequests[i].requester.profilePicture;
-    let altText = friendRequests[i].requester.displayName ? friendRequests[i].requester.displayName : friendRequests[i].requester.username;
+    let altText = friendRequests[i].requester.displayName
+      ? friendRequests[i].requester.displayName
+      : friendRequests[i].requester.username;
     altText = altText + "'s profile picture";
     friendImg.alt = altText;
-    friendImg.className = "w-8 h-8 rounded-full object-cover border-2 border-white border-solid";i > 0 ? friendImg.classList.add("ml-neg12") : null;
+    friendImg.className =
+      "w-8 h-8 rounded-full object-cover border-2 border-white border-solid";
+    i > 0 ? friendImg.classList.add("ml-neg12") : null;
     friendRequestsPreviews.push(friendImg.outerHTML);
   }
 
@@ -728,7 +748,11 @@ async function displayActivity() {
             </div>
             <div id="circleInvites" class="flex w-full">
                 <div class="flex w-180 h-33 items-center">
-                    ${circleInvites.length ? circleInvitePreviews.join("") : noCircleInvites}
+                    ${
+                      circleInvites.length
+                        ? circleInvitePreviews.join("")
+                        : noCircleInvites
+                    }
                 </div>
                 <div class="flex w-2 h-33 items-center ml-auto">
                     <svg width="9" height="15" viewBox="0 0 9 15" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -743,7 +767,11 @@ async function displayActivity() {
             </div>
             <div id="friendRequests" class="flex w-full">
               <div class="flex w-180 h-33 items-center">
-                  ${friendRequests.length ? friendRequestsPreviews.join("") : noFriendRequests}
+                  ${
+                    friendRequests.length
+                      ? friendRequestsPreviews.join("")
+                      : noFriendRequests
+                  }
               </div>
               <div class="flex w-2 h-33 items-center ml-auto">
                   <svg width="9" height="15" viewBox="0 0 9 15" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -900,7 +928,9 @@ async function displayProfile(userData) {
 
   backSpan.setAttribute("username", `${user}`);
 
-  pageName.textContent = userData.displayName ? userData.displayName : userData.username;
+  pageName.textContent = userData.displayName
+    ? userData.displayName
+    : userData.username;
   const username = document.createElement("h2");
   username.id = "username";
   username.className = "text-base text-center";
@@ -917,6 +947,7 @@ async function displayProfile(userData) {
   pageContent.innerHTML = `
   <div id="profilePage" class="relative pt-2 pb-16 mb-4 w-full">
     ${currentLocalUser === userData.username ? `<div id="settings" class="absolute top-0 right-0 w-6 h-6 cursor-pointer"><img src="/lightmode/settings_icon.svg"></div>` : ""}
+    ${currentLocalUser === userData.username ? `<div id="settings" class="absolute top-0 right-0 w-6 h-6 cursor-pointer"><img src="/lightmode/settings_icon.svg"></div>` : ""}
     <div class="flex justify-center mb-4">
       <img id="profilePicture" src="${userData.profilePicture}" class="w-110 h-110 object-cover rounded-full"/>
       ${hiddenImageInput.outerHTML}
@@ -927,7 +958,9 @@ async function displayProfile(userData) {
     <div class="w-180 mt-6 mb-6 m-auto grid grid-cols-2 gap-4">
       <div class="gap-0 justify-center">
         <div id="circles">
-          <h2 class="text-base font-bold text-center">${userData._count.UserCircle}</h2>
+          <h2 class="text-base font-bold text-center">${
+            userData._count.UserCircle
+          }</h2>
           <h2 class="text-secondary text-center">Circles</h2>
         </div>
       </div>
@@ -1071,7 +1104,11 @@ async function displayProfile(userData) {
     }
 
     if (comment) {
-      await displayComments(albumDiv.id, userData.profilePicture, currentLocalUser);
+      await displayComments(
+        albumDiv.id,
+        userData.profilePicture,
+        currentLocalUser
+      );
       return;
     }
 
@@ -1086,7 +1123,6 @@ async function displayProfile(userData) {
           }
         }
       }
-
     }
 
     if (albumTab) {
@@ -1126,17 +1162,19 @@ async function displayProfile(userData) {
     }
   });
 
-  document.querySelector("#circleList").addEventListener("click", async function (event) {
-    const circleDiv = event.target.closest("div.circle");
-    if (circleDiv) {
-      if (circleDiv.hasAttribute("id")) {
-        let { success, data, error } = await getCircle(circleDiv.id);
-        if (success && data) {
-          await displayCircle(data, userData.username);
+  document
+    .querySelector("#circleList")
+    .addEventListener("click", async function (event) {
+      const circleDiv = event.target.closest("div.circle");
+      if (circleDiv) {
+        if (circleDiv.hasAttribute("id")) {
+          let { success, data, error } = await getCircle(circleDiv.id);
+          if (success && data) {
+            await displayCircle(data, userData.username);
+          }
         }
       }
-    }
-  });
+    });
 
   const addFriendButton = document.querySelector("#addFriendButton");
   if (addFriendButton) {
@@ -1378,6 +1416,8 @@ async function displayPhotoUpload(albumData) {
       const files = event.target.files;
       for (let i = 0; i < files.length; i++) {
         const file = await uploadFile(files[i]);
+        console.log(file)
+
         albumPhotos.push(file);
       }
       if (files.length > 0) {
@@ -1429,13 +1469,13 @@ function displayPhotoUploadPreview(albumPhotos) {
   albumObj.photos = mappedPhotos;
 
   mappedPhotos.forEach((photo, index) => {
-
     const slideDiv = document.createElement("div");
     slideDiv.className = "keen-slider__slide";
 
     const img = document.createElement("img");
     img.className = "rounded-12.75 h-image w-image object-cover";
-    img.src = photo.photoSrc;
+    console.log(photo)
+    img.src = photo.photoSrc.url;
     img.alt = `image ${index}`;
 
     slideDiv.appendChild(img);
@@ -1549,6 +1589,7 @@ function displayPhotoUploadPreview(albumPhotos) {
       const files = event.target.files;
       for (let i = 0; i < files.length; i++) {
         const file = await uploadFile(files[i]);
+        console.log(file)
         albumPhotos.push(file);
       }
       
@@ -1589,7 +1630,7 @@ async function displayAlbumConfirmation() {
 
     const img = document.createElement("img");
     img.className = "rounded-12.75 h-image w-image object-cover";
-    img.src = photo.photoSrc;
+    img.src = photo.photoSrc.url;
     img.alt = `image ${index}`;
 
     slideDiv.appendChild(img);
@@ -1705,7 +1746,7 @@ async function displayCircle(circleData) {
   const imgElement = document.querySelector("#profileBackButton");
   if (imgElement) {
     imgElement.classList.remove("hidden");
-    imgElement.id = "circleToProfileButton"
+    imgElement.id = "circleToProfileButton";
   }
   
   const backSpan = document.querySelector(".backSpan");
@@ -1737,8 +1778,12 @@ async function displayCircle(circleData) {
       leftHeaderButton.appendChild(backSpan);
   }
 
-  const circlePreviewBackButton = document.querySelector("#circlePreviewBackButton");
-  const newAlbumToCircleButton = document.querySelector("#newAlbumToCircleButton");
+  const circlePreviewBackButton = document.querySelector(
+    "#circlePreviewBackButton"
+  );
+  const newAlbumToCircleButton = document.querySelector(
+    "#newAlbumToCircleButton"
+  );
   if (circlePreviewBackButton || newAlbumToCircleButton) {
     leftHeaderButton.innerHTML = "";
   }
@@ -1775,10 +1820,11 @@ async function displayCircle(circleData) {
     const likedClass = userLiked ? "liked" : "";
     const heartColor = userLiked ? "#FF4646" : "none";
     const heartColorStroke = userLiked ? "#FF4646" : "white";
-
+    // CHANGE ME : placeholder image 
+    console.log(obj.photos[0])
     return `
       <div class="w-full h-min relative album" id="${obj.id}">
-        <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.photos[0].src}"/>
+        <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.photos[0]? obj.photos[0].src : "/placeholder_image.svg"}"/>
         <div class="m-2 text-secondary font-semibold absolute inset-0 flex items-end justify-start">
           ${albumName.outerHTML}
         </div>
@@ -1821,7 +1867,9 @@ async function displayCircle(circleData) {
         </label>
       </div>
       <div class="grid grid-cols-5 place-items-center mt-12 mb-2">
-        <p class="grid-span-1 text-base font-medium">${circleData.members.length} Friends</p>
+        <p class="grid-span-1 text-base font-medium">${
+          circleData.members.length
+        } Friends</p>
       </div>
       <div class="flex gap-2 memberList">
         ${memberList.join("")}
@@ -1861,12 +1909,15 @@ async function displayCircle(circleData) {
     }
 
     if (comment) {
-      await displayComments(albumDiv.id, currentUserProfilePicture, currentLocalUser);
+      await displayComments(
+        albumDiv.id,
+        currentUserProfilePicture,
+        currentLocalUser
+      );
       return;
     }
 
     if (albumDiv) {
-
       if (albumDiv.hasAttribute("id")) {
         let { success, data, error } = await getAlbum(albumDiv.id);
         if (success && data) {
@@ -1899,11 +1950,12 @@ async function displayCircleInvites() {
   pageName.textContent = "Circle Invites";
   leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="toActivity">`;
   const { circleInvites } = await getActivities(currentLocalUser);
-  let circleInviteList = circleInvites.map((invite) => {
-    let circleName = document.createElement("h2");
-    circleName.className = "font-medium text-14 leading-tertiary";
-    circleName.textContent = invite.circle.name;
-    return `
+  let circleInviteList = circleInvites
+    .map((invite) => {
+      let circleName = document.createElement("h2");
+      circleName.className = "font-medium text-14 leading-tertiary";
+      circleName.textContent = invite.circle.name;
+      return `
     <div class="flex items-center my-3">
       <div class="flex-none w-58">
         <img class="rounded-input-box w-58 h-58 object-cover" src="${invite.circle.picture}" alt="${invite.circle.name}'s picture">
@@ -1918,7 +1970,8 @@ async function displayCircleInvites() {
         </form>
       </div>
     </div>`;
-  }).join("");
+    })
+    .join("");
 
   pageContent.innerHTML = `<div id="circleInviteList" class="flex flex-col pb-200">${circleInviteList}</div>`;
   const circleInviteListPage = document.querySelector("#circleInviteList");
@@ -1976,14 +2029,17 @@ async function displayAlbum(albumData) {
         profileBackButton.id = "albumToProfileButton";
       }
     }
-  } 
-  
+  }
+
   if (imgElement) {
     imgElement.id = "albumToCircleButton";
-  } 
+  }
   if (albumConfirmationBackButton) {
     albumConfirmationBackButton.id = "newAlbumToCircleButton";
-    albumConfirmationBackButton.setAttribute("circleId", `${albumData.circle.id}`);
+    albumConfirmationBackButton.setAttribute(
+      "circleId",
+      `${albumData.circle.id}`
+    );
   }
 
   const span = document.createElement("span");
@@ -1997,7 +2053,7 @@ async function displayAlbum(albumData) {
     span.appendChild(imgElement);
     leftHeaderButton.appendChild(span);
   }
-  
+
   rightHeaderButton.innerHTML = `
   <div class="flex flex-row flex-nowrap gap-2 w-full h-22>
     <div class="flex">
@@ -2023,7 +2079,11 @@ async function displayAlbum(albumData) {
       memberList.push(andMore);
       break;
     }
-    memberList.push(`<img id="user${i + 1}" src="${albumData.circle.UserCircle[i].user.profilePicture}" class="grid-item rounded-full object-cover">`);
+    memberList.push(
+      `<img id="user${i + 1}" src="${
+        albumData.circle.UserCircle[i].user.profilePicture
+      }" class="grid-item rounded-full object-cover">`
+    );
   }
 
   const photoList = albumData.photos.map((obj) => {
@@ -2088,18 +2148,35 @@ async function displayAlbum(albumData) {
 
   const user2 = document.querySelector("#user2");
   if (user2) {
-    user2.classList.add("h-43", "w-43", "col-start-1", "row-start-1", "justify-self-end");
+    user2.classList.add(
+      "h-43",
+      "w-43",
+      "col-start-1",
+      "row-start-1",
+      "justify-self-end"
+    );
   }
 
   const user3 = document.querySelector("#user3");
   if (user3) {
     user3.classList.add(
-      "h-40", "w-40", "col-start-3", "row-start-2", "justify-self-start");
+      "h-40",
+      "w-40",
+      "col-start-3",
+      "row-start-2",
+      "justify-self-start"
+    );
   }
 
   const user4 = document.querySelector("#user4");
   if (user4) {
-    user4.classList.add("h-5", "w-5", "col-start-1", "row-start-2", "justify-self-end");
+    user4.classList.add(
+      "h-5",
+      "w-5",
+      "col-start-1",
+      "row-start-2",
+      "justify-self-end"
+    );
   }
 
   const albumPhotos = document.querySelector("#albumPhotos");
@@ -2159,7 +2236,7 @@ async function displayFriends(username) {
 
   // this is to show all users when the page first loads
   pageName.textContent = "Friends";
-  leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="friendsBackButton"/>`;
+  leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" name="${username}" id="friendsBackButton"/>`;
   rightHeaderButton.innerHTML = "";
 
   pageContent.innerHTML = `
@@ -2196,7 +2273,7 @@ async function displayFriends(username) {
   }
 
   function updateSuggestedFriends(friends) {
-    friendsDiv.innerHTML = displayFriendsList(friends).join("");
+    friendsDiv.innerHTML = displayFriendsList(friends, username).join("");
     if (friends.length === 1) {
       friendCount.innerHTML = `${friends.length} friend`;
     } else if (friends.length > 1) {
@@ -2209,17 +2286,42 @@ async function displayFriends(username) {
   await initializeSearch();
 
   searchBox.addEventListener("input", (event) => {
-    const filteredResults = storedSearchResults.filter((user) => {
-      if (user.displayName){
-        return (user.username.toLowerCase().includes(searchBox.value.toLowerCase()) || user.displayName.toLowerCase().includes(searchBox.value.toLowerCase()))
+    const searchTerm = searchBox.value.toLowerCase();
+    const filteredResults = friendsList.filter((user) => {
+      if (user.displayName) {
+        return (
+          user.username.toLowerCase().includes(searchTerm) ||
+          user.displayName.toLowerCase().includes(searchTerm)
+        );
       }
-        return user.username.toLowerCase().includes(searchBox.value.toLowerCase())
+      return user.username.toLowerCase().includes(searchTerm);
     });
     updateSuggestedFriends(filteredResults);
   });
+  const allFriendsList = document.querySelector("#allFriendsList");
+  allFriendsList.addEventListener("click", async (event) => {
+    event.preventDefault();
+    const user = event.target.closest("div.user");
+    if (user) {
+      const { success, data } = await getUser(user.id);
+      if (success && data) {
+        return await displayProfile(data);
+      }
+    }
+  });
 }
 
-function displayFriendsList(friends) {
+function displayFriendsList(friends, username) {
+  let removeFriendIcon = "";
+  if (username === currentLocalUser) {
+    removeFriendIcon = `<div class="flex-none w-58">
+    <div class="removeFriendIcon">
+      <svg width="30" height="31" viewBox="0 0 30 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M17.5 10.5C17.5 7.7375 15.2625 5.5 12.5 5.5C9.7375 5.5 7.5 7.7375 7.5 10.5C7.5 13.2625 9.7375 15.5 12.5 15.5C15.2625 15.5 17.5 13.2625 17.5 10.5ZM2.5 23V24.25C2.5 24.9375 3.0625 25.5 3.75 25.5H21.25C21.9375 25.5 22.5 24.9375 22.5 24.25V23C22.5 19.675 15.8375 18 12.5 18C9.1625 18 2.5 19.675 2.5 23ZM22.5 13H27.5C28.1875 13 28.75 13.5625 28.75 14.25C28.75 14.9375 28.1875 15.5 27.5 15.5H22.5C21.8125 15.5 21.25 14.9375 21.25 14.25C21.25 13.5625 21.8125 13 22.5 13Z" fill="#0E0E0E"/>
+      </svg>
+    </div>
+  </div>`;
+  }
   return friends.map((friend) => {
     let displayName = document.createElement("h2");
     let username = document.createElement("h2");
@@ -2229,7 +2331,7 @@ function displayFriendsList(friends) {
     displayName.textContent = friend.displayName ? friend.displayName : friend.username;
     username.textContent = `@${friend.username}`;
     return `
-      <div class="flex items-center my-5">
+      <div class="flex items-center my-5 user" id="${friend.username}">
         <div class="flex-none w-58">
           <img class="rounded-full w-58 h-58 object-cover" src="${friend.profilePicture}" alt="${friend.username}'s profile picture"/>
         </div>
@@ -2253,14 +2355,17 @@ async function displayFriendRequests() {
   leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="toActivity"/>`;
   const { friendRequests } = await getActivities(currentLocalUser);
 
-  let friendRequestsList = friendRequests.map((request) => {
-    let username = document.createElement("h2");
-    username.className = "font-medium text-14 leading-tertiary";
-    username.textContent = `@${request.requester.username}`;
-    const displayName = username.cloneNode(true);
-    request.requester.displayName ? (displayName.textContent = request.requester.displayName) : (displayName.textContent = request.requester.username);
-    return `
-    <div class="flex items-center my-5">
+  let friendRequestsList = friendRequests
+    .map((request) => {
+      let username = document.createElement("h2");
+      username.className = "font-medium text-14 leading-tertiary";
+      username.textContent = `@${request.requester.username}`;
+      const displayName = username.cloneNode(true);
+      request.requester.displayName
+        ? (displayName.textContent = request.requester.displayName)
+        : (displayName.textContent = request.requester.username);
+      return `
+    <div class="flex items-center my-5 user" id="${request.requester.username}">
     <div class="flex-none w-58">
       <img class="rounded-full w-58 h-58 object-cover" src="${request.requester.profilePicture}" alt="${request.requester.username}'s profile picture"/>
     </div>
@@ -2279,7 +2384,8 @@ async function displayFriendRequests() {
       </form>
     </div>
   </div>`;
-  }).join("");
+    })
+    .join("");
 
   pageContent.innerHTML = `<div id="friendRequestsList" class="flex flex-col pb-200">
     ${friendRequestsList}
@@ -2289,6 +2395,13 @@ async function displayFriendRequests() {
     event.preventDefault();
     const id = event.target.getAttribute("identifier");
     const invitee = event.target.getAttribute("sentTo");
+    const user = event.target.closest("div.user");
+    if (user) {
+      const { success, data } = await getUser(user.id);
+      if (success && data) {
+        return await displayProfile(data);
+      }
+    }
     switch (event.target.name) {
       case "acceptFriendRequest":
         await acceptFriendRequest(id, invitee);
@@ -2307,7 +2420,8 @@ async function displayFriendRequests() {
 async function displayPhoto(photoSrc) {
   const albumPhotos = document.querySelector("#albumPhotos");
   const photoDiv = document.createElement("div");
-  photoDiv.className = "absolute top-0 left-0 bg-overlay-bg h-screen w-screen flex justify-center items-center mx-auto z-20";
+  photoDiv.className =
+    "absolute top-0 left-0 bg-overlay-bg h-screen w-screen flex justify-center items-center mx-auto z-20";
   photoDiv.id = "photoOverlay";
   const personalView = document.createElement("img");
   personalView.src = `${photoSrc}`;
@@ -2335,11 +2449,11 @@ async function displayListOfAlbums(data, user, profile = false) {
     const likedClass = userLiked ? "liked" : "";
     const heartColor = userLiked ? "#FF4646" : "none";
     const heartColorStroke = userLiked ? "#FF4646" : "white";
-
+    // CHANGE ME : placeholder image 
     return `
       <div class="w-full h-min relative overflow-hidden album" id="${obj.id}">
         ${userSpan.outerHTML}
-        <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.photos[0].src}"/>
+        <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.photos[0]? obj.photos[0].src : "/placeholder_image.svg"}"/>
         ${profile ? circleImage : null}
         <div class="m-2 text-secondary font-semibold absolute inset-0 flex items-end justify-start">
           ${albumName.outerHTML}
@@ -2361,10 +2475,14 @@ async function displayListOfAlbums(data, user, profile = false) {
   return albumList;
 }
 
-async function displayComments(albumId, currentUserProfilePicture, currentUserUsername) {
-  const fetchPfp = await getCurrentUserProfilePicture()
+async function displayComments(
+  albumId,
+  currentUserProfilePicture,
+  currentUserUsername
+) {
+  const fetchPfp = await getCurrentUserProfilePicture();
   if (fetchPfp.data && fetchPfp.success) {
-    currentUserProfilePicture = fetchPfp.data
+    currentUserProfilePicture = fetchPfp.data;
   }
 
   const { success, data } = await getComments(albumId);
@@ -2396,8 +2514,11 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
       postMsgContainer.className = "comment-text-container flex-grow";
       const postMsg = document.createElement("p");
       postMsg.className = "text-wrap break-words";
-      postMsg.textContent = comment.message ? comment.message : "message removed";
+      postMsg.textContent = comment.message
+        ? comment.message
+        : "message removed";
       postMsgContainer.appendChild(postMsg);
+
 
       if (comment.likedBy !== null && comment.likedBy.includes(currentUserUsername) && poster !== null) {
         likeDiv.querySelector("svg path").setAttribute("fill", "#FF4646");
@@ -2405,7 +2526,20 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
         likeDiv.classList.add("liked");
       }
 
-      return `<div class="comment relative flex flex-row items-start h-full my-4" id="${comment.id}" user="${comment.user.displayName ? comment.user.displayName : comment.user.username}">
+
+      if (comment.likedBy !== null && comment.likedBy.includes(currentUserUsername) && poster !== null) {
+        likeDiv.querySelector("svg path").setAttribute("fill", "#FF4646");
+        likeDiv.querySelector("svg path").setAttribute("stroke", "#FF4646");
+        likeDiv.classList.add("liked");
+      }
+
+      return `<div class="comment relative flex flex-row items-start h-full my-4" id="${
+        comment.id
+      }" user="${
+        comment.user.displayName
+          ? comment.user.displayName
+          : comment.user.username
+      }">
       <div class="flex-none w-58 items-center h-full mr-1 mt-1">
         <img src="${comment.user.profilePicture ? comment.user.profilePicture : "/placeholder_image.svg"}" class="w-47 h-47 rounded-full cursor-pointer">
       </div>
@@ -2427,7 +2561,13 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
         </div>
       </div>
     </div>
-    ${comment.replies ? `<div class="parentComment"><div class="childComment border-l border-comment-line pl-2 ml-3">${showCommentsRecursively(comment.replies)}</div></div>` : ""}`;
+    ${
+      comment.replies
+        ? `<div class="parentComment"><div class="childComment border-l border-comment-line pl-2 ml-3">${showCommentsRecursively(
+            comment.replies
+          )}</div></div>`
+        : ""
+    }`;
     });
     return arr.join("");
   };
@@ -2524,7 +2664,11 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
         like.querySelector("svg path").setAttribute("fill", "#FF4646");
         like.querySelector("svg path").setAttribute("stroke", "#FF4646");
         await likeComment(commentId);
-        return await displayComments(albumId, currentUserProfilePicture, currentLocalUser);
+        return await displayComments(
+          albumId,
+          currentUserProfilePicture,
+          currentLocalUser
+        );
       }
       return;
     }
@@ -2536,7 +2680,11 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
       newCommentInput.id === "replyInput"
         ? await newComment(newCommentInput.value, albumId, commentId)
         : await newComment(newCommentInput.value, albumId);
-      await displayComments(albumId, currentUserProfilePicture, currentLocalUser);
+      await displayComments(
+        albumId,
+        currentUserProfilePicture,
+        currentLocalUser
+      );
     }
   });
   const submitComment = document.querySelector("#submitComment");
@@ -2545,12 +2693,6 @@ async function displayComments(albumId, currentUserProfilePicture, currentUserUs
     const enterKeyEvent = new KeyboardEvent("keydown", { key: "Enter" });
     newCommentInput.dispatchEvent(enterKeyEvent);
   });
-}
-
-async function displayMap() {
-  pageName.textContent = "Maps";
-  leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="mapBackButton"/>`;
-  pageContent.innerHTML = "";
 }
 
 async function displayPopup(activity) {
@@ -2591,7 +2733,7 @@ async function displayConfirmationPopup(activity, helperObj) {
     const cancelButton = event.target.closest("#cancelButton");
     const contextButton = event.target.closest("#contextButton");
     if (cancelButton) {
-      confirmationPopup.removeEventListener("click", confirmEventHandler, true)
+      confirmationPopup.removeEventListener("click", confirmEventHandler, true);
       confirmationPopup.classList.add("hidden");
     }
 
@@ -2600,7 +2742,11 @@ async function displayConfirmationPopup(activity, helperObj) {
         await deleteComment(helperObj.commentId);
         confirmationPopup.classList.add("hidden");
         confirmationText.textContent = "";
-        confirmationPopup.removeEventListener("click", confirmEventHandler, true)
+        confirmationPopup.removeEventListener(
+          "click",
+          confirmEventHandler,
+          true
+        );
         await displayComments(
           helperObj.albumId,
           helperObj.currentUserProfilePicture,
@@ -2608,8 +2754,8 @@ async function displayConfirmationPopup(activity, helperObj) {
         );
       }
     }
-  }
+  };
 
   confirmationPopup.addEventListener("click", confirmEventHandler, true);
-  
 }
+

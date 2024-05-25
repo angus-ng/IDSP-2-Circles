@@ -1256,12 +1256,17 @@ select {
   height: 2.25rem;
 }
 
+<<<<<<< HEAD
 .h-\[145px\] {
   height: 145px;
 }
 
 .h-\[280px\] {
   height: 280px;
+=======
+.h-\[150px\] {
+  height: 150px;
+>>>>>>> 7f1ee5d461e9ec3323ab005ce3220eae94e61e11
 }
 
 .h-full {
@@ -1644,10 +1649,13 @@ select {
   overflow-x: auto;
 }
 
+<<<<<<< HEAD
 .overflow-y-clip {
   overflow-y: clip;
 }
 
+=======
+>>>>>>> 7f1ee5d461e9ec3323ab005ce3220eae94e61e11
 .overflow-y-scroll {
   overflow-y: scroll;
 }

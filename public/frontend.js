@@ -83,21 +83,12 @@ header.addEventListener("click", async (event) => {
     }
   }
 
-  if (backToExplore) {
-    const { success, data } = await getUser(currentLocalUser);
-    if (success && data) {
-      if (leftButtonSpan) {
-        leftButtonSpan.removeAttribute("origin");
-      }
-      await displayExplore(data);
-    }
-  }
-
   if (emailBackButton) {
     await displayLoginPage();
   }
 
   if (nextButtonInviteFriends) {
+    console.log("hello")
     const circleName = document.querySelector("#circleName");
     newCircleNameInput = circleName.value;
     circleImgSrc = document.querySelector("#circleImage").src;
@@ -318,7 +309,8 @@ header.addEventListener("click", async (event) => {
   }
 
   if (friendsBackButton) {
-    const { success, data } = await getUser(currentLocalUser);
+    const username = friendsBackButton.name
+    const { success, data } = await getUser(username);
     if (success && data) {
       return await displayProfile(data);
     }
@@ -678,7 +670,7 @@ const displayCircleEditMode = (circleId) => {
     event.preventDefault();
     const res = await handleSelectFile();
     if (res) {
-      circleImage.src = await res.data;
+      circleImage.src = await res.data.url;
     }
   });
 

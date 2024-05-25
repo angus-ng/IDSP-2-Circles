@@ -27,6 +27,9 @@ class UserController {
             try {
                 let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
                 const { requestee } = req.body;
+                if (!loggedInUser) {
+                    throw new Error("Not logged in");
+                }
                 yield this._service.friend(loggedInUser, requestee);
                 res.status(200).json({ success: true, data: null });
             }
@@ -66,6 +69,9 @@ class UserController {
         this.getActivities = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
+                if (!loggedInUser) {
+                    throw new Error("Not logged in");
+                }
                 const activities = yield this._service.getActivities(loggedInUser);
                 res.status(200).json({ success: true, data: activities });
             }
@@ -109,7 +115,6 @@ class UserController {
             try {
                 let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
                 const input = decodeURIComponent(req.params.input).slice(0, -1);
-                console.log(input);
                 const output = yield this._service.search(input, loggedInUser);
                 res.status(200).json({ success: true, data: output });
             }
@@ -128,7 +133,6 @@ class UserController {
             }
         });
         this.getUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            console.log("getting user");
             try {
                 let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
                 let { username } = req.body;
@@ -164,6 +168,7 @@ class UserController {
                 res.status(200).json({ success: true, data: null });
             }
         });
+<<<<<<< HEAD
         this.getFeed = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
@@ -177,6 +182,8 @@ class UserController {
                 res.status(200).json({ success: true, data: null, error: "failed to get album feed" });
             }
         });
+=======
+>>>>>>> 7f1ee5d461e9ec3323ab005ce3220eae94e61e11
         this.initializeRoutes();
         this._service = userService;
     }
@@ -192,7 +199,10 @@ class UserController {
         this.router.post(`${this.path}/get`, authentication_middleware_1.ensureAuthenticated, this.getUser);
         this.router.get(`${this.path}/ifEmailTaken/:email`, this.ifEmailTaken);
         this.router.get(`${this.path}/profilePicture`, authentication_middleware_1.ensureAuthenticated, this.profilePicture);
+<<<<<<< HEAD
         this.router.get(`${this.path}/feed`, authentication_middleware_1.ensureAuthenticated, this.getFeed);
+=======
+>>>>>>> 7f1ee5d461e9ec3323ab005ce3220eae94e61e11
     }
 }
 exports.default = UserController;
