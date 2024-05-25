@@ -294,6 +294,7 @@ header.addEventListener("click", async (event) => {
     }
     const albumId = data;
     if (success && data) {
+      rightButtonSpan.removeAttribute("createAlbum");
       const { success, data, error } = await getAlbum(albumId);
       if (success && data) {
         await displayPopup("album created");

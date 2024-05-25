@@ -12,7 +12,7 @@ async function initMap() {
     let lat = 49
     let long = -123
     if (response.data){
-      const newestAlbum = data.data.Album[0]
+      const newestAlbum = response.data.Album[0]
       if (newestAlbum) {
         lat = parseFloat(newestAlbum.lat)
         long = parseFloat(newestAlbum.long)
