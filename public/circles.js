@@ -247,7 +247,11 @@ async function displayCircle(circleData) {
     const backSpan = document.createElement("span");
     backSpan.className = "backSpan";
     const imgElement = document.createElement("img");
-    imgElement.id = "albumToCircleButton";
+    if (leftButtonSpan.getAttribute("origin") === "fromExplore") {
+      imgElement.id = "backToExplore";
+    } else {
+      imgElement.id = "albumToCircleButton";
+    }
     imgElement.src = "/lightmode/back_button.svg";
     imgElement.alt = "Back Button";
     

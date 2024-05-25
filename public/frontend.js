@@ -83,6 +83,16 @@ header.addEventListener("click", async (event) => {
     }
   }
 
+  if (backToExplore) {
+    const { success, data } = await getUser(currentLocalUser);
+    if (success && data) {
+      if (leftButtonSpan) {
+        leftButtonSpan.removeAttribute("origin");
+      }
+      await displayExplore(data);
+    }
+  }
+
   if (emailBackButton) {
     await displayLoginPage();
   }
