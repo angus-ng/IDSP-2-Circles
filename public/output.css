@@ -872,6 +872,10 @@ select {
   z-index: 40;
 }
 
+.z-50 {
+  z-index: 50;
+}
+
 .col-span-1 {
   grid-column: span 1 / span 1;
 }
@@ -1451,6 +1455,10 @@ select {
 
 .w-screen {
   width: 100vw;
+}
+
+.w-\[30px\] {
+  width: 30px;
 }
 
 .max-w-430 {

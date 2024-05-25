@@ -48,33 +48,32 @@ async function displayInviteFriends(fromCircle=false, circleId="") {
   leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="circleBackButton"/>`;
   rightHeaderButton.innerHTML = `<img src="/lightmode/next_button.svg" alt="Next Button" id="nextButton"/>`;
   if (fromCircle && circleId) {
-    leftHeaderButton.innerHTML = `<span class="backSpan" circleid="${circleId}">
-    <img src="/lightmode/back_button.svg" alt="Back Button" id="albumToCircleButton"/>
-    </span>
-    `
+    leftHeaderButton.innerHTML = `
+    <span class="backSpan" circleid="${circleId}">
+      <img src="/lightmode/back_button.svg" alt="Back Button" id="albumToCircleButton"/>
+    </span>`;
     rightHeaderButton.innerHTML = `<img src="/lightmode/done_button.svg" alt="Done Button" id="inviteDoneButton"/>`;
   }
 
   pageContent.innerHTML = `
-      <div class="font-light text-11 justify-center text-center text-dark-grey w-full">
-        <p>search or add friends to collaborate with in</p>
-        <p>your circle</p>
+    <div class="font-light text-11 justify-center text-center text-dark-grey w-full">
+      <p>search or add friends to collaborate with in</p>
+      <p>your circle</p>
+    </div>
+    <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full">
+      <div class="relative w-full h-9 mt-8">
+        <form onkeydown="return event.key != 'Enter';">
+          <input class="w-380 px-10 py-2 border-grey border-2 rounded-input-box text-secondary leading-secondary" placeholder="search friends"/>
+          <img src="/lightmode/search_icon_grey.svg" alt="search icon" class="absolute left-3 top-search w-25 h-25"/>
+        </form>
       </div>
-      <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full">
-        <div class="relative w-full h-9 mt-8">
-          <form onkeydown="return event.key != 'Enter';">
-            <input class="w-380 px-10 py-2 border-grey border-2 rounded-input-box text-secondary leading-secondary" placeholder="search friends"/>
-            <img src="/lightmode/search_icon_grey.svg" alt="search icon" class="absolute left-3 top-search w-25 h-25"/>
-          </form>
-        </div>
-        <div class="shrink-0 mt-10 mb-6 justify-center w-full">
-          <h1 class="font-bold text-20 leading-body">Suggested Friends</h1>
-          <div id="suggestedFriends"></div>
-        </div>
+      <div class="shrink-0 mt-10 mb-6 justify-center w-full">
+        <h1 class="font-bold text-20 leading-body">Suggested Friends</h1>
+        <div id="suggestedFriends"></div>
       </div>
-      `;
+    </div>
+    `;
   const suggestedFriends = document.querySelector("#suggestedFriends");
-
   suggestedFriends.innerHTML = friendsList.join("");
 }
 
@@ -157,6 +156,16 @@ async function displayFriends(username) {
     const allFriendsList = document.querySelector("#allFriendsList");
     allFriendsList.addEventListener("click", async (event) => {
       event.preventDefault();
+      const removeFriend = event.target.closest(".removeFriendIcon");
+
+      if (removeFriend) {
+        const username = document.querySelector(".username").getAttribute("username");
+        await displayPopup("friend removed");
+        await unfriend(username, currentLocalUser);
+        await displayFriends(currentLocalUser);
+        return;
+      }
+
       const user = event.target.closest("div.user");
       if (user) {
         const { success, data } = await getUser(user.id);
@@ -170,7 +179,7 @@ async function displayFriends(username) {
 function displayFriendsList(friends, username) {
     let removeFriendIcon = "";
     if (username === currentLocalUser) {
-      removeFriendIcon = `<div class="flex-none w-58">
+      removeFriendIcon = `<div class="flex-none w-[30px] z-50">
       <div class="removeFriendIcon">
         <svg width="30" height="31" viewBox="0 0 30 31" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M17.5 10.5C17.5 7.7375 15.2625 5.5 12.5 5.5C9.7375 5.5 7.5 7.7375 7.5 10.5C7.5 13.2625 9.7375 15.5 12.5 15.5C15.2625 15.5 17.5 13.2625 17.5 10.5ZM2.5 23V24.25C2.5 24.9375 3.0625 25.5 3.75 25.5H21.25C21.9375 25.5 22.5 24.9375 22.5 24.25V23C22.5 19.675 15.8375 18 12.5 18C9.1625 18 2.5 19.675 2.5 23ZM22.5 13H27.5C28.1875 13 28.75 13.5625 28.75 14.25C28.75 14.9375 28.1875 15.5 27.5 15.5H22.5C21.8125 15.5 21.25 14.9375 21.25 14.25C21.25 13.5625 21.8125 13 22.5 13Z" fill="#0E0E0E"/>
@@ -196,11 +205,7 @@ function displayFriendsList(friends, username) {
             ${username.outerHTML}
           </div>
           <div class="ml-auto pr-2">
-            <div class="removeFriendIcon">
-              <svg width="30" height="31" viewBox="0 0 30 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M17.5 10.5C17.5 7.7375 15.2625 5.5 12.5 5.5C9.7375 5.5 7.5 7.7375 7.5 10.5C7.5 13.2625 9.7375 15.5 12.5 15.5C15.2625 15.5 17.5 13.2625 17.5 10.5ZM2.5 23V24.25C2.5 24.9375 3.0625 25.5 3.75 25.5H21.25C21.9375 25.5 22.5 24.9375 22.5 24.25V23C22.5 19.675 15.8375 18 12.5 18C9.1625 18 2.5 19.675 2.5 23ZM22.5 13H27.5C28.1875 13 28.75 13.5625 28.75 14.25C28.75 14.9375 28.1875 15.5 27.5 15.5H22.5C21.8125 15.5 21.25 14.9375 21.25 14.25C21.25 13.5625 21.8125 13 22.5 13Z" fill="#0E0E0E"/>
-              </svg>
-            </div>
+            ${removeFriendIcon}
           </div>
         </div>`;
     });
@@ -211,64 +216,70 @@ async function displayFriendRequests() {
     leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="toActivity"/>`;
     const { friendRequests } = await getActivities(currentLocalUser);
   
-    let friendRequestsList = friendRequests
-      .map((request) => {
-        let username = document.createElement("h2");
-        username.className = "font-medium text-14 leading-tertiary";
-        username.textContent = `@${request.requester.username}`;
-        const displayName = username.cloneNode(true);
-        request.requester.displayName
-          ? (displayName.textContent = request.requester.displayName)
-          : (displayName.textContent = request.requester.username);
-        return `
-      <div class="flex items-center my-5 user" id="${request.requester.username}">
-      <div class="flex-none w-58">
-        <img class="rounded-full w-58 h-58 object-cover" src="${request.requester.profilePicture}" alt="${request.requester.username}'s profile picture"/>
+    let friendRequestsList = friendRequests.map((request) => {
+      let username = document.createElement("h2");
+      username.className = "font-medium text-14 leading-tertiary";
+      username.textContent = `@${request.requester.username}`;
+      const displayName = username.cloneNode(true);
+      request.requester.displayName
+        ? (displayName.textContent = request.requester.displayName)
+        : (displayName.textContent = request.requester.username);
+      return `
+    <div class="flex items-center my-5 user" id="${request.requester.username}">
+    <div class="flex-none w-58">
+      <img class="rounded-full w-58 h-58 object-cover" src="${request.requester.profilePicture}" alt="${request.requester.username}'s profile picture"/>
+    </div>
+    <div class="ml-8 flex-none w-110 grid grid-rows-2">
+      <div>
+        ${displayName.outerHTML}
       </div>
-      <div class="ml-8 flex-none w-110 grid grid-rows-2">
-        <div>
-          ${displayName.outerHTML}
-        </div>
-        <div>
-          ${username.outerHTML}
-        </div>
+      <div>
+        ${username.outerHTML}
       </div>
-      <div class="ml-auto w-166">
-        <form class="flex text-white gap-2">
-          <button identifier="${request.requesterName}" sentTo="${request.requesteeName}" name="acceptFriendRequest" class="w-request h-request rounded-input-box bg-light-mode-accent">accept</button>
-          <button identifier="${request.requesterName}" sentTo="${request.requesteeName}" name="declineFriendRequest" class="w-request h-request rounded-input-box bg-dark-grey">decline</button>
-        </form>
-      </div>
-    </div>`;
-      })
-      .join("");
-  
-    pageContent.innerHTML = `<div id="friendRequestsList" class="flex flex-col pb-200">
-      ${friendRequestsList}
-    </div>`;
-    const friendRequestsListPage = document.querySelector("#friendRequestsList");
-    friendRequestsListPage.addEventListener("click", async function (event) {
-      event.preventDefault();
-      const id = event.target.getAttribute("identifier");
-      const invitee = event.target.getAttribute("sentTo");
-      const user = event.target.closest("div.user");
-      if (user) {
-        const { success, data } = await getUser(user.id);
-        if (success && data) {
-          return await displayProfile(data);
-        }
+    </div>
+    <div class="ml-auto w-166">
+      <form class="flex text-white gap-2">
+        <button identifier="${request.requesterName}" 
+        sentTo="${request.requesteeName}" name="acceptFriendRequest" 
+        class="w-request h-request rounded-input-box bg-light-mode-accent z-50">accept</button>
+        <button identifier="${request.requesterName}" 
+        sentTo="${request.requesteeName}" name="declineFriendRequest" 
+        class="w-request h-request rounded-input-box bg-dark-grey z-50">decline</button>
+      </form>
+    </div>
+  </div>`;
+    })
+    .join("");
+
+  pageContent.innerHTML = `<div id="friendRequestsList" class="flex flex-col pb-200">
+    ${friendRequestsList}
+  </div>`;
+  const friendRequestsListPage = document.querySelector("#friendRequestsList");
+  friendRequestsListPage.addEventListener("click", async function (event) {
+    event.preventDefault();
+    const id = event.target.getAttribute("identifier");
+    const invitee = event.target.getAttribute("sentTo");
+    switch (event.target.name) {
+      case "acceptFriendRequest": {
+        await acceptFriendRequest(id, invitee);
+        await displayFriendRequests();
+        return;
       }
-      switch (event.target.name) {
-        case "acceptFriendRequest":
-          await acceptFriendRequest(id, invitee);
-          await displayFriendRequests();
-          break;
-        case "declineFriendRequest":
-          await removeFriendRequest(id, invitee);
-          await displayFriendRequests();
-          break;
-        default:
-          break;
+      case "declineFriendRequest": {
+        await removeFriendRequest(id, invitee);
+        await displayFriendRequests();
+        return;
       }
-    });
+      default:
+        break;
+    }
+    const user = event.target.closest("div.user");
+    if (user) {
+      const { success, data } = await getUser(user.id);
+      if (success && data) {
+        return await displayProfile(data);
+      }
+      return;
+    }
+  });
 }

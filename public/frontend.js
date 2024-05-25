@@ -497,17 +497,9 @@ async function handleLocalAuth() {
 pageContent.addEventListener("click", async (event) => {
   const localAuthButton = event.target.closest("#localAuth");
   const logOut = event.target.closest("#logOut");
-  const removeFriend = event.target.closest(".removeFriendIcon");
 
   if (localAuthButton) {
     handleLocalAuth();
-  }
-
-  if (removeFriend) {
-    const username = document.querySelector(".username").getAttribute("username");
-    await displayPopup("friend removed");
-    await unfriend(username, currentLocalUser);
-    await displayFriends(currentLocalUser);
   }
 
   if (logOut) {

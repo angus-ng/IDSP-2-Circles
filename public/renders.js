@@ -12,7 +12,11 @@ function displayLoginPage() {
           </div>
           <div class="flex items-center mt-4 mb-6">
               <label for="password" class=""></label>
-              <input type="password" placeholder="Password" id="passwordInput" name="password" class="rounded-input-box w-input-box text-17 border-dark-grey border-2 items-end">
+              <input type="password" 
+              placeholder="Password" 
+              id="passwordInput" name="password" 
+              class="rounded-input-box w-input-box text-17 border-dark-grey border-2 items-end"
+              />
           </div>
         </form>
           <div class="flex items-center mt-4 mb-6">
