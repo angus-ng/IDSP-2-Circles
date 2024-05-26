@@ -72,12 +72,18 @@ header.addEventListener("click", async (event) => {
   const inviteDoneButton = event.target.closest("#inviteDoneButton");
   const backToExplore = event.target.closest("#backToExplore");
   const backToProfile = event.target.closest("#backToProfile");
+  const backToFriendRequests = event.target.closest("#backToFriendRequests");
 
   if (backToProfile) {
     const user = leftButtonSpan.getAttribute("username");
     console.log(user);
     leftButtonSpan.removeAttribute("origin");
     await displayFriends(user);
+  }
+
+  if (backToFriendRequests) {
+    leftButtonSpan.removeAttribute("origin");
+    await displayFriendRequests(currentLocalUser);
   }
 
   if (mapButton) {

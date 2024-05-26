@@ -276,6 +276,7 @@ async function displayFriendRequests() {
     if (user) {
       const { success, data } = await getUser(user.id);
       if (success && data) {
+        leftButtonSpan.setAttribute("origin", "fromFriendRequests");
         return await displayProfile(data);
       }
       return;

@@ -353,17 +353,23 @@ async function displayProfile(userData) {
   imgElement.alt = "Back Button";
   imgElement.id = "profileBackButton";
   backSpan.removeAttribute("circleId");
+  const origin = leftButtonSpan.getAttribute("origin");
 
-  if (leftButtonSpan.getAttribute("origin") === "fromFeed") {
+  if (origin === "fromFeed") {
     imgElement.id = "backToExplore";
   }
 
-  if (leftButtonSpan.getAttribute("origin") === "fromFriendsList") {
+  if (origin === "fromFriendsList") {
     imgElement.id = "backToProfile";
     imgElement.className = "";
   }
 
-  if (currentLocalUser === userData.username && leftButtonSpan.getAttribute("origin") !== "fromFriendsList") {
+  if (origin === "fromFriendRequests") {
+    imgElement.id = "backToFriendRequests";
+    imgElement.className = "";
+  }
+
+  if (currentLocalUser === userData.username && origin !== "fromFriendsList" && origin !== "fromFriendRequests") {
     imgElement.classList.add("hidden");
   }
 
