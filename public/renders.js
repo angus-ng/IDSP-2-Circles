@@ -389,12 +389,6 @@ async function displayProfile(userData) {
   username.className = "text-base text-center";
   username.textContent = `@${userData.username}`;
 
-  const hiddenImageInput = document.createElement("input");
-  hiddenImageInput.id = "fileUpload";
-  hiddenImageInput.type ="file";
-  hiddenImageInput.multiple = "false";
-  hiddenImageInput.className = "hidden";
-
   const friendText = userData._count.friends === 1 ? "Friend" : "Friends";
 
   pageContent.innerHTML = `
@@ -402,7 +396,6 @@ async function displayProfile(userData) {
     ${currentLocalUser === userData.username ? `<div id="settings" class="absolute top-0 right-0 w-6 h-6 items-center justify-center cursor-pointer"><img src="/lightmode/settings_icon.svg"></div>` : ""}
     <div class="flex justify-center mb-4">
       <img id="profilePicture" src="${userData.profilePicture}" class="w-110 h-110 object-cover rounded-full"/>
-      ${hiddenImageInput.outerHTML}
     </div>
     <div class="flex justify-center mt-2">
       ${username.outerHTML}
@@ -507,16 +500,7 @@ async function displayProfile(userData) {
       });
     }
   }
-  const hiddenProfileInput = document.querySelector("#fileUpload");
-  hiddenProfileInput.addEventListener("input", async function (event) {
-    event.preventDefault();
-    const res = await handleSelectFile();
-    if (res) {
-      const profileImage = document.querySelector("#profilePicture")
-      profileImage.src = res.data
-      await updateProfilePicture(res.data);
-    }
-  });
+
   const profilePage = document.querySelector("#profilePage");
   profilePage.addEventListener("click", async (event) => {
     const albumTab = event.target.closest("#albumTab");
@@ -530,11 +514,6 @@ async function displayProfile(userData) {
     const albumDiv = event.target.closest(".album");
     const like = event.target.closest(".like");
     const comment = event.target.closest(".comment");
-    const profilePicture = event.target.closest("#profilePicture");
-    if (profilePicture) {
-      event.preventDefault();
-      await hiddenProfileInput.click();
-    }
 
     if (like) {
       const albumId = event.target.closest("div.album").getAttribute("id");
@@ -673,10 +652,17 @@ async function displayProfile(userData) {
     leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="settingsBackButton"/>`;
     rightHeaderButton.innerHTML = "";
 
+    const hiddenImageInput = document.createElement("input");
+    hiddenImageInput.id = "fileUpload";
+    hiddenImageInput.type ="file";
+    hiddenImageInput.multiple = "false";
+    hiddenImageInput.className = "hidden";
+
     pageContent.innerHTML = `
     <div id="settingsPage" class="flex flex-col pt-2 pb-200 mb-4 w-full">
       <div class="flex justify-center mb-4">
         <img id="profilePicture" src="${userData.profilePicture}" class="w-110 h-110 object-cover rounded-full"/>
+        ${hiddenImageInput.outerHTML}
       </div>
       <div class="flex justify-center mt-2">
         ${username.outerHTML}
@@ -771,6 +757,24 @@ async function displayProfile(userData) {
         </div>
       </div>
     </div>`;
+
+    const profilePicture = document.querySelector("#profilePicture");
+    profilePicture.addEventListener("click", async(event) => {
+      event.preventDefault();
+      await hiddenProfileInput.click();
+    })
+
+    const hiddenProfileInput = document.querySelector("#fileUpload");
+    hiddenProfileInput.addEventListener("input", async function (event) {
+      event.preventDefault();
+      const res = await handleSelectFile();
+      if (res) {
+        const profileImage = document.querySelector("#profilePicture");
+        profileImage.src = res.data.url
+        await updateProfilePicture(res.data.url);
+        await displaySettings();
+      }
+    });
   }
 }
 
