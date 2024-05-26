@@ -194,6 +194,36 @@ async function displayConfirmationPopup(activity, helperObj) {
   confirmationPopup.classList.remove("hidden");
   confirmationPopup;
 
+  const confirmationDetails = confirmationPopup.querySelector("#confirmationDetails");
+  const confirmationIcon = confirmationPopup.querySelector("#confirmationIcon");
+
+  console.log(helperObj)
+  if (activity === `remove ${helperObj.member}`) {
+    confirmationDetails.innerHTML = `
+    <p class="text-14">Once this member has been removed. They</p>
+    <p class="text-14">must be re-invited to the circle.</p>`;
+
+    contextButton.textContent = "Remove";
+    confirmationIcon.innerHTML = `
+    <svg width="32" height="32" viewBox="0 0 30 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M17.5 10.5C17.5 7.7375 15.2625 5.5 12.5 5.5C9.7375 5.5 7.5 7.7375 7.5 10.5C7.5 13.2625 9.7375 15.5 12.5 15.5C15.2625 15.5 17.5 13.2625 17.5 10.5ZM2.5 23V24.25C2.5 24.9375 3.0625 25.5 3.75 25.5H21.25C21.9375 25.5 22.5 24.9375 22.5 24.25V23C22.5 19.675 15.8375 18 12.5 18C9.1625 18 2.5 19.675 2.5 23ZM22.5 13H27.5C28.1875 13 28.75 13.5625 28.75 14.25C28.75 14.9375 28.1875 15.5 27.5 15.5H22.5C21.8125 15.5 21.25 14.9375 21.25 14.25C21.25 13.5625 21.8125 13 22.5 13Z" fill="#0E0E0E"></path>
+    </svg>`;
+  }
+
+  if (activity === `mod ${helperObj.member}`) {
+    confirmationDetails.innerHTML = `
+    <p class="text-14">Once this member is a moderator. They</p>
+    <p class="text-14">must be unmodded to revoke privileges.</p>`;
+
+    contextButton.textContent = "Mod";
+    confirmationIcon.innerHTML = `
+    <svg width="32px" height="32px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+      <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+      <g id="SVGRepo_iconCarrier"> <path d="M11.5 9.00011L10 12.0001H14L12.5 15.0001M20 12.0001C20 16.4612 14.54 19.6939 12.6414 20.6831C12.4361 20.7901 12.3334 20.8436 12.191 20.8713C12.08 20.8929 11.92 20.8929 11.809 20.8713C11.6666 20.8436 11.5639 20.7901 11.3586 20.6831C9.45996 19.6939 4 16.4612 4 12.0001V8.21772C4 7.4182 4 7.01845 4.13076 6.67482C4.24627 6.37126 4.43398 6.10039 4.67766 5.88564C4.9535 5.64255 5.3278 5.50219 6.0764 5.22146L11.4382 3.21079C11.6461 3.13283 11.75 3.09385 11.857 3.07839C11.9518 3.06469 12.0482 3.06469 12.143 3.07839C12.25 3.09385 12.3539 3.13283 12.5618 3.21079L17.9236 5.22146C18.6722 5.50219 19.0465 5.64255 19.3223 5.88564C19.566 6.10039 19.7537 6.37126 19.8692 6.67482C20 7.01845 20 7.4182 20 8.21772V12.0001Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></g>
+    </svg>`;
+  }
+
   const confirmEventHandler = async (event) => {
     event.stopImmediatePropagation();
     const cancelButton = event.target.closest("#cancelButton");

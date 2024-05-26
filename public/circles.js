@@ -166,12 +166,10 @@ async function displayCreateCirclePreview() {
   
     const fileInput = document.querySelector("#fileUpload");
     const circlePhoto = document.querySelector("#circleImage");
-    document
-      .querySelector("#circleImage")
-      .addEventListener("click", async function (event) {
-        event.preventDefault();
-        await fileInput.click();
-      });
+    document.querySelector("#circleImage").addEventListener("click", async function (event) {
+      event.preventDefault();
+      await fileInput.click();
+    });
   
     fileInput.addEventListener("input", async function (event) {
       event.preventDefault();
@@ -286,7 +284,7 @@ async function displayCircle(circleData) {
   pageName.textContent = "";
   let currentUserProfilePicture = null;
   const memberList = [];
-  for (i=0; i < circleData.members.length; i++) {
+  for (i = 0; i < circleData.members.length; i++) {
     if (i > 3){
       const count = circleData.members.length - 4;
       const andMore = `
@@ -356,10 +354,8 @@ async function displayCircle(circleData) {
         </span>
         </label>
       </div>
-      <div class="grid grid-cols-5 place-items-center mt-12 mb-2">
-        <p class="grid-span-1 text-base font-medium">${
-          circleData.members.length
-        } Friends</p>
+      <div class="memberCount grid grid-cols-2 justify-between place-items-center mt-12 mb-2 mr-0">
+        <button class="viewMoreMembers col-span-1 text-base font-medium justify-self-start hover:underline">${circleData.members.length} Friends</button>
       </div>
       <div class="flex gap-2 memberList">
         ${memberList.join("")}
@@ -373,8 +369,15 @@ async function displayCircle(circleData) {
         </div>
       </div>
     </div>`;
-  const privacyCheckbox = document.querySelector("#privacyCheckbox")
-  circleData.circle.isPublic ? privacyCheckbox.setAttribute("checked", true) : privacyCheckbox.removeAttribute("checked")
+
+  const privacyCheckbox = document.querySelector("#privacyCheckbox");
+  circleData.circle.isPublic ? privacyCheckbox.setAttribute("checked", true) : privacyCheckbox.removeAttribute("checked");
+
+  const vieweMoreMembers = document.querySelector(".viewMoreMembers");
+  vieweMoreMembers.addEventListener("click", async() => {
+    await displayCircleMembers(circleData);
+  });
+
   const albumListTarget = document.querySelector("#albumList");
   albumListTarget.addEventListener("click", async function (event) {
     event.preventDefault();
@@ -418,11 +421,18 @@ async function displayCircle(circleData) {
   });
 
   if (circleData.circle.ownerId === currentLocalUser) {
-    const inviteMore = document.createElement("img");
-    inviteMore.src = "/invite_more_friends.svg";
+    const inviteMore = document.createElement("button");
+    inviteMore.innerHTML = `
+    <svg fill="#000000" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+      <g id="SVGRepo_iconCarrier">
+        <path d="M2,21h8a1,1,0,0,0,0-2H3.071A7.011,7.011,0,0,1,10,13a5.044,5.044,0,1,0-3.377-1.337A9.01,9.01,0,0,0,1,20,1,1,0,0,0,2,21ZM10,5A3,3,0,1,1,7,8,3,3,0,0,1,10,5ZM23,16a1,1,0,0,1-1,1H19v3a1,1,0,0,1-2,0V17H14a1,1,0,0,1,0-2h3V12a1,1,0,0,1,2,0v3h3A1,1,0,0,1,23,16Z">
+        </path>
+      </g>
+    </svg>`;
     inviteMore.id = "inviteMoreUsers";
-    inviteMore.className = "w-42 h-42 rounded-full object-cover";
-    const memberList = document.querySelector(".memberList")
+    inviteMore.className = "col-span-1 justify-self-end w-6 h-6";
+    const memberList = document.querySelector(".memberCount");
     memberList.append(inviteMore);
 
     memberList.addEventListener("click", async function (event) {
@@ -440,12 +450,11 @@ async function displayCircleInvites() {
   pageName.textContent = "Circle Invites";
   leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="toActivity">`;
   const { circleInvites } = await getActivities(currentLocalUser);
-  let circleInviteList = circleInvites
-    .map((invite) => {
-      let circleName = document.createElement("h2");
-      circleName.className = "font-medium text-14 leading-tertiary";
-      circleName.textContent = invite.circle.name;
-      return `
+  let circleInviteList = circleInvites.map((invite) => {
+    let circleName = document.createElement("h2");
+    circleName.className = "font-medium text-14 leading-tertiary";
+    circleName.textContent = invite.circle.name;
+    return `
     <div class="flex items-center my-3">
       <div class="flex-none w-58">
         <img class="rounded-input-box w-58 h-58 object-cover" src="${invite.circle.picture}" alt="${invite.circle.name}'s picture">
@@ -460,8 +469,7 @@ async function displayCircleInvites() {
         </form>
       </div>
     </div>`;
-    })
-    .join("");
+    }).join("");
 
   pageContent.innerHTML = `<div id="circleInviteList" class="flex flex-col pb-200">${circleInviteList}</div>`;
   const circleInviteListPage = document.querySelector("#circleInviteList");
@@ -480,6 +488,83 @@ async function displayCircleInvites() {
         break;
       default:
         break;
+    }
+  });
+}
+
+async function displayCircleMembers(circleData) {
+  leftHeaderButton.id = "backToCircle";
+  rightButtonSpan.innerHTML = "";
+  pageName.textContent = `${circleData.circle.name} Members`;
+
+  const removeMemberIcon = `
+  <div class="flex-none w-[30px] z-50">
+    <div class="removeMemberIcon">
+      <svg width="30" height="31" viewBox="0 0 30 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M17.5 10.5C17.5 7.7375 15.2625 5.5 12.5 5.5C9.7375 5.5 7.5 7.7375 7.5 10.5C7.5 13.2625 9.7375 15.5 12.5 15.5C15.2625 15.5 17.5 13.2625 17.5 10.5ZM2.5 23V24.25C2.5 24.9375 3.0625 25.5 3.75 25.5H21.25C21.9375 25.5 22.5 24.9375 22.5 24.25V23C22.5 19.675 15.8375 18 12.5 18C9.1625 18 2.5 19.675 2.5 23ZM22.5 13H27.5C28.1875 13 28.75 13.5625 28.75 14.25C28.75 14.9375 28.1875 15.5 27.5 15.5H22.5C21.8125 15.5 21.25 14.9375 21.25 14.25C21.25 13.5625 21.8125 13 22.5 13Z" fill="#0E0E0E"/>
+      </svg>
+    </div>
+  </div>`;
+
+  const ownerIcon = `
+  <div class="flex-none w-[30px] z-50">
+    <div class="ownerIcon">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+      <g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M21.8382 11.1263L21.609 13.5616C21.2313 17.5742 21.0425 19.5805 19.8599 20.7902C18.6773 22 16.9048 22 13.3599 22H10.6401C7.09517 22 5.32271 22 4.14009 20.7902C2.95748 19.5805 2.76865 17.5742 2.391 13.5616L2.16181 11.1263C1.9818 9.2137 1.8918 8.25739 2.21899 7.86207C2.39598 7.64823 2.63666 7.5172 2.89399 7.4946C3.36968 7.45282 3.96708 8.1329 5.16187 9.49307C5.77977 10.1965 6.08872 10.5482 6.43337 10.6027C6.62434 10.6328 6.81892 10.6018 6.99526 10.5131C7.31351 10.3529 7.5257 9.91812 7.95007 9.04852L10.1869 4.46486C10.9888 2.82162 11.3898 2 12 2C12.6102 2 13.0112 2.82162 13.8131 4.46485L16.0499 9.04851C16.4743 9.91812 16.6865 10.3529 17.0047 10.5131C17.1811 10.6018 17.3757 10.6328 17.5666 10.6027C17.9113 10.5482 18.2202 10.1965 18.8381 9.49307C20.0329 8.1329 20.6303 7.45282 21.106 7.4946C21.3633 7.5172 21.604 7.64823 21.781 7.86207C22.1082 8.25739 22.0182 9.2137 21.8382 11.1263ZM12.9524 12.699L12.8541 12.5227C12.4741 11.841 12.2841 11.5002 12 11.5002C11.7159 11.5002 11.5259 11.841 11.1459 12.5227L11.0476 12.699C10.9397 12.8927 10.8857 12.9896 10.8015 13.0535C10.7173 13.1174 10.6125 13.1411 10.4028 13.1886L10.2119 13.2318C9.47396 13.3987 9.10501 13.4822 9.01723 13.7645C8.92945 14.0468 9.18097 14.3409 9.68403 14.9291L9.81418 15.0813C9.95713 15.2485 10.0286 15.3321 10.0608 15.4355C10.0929 15.5389 10.0821 15.6504 10.0605 15.8734L10.0408 16.0765C9.96476 16.8613 9.92674 17.2538 10.1565 17.4282C10.3864 17.6027 10.7318 17.4436 11.4227 17.1255L11.6014 17.0432C11.7978 16.9528 11.8959 16.9076 12 16.9076C12.1041 16.9076 12.2022 16.9528 12.3986 17.0432L12.5773 17.1255C13.2682 17.4436 13.6136 17.6027 13.8435 17.4282C14.0733 17.2538 14.0352 16.8613 13.9592 16.0765L13.9395 15.8734C13.9179 15.6504 13.9071 15.5389 13.9392 15.4355C13.9714 15.3321 14.0429 15.2485 14.1858 15.0813L14.316 14.9291C14.819 14.3409 15.0706 14.0468 14.9828 13.7645C14.895 13.4822 14.526 13.3987 13.7881 13.2318L13.5972 13.1886C13.3875 13.1411 13.2827 13.1174 13.1985 13.0535C13.1143 12.9896 13.0603 12.8927 12.9524 12.699Z" fill="#000000"></path> </g></svg>
+    </div>
+  </div>`;
+
+  const modIcon = `
+  <div class="flex-none w-[30px] z-50">
+    <div class="modIcon">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M11.5 9.00011L10 12.0001H14L12.5 15.0001M20 12.0001C20 16.4612 14.54 19.6939 12.6414 20.6831C12.4361 20.7901 12.3334 20.8436 12.191 20.8713C12.08 20.8929 11.92 20.8929 11.809 20.8713C11.6666 20.8436 11.5639 20.7901 11.3586 20.6831C9.45996 19.6939 4 16.4612 4 12.0001V8.21772C4 7.4182 4 7.01845 4.13076 6.67482C4.24627 6.37126 4.43398 6.10039 4.67766 5.88564C4.9535 5.64255 5.3278 5.50219 6.0764 5.22146L11.4382 3.21079C11.6461 3.13283 11.75 3.09385 11.857 3.07839C11.9518 3.06469 12.0482 3.06469 12.143 3.07839C12.25 3.09385 12.3539 3.13283 12.5618 3.21079L17.9236 5.22146C18.6722 5.50219 19.0465 5.64255 19.3223 5.88564C19.566 6.10039 19.7537 6.37126 19.8692 6.67482C20 7.01845 20 7.4182 20 8.21772V12.0001Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+    </div>
+  </div>`;
+
+  let membersList = circleData.members.map(member => {
+    let displayName = document.createElement("h2");
+    let username = document.createElement("h2");
+    displayName.className = "displayName font-medium text-14 leading-tertiary";
+    username.className = "username font-light text-14 text-dark-grey";
+    username.setAttribute("username", member.user.username);
+    username.textContent = `@${member.user.username}`;
+    return `
+      <div class="flex items-center my-5 user" id="${member.user.username}">
+        <div class="flex-none w-58">
+          <img class="rounded-full w-58 h-58 object-cover" src="${member.user.profilePicture}" alt="${member.user.username}'s profile picture"/>
+        </div>
+        <div class="ml-8 flex-none w-207">
+          ${username.outerHTML}
+        </div>
+        <div class="ml-auto pr-2">
+          ${removeMemberIcon}
+        </div>
+        <div class="ml-auto pr-2">
+          ${modIcon}
+        </div>
+      </div>`;
+  }).join("");
+
+  pageContent.innerHTML = `
+    <div id="circleMembersPage" class="w-full px-0 mx-0">
+      <div class="flex flex-col items-center my-5">
+        ${membersList}
+      </div>
+    </div>`;
+
+  const circleMembersPage = document.querySelector("#circleMembersPage");
+  circleMembersPage.addEventListener("click", async(event) => {
+    const removeMemberIcon = event.target.closest(".removeMemberIcon");
+    const modIcon = event.target.closest(".modIcon");
+    const member = event.target.closest(".user").getAttribute("id");
+
+    if (removeMemberIcon) {
+      await displayConfirmationPopup(`remove ${member}`, { member });
+    }
+
+    if (modIcon) {
+      await displayConfirmationPopup(`mod ${member}`, { member });
     }
   });
 }
