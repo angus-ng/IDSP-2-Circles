@@ -71,6 +71,14 @@ header.addEventListener("click", async (event) => {
   const mapBackButton = event.target.closest("#mapBackButton");
   const inviteDoneButton = event.target.closest("#inviteDoneButton");
   const backToExplore = event.target.closest("#backToExplore");
+  const backToProfile = event.target.closest("#backToProfile");
+
+  if (backToProfile) {
+    const user = leftButtonSpan.getAttribute("username");
+    console.log(user);
+    leftButtonSpan.removeAttribute("origin");
+    await displayFriends(user);
+  }
 
   if (mapButton) {
     await displayMap();
@@ -320,7 +328,7 @@ header.addEventListener("click", async (event) => {
   }
 
   if (friendsBackButton) {
-    const username = friendsBackButton.name
+    const username = friendsBackButton.name;
     const { success, data } = await getUser(username);
     if (success && data) {
       return await displayProfile(data);

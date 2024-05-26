@@ -93,6 +93,7 @@ async function displayFriends(username) {
     pageName.textContent = "Friends";
     leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" name="${username}" id="friendsBackButton"/>`;
     rightHeaderButton.innerHTML = "";
+    leftButtonSpan.setAttribute("username", username);
   
     pageContent.innerHTML = `
     <div class="font-light text-11 justify-center text-center text-dark-grey w-full bg-light-mode">
@@ -170,6 +171,7 @@ async function displayFriends(username) {
       if (user) {
         const { success, data } = await getUser(user.id);
         if (success && data) {
+          leftButtonSpan.setAttribute("origin", "fromFriendsList");
           return await displayProfile(data);
         }
       }
@@ -225,35 +227,32 @@ async function displayFriendRequests() {
         ? (displayName.textContent = request.requester.displayName)
         : (displayName.textContent = request.requester.username);
       return `
-    <div class="flex items-center my-5 user" id="${request.requester.username}">
-    <div class="flex-none w-58">
-      <img class="rounded-full w-58 h-58 object-cover" src="${request.requester.profilePicture}" alt="${request.requester.username}'s profile picture"/>
-    </div>
-    <div class="ml-8 flex-none w-110 grid grid-rows-2">
-      <div>
-        ${displayName.outerHTML}
-      </div>
-      <div>
-        ${username.outerHTML}
-      </div>
-    </div>
-    <div class="ml-auto w-166">
-      <form class="flex text-white gap-2">
-        <button identifier="${request.requesterName}" 
-        sentTo="${request.requesteeName}" name="acceptFriendRequest" 
-        class="w-request h-request rounded-input-box bg-light-mode-accent z-50">accept</button>
-        <button identifier="${request.requesterName}" 
-        sentTo="${request.requesteeName}" name="declineFriendRequest" 
-        class="w-request h-request rounded-input-box bg-dark-grey z-50">decline</button>
-      </form>
-    </div>
-  </div>`;
-    })
-    .join("");
+      <div class="flex items-center my-5 user" id="${request.requester.username}">
+        <div class="flex-none w-58">
+          <img class="rounded-full w-58 h-58 object-cover" src="${request.requester.profilePicture}" alt="${request.requester.username}'s profile picture"/>
+        </div>
+        <div class="ml-8 flex-none w-110 grid grid-rows-2">
+          <div>
+            ${displayName.outerHTML}
+          </div>
+          <div>
+            ${username.outerHTML}
+          </div>
+        </div>
+        <div class="ml-auto w-166">
+          <form class="flex text-white gap-2">
+            <button identifier="${request.requesterName}" 
+            sentTo="${request.requesteeName}" name="acceptFriendRequest" 
+            class="w-request h-request rounded-input-box bg-light-mode-accent z-50">accept</button>
+            <button identifier="${request.requesterName}" 
+            sentTo="${request.requesteeName}" name="declineFriendRequest" 
+            class="w-request h-request rounded-input-box bg-dark-grey z-50">decline</button>
+          </form>
+        </div>
+      </div>`;
+    }).join("");
 
-  pageContent.innerHTML = `<div id="friendRequestsList" class="flex flex-col pb-200">
-    ${friendRequestsList}
-  </div>`;
+  pageContent.innerHTML = `<div id="friendRequestsList" class="flex flex-col pb-200">${friendRequestsList}</div>`;
   const friendRequestsListPage = document.querySelector("#friendRequestsList");
   friendRequestsListPage.addEventListener("click", async function (event) {
     event.preventDefault();

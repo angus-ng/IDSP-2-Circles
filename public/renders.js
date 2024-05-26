@@ -355,10 +355,15 @@ async function displayProfile(userData) {
   backSpan.removeAttribute("circleId");
 
   if (leftButtonSpan.getAttribute("origin") === "fromFeed") {
-    imgElement.id = "backToExplore"
+    imgElement.id = "backToExplore";
   }
 
-  if (currentLocalUser === userData.username) {
+  if (leftButtonSpan.getAttribute("origin") === "fromFriendsList") {
+    imgElement.id = "backToProfile";
+    imgElement.className = "";
+  }
+
+  if (currentLocalUser === userData.username && leftButtonSpan.getAttribute("origin") !== "fromFriendsList") {
     imgElement.classList.add("hidden");
   }
 
@@ -374,6 +379,7 @@ async function displayProfile(userData) {
     : userData.username;
   const username = document.createElement("h2");
   username.id = "username";
+  username.setAttribute("username", userData.username);
   username.className = "text-base text-center";
   username.textContent = `@${userData.username}`;
 
@@ -387,8 +393,7 @@ async function displayProfile(userData) {
 
   pageContent.innerHTML = `
   <div id="profilePage" class="relative pt-2 pb-16 mb-4 w-full">
-    ${currentLocalUser === userData.username ? `<div id="settings" class="absolute top-0 right-0 w-6 h-6 cursor-pointer"><img src="/lightmode/settings_icon.svg"></div>` : ""}
-    ${currentLocalUser === userData.username ? `<div id="settings" class="absolute top-0 right-0 w-6 h-6 cursor-pointer"><img src="/lightmode/settings_icon.svg"></div>` : ""}
+    ${currentLocalUser === userData.username ? `<div id="settings" class="absolute top-0 right-0 w-6 h-6 items-center justify-center cursor-pointer"><img src="/lightmode/settings_icon.svg"></div>` : ""}
     <div class="flex justify-center mb-4">
       <img id="profilePicture" src="${userData.profilePicture}" class="w-110 h-110 object-cover rounded-full"/>
       ${hiddenImageInput.outerHTML}
@@ -399,9 +404,7 @@ async function displayProfile(userData) {
     <div class="w-180 mt-6 mb-6 m-auto grid grid-cols-2 gap-4">
       <div class="gap-0 justify-center">
         <div id="circles">
-          <h2 class="text-base font-bold text-center">${
-            userData._count.UserCircle
-          }</h2>
+          <h2 class="text-base font-bold text-center">${userData._count.UserCircle}</h2>
           <h2 class="text-secondary text-center">Circles</h2>
         </div>
       </div>
@@ -523,7 +526,6 @@ async function displayProfile(userData) {
     const comment = event.target.closest(".comment");
     const profilePicture = event.target.closest("#profilePicture");
     if (profilePicture) {
-      console.log("HI")
       event.preventDefault();
       await hiddenProfileInput.click();
     }
@@ -545,11 +547,7 @@ async function displayProfile(userData) {
     }
 
     if (comment) {
-      await displayComments(
-        albumDiv.id,
-        userData.profilePicture,
-        currentLocalUser
-      );
+      await displayComments(albumDiv.id, userData.profilePicture, currentLocalUser);
       return;
     }
 
@@ -603,19 +601,17 @@ async function displayProfile(userData) {
     }
   });
 
-  document
-    .querySelector("#circleList")
-    .addEventListener("click", async function (event) {
-      const circleDiv = event.target.closest("div.circle");
-      if (circleDiv) {
-        if (circleDiv.hasAttribute("id")) {
-          let { success, data, error } = await getCircle(circleDiv.id);
-          if (success && data) {
-            await displayCircle(data, userData.username);
-          }
+  document.querySelector("#circleList").addEventListener("click", async function (event) {
+    const circleDiv = event.target.closest("div.circle");
+    if (circleDiv) {
+      if (circleDiv.hasAttribute("id")) {
+        let { success, data, error } = await getCircle(circleDiv.id);
+        if (success && data) {
+          await displayCircle(data, userData.username);
         }
       }
-    });
+    }
+  });
 
   const addFriendButton = document.querySelector("#addFriendButton");
   if (addFriendButton) {

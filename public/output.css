@@ -1301,6 +1301,10 @@ select {
   height: 100vh;
 }
 
+.h-7 {
+  height: 1.75rem;
+}
+
 .max-h-400 {
   max-height: 400px;
 }
@@ -1459,6 +1463,10 @@ select {
 
 .w-\[30px\] {
   width: 30px;
+}
+
+.w-7 {
+  width: 1.75rem;
 }
 
 .max-w-430 {
