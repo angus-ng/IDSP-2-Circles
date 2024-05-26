@@ -675,8 +675,7 @@ async function displayListOfAlbums(data, user, profile = false) {
 
 async function displayComments(
   albumId,
-  currentUserProfilePicture,
-  currentUserUsername
+  currentUserProfilePicture
 ) {
   const fetchPfp = await getCurrentUserProfilePicture();
   if (fetchPfp.data && fetchPfp.success) {
@@ -718,14 +717,14 @@ async function displayComments(
       postMsgContainer.appendChild(postMsg);
 
 
-      if (comment.likedBy !== null && comment.likedBy.includes(currentUserUsername) && poster !== null) {
+      if (comment.likedBy !== null && comment.likedBy.includes(currentLocalUser) && poster !== null) {
         likeDiv.querySelector("svg path").setAttribute("fill", "#FF4646");
         likeDiv.querySelector("svg path").setAttribute("stroke", "#FF4646");
         likeDiv.classList.add("liked");
       }
 
 
-      if (comment.likedBy !== null && comment.likedBy.includes(currentUserUsername) && poster !== null) {
+      if (comment.likedBy !== null && comment.likedBy.includes(currentLocalUser) && poster !== null) {
         likeDiv.querySelector("svg path").setAttribute("fill", "#FF4646");
         likeDiv.querySelector("svg path").setAttribute("stroke", "#FF4646");
         likeDiv.classList.add("liked");
@@ -784,7 +783,7 @@ async function displayComments(
     </div>
     <div class="flex w-full items-end mt-2">
       <div class="relative flex flex-row mr-3">
-        <img class="rounded-full h-47 w-47" src="${currentUserProfilePicture}" alt="${currentUserUsername}'s profile picture"/>
+        <img class="rounded-full h-47 w-47" src="${currentUserProfilePicture}" alt="${currentLocalUser}'s profile picture"/>
       </div>
       <div id="comment" class="relative flex-1 h-full rounded-input-box">
         <div id="replyContent"></div>

@@ -285,14 +285,22 @@ async function displayCircle(circleData) {
   </div>`;
   pageName.textContent = "";
   let currentUserProfilePicture = null;
-  let currentUserUsername = null;
-  const memberList = circleData.members.map((obj) => {
-    if (obj.user.username === currentLocalUser) {
-      currentUserProfilePicture = obj.user.profilePicture;
-      currentUserUsername = obj.user.username;
+  const memberList = [];
+  for (i=0; i < circleData.members.length; i++) {
+    if (i > 3){
+      const count = circleData.members.length - 4;
+      const andMore = `
+      <div class="w-42 h-42 rounded-full border-0 border-secondary border-solid flex justify-center items-center bg-dark-grey">
+        <p class="text-secondary text-white font-bold">+${count}</p>
+      </div>`;
+      memberList.push(andMore);
+      break;
     }
-    return `<img src="${obj.user.profilePicture}" class="w-42 h-42 rounded-full object-cover"/>`;
-  });
+    if (circleData.members[i].user.username === currentLocalUser) {
+      currentUserProfilePicture = circleData.members[i].user.profilePicture;
+    }
+    memberList.push(`<img src="${circleData.members[i].user.profilePicture}" class="w-42 h-42 rounded-full object-cover"/>`);
+  }
 
   const albumList = circleData.circle.albums.map((obj) => {
     let albumName = document.createElement("p");
