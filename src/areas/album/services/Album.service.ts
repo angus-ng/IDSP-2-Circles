@@ -253,8 +253,8 @@ export class AlbumService implements IAlbumService {
                         src: newPhotos[i].photoSrc.url,
                         userId: currentUser,
                         albumId: id,
-                        lat: newPhotos[i].photoSrc.gps ? newPhotos[i].photoSrc.gps.lat : null,
-                        long: newPhotos[i].photoSrc.gps ? newPhotos[i].photoSrc.gps.long: null
+                        lat: newPhotos[i].photoSrc.gps ? String(newPhotos[i].photoSrc.gps.lat) : null,
+                        long: newPhotos[i].photoSrc.gps ? String(newPhotos[i].photoSrc.gps.long) : null
                     }
                 })
             }

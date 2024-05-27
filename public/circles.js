@@ -415,8 +415,8 @@ async function displayCircle(circleData) {
       }
     }
   });
-
-  if (circleData.circle.ownerId === currentLocalUser) {
+  const currentUserMembership = circleData.members.find((member) => member.user.username === currentLocalUser);
+  if (circleData.circle.ownerId === currentLocalUser || (currentUserMembership ? currentUserMembership.mod : false)) {
     const inviteMore = document.createElement("button");
     inviteMore.innerHTML = `
     <svg fill="#000000" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
