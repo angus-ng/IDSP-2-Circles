@@ -77,11 +77,11 @@ model Album {
 }
 
 model Photo {
-  id      String @id @default(cuid())
+  id      String  @id @default(cuid())
   src     String
-  album   Album  @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  album   Album   @relation(fields: [albumId], references: [id], onDelete: Cascade)
   albumId String
-  poster  User   @relation(fields: [userId], references: [username])
+  poster  User    @relation(fields: [userId], references: [username])
   userId  String
   lat     String?
   long    String?
@@ -114,10 +114,11 @@ model Like {
 }
 
 model UserCircle {
-  user     User   @relation(fields: [username], references: [username])
+  user     User    @relation(fields: [username], references: [username])
   username String
-  circle   Circle @relation(fields: [circleId], references: [id], onDelete: Cascade)
+  circle   Circle  @relation(fields: [circleId], references: [id], onDelete: Cascade)
   circleId String
+  mod      Boolean @default(false)
 
   @@id([username, circleId])
 }

@@ -31,6 +31,8 @@ class CircleController implements IController {
     this.router.post(`${this.path}/accept`, ensureAuthenticated, this.acceptInvite)
     this.router.post(`${this.path}/decline`, ensureAuthenticated, this.removeCircleInvite)
     this.router.post(`${this.path}/update`, ensureAuthenticated, this.updateCircle)
+    this.router.post(`${this.path}/mod`, ensureAuthenticated, this.mod)
+    this.router.post(`${this.path}/user/remove`, ensureAuthenticated, this.removeUser)
   }
 
   private uploadImage = async (req: Request, res: Response) => {
@@ -190,6 +192,34 @@ class CircleController implements IController {
       res.status(200).json({ success: true, data: null, error: "failed to update circle" })
     }
 
+  }
+  private mod = async (req: Request, res: Response) => {
+    try {
+      let loggedInUser = await getLocalUser(req, res)
+      const { member, circleId } = req.body
+      if (!member || !circleId) {
+        return res.status(200).json({ success: true, data: null, error: "missing parameters" })
+      }
+      const modHelper = { loggedInUser, member, circleId }
+      await this._service.mod(modHelper) //this checks ownership, toggles mod status
+      return res.status(200).json({ success: true })
+    } catch (err) {
+      res.status(200).json({ success: true, data: null, error: "failed to mod/unmod" })
+    }
+  }
+  private removeUser = async (req: Request, res: Response) => {
+    try {
+      let loggedInUser = await getLocalUser(req, res)
+      const { member, circleId } = req.body
+      if (!member || !circleId) {
+        return res.status(200).json({ success: true, data: null, error: "missing parameters" })
+      }
+      const userHelper = { loggedInUser, member, circleId }
+      await this._service.removeUser(userHelper) //this checks ownership, toggles mod status
+      return res.status(200).json({ success: true })
+    } catch (err) {
+      res.status(200).json({ success: true, data: null, error: "failed to mod/unmod" })
+    }
   }
 }
 

@@ -88,6 +88,11 @@ header.addEventListener("click", async (event) => {
 
   if (backToCircle) {
     const circleId = leftButtonSpan.getAttribute("circleId");
+    leftButtonSpan.removeAttribute("id");
+    const imgElement = document.querySelector(".backSpan img");
+    if (imgElement) {
+      imgElement.id = "backToExplore";
+    }
     const { success, data } = await getCircle(circleId);
     if (success && data) {
       leftButtonSpan.removeAttribute("circleId");

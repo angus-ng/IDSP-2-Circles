@@ -566,3 +566,37 @@ async function updateProfilePicture (src) {
 
   }
 }
+
+async function toggleMod (helperObj) {
+  try {
+    const response = await fetch(`/circle/mod`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(helperObj)
+    });
+
+    const jsonResponse = await response.json();
+    return jsonResponse
+  } catch (err) {
+
+  }
+}
+
+async function removeFromCircle (helperObj) {
+  try {
+    const response = await fetch(`/circle/user/remove`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(helperObj)
+    });
+
+    const jsonResponse = await response.json();
+    return jsonResponse
+  } catch (err) {
+
+  }
+}

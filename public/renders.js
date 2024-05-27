@@ -209,12 +209,19 @@ async function displayConfirmationPopup(activity, helperObj) {
     </svg>`;
   }
 
-  if (activity === `mod ${helperObj.member}`) {
-    confirmationDetails.innerHTML = `
-    <p class="text-14">Once this member is a moderator. They</p>
-    <p class="text-14">must be unmodded to revoke privileges.</p>`;
+  if (activity === `mod ${helperObj.member}` || activity === `unmod ${helperObj.member}`) {
+    if (activity.slice(0,3) === "mod") {
+      confirmationDetails.innerHTML = `
+      <p class="text-14">Once this member is a moderator. They</p>
+      <p class="text-14">must be unmodded to revoke privileges.</p>`;
+      contextButton.textContent = "Mod";
+    } else {
+      confirmationDetails.innerHTML = `
+      <p class="text-14">Revoke moderator privileges</p>
+      <p class="text-14">from this user?</p>`;
+      contextButton.textContent = "Unmod";
+    }
 
-    contextButton.textContent = "Mod";
     confirmationIcon.innerHTML = `
     <svg width="32px" height="32px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -238,19 +245,41 @@ async function displayConfirmationPopup(activity, helperObj) {
     event.stopImmediatePropagation();
     const cancelButton = event.target.closest("#cancelButton");
     const contextButton = event.target.closest("#contextButton");
-    if (cancelButton) {
-      confirmationPopup.removeEventListener("click", confirmEventHandler, true);
+    const closeWindowAfterAction = () => {
       confirmationPopup.classList.add("hidden");
+      confirmationText.textContent = "";
+      confirmationPopup.removeEventListener("click", confirmEventHandler, true);
+    }
+    if (cancelButton) {
+      closeWindowAfterAction();
     }
 
     if (contextButton) {
+      console.log("activity", activity)
       if (activity === "delete comment") {
         await deleteComment(helperObj.commentId);
-        
-        confirmationPopup.classList.add("hidden");
-        confirmationText.textContent = "";
-        confirmationPopup.removeEventListener("click", confirmEventHandler, true);
+        closeWindowAfterAction();
         await displayComments(helperObj.albumId, helperObj.currentUserProfilePicture, currentLocalUser);
+      }
+      if (activity.slice(0,3) === "mod" || activity.slice(0, 5) === "unmod") {
+        const { success, error } = await toggleMod(helperObj)
+        if (success && !error) {
+          closeWindowAfterAction();
+          const { success, data } = await getCircle(helperObj.circleId)
+          if ( success && data ) {
+            await displayCircleMembers(data);
+          }
+        }
+      }
+      if (activity.slice(0, 6) === "remove") {
+        const { success, error } = await removeFromCircle(helperObj)
+        if (success && !error) { 
+          closeWindowAfterAction();
+          const { success, data } = await getCircle(helperObj.circleId)
+          if ( success && data ) {
+            await displayCircleMembers(data);
+          }
+        }
       }
     }
   };

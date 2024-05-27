@@ -14,4 +14,6 @@ export default interface ICircleService {
     acceptInvite(id: string, username: string): Promise<void>
     removeRequest(id: string, invitee: string): Promise<void>
     updateCircle(currentUser: string, circleObj: any): Promise<Circle>
+    mod(modHelper: {loggedInUser: string, member: string, circleId: string}): Promise<void>
+    removeUser(userHelper: {loggedInUser: string, member: string, circleId: string}): Promise<void>
 }

@@ -373,8 +373,8 @@ async function displayCircle(circleData) {
   const privacyCheckbox = document.querySelector("#privacyCheckbox");
   circleData.circle.isPublic ? privacyCheckbox.setAttribute("checked", true) : privacyCheckbox.removeAttribute("checked");
 
-  const vieweMoreMembers = document.querySelector(".viewMoreMembers");
-  vieweMoreMembers.addEventListener("click", async() => {
+  const viewMoreMembers = document.querySelector(".viewMoreMembers");
+  viewMoreMembers.addEventListener("click", async() => {
     await displayCircleMembers(circleData);
   });
 
@@ -431,8 +431,8 @@ async function displayCircle(circleData) {
     const memberList = document.querySelector(".memberCount");
     memberList.append(inviteMore);
 
-    memberList.addEventListener("click", async function (event) {
-      const portrait = event.target.closest("img")
+    document.querySelector("#inviteMoreUsers").addEventListener("click", async function (event) {
+      const portrait = event.target.closest("button")
       if (portrait) {
         if (portrait.id === "inviteMoreUsers") {
           await displayInviteFriends(true, circleData.circle.id)
@@ -491,7 +491,7 @@ async function displayCircleInvites() {
 async function displayCircleMembers(circleData) {
   console.log(circleData.circle.id)
   const imgElement = document.querySelector(".backSpan img");
-  imgElement.id = "";
+  imgElement.removeAttribute("id")
   leftButtonSpan.id = "backToCircle";
   leftButtonSpan.setAttribute("circleId", circleData.circle.id);
   rightButtonSpan.innerHTML = "";
@@ -521,28 +521,35 @@ async function displayCircleMembers(circleData) {
     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M11.5 9.00011L10 12.0001H14L12.5 15.0001M20 12.0001C20 16.4612 14.54 19.6939 12.6414 20.6831C12.4361 20.7901 12.3334 20.8436 12.191 20.8713C12.08 20.8929 11.92 20.8929 11.809 20.8713C11.6666 20.8436 11.5639 20.7901 11.3586 20.6831C9.45996 19.6939 4 16.4612 4 12.0001V8.21772C4 7.4182 4 7.01845 4.13076 6.67482C4.24627 6.37126 4.43398 6.10039 4.67766 5.88564C4.9535 5.64255 5.3278 5.50219 6.0764 5.22146L11.4382 3.21079C11.6461 3.13283 11.75 3.09385 11.857 3.07839C11.9518 3.06469 12.0482 3.06469 12.143 3.07839C12.25 3.09385 12.3539 3.13283 12.5618 3.21079L17.9236 5.22146C18.6722 5.50219 19.0465 5.64255 19.3223 5.88564C19.566 6.10039 19.7537 6.37126 19.8692 6.67482C20 7.01845 20 7.4182 20 8.21772V12.0001Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
     </div>
   </div>`;
-
+  const currentUserMembership = circleData.members.find((member) => member.user.username === currentLocalUser)
   let membersList = circleData.members.map(member => {
     let displayName = document.createElement("h2");
     let username = document.createElement("h2");
     displayName.className = "displayName font-medium text-14 leading-tertiary";
     username.className = "username font-light text-14 text-dark-grey";
     username.setAttribute("username", member.user.username);
+    displayName.textContent = member.user.displayName ? member.user.displayName : member.user.username
     username.textContent = `@${member.user.username}`;
     return `
-      <div class="flex items-center my-5 user" id="${member.user.username}">
+      <div class="flex items-center my-5 user" id="${member.user.username}" mod="${member.mod}">
         <div class="flex-none w-58">
           <img class="rounded-full w-58 h-58 object-cover" src="${member.user.profilePicture}" alt="${member.user.username}'s profile picture"/>
         </div>
+        <div class="">
+        ${member.user.username === circleData.circle.ownerId ? ownerIcon : (member.mod ? modIcon : "")} 
+        </div>
         <div class="ml-8 flex-none w-207">
+          ${displayName.outerHTML}
           ${username.outerHTML}
         </div>
-        <div class="ml-auto pr-2">
-          ${removeMemberIcon}
-        </div>
-        <div class="ml-auto pr-2">
-          ${modIcon}
-        </div>
+        ${(currentLocalUser === circleData.circle.ownerId || (currentUserMembership ? currentUserMembership.mod : false)) && member.user.username !== circleData.circle.ownerId ? 
+          `<div class="ml-auto pr-2">
+            ${removeMemberIcon}
+            </div>`: ""}
+        ${currentLocalUser === circleData.circle.ownerId && member.user.username !== circleData.circle.ownerId ?
+          `<div class="ml-auto pr-2">
+            ${modIcon}
+          </div>` : ""}
       </div>`;
   }).join("");
 
@@ -557,14 +564,23 @@ async function displayCircleMembers(circleData) {
   circleMembersPage.addEventListener("click", async(event) => {
     const removeMemberIcon = event.target.closest(".removeMemberIcon");
     const modIcon = event.target.closest(".modIcon");
-    const member = event.target.closest(".user").getAttribute("id");
+    const user = event.target.closest(".user")
+      if (user) {
+        const member = user.getAttribute("id");
+        const currentStatus = user.getAttribute("mod")
 
-    if (removeMemberIcon) {
-      await displayConfirmationPopup(`remove ${member}`, { member });
-    }
+        if (removeMemberIcon) {
+          await displayConfirmationPopup(`remove ${member}`, { member, circleId:circleData.circle.id });
+        }
 
-    if (modIcon) {
-      await displayConfirmationPopup(`mod ${member}`, { member });
+        if (modIcon) {
+          if (currentStatus === "true"){ 
+            await displayConfirmationPopup(`unmod ${member}`, { member, circleId:circleData.circle.id });
+          } else {
+            await displayConfirmationPopup(`mod ${member}`, { member, circleId:circleData.circle.id });
+          }
+        }
+
     }
   });
 }

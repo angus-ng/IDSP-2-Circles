@@ -31,7 +31,8 @@ export class CircleService implements ICircleService {
             await this._db.prisma.userCircle.create({
                 data: {
                     username: creator.username,
-                    circleId: createdCircle.id
+                    circleId: createdCircle.id,
+                    mod: true
                 }
             })
         }
@@ -157,9 +158,11 @@ export class CircleService implements ICircleService {
             user: {
                 select: {
                     username: true,
-                    profilePicture: true
+                    profilePicture: true,
+                    displayName: true
                 }
-            }
+            },
+            mod: true
         },
         where: {
             circleId: circleId
@@ -256,5 +259,96 @@ export class CircleService implements ICircleService {
             }
         })
         return updatedCircle;
+    }
+    async mod(modHelperObj: {loggedInUser: string, member: string, circleId: string}): Promise<void> {
+        try {
+            const circle = await this._db.prisma.circle.findUnique({
+                where: {
+                    id: modHelperObj.circleId
+                }
+            })
+            if (!circle) {
+                throw new Error("circle not found")
+            }
+            if (circle.ownerId !== modHelperObj.loggedInUser){
+                throw new Error("insufficient permissions")
+            }
+            const relation = await this._db.prisma.userCircle.findUnique({
+                where: {
+                    username_circleId: {
+                        username: modHelperObj.member,
+                        circleId: circle.id
+                    }
+                }
+            })
+            if (!relation) {
+                throw new Error("user is not a member of the circle")
+            }
+            await this._db.prisma.userCircle.update({
+                where: {
+                    username_circleId: {
+                        username: modHelperObj.member,
+                        circleId: circle.id
+                    }
+                },
+                data: {
+                    mod: !(relation.mod)
+                }
+            })
+        } catch (err) {
+            console.log(err)
+            throw err;
+        }
+    }
+    async removeUser(userHelper: { loggedInUser: string; member: string; circleId: string; }): Promise<void> {
+        try {
+            const circle = await this._db.prisma.circle.findUnique({
+                where: {
+                    id: userHelper.circleId
+                }
+            })
+    
+            if (!circle) {
+                throw new Error("missing circle")
+            }
+            if (userHelper.member === circle.ownerId) {
+                throw new Error("Cannot remove the owner");
+            }
+            if (userHelper.loggedInUser === circle.ownerId) {
+                    await this._db.prisma.userCircle.delete({
+                        where: {
+                            username_circleId: {
+                                username: userHelper.member,
+                                circleId: circle.id
+                            }
+                        }
+                    })     
+            } else {
+                const members = await this.getMembers(userHelper.circleId)
+                const found = members.find((member) => member.user.username === userHelper.loggedInUser)
+                if (!found) {
+                    throw new Error("you are not a member of the circle")
+                }
+                if (found.mod === false) {
+                    throw new Error("insufficient permissions")
+                } else {
+                    const removeUser = members.find((member) => member.user.username === userHelper.member)
+                    if (removeUser && (removeUser.mod !== true)){
+                        await this._db.prisma.userCircle.delete({
+                            where: {
+                                username_circleId: {
+                                    username: userHelper.member,
+                                    circleId: circle.id
+                                }
+                            }
+                        })    
+                    } 
+                }
+            }
+            
+        } catch (err) {
+            console.log(err)
+            throw err;
+        }
     }
 }

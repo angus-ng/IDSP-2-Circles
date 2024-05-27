@@ -250,9 +250,11 @@ export class AlbumService implements IAlbumService {
             for (let i = 0; i < newPhotos.length; i++) {
                 const file = await this._db.prisma.photo.create({
                     data: {
-                        src: newPhotos[i].photoSrc,
+                        src: newPhotos[i].photoSrc.url,
                         userId: currentUser,
-                        albumId: id
+                        albumId: id,
+                        lat: newPhotos[i].photoSrc.gps ? newPhotos[i].photoSrc.gps.lat : null,
+                        long: newPhotos[i].photoSrc.gps ? newPhotos[i].photoSrc.gps.long: null
                     }
                 })
             }
