@@ -112,7 +112,7 @@ export class AlbumService implements IAlbumService {
         return true
     }
 
-    async likeAlbum(currentUser: string, albumId: string): Promise<void> {
+    async likeAlbum(currentUser: string, albumId: string): Promise<void | boolean> {
         try {
             const existingLike = await this._db.prisma.like.findFirst({
                 where: {
@@ -138,7 +138,6 @@ export class AlbumService implements IAlbumService {
                         }
                     }
                 });
-
                 console.log("Album unliked successfully");
             } else {
                 await this._db.prisma.like.create({
@@ -148,7 +147,7 @@ export class AlbumService implements IAlbumService {
                     }
                 });
 
-                await this._db.prisma.album.update({
+                const album = await this._db.prisma.album.update({
                     where: {
                         id: albumId
                     },
@@ -158,8 +157,8 @@ export class AlbumService implements IAlbumService {
                         }
                     }
                 });
-
                 console.log("Album liked successfully");
+                return true;
             }
         } catch (err) {
             throw err;

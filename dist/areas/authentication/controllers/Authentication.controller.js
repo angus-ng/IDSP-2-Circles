@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const kinde_1 = require("../config/kinde");
+const SocketIO_1 = require("../../../helper/SocketIO");
 class AuthenticationController {
     constructor(service) {
         this.path = "/auth";
@@ -44,6 +45,7 @@ class AuthenticationController {
             }
             //@ts-ignore
             req.user = user;
+            (0, SocketIO_1.initializeSocket)();
             return res.redirect("/");
         });
         this.logout = (req, res) => __awaiter(this, void 0, void 0, function* () {

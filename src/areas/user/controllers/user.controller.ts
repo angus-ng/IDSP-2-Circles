@@ -4,6 +4,7 @@ import IUserService from "../services/IUserService";
 import { ensureAuthenticated } from "../../../middleware/authentication.middleware";
 import { kindeClient, sessionManager } from "../../../areas/authentication/config/kinde";
 import { getLocalUser } from "../../../helper/getLocalUser";
+import { io } from '../../../app';
 
 class UserController implements IController {
   public path = "/user";

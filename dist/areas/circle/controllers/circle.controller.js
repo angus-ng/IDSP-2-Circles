@@ -31,6 +31,10 @@ class CircleController {
                 const cldRes = yield (0, HandleSingleUpload_1.handleUpload)(dataURI);
                 try {
                     let { latitude, longitude } = yield exifr_1.default.gps(b64);
+                    console.log("HERE", cldRes);
+                    if (cldRes.format === "heic") {
+                        cldRes.url = cldRes.url.split(".heic")[0] + ".jpg";
+                    }
                     res.json({ message: 'File uploaded successfully', data: { url: cldRes.url, gps: { lat: latitude, long: longitude } } });
                 }
                 catch (error) {

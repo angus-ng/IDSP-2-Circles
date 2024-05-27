@@ -16,7 +16,7 @@ import AlbumController from './areas/album/controllers/album.controller';
 import { AlbumService } from './areas/album/services';
 import UserController from './areas/user/controllers/user.controller';
 import { UserService } from './areas/user/services';
-
+import { io } from './app';
 
 const cloudinary = require("cloudinary").v2;
 
@@ -30,10 +30,8 @@ const server = new App([
   new LandingController(),
   new CircleController(new CircleService()),
   new AlbumController(new AlbumService()),
-  // new PostController(new PostService()),
   new UserController(new UserService()),
   new AuthenticationController(new AuthenticationService()),
-  // new SearchController(new SearchService())
   // new SettingController(new SettingService()),
 ]);
 

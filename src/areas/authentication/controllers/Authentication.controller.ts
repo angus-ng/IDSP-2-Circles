@@ -3,7 +3,7 @@ import IController from "../../../interfaces/controller.interface";
 import { IAuthenticationService } from "../services/IAuthentication.service";
 import { kindeClient, sessionManager } from "../config/kinde";
 import { User as IUser } from "@prisma/client";
-import { initializeSocket } from "../../../helper/SocketIO";
+import { io } from '../../../app';
 
 declare global {
   namespace Express {
@@ -15,9 +15,10 @@ class AuthenticationController implements IController {
   public path = "/auth";
   public router = express.Router();
   private _service: IAuthenticationService;
+  
   constructor(service: IAuthenticationService) {
     this.initializeRoutes();
-    this._service = service;
+    this._service = service; 
   }
   private initializeRoutes() {
     this.router.get(`${this.path}/getSession`, this.getSession)
@@ -55,7 +56,6 @@ class AuthenticationController implements IController {
     }
     //@ts-ignore
     req.user = user
-    initializeSocket()
 
     return res.redirect("/");
   }

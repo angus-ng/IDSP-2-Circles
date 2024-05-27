@@ -1,19 +1,9 @@
-const socket = io();
-socket.on('connect',function(){      
-  socket.emit('join','room_one');
-  socket.emit('room_message',{hello:'hello'});
-});
-
-socket.on('room_message',function(data){
-  console.log(data);
-})   
-
 async function handleCreateCircle() {
   try {
     const circlePhoto = document.querySelector("#circleImage");
     const circleName = document.querySelector("#circleName").value;
     if (!circleName) {
-      return { success: true, data: null, error: "Missing circle name" };
+      return { success: true, data: null, error: "Missing circlge name" };
     }
 
     const formData = new FormData();
@@ -76,6 +66,7 @@ async function uploadFile(file) {
   }
 }
 
+//NOT USED ANYMORE DELETE
 async function localAuth() {
   let emailInput = document.querySelector("#emailInput");
   let passwordInput = document.querySelector("#passwordInput");

@@ -1,14 +1,12 @@
 import { Request, Response, NextFunction, Router } from "express";
 import IController from "../../../interfaces/controller.interface";
 import IAlbumService from "../services/IAlbumService";
-import { Album } from '@prisma/client'
 import { ensureAuthenticated } from "../../../middleware/authentication.middleware";
-import { handleUpload } from "../../../helper/HandleSingleUpload";
 import multer from 'multer';
-import { handleMultipleUpload } from "../../../helper/HandleMultiplePhotos";
 import { getLocalUser } from "../../../helper/getLocalUser";
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
+import { io } from '../../../app';
 
 TimeAgo.addLocale(en);
 const timeAgo = new TimeAgo("en");
@@ -64,7 +62,7 @@ class AlbumController implements IController {
       console.log(albumObj)
       const newAlbum = await this._service.createAlbum(albumObj)
       console.log(newAlbum.id)
-
+      io.emit("newAlbum", { user: loggedInUser, albumId: newAlbum.id })
       return res.status(200).json({ success: true, data: newAlbum.id })
     } catch (err) {
       res.status(200).json({ success: true, data: null, error: "Failed to create album" })
@@ -94,7 +92,7 @@ class AlbumController implements IController {
       }
 
       console.log(updatedAlbum);
-
+      io.emit("updateAlbum", { user: loggedInUser, albumId: updatedAlbum.id })
       res.status(200).json({ success: true, data: updatedAlbum });
 
     } catch (err) {
@@ -107,9 +105,13 @@ class AlbumController implements IController {
     try {
       let loggedInUser = await getLocalUser(req, res)
       const { albumId } = req.body;
-      await this._service.likeAlbum(loggedInUser, albumId);
+      const liked = await this._service.likeAlbum(loggedInUser, albumId);
+      if (liked) {
+        io.emit('likeAlbum', { albumId, user: loggedInUser });
+      }
       res.json({ success: true, data: null });
     } catch (err) {
+      console.log(err)
       res.json({ success: true, data: null, error: "failed to like album" });
     }
   }
@@ -188,6 +190,7 @@ class AlbumController implements IController {
         return res.status(200).json({ success: true, data: null });
       }
       const comment = await this._service.createComment(loggedInUser, message, albumId, commentId);
+      io.emit("newComment", { user: loggedInUser, albumId })
       res.json({ success: true, data: null });
     } catch (err) {
       res.json({ success: true, data: null, error: "failed to create comment" });
@@ -212,6 +215,7 @@ class AlbumController implements IController {
     try {
       const { commentId } = req.body;
       await this._service.likeComment(loggedInUser, commentId);
+      io.emit("likeComment", { user: loggedInUser, commentId })
       res.json({ success: true, data: null });
     } catch (err) {
       res.json({ success: true, data: null, error: "failed to like comment" });

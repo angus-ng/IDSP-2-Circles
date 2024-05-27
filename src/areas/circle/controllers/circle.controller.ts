@@ -7,6 +7,7 @@ import { handleUpload } from "../../../helper/HandleSingleUpload";
 import multer from 'multer';
 import { getLocalUser } from "../../../helper/getLocalUser";
 import exifr from 'exifr'
+import { io } from '../../../app';
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });

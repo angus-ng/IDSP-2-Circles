@@ -3,8 +3,10 @@ import http from "http";
 import { Server } from "socket.io";
 import Controller from "./interfaces/controller.interface";
 import dotenv from "dotenv";
+import { SocketIo } from "./helper/getSocket";
 
-export let io: Server;
+let io: Server;
+export { App, io };
 
 class App {
   private _app: express.Application;
@@ -17,7 +19,7 @@ class App {
 
     this._app = express();
     this._server = http.createServer(this._app);
-    this._io = new Server( this._server );
+    this._io = SocketIo.getInstance(this._server)
     this.initializeMiddlewares();
     this.initializeControllers(controllers);
     io = this._io
