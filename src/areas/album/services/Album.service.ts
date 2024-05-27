@@ -112,7 +112,7 @@ export class AlbumService implements IAlbumService {
         return true
     }
 
-    async likeAlbum(currentUser: string, albumId: string): Promise<void | boolean> {
+    async likeAlbum(currentUser: string, albumId: string): Promise<any> {
         try {
             const existingLike = await this._db.prisma.like.findFirst({
                 where: {
@@ -157,8 +157,21 @@ export class AlbumService implements IAlbumService {
                         }
                     }
                 });
+                const members = await this._db.prisma.userCircle.findMany({
+                    select: {
+                        user: {
+                            select: {
+                                username: true,
+                            }
+                        }
+                    },
+                    where: {
+                        circleId: album.circleId
+                    }
+                })
+                const listOfMembers= members.map(obj => obj.user.username);
                 console.log("Album liked successfully");
-                return true;
+                return {members: listOfMembers, user:currentUser};
             }
         } catch (err) {
             throw err;

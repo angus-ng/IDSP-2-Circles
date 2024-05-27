@@ -8,7 +8,7 @@ export default interface IAlbumService {
     checkPublic(id: string): Promise<boolean>
     getAlbum(id: string): Promise<Album | null>
     // listAlbums(currentUser: string): Promise<{album: Album}[] | void>
-    likeAlbum(currentUser: string, albumId: string): Promise<void | boolean>
+    likeAlbum(currentUser: string, albumId: string): Promise<any>
     getComments(albumId: string): Promise<any>
     createComment(currentUser: string, message: string, albumId: string, commentId?:string): Promise<void>
     deleteComment(currentUser: string, commentId: string): Promise<void>

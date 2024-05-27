@@ -107,7 +107,8 @@ class AlbumController implements IController {
       const { albumId } = req.body;
       const liked = await this._service.likeAlbum(loggedInUser, albumId);
       if (liked) {
-        io.emit('likeAlbum', { albumId, user: loggedInUser });
+        console.log(liked)
+        io.emit('likeAlbum', { users: liked.members, user:liked.user });
       }
       res.json({ success: true, data: null });
     } catch (err) {
