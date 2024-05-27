@@ -673,10 +673,7 @@ async function displayListOfAlbums(data, user, profile = false) {
   return albumList;
 }
 
-async function displayComments(
-  albumId,
-  currentUserProfilePicture
-) {
+async function displayComments(albumId, currentUserProfilePicture) {
   const fetchPfp = await getCurrentUserProfilePicture();
   if (fetchPfp.data && fetchPfp.success) {
     currentUserProfilePicture = fetchPfp.data;
@@ -689,7 +686,7 @@ async function displayComments(
     return;
   }
 
-  const showCommentsRecursively = (comments) => {
+  const showCommentsRecursively = (comments, level = 0) => {
     const arr = comments.map((comment) => {
       const likeDiv = document.createElement("div");
       likeDiv.className = "like h-full cursor-pointer";
@@ -730,13 +727,12 @@ async function displayComments(
         likeDiv.classList.add("liked");
       }
 
-      return `<div class="comment relative flex flex-row items-start h-full my-4" id="${
-        comment.id
-      }" user="${
-        comment.user.displayName
-          ? comment.user.displayName
-          : comment.user.username
-      }">
+      const marginClass = level >= 5 ? "ml-0 pl-0 border-0" : "ml-3 pl-2 border-l border-gray-300";
+
+      return `
+      <div class="comment relative flex flex-row items-start h-full my-4" 
+        id="${comment.id}" 
+        user="${comment.user.displayName ? comment.user.displayName : comment.user.username}">
       <div class="flex-none w-58 items-center h-full mr-1 mt-1">
         <img src="${comment.user.profilePicture ? comment.user.profilePicture : "/placeholder_image.svg"}" class="w-47 h-47 rounded-full cursor-pointer">
       </div>
@@ -758,13 +754,12 @@ async function displayComments(
         </div>
       </div>
     </div>
-    ${
-      comment.replies
-        ? `<div class="parentComment"><div class="childComment border-l border-comment-line pl-2 ml-3">${showCommentsRecursively(
-            comment.replies
-          )}</div></div>`
-        : ""
-    }`;
+    ${comment.replies 
+      ? `<div class="parentComment">
+          <div class="childComment ${marginClass}">
+            ${showCommentsRecursively(comment.replies, level + 1)}
+          </div>
+        </div>` : ""}`;
     });
     return arr.join("");
   };
@@ -877,11 +872,7 @@ async function displayComments(
       newCommentInput.id === "replyInput"
         ? await newComment(newCommentInput.value, albumId, commentId)
         : await newComment(newCommentInput.value, albumId);
-      await displayComments(
-        albumId,
-        currentUserProfilePicture,
-        currentLocalUser
-      );
+      await displayComments(albumId, currentUserProfilePicture, currentLocalUser);
     }
   });
   const submitComment = document.querySelector("#submitComment");

@@ -1119,6 +1119,10 @@ select {
   margin-top: 105px;
 }
 
+.ml-0 {
+  margin-left: 0px;
+}
+
 .flex {
   display: flex;
 }
@@ -1835,6 +1839,11 @@ select {
   border-color: rgb(255 255 255 / var(--tw-border-opacity));
 }
 
+.border-gray-300 {
+  --tw-border-opacity: 1;
+  border-color: rgb(209 213 219 / var(--tw-border-opacity));
+}
+
 .border-x-transparent {
   border-left-color: transparent;
   border-right-color: transparent;
@@ -2047,6 +2056,10 @@ select {
 
 .pt-6 {
   padding-top: 1.5rem;
+}
+
+.pl-0 {
+  padding-left: 0px;
 }
 
 .text-center {
