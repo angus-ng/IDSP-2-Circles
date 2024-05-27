@@ -15,6 +15,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const authentication_middleware_1 = require("../../../middleware/authentication.middleware");
 const getLocalUser_1 = require("../../../helper/getLocalUser");
+const javascript_time_ago_1 = __importDefault(require("javascript-time-ago"));
+const en_1 = __importDefault(require("javascript-time-ago/locale/en"));
+javascript_time_ago_1.default.addLocale(en_1.default);
+const timeAgo = new javascript_time_ago_1.default("en");
 class UserController {
     constructor(userService) {
         this.path = "/user";

@@ -45,7 +45,6 @@
     "@prisma/adapter-libsql": "^5.13.0",
     "@prisma/client": "^5.13.0",
     "@types/livereload": "^0.9.5",
-    "@types/ws": "^8.5.10",
     "bcrypt": "^5.1.1",
     "cloudinary": "^2.2.0",
     "connect-redis": "^7.1.1",
@@ -68,7 +67,6 @@
     "sharp": "^0.33.4",
     "socket.io": "^4.7.5",
     "swiped-events": "^1.2.0",
-    "tsx": "^4.7.3",
-    "ws": "^8.17.0"
+    "tsx": "^4.7.3"
   }
 }

@@ -185,10 +185,15 @@ class AlbumController implements IController {
     try {
       const { message, albumId, commentId } = req.body;
       console.log(message, albumId, commentId);
-
-      const member = await this._service.checkMembership(albumId, loggedInUser);
-      if (!member || !message || message === "") {
-        return res.status(200).json({ success: true, data: null });
+      const publicStatus = await this._service.checkPublic(albumId)
+      if (!publicStatus){
+        const member = await this._service.checkMembership(albumId, loggedInUser);
+        if (!member){
+          return res.status(200).json({ success: true, data:null });
+        }
+      }
+      if (!message || message===""){
+        return res.status(200).json({ success: true, data:null });
       }
       const comment = await this._service.createComment(loggedInUser, message, albumId, commentId);
       io.emit("newComment", { user: loggedInUser, albumId })

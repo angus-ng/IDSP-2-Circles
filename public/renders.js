@@ -450,9 +450,9 @@ async function displayInviteFriends(fromCircle = false, circleId = "") {
         if (!memberList.includes(user.username)) {
           return user;
         }
-      });
-      console.log("1", memberList);
-      console.log("2", friends);
+      })
+      console.log("1",memberList)
+      console.log("2",friends)
     }
   }
   const friendsList = await displayListOfFriends(friends);
@@ -586,7 +586,6 @@ async function displayCreateCirclePreview() {
       circlePhoto.src = await res.data.url;
     }
   });
-  //This needs to be implemented when SPA creates the html for the privacy toggle
 
   privacyCheckbox.addEventListener("change", async function () {
     const privacyIcon = document.querySelector("#privacyIcon");
@@ -601,9 +600,14 @@ async function displayCreateCirclePreview() {
 
 async function displayExplore(userData) {
   const { success, data } = await getAlbumFeed();
+  let feedRender = "";
   if (success && data) {
-    console.log(data);
+    const { feedData } = await displayFriendAlbums(data);
+    if (feedData) {
+      feedRender = feedData.join("");
+    }
   }
+
   pageName.textContent = "Explore";
   header.classList.remove("hidden");
   leftHeaderButton.innerHTML = "";
@@ -616,17 +620,141 @@ async function displayExplore(userData) {
   <div id="explorePage" class="flex flex-col py-2 w-full h-full>
     <div id="circlesFeed">
       <h2 class="font-medium text-17 mb-2">Your Circles</h2>
-      <div class="h-[150px]">
-        <div id="circleList" class="m-auto flex flex-row gap-4 overflow-x-auto h-full">
+      <div class="h-[145px]">
+        <div id="circleList" class="m-auto flex flex-row gap-4 overflow-x-auto overflow-y-clip h-full">
           ${circleRender.join("")}
         </div>
       </div>
     </div>
-    <div id="feed">
+    <div id="feed" class="h-full">
       <h2 class="font-medium text-17">Your Feed</h2>
+      <div id="albumList" class="m-auto mt-6 mb-6 columns-2 gap-4 space-y-4 grid-flow-row h-full">
+        ${feedRender}
+      </div>
     </div>
   </div>`;
   await displayNavBar();
+
+  async function displayFriendAlbums(data) {
+    const albumList = await Promise.all(data.map(async (obj) => {
+      let albumName = document.createElement("p");
+      albumName.className = "text-white text-shadow shadow-black";
+      albumName.textContent = obj.name;
+  
+      const { data: userData } = await getUser(obj.ownerName);
+      let userDiv = document.createElement("div");
+      userDiv.setAttribute("username", obj.ownerName);
+      userDiv.className = "userInfo flex flex-row gap-2 bg-white py-4 items-center justify-start";
+      let userImage = document.createElement("img");
+      userImage.className = "userImage w-8 h-8 rounded-full object-cover flex-none";
+      userImage.src = userData.profilePicture;
+      userImage.alt = `${obj.ownerName}'s profile picture`;
+      userDiv.append(userImage);
+      let username = document.createElement("p");
+      username.className = "username text-secondary break-words";
+      username.textContent = obj.ownerName;
+      userDiv.append(username);
+
+      let creationDate = document.createElement("p");
+      creationDate.className = "text-secondary text-dark-grey";
+      creationDate.textContent = obj.createdAt;
+  
+      const { data: circleData } = await getCircle(obj.circleId);
+      let circleImage = document.createElement("img");
+      circleImage.className = "circle w-8 h-8 rounded-full object-cover";
+      circleImage.src = circleData.circle.picture;
+
+      const { data: albumData } = await getAlbum(obj.id);
+      let albumImage = document.createElement("img");
+      albumImage.className = "w-full w-167 h-167 h-min rounded-xl object-cover";
+      albumImage.src = albumData.photos[0].src;
+      albumImage.alt = `${albumData.name}'s album cover`;
+
+      const userLiked = albumData.likes.some(like => like.user.username === currentLocalUser);
+      const likedClass = userLiked ? "liked" : "";
+      const heartColor = userLiked ? "#FF4646" : "none";
+      const heartColorStroke = userLiked ? "#FF4646" : "white";
+  
+      return `
+      <div class="w-full flex flex-col bg-white p-3 rounded-12.75 h-[280px] overflow-hidden">
+        <div class="albumCard">
+            <div class="w-full h-min relative overflow-hidden album" id="${obj.id}">
+            <div>${albumImage.outerHTML}</div>
+            <div class="absolute top-0 right-0 m-2 flex items-start justify-end gap-1 p2">${circleImage.outerHTML}</div>
+            <div class="m-2 text-secondary font-semibold absolute inset-0 flex items-end justify-start">
+                ${albumName.outerHTML}
+            </div>
+            <div class="absolute inset-0 flex items-end justify-end gap-1 p-2">
+                <div class="like cursor-pointer ${likedClass}">
+                  <svg width="20" height="19" viewBox="0 0 20 19" fill="${heartColor}" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M9.22318 16.2905L9.22174 16.2892C6.62708 13.9364 4.55406 12.0515 3.11801 10.2946C1.69296 8.55118 1 7.05624 1 5.5C1 2.96348 2.97109 1 5.5 1C6.9377 1 8.33413 1.67446 9.24117 2.73128L10 3.61543L10.7588 2.73128C11.6659 1.67446 13.0623 1 14.5 1C17.0289 1 19 2.96348 19 5.5C19 7.05624 18.307 8.55118 16.882 10.2946C15.4459 12.0515 13.3729 13.9364 10.7783 16.2892L10.7768 16.2905L10 16.9977L9.22318 16.2905Z" stroke="${heartColorStroke}" stroke-width="2"/>
+                  </svg>
+                </div>
+                <div class="comment cursor-pointer" albumid="${obj.id}">
+                  <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M10.5 19.125C8.79414 19.125 7.12658 18.6192 5.70821 17.6714C4.28983 16.7237 3.18434 15.3767 2.53154 13.8006C1.87873 12.2246 1.70793 10.4904 2.04073 8.81735C2.37352 7.14426 3.19498 5.60744 4.4012 4.40121C5.60743 3.19498 7.14426 2.37353 8.81735 2.04073C10.4904 1.70793 12.2246 1.87874 13.8006 2.53154C15.3767 3.18435 16.7237 4.28984 17.6714 5.70821C18.6192 7.12658 19.125 8.79414 19.125 10.5C19.125 11.926 18.78 13.2705 18.1667 14.455L19.125 19.125L14.455 18.1667C13.2705 18.78 11.925 19.125 10.5 19.125Z" stroke="#F8F4EA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="h-20">
+        ${userDiv.outerHTML}
+        ${creationDate.outerHTML}
+        </div>
+    </div>`;
+    }));
+    return { feedData: albumList };
+  }
+
+  const albumList = document.querySelector("#albumList");
+  albumList.addEventListener("click", async(event) => {
+    const like = event.target.closest(".like");
+    const comment = event.target.closest(".comment");
+    const username = event.target.closest(".username");
+    const userImage = event.target.closest(".userImage");
+    const albumDiv = event.target.closest(".album");
+
+    if (like) {
+      const albumId = event.target.closest("div.album").getAttribute("id");
+      if (like.classList.contains("liked")) {
+        like.classList.remove("liked");
+        like.querySelector("svg path").setAttribute("fill", "none");
+        like.querySelector("svg path").setAttribute("stroke", "#FFFFFF");
+        await likeAlbum(albumId);
+      } else {
+        like.classList.add("liked");
+        like.querySelector("svg path").setAttribute("fill", "#FF4646");
+        like.querySelector("svg path").setAttribute("stroke", "#FF4646");
+        await likeAlbum(albumId);
+      }
+      return;
+    }
+
+    if (comment) {
+      const { data: userData } = await getUser(currentLocalUser);
+      await displayComments(albumDiv.id, userData.profilePicture, currentLocalUser);
+      return;
+    }
+
+    if (albumDiv) {
+      if (albumDiv.hasAttribute("id")) {
+        let { success, data, error } = await getAlbum(albumDiv.id);
+        if (success && data) {
+          leftButtonSpan.setAttribute("origin", "fromExplore");
+          await displayAlbum(data);
+        }
+      }
+      return;
+    }
+
+    if (username || userImage) {
+      const user = event.target.closest(".userInfo").getAttribute("username");
+      const { data: userData } = await getUser(user);
+      leftButtonSpan.setAttribute("origin", "fromFeed");
+      await displayProfile(userData);
+    }
+  })
 
   const circleList = document.querySelector("#circleList");
 
@@ -636,6 +764,7 @@ async function displayExplore(userData) {
       if (circleDiv.hasAttribute("id")) {
         let { success, data, error } = await getCircle(circleDiv.id);
         if (success && data) {
+          leftButtonSpan.setAttribute("origin", "fromExplore");
           await displayCircle(data, userData.username);
         }
       }
@@ -1020,6 +1149,10 @@ async function displayProfile(userData) {
   imgElement.alt = "Back Button";
   imgElement.id = "profileBackButton";
   backSpan.removeAttribute("circleId");
+
+  if (leftButtonSpan.getAttribute("origin") === "fromFeed") {
+    imgElement.id = "backToExplore"
+  }
 
   if (currentLocalUser === userData.username) {
     imgElement.classList.add("hidden");
@@ -1850,11 +1983,12 @@ async function displayCircle(circleData) {
     imgElement.classList.remove("hidden");
     imgElement.id = "circleToProfileButton";
   }
+  
   const backSpan = document.querySelector(".backSpan");
   if (backSpan) {
     const circleId = backSpan.getAttribute("circleId");
+    const imgElement = document.querySelector("#albumToCircleButton");
     if (circleId === null) {
-      const imgElement = document.querySelector("#albumToCircleButton");
       if (backSpan.getAttribute("username") === null) {
         leftHeaderButton.innerHTML = "";
       } else if (imgElement) {
@@ -1862,17 +1996,21 @@ async function displayCircle(circleData) {
       }
     }
   } else {
-    const circleId = circleData.circle.id;
-    const backSpan = document.createElement("span");
-    backSpan.className = "backSpan";
-    const imgElement = document.createElement("img");
-    imgElement.id = "albumToCircleButton";
-    imgElement.src = "/lightmode/back_button.svg";
-    imgElement.alt = "Back Button";
-
-    backSpan.setAttribute("circleId", circleId);
-    backSpan.appendChild(imgElement);
-    leftHeaderButton.appendChild(backSpan);
+      const circleId = circleData.circle.id;
+      const backSpan = document.createElement("span");
+      backSpan.className = "backSpan";
+      const imgElement = document.createElement("img");
+      if (leftButtonSpan.getAttribute("origin") === "fromExplore") {
+        imgElement.id = "backToExplore";
+      } else {
+        imgElement.id = "albumToCircleButton";
+      }
+      imgElement.src = "/lightmode/back_button.svg";
+      imgElement.alt = "Back Button";
+      
+      backSpan.setAttribute("circleId", circleId);
+      backSpan.appendChild(imgElement);
+      leftHeaderButton.appendChild(backSpan);
   }
 
   const circlePreviewBackButton = document.querySelector(
@@ -2072,7 +2210,7 @@ async function displayCircleInvites() {
       return `
     <div class="flex items-center my-3">
       <div class="flex-none w-58">
-        <img class="rounded-input-box w-58 h-58" src="${invite.circle.picture}" alt="${invite.circle.name}'s picture">
+        <img class="rounded-input-box w-58 h-58 object-cover" src="${invite.circle.picture}" alt="${invite.circle.name}'s picture">
       </div>
       <div class="ml-8 flex-none w-110">
         ${circleName.outerHTML}
@@ -2109,16 +2247,16 @@ async function displayCircleInvites() {
 }
 
 async function displayAlbum(albumData) {
-  console.log("current user:", currentLocalUser);
   const backSpan = document.querySelector(".backSpan");
   const leftButtonImg = document.querySelector(".backSpan img");
   const album = document.querySelector(".album");
   const imgElement = document.querySelector("#circleToProfileButton");
-  const albumConfirmationBackButton = document.querySelector(
-    "#albumConfirmationBackButton"
-  );
-  const backToAlbumButton = document.querySelector("#backToAlbumButton");
-  console.log("albumdata", albumData);
+  const albumConfirmationBackButton = document.querySelector("#albumConfirmationBackButton");
+  const backToAlbumButton = document.querySelector("#backToAlbumButton")
+
+  if (leftButtonSpan.getAttribute("origin") === "fromExplore") {
+    leftHeaderButton.id = "backToExplore";
+  }
 
   if (backToAlbumButton) {
     backToAlbumButton.classList.add("hidden");
@@ -2461,7 +2599,7 @@ function displayFriendsList(friends, username) {
     return `
       <div class="flex items-center my-5 user" id="${friend.username}">
         <div class="flex-none w-58">
-          <img class="rounded-full w-58 h-58" src="${friend.profilePicture}" alt="${friend.username}'s profile picture"/>
+          <img class="rounded-full w-58 h-58 object-cover" src="${friend.profilePicture}" alt="${friend.username}'s profile picture"/>
         </div>
         <div class="ml-8 flex-none w-207">
           ${displayName.outerHTML}
@@ -2495,7 +2633,7 @@ async function displayFriendRequests() {
       return `
     <div class="flex items-center my-5 user" id="${request.requester.username}">
     <div class="flex-none w-58">
-      <img class="rounded-full w-58 h-58" src="${request.requester.profilePicture}" alt="${request.requester.username}'s profile picture"/>
+      <img class="rounded-full w-58 h-58 object-cover" src="${request.requester.profilePicture}" alt="${request.requester.username}'s profile picture"/>
     </div>
     <div class="ml-8 flex-none w-110 grid grid-rows-2">
       <div>

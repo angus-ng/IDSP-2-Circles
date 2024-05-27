@@ -20,6 +20,7 @@ class AlbumService {
     }
     createAlbum(newAlbumInput) {
         return __awaiter(this, void 0, void 0, function* () {
+            console.log("I RAN");
             //find the logged in user from db
             const creator = yield this._db.prisma.user.findUnique({
                 where: {

@@ -51,6 +51,7 @@ class AuthenticationController {
         this.logout = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const logoutUrl = yield kinde_1.kindeClient.logout((0, kinde_1.sessionManager)(req, res));
             return res.redirect("/");
+            return res.redirect("/");
         });
         this.getSession = (req, res) => __awaiter(this, void 0, void 0, function* () {
             var _a;

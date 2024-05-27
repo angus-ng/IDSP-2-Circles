@@ -84,6 +84,7 @@ header.addEventListener("click", async (event) => {
   const mapButton = event.target.closest("#mapButton");
   const mapBackButton = event.target.closest("#mapBackButton");
   const inviteDoneButton = event.target.closest("#inviteDoneButton");
+  const backToExplore = event.target.closest("#backToExplore");
 
   if (mapButton) {
     await displayMap();
@@ -94,6 +95,16 @@ header.addEventListener("click", async (event) => {
     console.log(map);
     const { success, data } = await getUser(currentLocalUser);
     if (success && data) {
+      await displayExplore(data);
+    }
+  }
+
+  if (backToExplore) {
+    const { success, data } = await getUser(currentLocalUser);
+    if (success && data) {
+      if (leftButtonSpan) {
+        leftButtonSpan.removeAttribute("origin");
+      }
       await displayExplore(data);
     }
   }

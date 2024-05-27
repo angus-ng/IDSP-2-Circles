@@ -109,7 +109,7 @@ async function getSessionFromBackend() {
 async function getCircle(circleId) {
   try {
     const response = await fetch(`/circle/${circleId}`);
-    responseJson = await response.json();
+    const responseJson = await response.json();
 
     console.log(responseJson);
     return responseJson;
@@ -121,8 +121,12 @@ async function getAlbum(albumId) {
     const response = await fetch(`/album/${albumId}`);
     const responseJson = await response.json();
 
+    console.log(responseJson);
     return responseJson;
-  } catch (err) {}
+  } catch (err) {
+    console.error("Error fetching album:", err);
+    return { success: false, error: err.message };
+  }
 }
 
 async function handleCreateAlbum(albumObj) {

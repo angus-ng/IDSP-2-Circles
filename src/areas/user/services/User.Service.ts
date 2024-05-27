@@ -447,14 +447,18 @@ export class UserService implements IUserService {
               },
               ownerName: friend.friend_2_name
             },
-          {circle: {
-            UserCircle: {some: {user: {username: username}}}
-          },
-        ownerName: friend.friend_2_name}]
-            },
-        orderBy: {
-          createdAt: "desc"
-        }
+            {
+              circle: {
+                UserCircle: {some: {user: {username: username}}}
+              },
+              ownerName: friend.friend_2_name}]
+              },
+              orderBy: {
+                createdAt: "desc"
+              },
+              include: {
+                likes: true
+              }
         })
         if (albums.length){
           albums.forEach((album) => {

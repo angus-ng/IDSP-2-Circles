@@ -26,6 +26,7 @@ class App {
     }
     initializeMiddlewares() {
         require("./middleware/express.middlewares")(this._app);
+        require("./middleware/passport.middlewares")(this._app);
     }
     initializeControllers(controllers) {
         controllers.forEach((controller) => {
