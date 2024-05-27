@@ -402,11 +402,7 @@ async function displayCircle(circleData) {
     }
 
     if (comment) {
-      await displayComments(
-        albumDiv.id,
-        currentUserProfilePicture,
-        currentLocalUser
-      );
+      await displayComments(albumDiv.id, currentUserProfilePicture, currentLocalUser);
       return;
     }
 
@@ -493,7 +489,11 @@ async function displayCircleInvites() {
 }
 
 async function displayCircleMembers(circleData) {
-  leftHeaderButton.id = "backToCircle";
+  console.log(circleData.circle.id)
+  const imgElement = document.querySelector(".backSpan img");
+  imgElement.id = "";
+  leftButtonSpan.id = "backToCircle";
+  leftButtonSpan.setAttribute("circleId", circleData.circle.id);
   rightButtonSpan.innerHTML = "";
   pageName.textContent = `${circleData.circle.name} Members`;
 

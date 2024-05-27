@@ -73,10 +73,10 @@ header.addEventListener("click", async (event) => {
   const backToExplore = event.target.closest("#backToExplore");
   const backToProfile = event.target.closest("#backToProfile");
   const backToFriendRequests = event.target.closest("#backToFriendRequests");
+  const backToCircle = event.target.closest("#backToCircle");
 
   if (backToProfile) {
     const user = leftButtonSpan.getAttribute("username");
-    console.log(user);
     leftButtonSpan.removeAttribute("origin");
     await displayFriends(user);
   }
@@ -84,6 +84,15 @@ header.addEventListener("click", async (event) => {
   if (backToFriendRequests) {
     leftButtonSpan.removeAttribute("origin");
     await displayFriendRequests(currentLocalUser);
+  }
+
+  if (backToCircle) {
+    const circleId = leftButtonSpan.getAttribute("circleId");
+    const { success, data } = await getCircle(circleId);
+    if (success && data) {
+      leftButtonSpan.removeAttribute("circleId");
+      await displayCircle(data);
+    }
   }
 
   if (mapButton) {
