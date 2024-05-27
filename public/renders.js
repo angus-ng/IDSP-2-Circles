@@ -265,20 +265,14 @@ async function displayConfirmationPopup(activity, helperObj) {
         const { success, error } = await toggleMod(helperObj)
         if (success && !error) {
           closeWindowAfterAction();
-          const { success, data } = await getCircle(helperObj.circleId)
-          if ( success && data ) {
-            await displayCircleMembers(data);
-          }
+            await displayCircleMembers(helperObj.circleId);
         }
       }
       if (activity.slice(0, 6) === "remove") {
         const { success, error } = await removeFromCircle(helperObj)
         if (success && !error) { 
           closeWindowAfterAction();
-          const { success, data } = await getCircle(helperObj.circleId)
-          if ( success && data ) {
-            await displayCircleMembers(data);
-          }
+            await displayCircleMembers(helperObj.circleId);
         }
       }
     }

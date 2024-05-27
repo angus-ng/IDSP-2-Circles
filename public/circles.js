@@ -401,7 +401,7 @@ async function displayCircle(circleData) {
     }
 
     if (comment) {
-      await displayComments(albumDiv.id, currentUserProfilePicture, currentLocalUser);
+      await displayComments(albumDiv.id, currentUserProfilePicture, circleData.members);
       return;
     }
 
@@ -549,7 +549,7 @@ async function displayCircleMembers(circleId) {
           ${displayName.outerHTML}
           ${username.outerHTML}
         </div>
-        ${(currentLocalUser === circleData.circle.ownerId || (currentUserMembership ? currentUserMembership.mod : false)) && member.user.username !== circleData.circle.ownerId ? 
+        ${(currentLocalUser === circleData.circle.ownerId || ((currentUserMembership && !member.mod) ? currentUserMembership.mod: false)) && member.user.username !== circleData.circle.ownerId ? 
           `<div class="ml-auto pr-2">
             ${removeMemberIcon}
             </div>`: ""}

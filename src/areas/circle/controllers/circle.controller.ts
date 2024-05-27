@@ -102,6 +102,7 @@ class CircleController implements IController {
 
       //ensure user is a member of the circle
       let loggedInUser = await getLocalUser(req, res)
+      console.log(id)
       const publicStatus = await this._service.checkPublic(id)
       if (!publicStatus) {
         const member = await this._service.checkMembership(id, loggedInUser)

@@ -673,7 +673,7 @@ async function displayListOfAlbums(data, user, profile = false) {
   return albumList;
 }
 
-async function displayComments(albumId, currentUserProfilePicture) {
+async function displayComments(albumId, currentUserProfilePicture, circleMembers) {
   const fetchPfp = await getCurrentUserProfilePicture();
   if (fetchPfp.data && fetchPfp.success) {
     currentUserProfilePicture = fetchPfp.data;
@@ -685,7 +685,8 @@ async function displayComments(albumId, currentUserProfilePicture) {
     console.log("could not fetch comment data");
     return;
   }
-
+  const currentUserMembership = circleMembers.find((member) => member.user.username === currentLocalUser)
+  console.log(data)
   const showCommentsRecursively = (comments, level = 0) => {
     const arr = comments.map((comment) => {
       const likeDiv = document.createElement("div");
@@ -744,7 +745,7 @@ async function displayComments(albumId, currentUserProfilePicture) {
           ${postMsgContainer.outerHTML}
         <div class="flex items-center space-x-2">
           <a class="text-time text-11 underline replyButton w-8 cursor-pointer">Reply</a>
-          ${comment.user.username === currentLocalUser ? `<img src="/lightmode/more_options.svg" alt="more options"/ class="moreOptions w-5 h-5 cursor-pointer">` : ""}
+          ${comment.user.username === currentLocalUser || (currentUserMembership ? currentUserMembership.mod : false) ? `<img src="/lightmode/more_options.svg" alt="more options"/ class="moreOptions w-5 h-5 cursor-pointer">` : ""}
         </div>
       </div>
       <div class="absolute right-0 top-2 flex flex-1 flex-col items-center">
