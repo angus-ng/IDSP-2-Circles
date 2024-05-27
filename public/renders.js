@@ -259,7 +259,7 @@ async function displayConfirmationPopup(activity, helperObj) {
       if (activity === "delete comment") {
         await deleteComment(helperObj.commentId);
         closeWindowAfterAction();
-        await displayComments(helperObj.albumId, helperObj.currentUserProfilePicture, currentLocalUser);
+        await displayComments(helperObj.albumId, helperObj.currentUserProfilePicture, helperObj.circleId );
       }
       if (activity.slice(0,3) === "mod" || activity.slice(0, 5) === "unmod") {
         const { success, error } = await toggleMod(helperObj)
@@ -587,7 +587,7 @@ async function displayProfile(userData) {
     }
 
     if (comment) {
-      await displayComments(albumDiv.id, userData.profilePicture, currentLocalUser);
+      await displayComments(albumDiv.id, userData.profilePicture, albumDiv.getAttribute("circleid"));
       return;
     }
 
@@ -838,6 +838,7 @@ async function displayExplore(userData) {
   let feedRender = "";
   if (success && data) {
     const { feedData } = await displayFriendAlbums(data);
+    console.log("FEED", data)
     if (feedData) {
       feedRender = feedData.join("");
     }
@@ -906,7 +907,7 @@ async function displayExplore(userData) {
       return `
       <div class="w-full bg-white p-3 rounded-12.75 h-[280px] overflow-hidden">
         <div class="albumCard">
-            <div class="w-full h-min relative overflow-hidden album" id="${obj.id}">
+            <div class="w-full h-min relative overflow-hidden album" id="${obj.id}" circleid="${obj.circleId}">
             <div>${albumImage.outerHTML}</div>
             <div class="absolute top-0 right-0 m-2 flex items-start justify-end gap-1 p2">${circleImage.outerHTML}</div>
             <div class="m-2 text-secondary font-semibold absolute inset-0 flex items-end justify-start">
@@ -961,7 +962,7 @@ async function displayExplore(userData) {
 
     if (comment) {
       const { data: userData } = await getUser(currentLocalUser);
-      await displayComments(albumDiv.id, userData.profilePicture, currentLocalUser);
+      await displayComments(albumDiv.id, userData.profilePicture, albumDiv.getAttribute("circleid"));
       return;
     }
 

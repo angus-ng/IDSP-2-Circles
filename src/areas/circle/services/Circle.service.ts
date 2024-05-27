@@ -111,6 +111,7 @@ export class CircleService implements ICircleService {
                 albums: {
                     select: {
                         id: true,
+                        circleId: true,
                         name: true,
                         photos: {
                             take: 1
@@ -153,7 +154,7 @@ export class CircleService implements ICircleService {
 //   }
 
   async getMembers (circleId: string) {
-    const members = await this._db.prisma.userCircle.findMany({
+    let members = await this._db.prisma.userCircle.findMany({
         select: {
             user: {
                 select: {
@@ -167,6 +168,20 @@ export class CircleService implements ICircleService {
         where: {
             circleId: circleId
         }
+    })
+    const owner = await this._db.prisma.circle.findUnique({
+        where: {
+            id: circleId
+        },
+        select: {
+            ownerId : true
+        }
+    })
+    members = members.map((member) => {
+        if (member.user.username === owner?.ownerId) {
+            member.user.owner = true;
+        }
+        return member
     })
     return members;
   }

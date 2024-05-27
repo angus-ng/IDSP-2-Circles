@@ -297,7 +297,7 @@ async function displayCircle(circleData) {
     }
     memberList.push(`<img src="${circleData.members[i].user.profilePicture}" class="w-42 h-42 rounded-full object-cover"/>`);
   }
-
+  console.log("CIRCLE", circleData)
   const albumList = circleData.circle.albums.map((obj) => {
     let albumName = document.createElement("p");
     albumName.className = "text-white text-shadow shadow-black";
@@ -309,7 +309,7 @@ async function displayCircle(circleData) {
     // CHANGE ME : placeholder image 
     console.log(obj.photos[0])
     return `
-      <div class="w-full h-min relative album" id="${obj.id}">
+      <div class="w-full h-min relative album" id="${obj.id}" circleid="${obj.circleId}">
         <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.photos[0]? obj.photos[0].src : "/placeholder_image.svg"}"/>
         <div class="m-2 text-secondary font-semibold absolute inset-0 flex items-end justify-start">
           ${albumName.outerHTML}
@@ -401,7 +401,7 @@ async function displayCircle(circleData) {
     }
 
     if (comment) {
-      await displayComments(albumDiv.id, currentUserProfilePicture, circleData.members);
+      await displayComments(albumDiv.id, currentUserProfilePicture, albumDiv.getAttribute("circleid"));
       return;
     }
 
