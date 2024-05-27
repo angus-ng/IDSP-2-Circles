@@ -258,12 +258,8 @@ async function displayCircle(circleData) {
     leftHeaderButton.appendChild(backSpan);
   }
 
-  const circlePreviewBackButton = document.querySelector(
-    "#circlePreviewBackButton"
-  );
-  const newAlbumToCircleButton = document.querySelector(
-    "#newAlbumToCircleButton"
-  );
+  const circlePreviewBackButton = document.querySelector("#circlePreviewBackButton");
+  const newAlbumToCircleButton = document.querySelector("#newAlbumToCircleButton");
   if (circlePreviewBackButton || newAlbumToCircleButton) {
     leftHeaderButton.innerHTML = "";
   }
@@ -271,7 +267,9 @@ async function displayCircle(circleData) {
   <div class="flex flex-row flex-nowrap gap-2 w-full h-22">
     <div class="flex gap-2">
       <button id="circleEditButton" class="${circleData.circle.ownerId === currentLocalUser ? "" : "hidden"}">
-        <img src="/lightmode/edit_icon.svg"></img>
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22 5.76359C22.0008 5.61883 21.9731 5.47533 21.9183 5.34132C21.8636 5.20731 21.7829 5.08542 21.681 4.98265L17.017 0.318995C16.9142 0.217053 16.7923 0.136401 16.6583 0.0816639C16.5243 0.026927 16.3808 -0.000818536 16.236 1.83843e-05C16.0912 -0.000818536 15.9477 0.026927 15.8137 0.0816639C15.6797 0.136401 15.5578 0.217053 15.455 0.318995L12.342 3.43176L0.319018 15.4539C0.217068 15.5566 0.136411 15.6785 0.0816699 15.8125C0.0269289 15.9466 -0.000818595 16.09 1.83857e-05 16.2348V20.8985C1.83857e-05 21.1902 0.115911 21.4699 0.3222 21.6762C0.52849 21.8825 0.808279 21.9984 1.10002 21.9984H5.76401C5.91793 22.0067 6.07189 21.9827 6.21591 21.9277C6.35993 21.8728 6.49079 21.7882 6.60001 21.6794L18.557 9.6573L21.681 6.59953C21.7814 6.49292 21.8632 6.37023 21.923 6.23655C21.9336 6.14888 21.9336 6.06025 21.923 5.97257C21.9281 5.92137 21.9281 5.86978 21.923 5.81858L22 5.76359ZM5.31301 19.7985H2.20001V16.6858L13.123 5.76359L16.236 8.87636L5.31301 19.7985ZM17.787 7.32547L14.674 4.2127L16.236 2.66182L19.338 5.76359L17.787 7.32547Z" fill="#0E0E0E"/>
+        </svg>
         <span circleid=${circleData.circle.id}></span>
       </button>
       <button id="circleShareButton">
@@ -375,11 +373,12 @@ async function displayCircle(circleData) {
 
   const viewMoreMembers = document.querySelector(".viewMoreMembers");
   viewMoreMembers.addEventListener("click", async() => {
-    await displayCircleMembers(circleData);
+    await displayCircleMembers(circleData.circle.id);
   });
 
   const albumListTarget = document.querySelector("#albumList");
   albumListTarget.addEventListener("click", async function (event) {
+    pageName.classList.remove("text-light-mode-accent");
     event.preventDefault();
     const albumDiv = event.target.closest(".album");
     const like = event.target.closest(".like");
@@ -488,10 +487,18 @@ async function displayCircleInvites() {
   });
 }
 
-async function displayCircleMembers(circleData) {
-  console.log(circleData.circle.id)
+async function displayCircleMembers(circleId) {
+  pageName.classList.remove("text-light-mode-accent");
+  const { success, data: circleData } = await getCircle(circleId);
+  if (success && circleData) {
+    console.log(circleData);
+  }
+
   const imgElement = document.querySelector(".backSpan img");
-  imgElement.removeAttribute("id")
+  if (imgElement) {
+    imgElement.removeAttribute("id");
+  }
+  
   leftButtonSpan.id = "backToCircle";
   leftButtonSpan.setAttribute("circleId", circleData.circle.id);
   rightButtonSpan.innerHTML = "";
@@ -570,14 +577,14 @@ async function displayCircleMembers(circleData) {
         const currentStatus = user.getAttribute("mod")
 
         if (removeMemberIcon) {
-          await displayConfirmationPopup(`remove ${member}`, { member, circleId:circleData.circle.id });
+          await displayConfirmationPopup(`remove ${member}`, { member, circleId: circleData.circle.id });
         }
 
         if (modIcon) {
           if (currentStatus === "true"){ 
-            await displayConfirmationPopup(`unmod ${member}`, { member, circleId:circleData.circle.id });
+            await displayConfirmationPopup(`unmod ${member}`, { member, circleId: circleData.circle.id });
           } else {
-            await displayConfirmationPopup(`mod ${member}`, { member, circleId:circleData.circle.id });
+            await displayConfirmationPopup(`mod ${member}`, { member, circleId: circleData.circle.id });
           }
         }
 
