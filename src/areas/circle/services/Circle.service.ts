@@ -92,16 +92,20 @@ export class CircleService implements ICircleService {
         throw new Error(error)
     }
   }
-  async checkPublic(id: string): Promise<boolean> {
+  async checkPublic(id: string): Promise<boolean | null> {
     try {
         const isPublic = await this._db.prisma.circle.findUnique({
             where: {
                 id: id
             }
         })
-        return isPublic!.isPublic
+        if (isPublic) {
+            return isPublic.isPublic
+        }
+        return null;
     } catch (err:any){
-        throw new Error(err)
+        console.log(err)
+        return null;
     }
   }
   async getCircle (id: string): Promise<Circle | null> {
@@ -257,7 +261,19 @@ export class CircleService implements ICircleService {
         const circle = await this._db.prisma.circle.findUnique({
             where: {
                 id: circleObj.circleId,
-                ownerId: currentUser
+                OR: [{
+                    ownerId: currentUser
+                },
+                {
+                    UserCircle: {
+                        some : {
+                            username: currentUser,
+                            circleId: circleObj.circleId,
+                            mod: true
+                        }
+                    }
+                }
+            ]
             }
         })
         if (!circle) {

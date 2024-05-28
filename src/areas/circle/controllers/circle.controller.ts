@@ -118,7 +118,8 @@ class CircleController implements IController {
 
       return res.status(200).json({ success: true, data: { circle, members } })
     } catch (err) {
-      throw err;
+      return res.status(200).json({ success: true, data: null, error: "unable to get circle"});
+
     }
   }
 
