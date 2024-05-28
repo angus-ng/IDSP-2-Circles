@@ -285,9 +285,7 @@ async function displayActivity() {
   pageName.textContent = "All Activity";
   rightHeaderButton.innerHTML = "";
   leftHeaderButton.innerHTML = "";
-  const { friendRequests, circleInvites } = await getActivities(
-    currentLocalUser
-  );
+  const { friendRequests, circleInvites } = await getActivities(currentLocalUser);
   const noCircleInvites = `<p class="text-secondary text-medium-grey" >No circle invites pending.</p>`;
   const circleInvitePreviews = [];
   for (i = 0; i < circleInvites.length; i++) {
@@ -303,8 +301,7 @@ async function displayActivity() {
     const circleImg = document.createElement("img");
     circleImg.src = circleInvites[i].circle.picture;
     circleImg.alt = `${circleInvites[i].circle.name}'s picture`;
-    circleImg.className =
-      "w-8 h-8 rounded-full object-cover border-2 border-white border-solid";
+    circleImg.className = "w-8 h-8 rounded-full object-cover border-2 border-white border-solid";
     i > 0 ? circleImg.classList.add("ml-neg12") : null;
     circleInvitePreviews.push(circleImg.outerHTML);
   }
@@ -327,8 +324,7 @@ async function displayActivity() {
       : friendRequests[i].requester.username;
     altText = altText + "'s profile picture";
     friendImg.alt = altText;
-    friendImg.className =
-      "w-8 h-8 rounded-full object-cover border-2 border-white border-solid";
+    friendImg.className = "w-8 h-8 rounded-full object-cover border-2 border-white border-solid";
     i > 0 ? friendImg.classList.add("ml-neg12") : null;
     friendRequestsPreviews.push(friendImg.outerHTML);
   }
@@ -341,11 +337,9 @@ async function displayActivity() {
             </div>
             <div id="circleInvites" class="flex w-full">
                 <div class="flex w-180 h-33 items-center">
-                    ${
-                      circleInvites.length
+                    ${circleInvites.length
                         ? circleInvitePreviews.join("")
-                        : noCircleInvites
-                    }
+                        : noCircleInvites}
                 </div>
                 <div class="flex w-2 h-33 items-center ml-auto">
                     <svg width="9" height="15" viewBox="0 0 9 15" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -360,11 +354,9 @@ async function displayActivity() {
             </div>
             <div id="friendRequests" class="flex w-full">
               <div class="flex w-180 h-33 items-center">
-                  ${
-                    friendRequests.length
+                  ${friendRequests.length
                       ? friendRequestsPreviews.join("")
-                      : noFriendRequests
-                  }
+                      : noFriendRequests}
               </div>
               <div class="flex w-2 h-33 items-center ml-auto">
                   <svg width="9" height="15" viewBox="0 0 9 15" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -398,42 +390,39 @@ async function displayActivity() {
 
 async function displayProfile(userData) {
   nav.classList.remove("hidden");
+  leftHeaderButton.classList.remove("hidden");
   const user = userData.username;
   const circleRender = await displayListOfCircles(userData, user);
   const albumRender = await displayListOfAlbums(userData, user, true);
-  const backSpan = document.createElement("span");
-  backSpan.className = "backSpan";
-  const imgElement = document.createElement("img");
-  imgElement.src = "/lightmode/back_button.svg";
-  imgElement.alt = "Back Button";
-  imgElement.id = "profileBackButton";
-  backSpan.removeAttribute("circleId");
-  const origin = leftButtonSpan.getAttribute("origin");
+
+  rightHeaderButton.innerHTML = "";
+  leftHeaderButton.innerHTML = backIcon;
+  leftHeaderButton.id = "profileBackButton";
+  leftHeaderButton.removeAttribute("circleId");
+  const origin = leftHeaderButton.getAttribute("origin");
+
+  leftHeaderButton.setAttribute("username", user);
+
+  if (origin === "fromSearch") {
+    leftHeaderButton.id = "backToSearch";
+  }
 
   if (origin === "fromFeed") {
-    imgElement.id = "backToExplore";
+    leftHeaderButton.id = "backToExplore";
   }
 
   if (origin === "fromFriendsList") {
-    imgElement.id = "backToProfile";
-    imgElement.className = "";
+    leftHeaderButton.id = "backToProfile";
   }
 
   if (origin === "fromFriendRequests") {
-    imgElement.id = "backToFriendRequests";
-    imgElement.className = "";
+    leftHeaderButton.id = "backToFriendRequests";
+    leftHeaderButton.className = "";
   }
 
   if (currentLocalUser === userData.username && origin !== "fromFriendsList" && origin !== "fromFriendRequests") {
-    imgElement.classList.add("hidden");
+    leftHeaderButton.classList.add("hidden");
   }
-
-  backSpan.appendChild(imgElement);
-
-  leftHeaderButton.innerHTML = "";
-  leftHeaderButton.appendChild(backSpan);
-
-  backSpan.setAttribute("username", `${user}`);
 
   pageName.textContent = userData.displayName
     ? userData.displayName
@@ -598,6 +587,7 @@ async function displayProfile(userData) {
         if (albumDiv.hasAttribute("id")) {
           let { success, data, error } = await getAlbum(albumDiv.id);
           if (success && data) {
+            leftHeaderButton.setAttribute("origin", "fromProfile");
             await displayAlbum(data);
           }
         }
@@ -647,6 +637,7 @@ async function displayProfile(userData) {
       if (circleDiv.hasAttribute("id")) {
         let { success, data, error } = await getCircle(circleDiv.id);
         if (success && data) {
+          leftHeaderButton.setAttribute("origin", "fromProfile");
           await displayCircle(data, userData.username);
         }
       }
@@ -704,7 +695,9 @@ async function displayProfile(userData) {
 
   async function displaySettings() {
     pageName.textContent = "Settings";
-    leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="settingsBackButton"/>`;
+    leftHeaderButton.classList.remove("hidden");
+    leftHeaderButton.innerHTML = backIcon;
+    leftHeaderButton.id = "currentUserProfile";
     rightHeaderButton.innerHTML = "";
 
     const hiddenImageInput = document.createElement("input");
@@ -846,7 +839,8 @@ async function displayExplore(userData) {
   pageName.textContent = "Explore";
   header.classList.remove("hidden");
   leftHeaderButton.innerHTML = "";
-  rightHeaderButton.innerHTML = `<img id="mapButton" class="px-1" src="/lightmode/map_icon.svg" alt="Map Icon"/>`;
+  rightHeaderButton.innerHTML = mapIcon;
+  rightHeaderButton.id = "mapButton";
   const circleRender = await displayListOfCirclesHorizontally(userData, currentLocalUser);
   pageContent.innerHTML = `
   <div id="explorePage" class="flex flex-col py-2 w-full h-full>
@@ -969,7 +963,7 @@ async function displayExplore(userData) {
       if (albumDiv.hasAttribute("id")) {
         let { success, data, error } = await getAlbum(albumDiv.id);
         if (success && data) {
-          leftButtonSpan.setAttribute("origin", "fromExplore");
+          leftHeaderButton.setAttribute("origin", "fromExplore");
           await displayAlbum(data);
         }
       }
@@ -985,14 +979,13 @@ async function displayExplore(userData) {
   })
 
   const circleList = document.querySelector("#circleList");
-
   circleList.addEventListener("click", async function (event) {
     const circleDiv = event.target.closest("div.circle");
     if (circleDiv) {
       if (circleDiv.hasAttribute("id")) {
         let { success, data, error } = await getCircle(circleDiv.id);
         if (success && data) {
-          leftButtonSpan.setAttribute("origin", "fromExplore");
+          leftHeaderButton.setAttribute("origin", "fromExplore");
           await displayCircle(data, userData.username);
         }
       }

@@ -378,64 +378,39 @@ async function displayAlbumConfirmation() {
 }
 
 async function displayAlbum(albumData) {
-  const backSpan = document.querySelector(".backSpan");
-  const leftButtonImg = document.querySelector(".backSpan img");
-  const album = document.querySelector(".album");
-  const imgElement = document.querySelector("#circleToProfileButton");
-  const albumConfirmationBackButton = document.querySelector("#albumConfirmationBackButton");
-  const backToAlbumButton = document.querySelector("#backToAlbumButton")
+  const origin = leftHeaderButton.getAttribute("origin");
+  leftHeaderButton.classList.remove("hidden");
+  leftHeaderButton.innerHTML = backIcon;
 
-  if (leftButtonSpan.getAttribute("origin") === "fromExplore") {
+  if (origin === "fromExploreCircle") {
+    leftHeaderButton.id = "backToExploreCircle";
+  }
+
+  if (origin === "fromExplore") {
     leftHeaderButton.id = "backToExplore";
   }
 
-  if (backToAlbumButton) {
-    backToAlbumButton.classList.add("hidden");
+  if (origin === "fromExploreCircle") {
+    leftHeaderButton.id = "backToExploreCircle";
   }
 
-  if (leftButtonImg) {
-    leftButtonImg.classList.remove("hidden");
+  if (origin === "fromProfile") {
+    leftHeaderButton.id = "backToProfile";
   }
 
-
-  if (backSpan) {
-    if (albumData.circle.id) {
-      backSpan.setAttribute("circleId", `${albumData.circle.id}`);
-    }
-  } 
-  
-  if (album) {
-    const albumId = album.getAttribute("id");
-    if (albumId) {
-      const profileBackButton = document.querySelector("#profileBackButton");
-      if (profileBackButton) {
-        profileBackButton.id = "albumToProfileButton";
-      }
-    }
+  if (origin === "fromCircleProfile") {
+    leftHeaderButton.id = "backToCircle";
+    leftHeaderButton.setAttribute("origin", "fromProfile");
   }
 
-  if (imgElement) {
-    imgElement.id = "albumToCircleButton";
-  }
-  if (albumConfirmationBackButton) {
-    albumConfirmationBackButton.id = "newAlbumToCircleButton";
-    albumConfirmationBackButton.setAttribute(
-      "circleId",
-      `${albumData.circle.id}`
-    );
+  if (albumData.circle.id) {
+    leftHeaderButton.setAttribute("circleId", `${albumData.circle.id}`);
   }
 
-  const span = document.createElement("span");
-  span.className = "backSpan";
-  if (!backSpan && !imgElement && !albumConfirmationBackButton) {
-    const imgElement = document.createElement("img");
-    imgElement.id = "albumToCircleButton";
-    imgElement.src = "/lightmode/back_button.svg";
-    imgElement.alt = "Back Button";
-    span.setAttribute("circleId", `${albumData.circle.id}`);
-    span.appendChild(imgElement);
-    leftHeaderButton.appendChild(span);
-  }
+  // if (albumConfirmationBackButton) {
+  //   albumConfirmationBackButton.id = "newAlbumToCircleButton";
+  //   albumConfirmationBackButton.setAttribute("circleId", `${albumData.circle.id}`);
+  // }
 
   rightHeaderButton.innerHTML = `
   <div class="flex flex-row flex-nowrap gap-2 w-full h-22>
@@ -475,6 +450,7 @@ async function displayAlbum(albumData) {
       <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.src}"/>
     </div>`;
   });
+  
   let albumName = document.createElement("h2");
   albumName.className = "flex justify-center font-medium text-lg";
   albumName.textContent = albumData.name;
@@ -542,13 +518,7 @@ async function displayAlbum(albumData) {
 
   const user3 = document.querySelector("#user3");
   if (user3) {
-    user3.classList.add(
-      "h-40",
-      "w-40",
-      "col-start-3",
-      "row-start-2",
-      "justify-self-start"
-    );
+    user3.classList.add("h-40", "w-40", "col-start-3", "row-start-2", "justify-self-start");
   }
 
   const user4 = document.querySelector("#user4");

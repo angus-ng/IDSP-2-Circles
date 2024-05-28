@@ -27,7 +27,7 @@ async function displayListOfFriends(friends) {
   return newArr;
 }
 
-async function displayInviteFriends(fromCircle=false, circleId="") {
+async function displayInviteFriends(fromCircle = false, circleId = "") {
   nav.classList.add("hidden");
   let friends = await getFriends(currentLocalUser);
   if (fromCircle && circleId) {
@@ -45,14 +45,17 @@ async function displayInviteFriends(fromCircle=false, circleId="") {
   }
   const friendsList = await displayListOfFriends(friends);
   pageName.textContent = "Invite Friends";
-  leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="circleBackButton"/>`;
-  rightHeaderButton.innerHTML = `<img src="/lightmode/next_button.svg" alt="Next Button" id="nextButton"/>`;
+  leftHeaderButton.innerHTML = backIcon;
+  leftHeaderButton.id = "circleBackButton";
+  rightHeaderButton.innerHTML = `<button class="text-lg">Next</button>`;
+  rightHeaderButton.id = "nextButton";
   if (fromCircle && circleId) {
-    leftHeaderButton.innerHTML = `
-    <span class="backSpan" circleid="${circleId}">
-      <img src="/lightmode/back_button.svg" alt="Back Button" id="albumToCircleButton"/>
-    </span>`;
-    rightHeaderButton.innerHTML = `<img src="/lightmode/done_button.svg" alt="Done Button" id="inviteDoneButton"/>`;
+    leftHeaderButton.innerHTML = backIcon;
+    leftHeaderButton.id = "backToCircle";
+    leftHeaderButton.setAttribute("circleId", circleId);
+    rightHeaderButton.textContent = "Done";
+    rightHeaderButton.className = "text-lg";
+    rightHeaderButton.id = "inviteDoneButton";
   }
 
   pageContent.innerHTML = `
@@ -91,9 +94,11 @@ async function displayFriends(username) {
   
     // this is to show all users when the page first loads
     pageName.textContent = "Friends";
-    leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" name="${username}" id="friendsBackButton"/>`;
+    leftHeaderButton.classList.remove("hidden");
+    leftHeaderButton.innerHTML = backIcon;
+    leftHeaderButton.id = "friendsBackButton";
+    leftHeaderButton.setAttribute("username", username);
     rightHeaderButton.innerHTML = "";
-    leftButtonSpan.setAttribute("username", username);
   
     pageContent.innerHTML = `
     <div class="font-light text-11 justify-center text-center text-dark-grey w-full bg-light-mode">
@@ -216,7 +221,8 @@ function displayFriendsList(friends, username) {
   
 async function displayFriendRequests() {
     pageName.textContent = "Friend Requests";
-    leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="toActivity"/>`;
+    leftHeaderButton.innerHTML = backIcon;
+    leftHeaderButton.id = "toActivity";
     const { friendRequests } = await getActivities(currentLocalUser);
   
     let friendRequestsList = friendRequests.map((request) => {

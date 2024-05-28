@@ -223,46 +223,21 @@ async function displayListOfCirclesHorizontally(data) {
 }
 
 async function displayCircle(circleData) {
-  const imgElement = document.querySelector("#profileBackButton");
-  if (imgElement) {
-    imgElement.classList.remove("hidden");
-    imgElement.id = "circleToProfileButton";
-  }
-  
-  const backSpan = document.querySelector(".backSpan");
-  if (backSpan) {
-    const circleId = backSpan.getAttribute("circleId");
-    const imgElement = document.querySelector("#albumToCircleButton");
-    if (circleId === null) {
-      if (backSpan.getAttribute("username") === null) {
-        leftHeaderButton.innerHTML = "";
-      } else if (imgElement) {
-        imgElement.id = "circleToProfileButton";
-      }
-    }
-  } else {
-    const circleId = circleData.circle.id;
-    const backSpan = document.createElement("span");
-    backSpan.className = "backSpan";
-    const imgElement = document.createElement("img");
-    if (leftButtonSpan.getAttribute("origin") === "fromExplore") {
-      imgElement.id = "backToExplore";
-    } else {
-      imgElement.id = "albumToCircleButton";
-    }
-    imgElement.src = "/lightmode/back_button.svg";
-    imgElement.alt = "Back Button";
-    
-    backSpan.setAttribute("circleId", circleId);
-    backSpan.appendChild(imgElement);
-    leftHeaderButton.appendChild(backSpan);
+
+  const origin = leftHeaderButton.getAttribute("origin");
+  const circleId = circleData.circle.id;
+  leftHeaderButton.innerHTML = backIcon;
+  leftHeaderButton.setAttribute("circleId", circleId);
+  leftHeaderButton.classList.remove("hidden");
+
+  if (origin === "fromProfile") {
+    leftHeaderButton.id = "backToProfile";
   }
 
-  const circlePreviewBackButton = document.querySelector("#circlePreviewBackButton");
-  const newAlbumToCircleButton = document.querySelector("#newAlbumToCircleButton");
-  if (circlePreviewBackButton || newAlbumToCircleButton) {
-    leftHeaderButton.innerHTML = "";
+  if (origin === "fromExplore") {
+    leftHeaderButton.id = "backToExplore";
   }
+
   rightHeaderButton.innerHTML = `
   <div class="flex flex-row flex-nowrap gap-2 w-full h-22">
     <div class="flex gap-2">
@@ -409,6 +384,11 @@ async function displayCircle(circleData) {
       if (albumDiv.hasAttribute("id")) {
         let { success, data, error } = await getAlbum(albumDiv.id);
         if (success && data) {
+          if (origin === "fromExplore") {
+            leftHeaderButton.setAttribute("origin", "fromExploreCircle");
+          } else {
+            leftHeaderButton.setAttribute("origin", "fromCircleProfile");
+          }
           await displayAlbum(data);
         }
       }
@@ -431,7 +411,7 @@ async function displayCircle(circleData) {
     memberList.append(inviteMore);
 
     document.querySelector("#inviteMoreUsers").addEventListener("click", async function (event) {
-      const portrait = event.target.closest("button")
+      const portrait = event.target.closest("button");
       if (portrait) {
         if (portrait.id === "inviteMoreUsers") {
           await displayInviteFriends(true, circleData.circle.id)
@@ -443,7 +423,8 @@ async function displayCircle(circleData) {
   
 async function displayCircleInvites() {
   pageName.textContent = "Circle Invites";
-  leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="toActivity">`;
+  leftHeaderButton.innerHTML = backIcon;
+  leftHeaderButton.id = "toActivity";
   const { circleInvites } = await getActivities(currentLocalUser);
   let circleInviteList = circleInvites.map((invite) => {
     let circleName = document.createElement("h2");
@@ -490,18 +471,10 @@ async function displayCircleInvites() {
 async function displayCircleMembers(circleId) {
   pageName.classList.remove("text-light-mode-accent");
   const { success, data: circleData } = await getCircle(circleId);
-  if (success && circleData) {
-    console.log(circleData);
-  }
-
-  const imgElement = document.querySelector(".backSpan img");
-  if (imgElement) {
-    imgElement.removeAttribute("id");
-  }
   
-  leftButtonSpan.id = "backToCircle";
-  leftButtonSpan.setAttribute("circleId", circleData.circle.id);
-  rightButtonSpan.innerHTML = "";
+  leftHeaderButton.id = "backToCircle";
+  leftHeaderButton.setAttribute("circleId", circleData.circle.id);
+  rightHeaderButton.innerHTML = "";
   pageName.textContent = `${circleData.circle.name} Members`;
 
   const removeMemberIcon = `

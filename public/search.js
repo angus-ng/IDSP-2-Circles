@@ -61,6 +61,7 @@ async function displaySearch() {
       if (user) {
         const { success, data } = await getUser(user.id);
         if (success && data) {
+          leftHeaderButton.setAttribute("origin", "fromSearch");
           return await displayProfile(data);
         }
       }

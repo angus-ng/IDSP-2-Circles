@@ -12,6 +12,7 @@
     <script defer src="/swiped-events.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/keen-slider/keen-slider.min.js"></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script defer src="/icons.js"></script>
     <script defer src="/renders.js"></script>
     <script defer src="/apiCalls.js"></script>
     <script defer src="/frontend.js"></script>
@@ -27,15 +28,15 @@
     <header id="header"
         class="fixed top-0 w-full h-header flex justify-between items-center bg-light-mode px-6 pt-6 pb-0 hidden z-20">
         <div class="flex-1 flex justify-start">
-            <span class="leftButtonSpan"><button id="leftButton"></button></span>
+            <span class="leftButtonSpan"><button class="leftButton"></button></span>
         </div>
 
         <div class="flex-none max-w-[300px] text-center flex justify-center">
-            <h1 id="pageName" class="font-bold text-h2 leading-h2 break-words"></h1>
+            <h1 class="pageName font-bold text-h2 leading-h2 break-words"></h1>
         </div>
 
         <div class="flex-1 flex justify-end items-center"> 
-            <span class="rightButtonSpan items-center"><button id="rightButton" class="flex items-center justify-center"></button></span>
+            <span class="rightButtonSpan items-center"><button class="rightButton flex items-center justify-center"></button></span>
         </div>
     </header>
 
@@ -51,7 +52,7 @@
 
     <div class="absolute top-0 min-screen:flex flex-col justify-center items-center h-screen w-full">
         <section class="w-full h-screen overflow-hidden">
-            <div id="pageContent" class="w-430 mx-auto h-full justify-center overflow-y-scroll px-4 pb-4 mt-header">
+            <div class="pageContent w-430 mx-auto h-full justify-center overflow-y-scroll px-4 pb-4 mt-header">
 
             </div>
 
