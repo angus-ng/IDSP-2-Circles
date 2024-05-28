@@ -570,4 +570,88 @@ export class AlbumService implements IAlbumService {
             throw err;
         }
     }
+    async deleteAlbum(albumId: string, currentUser: string): Promise<void> {
+        try {
+            const album = await this._db.prisma.album.findUnique({
+                where: {
+                    id: albumId
+                }, 
+                include: {
+                    circle: {
+                        include: {
+                            UserCircle: true,
+                            owner: {
+                                select: {username : true}
+                            }
+                        },
+                    },
+                }
+            })
+            if (!album) { 
+             throw new Error("could not find album")   
+            }
+            let isMod = false;
+                const member = album.circle.UserCircle.find((user) => {
+                    user.username === currentUser
+                })
+                if (member) {
+                    isMod = member.mod
+                }
+            if (currentUser === album.circle.owner.username || isMod || currentUser === album.ownerName) {
+                await this._db.prisma.album.delete({
+                    where: {
+                        id: albumId
+                    }
+                })
+            } else {
+                throw new Error("insufficient permissions to delete album")
+            }
+
+        } catch (err) {
+            console.log(err)
+            throw err;
+        }
+    }
+    async deletePhoto(photoId: string, currentUser: string): Promise<void> {
+        try {
+            const photo = await this._db.prisma.photo.findUnique({
+                where: {
+                    id: photoId
+                }, 
+                include: {
+                    album : {
+                        include: {
+                            circle: {
+                                include: {
+                                    UserCircle: true
+                                }
+                            }
+                        }
+                    }
+                }
+            })
+            if (!photo) { 
+                throw new Error("could not find photo")   
+            }
+            let isMod = false;
+            const member = photo.album.circle.UserCircle.find((user) => {
+                user.username === currentUser
+            })
+            if (member) {
+                isMod = member.mod
+            }
+            if (currentUser === photo.album.circle.ownerId || isMod || currentUser === photo.userId) {
+                await this._db.prisma.photo.delete({
+                    where: {
+                        id: photoId
+                    }
+                })
+            } else {
+                throw new Error("insufficient permissions to delete photo")
+            }
+        } catch (err) {
+            console.log(err)
+            throw err;
+        }
+    }
 }
