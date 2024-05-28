@@ -1,11 +1,14 @@
-const pageName = document.querySelector("#pageName");
-const pageContent = document.querySelector("#pageContent");
-const leftHeaderButton = document.querySelector("#leftButton");
+const pageName = document.querySelector(".pageName");
+const pageContent = document.querySelector(".pageContent");
 const leftButtonSpan = document.querySelector(".leftButtonSpan");
-const rightHeaderButton = document.querySelector("#rightButton");
+const leftHeaderButton = document.querySelector(".leftButton");
 const rightButtonSpan = document.querySelector(".rightButtonSpan");
+const rightHeaderButton = document.querySelector(".rightButton");
+
 rightButtonSpan.removeAttribute("fromCreateAlbum");
 pageName.setAttribute("page", "");
+const origin = pageName.getAttribute("origin");
+const destination = pageName.getAttribute("destination");
 
 let currentLocalUser;
 let isPrivacyPublic = false;
@@ -39,444 +42,121 @@ main();
 
 const header = document.querySelector("header");
 header.addEventListener("click", async (event) => {
-  const nextButtonInviteFriends = event.target.closest("#nextInviteFriends");
-  const nextButton = event.target.closest("#nextButton");
-  const backButton = event.target.closest("#backButton");
-  const circleBackButton = event.target.closest("#circleBackButton");
-  const circlePreviewBackButton = event.target.closest("#circlePreviewBackButton");
-  const createCircleButton = event.target.closest("#createCircleButton");
-  const closeButton = event.target.closest("#closeButton");
-  const albumNextButton = event.target.closest("#albumNextButton");
-  const backButtonAlbum = event.target.closest("#backButtonAlbum");
-  const createAlbumButton = event.target.closest("#createAlbum");
-  const albumConfirmationBackButton = event.target.closest("#albumConfirmationBackButton");
-  const addCircleBackButton = event.target.closest("#addCircleBackButton");
-  const toActivity = event.target.closest("#toActivity");
-  const emailBackButton = event.target.closest("#emailBack");
-  const friendsBackButton = event.target.closest("#friendsBackButton");
-  const circleViewBackButton = event.target.closest("#circleViewBackButton");
-  const profileBackButton = event.target.closest("#profileBackButton");
-  const settingsBackButton = event.target.closest("#settingsBackButton");
-  const albumToProfileButton = event.target.closest("#albumToProfileButton");
-  const circleToProfileButton = event.target.closest("#circleToProfileButton");
-  const albumToCircleButton = event.target.closest("#albumToCircleButton");
-  const newAlbumToCircleButton = event.target.closest("#newAlbumToCircleButton");
-  const circleEditButton = event.target.closest("#circleEditButton");
-  const circleShareButton = event.target.closest("#circleShareButton");
-  const updateCircleButton = event.target.closest("#updateCircle");
-  const backToAlbumButton = event.target.closest("#backToAlbumButton");
-  const updateAlbumButton = event.target.closest("#updateAlbum");
-  const createCircleToAlbum = event.target.closest("#createCircleToAlbum");
-  const mapButton = event.target.closest("#mapButton");
-  const mapBackButton = event.target.closest("#mapBackButton");
-  const inviteDoneButton = event.target.closest("#inviteDoneButton");
-  const backToExplore = event.target.closest("#backToExplore");
-  const backToProfile = event.target.closest("#backToProfile");
-  const backToFriendRequests = event.target.closest("#backToFriendRequests");
-  const backToCircle = event.target.closest("#backToCircle");
-  const deleteCircle = event.target.closest("#deleteCircle");
-
-  if (backToProfile) {
-    const user = leftButtonSpan.getAttribute("username");
-    leftButtonSpan.removeAttribute("origin");
-    await displayFriends(user);
-  }
-
-  if (deleteCircle) {
-    console.log("ligma");
-  }
-
-  if (backToFriendRequests) {
-    leftButtonSpan.removeAttribute("origin");
-    await displayFriendRequests(currentLocalUser);
-  }
-
-  if (backToCircle) {
-    const circleId = leftButtonSpan.getAttribute("circleId");
-    leftButtonSpan.removeAttribute("id");
-    const imgElement = document.querySelector(".backSpan img");
-    if (imgElement) {
-      imgElement.id = "backToExplore";
-    }
-    const { success, data } = await getCircle(circleId);
-    if (success && data) {
-      leftButtonSpan.removeAttribute("circleId");
-      await displayCircle(data);
-    }
-  }
-
-  if (mapButton) {
-    await displayMap();
-  }
-
-  if (mapBackButton) {
-    const { success, data } = await getUser(currentLocalUser);
-    if (success && data) {
+  const target = event.target.closest("button")
+  console.log(target.id)
+  switch (target.id) {
+    case "backToExplore": {
+      const { success, data } = await getUser(currentLocalUser);
       await displayExplore(data);
+      break;
     }
-  }
-
-  if (backToExplore) {
-    const { success, data } = await getUser(currentLocalUser);
-    if (success && data) {
-      if (leftButtonSpan) {
-        leftButtonSpan.removeAttribute("origin");
-      }
+    case "currentUserProfile": {
+      const { success, data } = await getUser(currentLocalUser);
+      await displayProfile(data);
+      break;
+    }
+    case "mapButton": {
+      await displayMap();
+      break;
+    }
+    case "backToExplore": {
+      const { success, data } = await getUser(currentLocalUser);
       await displayExplore(data);
+      break;
     }
-  }
-
-  if (emailBackButton) {
-    await displayLoginPage();
-  }
-
-  if (nextButtonInviteFriends) {
-    console.log("hello")
-    const circleName = document.querySelector("#circleName");
-    newCircleNameInput = circleName.value;
-    circleImgSrc = document.querySelector("#circleImage").src;
-    isPrivacyPublic = document.querySelector("#privacyCheckbox").checked;
-    await displayInviteFriends();
-    return;
-  }
-
-  if (nextButton) {
-    saveCheckedFriends();
-    await displayCreateCirclePreview();
-    circleName.value = newCircleNameInput;
-    document.querySelector("#privacyCheckbox").checked = isPrivacyPublic;
-    document.querySelector("#circleImage").src = circleImgSrc;
-    await updateCheckbox();
-    return;
-  }
-
-  if (createCircleButton) {
-    isPrivacyPublic = document.querySelector("#privacyCheckbox").checked;
-    const { success, data, error } = await handleCreateCircle();
-    if (error) {
-      if (error === "Missing circle name") {
-        await displayPopup("Please add a title to your circle");
-      }
-      console.log(error);
-      return;
+    case "circleEditButton": {
+      const circleId = document.querySelector(".leftButton").getAttribute("circleId");
+      console.log(circleId);
+      await displayCircleEditMode(circleId);
+      break;
     }
-    const circleId = data;
-    if (success && data) {
-      for (let friend of checkedFriends) {
-        const { success, data } = await handleSendCircleRequest(
-          friend,
-          circleId
-        );
-      }
-      checkedFriends = [];
-      const { success, data, error } = await getCircle(circleId);
+    case "backToProfile": {
+      const user = leftHeaderButton.getAttribute("username");
+      const { success, data } = await getUser(user);
       if (success && data) {
-        await displayPopup("circle created");
-        await displayCircle(data);
+        await displayProfile(data);
       }
-      nav.classList.remove("hidden");
+      break;
     }
-    return;
-  }
-
-  if (createCircleToAlbum) {
-    isPrivacyPublic = document.querySelector("#privacyCheckbox").checked;
-    const { success, data, error } = await handleCreateCircle();
-    if (error) {
-      if (error === "Missing circle name") {
-        await displayPopup("Please add a title to your circle");
-      }
-      console.log(error);
-      return;
-    }
-    const circleId = data;
-    if (success && data) {
-      for (let friend of checkedFriends) {
-        const { success, data } = await handleSendCircleRequest(
-          friend,
-          circleId
-        );
-      }
-      checkedFriends = [];
-      albumObj.isCircle = true;
-      albumObj.id = circleId;
-
-      let { success, data, error } = await getCircle(circleId);
-      if (success && data) {
-        albumObj.circleSrc = data.circle.picture;
-        albumObj.circleName = data.circle.name;
-      }
-      rightButtonSpan.removeAttribute("fromCreateAlbum");
-      await displayPopup("circle created");
-      await displayAlbumConfirmation();
-      nav.classList.remove("hidden");
-    }
-    return;
-  }
-
-  if (backButton) {
-    nav.classList.remove("hidden");
-    newCircleNameInput = "";
-    const { success, data } = await getUser(currentLocalUser);
-    if (success && data) {
-      await displayExplore(data);
-    }
-    return;
-  }
-
-  if (circleBackButton) {
-    await displayCreateCircle();
-    const circleName = document.querySelector("#circleName");
-    document.querySelector("#privacyCheckbox").checked = isPrivacyPublic;
-    document.querySelector("#circleImage").src = circleImgSrc;
-    const addPictureButton = document.querySelector("#addPicture");
-    addPictureButton.textContent = "Change Picture";
-    addPictureButton.className = "w-380 h-45 bg-white border-2 border-dark-grey text-dark-grey rounded-input-box fixed bottom-8";
-    circleName.value = newCircleNameInput;
-    await updateCheckbox();
-    return;
-  }
-
-  if (closeButton) {
-    newCircleNameInput = "";
-    nav.classList.remove("hidden");
-    const { success, data } = await getUser(currentLocalUser);
-    if (success && data) {
-      await displayExplore(data);
-    }
-    return;
-  }
-
-  if (backToAlbumButton) {
-    const albumId = leftButtonSpan.getAttribute("albumId");
-    const { success, data, error } = await getAlbum(albumId);
-    if (success && data) {
-      await displayAlbum(data);
-      nav.classList.remove("hidden");
-    }
-    await cleanUpSectionEventListener();
-  }
-
-  if (updateAlbumButton) {
-    const albumId = leftButtonSpan.getAttribute("albumId");
+    case "updateCircle": {
+      pageName.classList.remove("text-light-mode-accent");
+      const privacyCheckbox = document.querySelector("#privacyCheckbox");
+      const circleImage = document.querySelector("#circleImage img");
+      const circleNameInput = document.querySelector("#circleNameInput");
+      const circleId = leftHeaderButton.getAttribute("circleId");
   
-    if (albumId) {
-      const { success, data, error } = await updateAlbum(albumId, albumObj);
-      if (success && data) {
-        const albumResponse = await getAlbum(albumId);
-        if (albumResponse.success && albumResponse.data) {
-          albumPhotos = [];
-          await displayPopup("images successfully added");
-          rightButtonSpan.removeAttribute("id");
-          await displayAlbum(albumResponse.data);
-        } else {
-          console.log(albumResponse.error);
-        }
-      } else {
-        console.log(error);
+      if (!circleNameInput.value) {
+        return displayPopup("Missing circle name");
       }
-    }
-    await cleanUpSectionEventListener();
-  }  
-
-  if (albumNextButton) {
-    const { success, data } = await getUser(currentLocalUser);
-    if (success && data) {
-      const circleRender = await displayListOfCircles(data);
-      await showCreateOrAddToCircle(circleRender);
-      return;
-    }
-  }
-
-  if (addCircleBackButton) {
-    await displayPhotoUploadPreview(albumPhotos);
-  }
-
-  if (backButtonAlbum) {
-    const span = event.target.closest("span");
-    if (span) {
-      if (span.hasAttribute("id")) {
-        let { success, data, error } = await getCircle(span.id);
+  
+      const circleObj = {
+        circleId,
+        circleImg: circleImage.src,
+        circleName: circleNameInput.value,
+        isPublic: privacyCheckbox.checked
+      }
+      const {success, data } = await updateCircle(circleObj);
+      let circleIdFromUpdate = data;
+      if (success && data) {
+        const { success, data } = await getCircle(circleIdFromUpdate);
         if (success && data) {
           await displayCircle(data);
         }
       }
     }
-  }
-
-  if (circlePreviewBackButton) {
-    const circleName = document.querySelector("#circleName");
-    circleImgSrc = document.querySelector("#circleImage").src;
-    isPrivacyPublic = document.querySelector("#privacyCheckbox").checked;
-    newCircleNameInput = circleName.value;
-    await displayInviteFriends();
-    return;
-  }
-
-  if (albumConfirmationBackButton) {
-    const { success, data } = await getUser(currentLocalUser);
-    if (success && data) {
-      nav.classList.remove("hidden");
-      const circleRender = await displayListOfCircles(data);
-      rightButtonSpan.removeAttribute("fromCreateAlbum");
-      showCreateOrAddToCircle(circleRender);
-      return;
-    }
-  }
-
-  if (createAlbumButton) {
-    const albumName = await getAlbumName();
-    albumObj.name = albumName;
-    const { success, data, error } = await handleCreateAlbum(albumObj);
-    if (error) {
-      if (error === "Missing album name") {
-        await displayPopup("Please add a title to your album");
-      }
-      console.log(error);
-      return;
-    }
-    const albumId = data;
-    if (success && data) {
-      rightButtonSpan.removeAttribute("createAlbum");
-      const { success, data, error } = await getAlbum(albumId);
+    case "backToCircle": {
+      const circleId = leftHeaderButton.getAttribute("circleId");
+      const { success, data } = await getCircle(circleId);
       if (success && data) {
-        await displayPopup("album created");
-        await displayAlbum(data);
         nav.classList.remove("hidden");
-      }
-    }
-    return;
-  }
-
-  if (toActivity) {
-    await displayActivity();
-  }
-
-  if (friendsBackButton) {
-    const username = friendsBackButton.name;
-    const { success, data } = await getUser(username);
-    if (success && data) {
-      return await displayProfile(data);
-    }
-  }
-
-  if (circleViewBackButton) {
-    const user = event.target.closest("span").getAttribute("username");
-    const { success, data } = await getUser(user);
-    if (success && data) {
-      return await displayProfile(data);
-    }
-  }
-
-  if (profileBackButton) {
-    await displaySearch();
-  }
-
-  if (circleToProfileButton) {
-    const backSpan = document.querySelector(".backSpan");
-    const username = backSpan.getAttribute("username");
-    rightHeaderButton.innerHTML = "";
-    const { success, data } = await getUser(username);
-    if (success && data) {
-      backSpan.removeAttribute("circleId");
-      await displayProfile(data);
-    }
-  }
-
-  if (albumToProfileButton) {
-    const user = event.target.closest("span").getAttribute("username");
-    const { success, data } = await getUser(user);
-    if (success && data) {
-      return await displayProfile(data);
-    }
-  }
-
-  if (albumToCircleButton) {
-    const circleId = event.target.closest("span").getAttribute("circleId");
-    const { success, data } = await getCircle(circleId);
-    const backSpan = document.querySelector(".backSpan");
-    backSpan.removeAttribute("circleId");
-    if (success && data) {
-      nav.classList.remove("hidden");
-      return await displayCircle(data);
-    }
-  }
-
-  if (newAlbumToCircleButton) {
-    const circleId = event.target.closest("img").getAttribute("circleId");
-    const { success, data } = await getCircle(circleId);
-    if (success && data) {
-      return await displayCircle(data);
-    }
-  }
-
-  if (settingsBackButton) {
-    const { success, data } = await getUser(currentLocalUser);
-    if (success && data) {
-      return await displayProfile(data);
-    }
-  }
-
-  if (circleEditButton) {
-    const circleId = document.querySelector("#circleEditButton span").getAttribute("circleid");
-    pageName.setAttribute("page", "circleEdit");
-    await displayCircleEditMode(circleId)
-  }
-
-  if (circleShareButton) {
-    console.log("SHARE CIRCLE")
-  }
-
-  if (updateCircleButton) {
-    pageName.classList.remove("text-light-mode-accent");
-    const backSpan = document.querySelector("span.backSpan")
-    const privacyCheckbox = document.querySelector("#privacyCheckbox");
-    const circleImage = document.querySelector("#circleImage img");
-    const circleNameInput = document.querySelector("#circleNameInput");
-    const circleId = document.querySelector("#rightButton img").getAttribute("circleid");
-
-    if (!circleNameInput.value) {
-      return displayPopup("Missing circle name")
-    }
-
-    const circleObj = {
-      circleId,
-      circleImg: circleImage.src,
-      circleName: circleNameInput.value,
-      isPublic: privacyCheckbox.checked
-    }
-    const {success, data, error } = await updateCircle(circleObj);
-    let circleIdFromUpdate = data;
-    console.log(data)
-    if (success && data) {
-      backSpan.removeAttribute("circleId");
-      const { success, data, error } = await getCircle(circleIdFromUpdate);
-      if (success && data) {
         await displayCircle(data);
       }
+      break;
     }
-  }
-
-  if (inviteDoneButton) {
-    saveCheckedFriends()
-    const backSpan = document.querySelector("span.backSpan");
-    if (backSpan) {
-      const circleId = backSpan.getAttribute("circleid")
-      backSpan.removeAttribute("circleId");
+    case "inviteDoneButton": {
+      saveCheckedFriends()
+      const circleId = leftHeaderButton.getAttribute("circleid")
+      leftHeaderButton.removeAttribute("circleId");
       for (let friend of checkedFriends) {
-        const { success, data } = await handleSendCircleRequest(
-          friend,
-          circleId
-        );
+        const { success, data } = await handleSendCircleRequest(friend, circleId);
       }
       checkedFriends = [];
-      const {success, data} = await getCircle(circleId)
+      const {success, data} = await getCircle(circleId);
       if (success && data) {
         nav.classList.remove("hidden");
         await displayCircle(data)
       }
+      break;
     }
+    case "friendsBackButton": {
+      const username = leftHeaderButton.getAttribute("username");
+      const { success, data } = await getUser(username);
+      if (success && data) {
+        return await displayProfile(data);
+      }
+      break;
+    }
+    case "backToSearch": {
+      await displaySearch();
+      break;
+    }
+    case "backToExploreCircle": {
+      const circleId = leftHeaderButton.getAttribute("circleId");
+      const { success, data } = await getCircle(circleId);
+      if (success && data) {
+        leftHeaderButton.id = "backToExplore";
+        await displayCircle(data);
+      }
+      break;
+    }
+    case "toActivity": {
+      await displayActivity();
+      break;
+    }
+    default:
+      break;
   }
+
 });
 
 // create Cirlcle/Album modal
@@ -655,28 +335,16 @@ const displayCircleEditMode = (circleId) => {
     pageName.classList.add("text-light-mode-accent");
   }
   
-  const backSpan = document.querySelector("span.backSpan");
-  if (backSpan) {
-    if (backSpan.getAttribute("username")) {
-      backSpan.removeAttribute("username");
-    }
-    backSpan.setAttribute("circleId", circleId)
-    backSpan.childNodes[0].id = "albumToCircleButton";
-  } else {
-    leftHeaderButton.innerHTML = `<span class="backSpan" circleid="${circleId}"><img src="/lightmode/back_button.svg" alt="Back Button" id="albumToCircleButton" class=""></span>`;
-  }
-
-  const trashCanIcon = `
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path fill-rule="evenodd" clip-rule="evenodd" d="M4.25 3.55357V4.57143H1.0625C0.780707 4.57143 0.510456 4.67867 0.311199 4.86955C0.111942 5.06044 0 5.31933 0 5.58929C0 5.85924 0.111942 6.11813 0.311199 6.30902C0.510456 6.4999 0.780707 6.60714 1.0625 6.60714H1.4875L2.64208 17.6679C2.69475 18.1699 2.94015 18.6353 3.33069 18.9738C3.72122 19.3123 4.22907 19.4998 4.75575 19.5H12.2442C12.7709 19.4998 13.2788 19.3123 13.6693 18.9738C14.0599 18.6353 14.3052 18.1699 14.3579 17.6679L15.5125 6.60714H15.9375C16.2193 6.60714 16.4895 6.4999 16.6888 6.30902C16.8881 6.11813 17 5.85924 17 5.58929C17 5.31933 16.8881 5.06044 16.6888 4.86955C16.4895 4.67867 16.2193 4.57143 15.9375 4.57143H12.75V3.55357C12.75 2.74371 12.4142 1.96703 11.8164 1.39437C11.2186 0.821715 10.4079 0.5 9.5625 0.5H7.4375C6.59212 0.5 5.78137 0.821715 5.1836 1.39437C4.58582 1.96703 4.25 2.74371 4.25 3.55357ZM7.4375 2.53571C7.15571 2.53571 6.88546 2.64295 6.6862 2.83384C6.48694 3.02472 6.375 3.28362 6.375 3.55357V4.57143H10.625V3.55357C10.625 3.28362 10.5131 3.02472 10.3138 2.83384C10.1145 2.64295 9.84429 2.53571 9.5625 2.53571H7.4375ZM5.7375 7.28571C5.87707 7.27895 6.01666 7.29864 6.14827 7.34364C6.27989 7.38864 6.40095 7.45807 6.50451 7.54795C6.60808 7.63783 6.69212 7.74641 6.75182 7.86745C6.81151 7.9885 6.8457 8.11964 6.85242 8.25336L7.242 15.7176C7.25239 15.9851 7.15236 16.2458 6.96357 16.4432C6.77479 16.6405 6.51244 16.7587 6.23336 16.7721C5.95428 16.7855 5.68093 16.693 5.47251 16.5147C5.2641 16.3364 5.13739 16.0866 5.11983 15.8194L4.73025 8.35514C4.723 8.22154 4.7433 8.08789 4.79001 7.96181C4.83672 7.83574 4.90891 7.71973 5.00246 7.6204C5.09601 7.52108 5.20908 7.44039 5.3352 7.38297C5.46133 7.32554 5.59803 7.29249 5.7375 7.28571ZM11.2625 7.28571C11.402 7.29232 11.5387 7.3252 11.6649 7.38246C11.7911 7.43973 11.9043 7.52026 11.9979 7.61946C12.0916 7.71866 12.164 7.83457 12.2108 7.96057C12.2577 8.08657 12.2782 8.22019 12.2712 8.35379L11.8816 15.8181C11.864 16.0852 11.7373 16.335 11.5289 16.5133C11.3205 16.6916 11.0471 16.7841 10.7681 16.7707C10.489 16.7573 10.2266 16.6392 10.0378 16.4418C9.84906 16.2444 9.74903 15.9838 9.75942 15.7163L10.149 8.252C10.1633 7.98266 10.2886 7.72976 10.4974 7.54885C10.7061 7.36793 10.9813 7.27242 11.2625 7.28571Z" fill="#0E0E0E"/>
-  </svg>`;
+  leftHeaderButton.innerHTML = backIcon;
+  leftHeaderButton.id = "backToCircle";
+  leftHeaderButton.setAttribute("circleId", circleId);
 
   rightHeaderButton.innerHTML = `
   <div class="flex flex-row flex-nowrap gap-2">
     <button id="deleteCircle" class="w-6 h-6 items-center justify-center">
-        ${trashCanIcon}
+        ${deleteIcon}
     </button>
-    <img src="/lightmode/save_button.svg" alt="Save Button" id="updateCircle" circleid="clw302sg20005flw93a45fqsa">
+    <button id="updateCircle" circleid="${circleId}" class="text-lg">Save</button>
   </div>`;
 
 
@@ -734,5 +402,4 @@ const displayCircleEditMode = (circleId) => {
   circleNameInput.className = "max-w-full text-center bg-transparent text-20 text-black font-light border-dark-grey";
   circleName.remove();
   document.querySelector("#circleName").append(circleNameInput);
-
 }

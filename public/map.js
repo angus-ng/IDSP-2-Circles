@@ -77,13 +77,15 @@ async function getMapInfo() {
 }
 
 async function displayMap() {
+const pageName = document.querySelector(".pageName");
+    pageName.textContent = "Maps"
+    leftHeaderButton.innerHTML = backIcon;
+    leftHeaderButton.id = "backToExplore"
+    rightHeaderButton.innerHTML = "";
     try {
-      const response = await fetch("/googleMapKey")
-      const responseJson = await response.json()
-      const googleMapKey = responseJson.data
-      pageName.textContent = "Maps"
-      leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="mapBackButton"/>`;
-      rightHeaderButton.innerHTML = "";
+      const response = await fetch("/googleMapKey");
+      const responseJson = await response.json();
+      const googleMapKey = responseJson.data;
       
       if (storedMap) {
         map.deleteMarkers()
