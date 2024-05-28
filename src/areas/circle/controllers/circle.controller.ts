@@ -25,7 +25,7 @@ class CircleController implements IController {
     this.router.post(`${this.path}/create`, ensureAuthenticated, upload.none(), this.createCircle);
     this.router.post(`${this.path}/upload`, ensureAuthenticated, upload.single("file"), this.uploadImage);
     this.router.get(`${this.path}/:id`, ensureAuthenticated, this.getCircle);
-    this.router.get(`${this.path}/:id/delete`, ensureAuthenticated, this.deleteCircle);
+    this.router.post(`${this.path}/:id/delete`, ensureAuthenticated, this.deleteCircle);
     this.router.post(`${this.path}/invite`, ensureAuthenticated, this.circleInvite);
     // this.router.post(`${this.path}/list`, ensureAuthenticated, this.getCircleList);
     this.router.post(`${this.path}/accept`, ensureAuthenticated, this.acceptInvite)
@@ -90,10 +90,13 @@ class CircleController implements IController {
       let loggedInUser = await getLocalUser(req, res)
 
       const { id } = req.params
+      console.log(id)
       await this._service.deleteCircle(id, loggedInUser) //this method also checks if its the owner of the circle, maybe a check should be done separately
-      res.redirect("/");
+      console.log("hi")
+      res.status(200).json({ success: true, data: null})
     } catch (err) {
-      throw err;
+      console.log(err)
+      return res.status(200).json({ success: true, data: null, error: "failed to delete circle"})
     }
   }
   private getCircle = async (req: Request, res: Response) => {

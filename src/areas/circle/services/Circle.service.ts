@@ -57,7 +57,7 @@ export class CircleService implements ICircleService {
         })
     
         if (!user || !circle || circle.ownerId !== user.username) {
-            return;
+            throw new Error("insufficient permissions")
         }
     
         // delete circle

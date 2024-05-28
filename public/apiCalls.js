@@ -600,3 +600,18 @@ async function removeFromCircle (helperObj) {
 
   }
 }
+
+async function deleteCircle (circleId) {
+  try {
+    const response = await fetch(`/circle/${circleId}/delete`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      }
+    });
+    const jsonResponse = await response.json();
+    return jsonResponse
+  } catch (err) {
+
+  }
+}

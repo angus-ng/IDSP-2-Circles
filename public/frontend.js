@@ -67,7 +67,8 @@ header.addEventListener("click", async (event) => {
     case "circleEditButton": {
       const circleId = document.querySelector(".leftButton").getAttribute("circleId");
       console.log(circleId);
-      await displayCircleEditMode(circleId);
+      const ownerId = document.querySelector("#circleEditButton").getAttribute("ownerId")
+      await displayCircleEditMode(circleId, ownerId);
       break;
     }
     case "backToProfile": {
@@ -103,6 +104,17 @@ header.addEventListener("click", async (event) => {
           await displayCircle(data);
         }
       }
+    }
+    case "deleteCircle": {
+      const circleId = leftHeaderButton.getAttribute("circleId");
+      const { success, data, error } = await deleteCircle(circleId)
+      if (success && !error) {
+        const { success, data } = await getUser(currentLocalUser);
+        if (success && data) {
+          await displayExplore(data);
+        }
+      }
+      break;
     }
     case "backToCircle": {
       const circleId = leftHeaderButton.getAttribute("circleId");
@@ -328,7 +340,7 @@ const clearNewAlbum = () => {
   albumPhotos = [];
 };
 
-const displayCircleEditMode = (circleId) => {
+const displayCircleEditMode = (circleId, ownerId) => {
   pageName.textContent = "Edit";
   const page = pageName.getAttribute("page");
   if (page === "circleEdit") {
@@ -341,9 +353,10 @@ const displayCircleEditMode = (circleId) => {
 
   rightHeaderButton.innerHTML = `
   <div class="flex flex-row flex-nowrap gap-2">
-    <button id="deleteCircle" class="w-6 h-6 items-center justify-center">
-        ${deleteIcon}
-    </button>
+  ${currentLocalUser === ownerId ? `
+  <button id="deleteCircle" class="w-6 h-6 items-center justify-center">
+    ${deleteIcon}
+  </button>` : ""}
     <button id="updateCircle" circleid="${circleId}" class="text-lg">Save</button>
   </div>`;
 

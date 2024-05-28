@@ -95,7 +95,7 @@ model Comment {
   userId    String?
   likeCount Int       @default(0)
   likes     Like[]
-  album     Album     @relation(fields: [albumId], references: [id])
+  album     Album     @relation(fields: [albumId], references: [id], onDelete: Cascade)
   albumId   String
   replies   Comment[] @relation("replies")
   parent    Comment?  @relation("replies", fields: [parentId], references: [id])
@@ -126,7 +126,7 @@ model UserCircle {
 model CircleInvite {
   invitee          User   @relation("circle_invitee", fields: [invitee_username], references: [username])
   invitee_username String
-  circle           Circle @relation("circle", fields: [circleId], references: [id])
+  circle           Circle @relation("circle", fields: [circleId], references: [id], onDelete: Cascade)
   circleId         String
 
   @@id([invitee_username, circleId])
