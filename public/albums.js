@@ -1,7 +1,9 @@
 async function displayPhotoUpload(albumData) {
+  leftHeaderButton.classList.remove("hidden");
   if (albumData === undefined) {
     pageName.textContent = "New Album";
-    leftHeaderButton.innerHTML = `<img src="/lightmode/close_icon.svg" alt="Close Button" id="closeButton">`;
+    leftHeaderButton.innerHTML = closeIcon;
+    leftHeaderButton.id = "closeButton";
   }
   
   if (albumData) {

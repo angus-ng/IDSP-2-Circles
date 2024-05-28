@@ -159,6 +159,15 @@ header.addEventListener("click", async (event) => {
       await displayActivity();
       break;
     }
+    case "closeButton": {
+      newCircleNameInput = "";
+      nav.classList.remove("hidden");
+      const { success, data } = await getUser(currentLocalUser);
+      if (success && data) {
+        await displayExplore(data);
+      }
+      break;
+    }
     default:
       break;
   }
