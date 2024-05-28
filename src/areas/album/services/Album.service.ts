@@ -458,11 +458,21 @@ export class AlbumService implements IAlbumService {
         try {
             const comment = await this._db.prisma.comment.findUnique({
                 where: {
-                    id: commentId,
-                    userId: currentUser
+                    id: commentId
                 },
                 select: {
-                    replies: true
+                    userId: true,
+                    replies: true,
+                    album: {
+                        select: {
+                            circle: {
+                                select: {
+                                    id: true,
+                                    ownerId: true
+                                }
+                            }
+                        }
+                    }
                 }
             })
 
@@ -470,25 +480,38 @@ export class AlbumService implements IAlbumService {
                 return
             }
 
-            if (comment.replies.length) {
-                await this._db.prisma.comment.update({
-                    where: {
-                        id: commentId,
-                        userId: currentUser
-                    },
-                    data: {
-                        userId: null,
-                        message: null
+            const modStatus = await this._db.prisma.userCircle.findUnique({
+                where: {
+                    username_circleId: {
+                        username: currentUser,
+                        circleId: comment.album.circle.id
                     }
-                })
-            } else {
-                await this._db.prisma.comment.delete({
-                    where: {
-                        id: commentId,
-                        userId: currentUser
-                    }
-                })
+                },
+                select: {
+                    mod: true
+                }
+            })
+
+            if (comment.album.circle.ownerId === currentUser || comment.userId === currentUser || modStatus) {
+                if (comment.replies.length) {
+                    await this._db.prisma.comment.update({
+                        where: {
+                            id: commentId
+                        },
+                        data: {
+                            userId: null,
+                            message: null
+                        }
+                    })
+                } else {
+                    await this._db.prisma.comment.delete({
+                        where: {
+                            id: commentId
+                        }
+                    })
+                }
             }
+
         } catch (err) {
             throw err;
         }

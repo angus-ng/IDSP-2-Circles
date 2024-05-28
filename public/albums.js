@@ -601,6 +601,7 @@ async function displayPhoto(photoSrc) {
 }
 
 async function displayListOfAlbums(data, user, profile = false) {
+  console.log("PROFILE", data)
   const albumList = data.Album.map((obj) => {
     let albumName = document.createElement("p");
     albumName.className = "text-white text-shadow shadow-black";
@@ -619,7 +620,7 @@ async function displayListOfAlbums(data, user, profile = false) {
     const heartColorStroke = userLiked ? "#FF4646" : "white";
     // CHANGE ME : placeholder image 
     return `
-      <div class="w-full h-min relative overflow-hidden album" id="${obj.id}">
+      <div class="w-full h-min relative overflow-hidden album" id="${obj.id}" circleId="${obj.circleId}">
         ${userSpan.outerHTML}
         <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.photos[0]? obj.photos[0].src : "/placeholder_image.svg"}"/>
         ${profile ? circleImage : null}
@@ -643,20 +644,26 @@ async function displayListOfAlbums(data, user, profile = false) {
   return albumList;
 }
 
-async function displayComments(albumId, currentUserProfilePicture, circleMembers) {
+async function displayComments(albumId, currentUserProfilePicture, circleId) {
+  let circleMembers = []
   const fetchPfp = await getCurrentUserProfilePicture();
   if (fetchPfp.data && fetchPfp.success) {
     currentUserProfilePicture = fetchPfp.data;
   }
-
   const { success, data } = await getComments(albumId);
   //return early do something on error
   if (!(success && data)) {
     console.log("could not fetch comment data");
     return;
   }
+  const circleResponse = await getCircle(circleId)
+  if (circleResponse.data && circleResponse.success) {
+    circleMembers = circleResponse.data.members
+  }
   const currentUserMembership = circleMembers.find((member) => member.user.username === currentLocalUser)
+  const circleOwner = circleMembers.find((member) => member.user["owner"] !== undefined)
   console.log(data)
+  console.log("OWNER", circleOwner)
   const showCommentsRecursively = (comments, level = 0) => {
     const arr = comments.map((comment) => {
       const likeDiv = document.createElement("div");
@@ -715,7 +722,7 @@ async function displayComments(albumId, currentUserProfilePicture, circleMembers
           ${postMsgContainer.outerHTML}
         <div class="flex items-center space-x-2">
           <a class="text-time text-11 underline replyButton w-8 cursor-pointer">Reply</a>
-          ${comment.user.username === currentLocalUser || (currentUserMembership ? currentUserMembership.mod : false) ? `<img src="/lightmode/more_options.svg" alt="more options"/ class="moreOptions w-5 h-5 cursor-pointer">` : ""}
+          ${comment.user.username === currentLocalUser || currentLocalUser === circleOwner.user.username || (currentUserMembership ? currentUserMembership.mod : false) && comment.user.username !== circleOwner.user.username  ? `<img src="/lightmode/more_options.svg" alt="more options"/ class="moreOptions w-5 h-5 cursor-pointer">` : ""}
         </div>
       </div>
       <div class="absolute right-0 top-2 flex flex-1 flex-col items-center">
@@ -805,7 +812,7 @@ async function displayComments(albumId, currentUserProfilePicture, circleMembers
       case "IMG":
         if (event.target.className.includes("moreOptions")) {
           commentId = event.target.closest("div.comment").id;
-          const helperObj = { currentUserProfilePicture, albumId, commentId }
+          const helperObj = { currentUserProfilePicture, albumId, commentId, circleId }
           await displayConfirmationPopup("delete comment", helperObj);
         }
       default:
@@ -820,7 +827,7 @@ async function displayComments(albumId, currentUserProfilePicture, circleMembers
         like.querySelector("svg path").setAttribute("fill", "none");
         like.querySelector("svg path").setAttribute("stroke", "#000000");
         await likeComment(commentId);
-        await displayComments(albumId, currentUserProfilePicture, currentLocalUser);
+        await displayComments(albumId, currentUserProfilePicture, circleId);
       } else if (commentUser !== "null") {
         like.classList.add("liked");
         commentId = event.target.closest("div.comment").id;
@@ -830,7 +837,7 @@ async function displayComments(albumId, currentUserProfilePicture, circleMembers
         return await displayComments(
           albumId,
           currentUserProfilePicture,
-          currentLocalUser
+          circleId
         );
       }
       return;
@@ -843,7 +850,7 @@ async function displayComments(albumId, currentUserProfilePicture, circleMembers
       newCommentInput.id === "replyInput"
         ? await newComment(newCommentInput.value, albumId, commentId)
         : await newComment(newCommentInput.value, albumId);
-      await displayComments(albumId, currentUserProfilePicture, currentLocalUser);
+      await displayComments(albumId, currentUserProfilePicture, circleId);
     }
   });
   const submitComment = document.querySelector("#submitComment");
