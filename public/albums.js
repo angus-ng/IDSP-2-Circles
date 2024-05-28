@@ -448,9 +448,10 @@ async function displayAlbum(albumData) {
     return `
     <div id="photo" class="w-full h-min relative photo" albumId="${obj.id}">
       <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.src}"/>
+      <button class="absolute top-0 right-0 p-2">${photoDeleteIcon}</button>
     </div>`;
   });
-  
+
   let albumName = document.createElement("h2");
   albumName.className = "flex justify-center font-medium text-lg";
   albumName.textContent = albumData.name;
