@@ -107,13 +107,7 @@ header.addEventListener("click", async (event) => {
     }
     case "deleteCircle": {
       const circleId = leftHeaderButton.getAttribute("circleId");
-      const { success, data, error } = await deleteCircle(circleId)
-      if (success && !error) {
-        const { success, data } = await getUser(currentLocalUser);
-        if (success && data) {
-          await displayExplore(data);
-        }
-      }
+      await displayConfirmationPopup(`delete circle`, { circleId })
       break;
     }
     case "backToCircle": {
