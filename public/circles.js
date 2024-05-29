@@ -1,9 +1,11 @@
 async function displayCreateCircle() {
+  const origin = leftHeaderButton.getAttribute("origin");
     nav.classList.add("hidden");
     pageName.textContent = `New Circle`;
 
     leftHeaderButton.classList.remove("hidden");
     leftHeaderButton.innerHTML = backIcon;
+    console.log(origin)
     if (origin === "fromCreateAlbum") {
       leftHeaderButton.id = "albumConfirmationBack";
     } else {
@@ -99,22 +101,19 @@ async function displayCreateCircle() {
   }
 
 async function displayCreateCirclePreview() {
+    const origin = leftHeaderButton.getAttribute("origin");
     nav.classList.add("hidden");
     leftHeaderButton.innerHTML = backIcon;
     leftHeaderButton.id = "circlePreviewBack";
     pageName.textContent = "New Circle";
-    // const fromCreateAlbum = rightButtonSpan.getAttribute("fromCreateAlbum");
-    // const next = document.querySelector("#nextButton");
-    
-    // next.src = "/lightmode/create_button.svg";
-    // if (fromCreateAlbum === "true") {
-    //   next.id = "createCircleToAlbum";
-    // } else {
-    //   next.id = "createCircleButton";
-    // }
+
+    if (origin === "fromCreateAlbum") {
+      rightHeaderButton.id = "createCircleToAlbum";
+    } else {
+      rightHeaderButton.id = "createCircle";
+    }
   
     rightHeaderButton.textContent = "Create";
-    rightHeaderButton.id = "createCircle";
   
     pageContent.innerHTML = `
       <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full">
@@ -237,6 +236,10 @@ async function displayCircle(circleData) {
   leftHeaderButton.setAttribute("circleId", circleId);
   leftHeaderButton.classList.remove("hidden");
 
+  if (origin === "fromSearchProfile") {
+    leftHeaderButton.id = "backToSearchProfile"
+  }
+
   if (origin === "fromProfile") {
     leftHeaderButton.id = "backToProfile";
   }
@@ -279,7 +282,7 @@ async function displayCircle(circleData) {
     }
     memberList.push(`<img src="${circleData.members[i].user.profilePicture}" class="w-42 h-42 rounded-full object-cover"/>`);
   }
-  console.log("CIRCLE", circleData)
+
   const albumList = circleData.circle.albums.map((obj) => {
     let albumName = document.createElement("p");
     albumName.className = "text-white text-shadow shadow-black";
@@ -393,6 +396,8 @@ async function displayCircle(circleData) {
         if (success && data) {
           if (origin === "fromExplore") {
             leftHeaderButton.setAttribute("origin", "fromExploreCircle");
+          } else if (origin === "fromSearchProfile") {
+            leftHeaderButton.setAttribute("origin", "fromSearchProfileCircle");
           } else {
             leftHeaderButton.setAttribute("origin", "fromCircleProfile");
           }

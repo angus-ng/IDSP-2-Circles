@@ -111,6 +111,7 @@ async function displayNavBar() {
       pageName.classList.remove("text-light-mode-accent");
     }
     if (searchButton) {
+      navigationHistory = [];
       await displaySearch();
       pageName.setAttribute("page", "search");
       newCircleNameInput = "";
@@ -129,12 +130,14 @@ async function displayNavBar() {
       pageName.classList.remove("text-light-mode-accent");
     }
     if (profileButton) {
+      navigationHistory = [];
       rightHeaderButton.innerHTML = "";
       newCircleNameInput = "";
       pageName.classList.remove("text-light-mode-accent");
       const { success, data } = await getUser(currentLocalUser);
       if (success && data) {
         pageName.setAttribute("page", "profile");
+        leftHeaderButton.setAttribute("origin", "fromProfile");
         return await displayProfile(data);
       }
     }
@@ -418,22 +421,24 @@ async function displayProfile(userData) {
 
   rightHeaderButton.innerHTML = "";
   leftHeaderButton.innerHTML = backIcon;
-  leftHeaderButton.id = "profileBackButton";
+  // leftHeaderButton.id = "profileBackButton";
   leftHeaderButton.removeAttribute("circleId");
-  const origin = leftHeaderButton.getAttribute("origin");
-
   leftHeaderButton.setAttribute("username", user);
+  
+  const origin = leftHeaderButton.getAttribute("origin");
+  const secondaryOrigin = leftHeaderButton.getAttribute("secondaryOrigin");
+  console.log(secondaryOrigin)
 
   if (origin === "fromSearch") {
-    leftHeaderButton.id = "backToSearch";
+    if (secondaryOrigin === "fromFriendsList") {
+      leftHeaderButton.id = "friendsBackButton";
+    } else {
+      leftHeaderButton.id = "backToSearch";
+    }
   }
 
   if (origin === "fromFeed") {
     leftHeaderButton.id = "backToExplore";
-  }
-
-  if (origin === "fromFriendsList") {
-    leftHeaderButton.id = "backToProfile";
   }
 
   if (origin === "fromFriendRequests") {
@@ -441,13 +446,17 @@ async function displayProfile(userData) {
     leftHeaderButton.className = "";
   }
 
-  if (currentLocalUser === userData.username && origin !== "fromFriendsList" && origin !== "fromFriendRequests") {
+  if (currentLocalUser === user && secondaryOrigin !== "fromFriendsList" && origin !== "fromFriendRequests") {
     leftHeaderButton.classList.add("hidden");
   }
 
-  pageName.textContent = userData.displayName
-    ? userData.displayName
-    : userData.username;
+  console.log(navigationHistory, navigationHistory.length)
+  
+  if (navigationHistory.length === 0 || navigationHistory[navigationHistory.length - 1] !== user) {
+    navigationHistory.push(user);
+  }
+
+  pageName.textContent = userData.displayName ? userData.displayName : userData.username;
   const username = document.createElement("h2");
   username.id = "username";
   username.setAttribute("username", userData.username);
@@ -654,7 +663,11 @@ async function displayProfile(userData) {
       if (circleDiv.hasAttribute("id")) {
         let { success, data, error } = await getCircle(circleDiv.id);
         if (success && data) {
-          leftHeaderButton.setAttribute("origin", "fromProfile");
+          if (origin === "fromSearch") {
+            leftHeaderButton.setAttribute("origin", "fromSearchProfile");
+          } else {
+            leftHeaderButton.setAttribute("origin", "fromProfile");
+          }
           await displayCircle(data, userData.username);
         }
       }
@@ -716,6 +729,7 @@ async function displayProfile(userData) {
     leftHeaderButton.innerHTML = backIcon;
     leftHeaderButton.id = "currentUserProfile";
     rightHeaderButton.innerHTML = "";
+    console.log(userData)
 
     const hiddenImageInput = document.createElement("input");
     hiddenImageInput.id = "fileUpload";
@@ -728,6 +742,9 @@ async function displayProfile(userData) {
       <div class="flex justify-center mb-4">
         <img id="profilePicture" src="${userData.profilePicture}" class="w-110 h-110 object-cover rounded-full"/>
         ${hiddenImageInput.outerHTML}
+      </div>
+      <div class="flex justify-center mt-2">
+        ${userData.displayName ? userData.displayName : userData.username}
       </div>
       <div class="flex justify-center mt-2">
         ${username.outerHTML}

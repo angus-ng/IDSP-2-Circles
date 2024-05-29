@@ -406,6 +406,10 @@ async function displayAlbum(albumData) {
     leftHeaderButton.setAttribute("origin", "fromProfile");
   }
 
+  if (origin === "fromSearchProfileCircle") {
+    leftHeaderButton.id = "backToSearchCircle";
+  }
+
   if (albumData.circle.id) {
     leftHeaderButton.setAttribute("circleId", `${albumData.circle.id}`);
   }
@@ -449,7 +453,7 @@ async function displayAlbum(albumData) {
 
   const photoList = albumData.photos.map((obj) => {
     return `
-    <div id="photo" class="w-full h-min relative photo" albumId="${obj.id}">
+    <div class="photo w-full h-min relative photo" albumId="${obj.id}">
       <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.src}"/>
       <button class="absolute top-0 right-0 p-2">${photoDeleteIcon}</button>
     </div>`;

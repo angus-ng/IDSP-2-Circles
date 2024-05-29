@@ -57,7 +57,7 @@ async function displayInviteFriends(fromCircle = false, circleId = "") {
     leftHeaderButton.setAttribute("circleId", circleId);
     rightHeaderButton.textContent = "Done";
     rightHeaderButton.className = "text-lg";
-    rightHeaderButton.id = "inviteDoneButton";
+    rightHeaderButton.id = "inviteDone";
   }
 
   pageContent.innerHTML = `
@@ -178,7 +178,7 @@ async function displayFriends(username) {
       if (user) {
         const { success, data } = await getUser(user.id);
         if (success && data) {
-          leftButtonSpan.setAttribute("origin", "fromFriendsList");
+          leftHeaderButton.setAttribute("secondaryOrigin", "fromFriendsList");
           return await displayProfile(data);
         }
       }
