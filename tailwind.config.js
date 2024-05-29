@@ -182,17 +182,17 @@ theme: {
       fill: ['hover', 'focus']
   }
 },
-plugins: [
-  require('@tailwindcss/forms'),
-  plugin(function ({ matchUtilities, theme }) {
-    matchUtilities(
-      {
-        'text-shadow': (value) => ({
-          textShadow: value,
-        }),
-      },
-      { values: theme('textShadow') }
-    )
-  })
-],
+  plugins: [
+    require('@tailwindcss/forms'),
+    plugin(function ({ matchUtilities, theme }) {
+      matchUtilities(
+        {
+          'text-shadow': (value) => ({
+            textShadow: value,
+          }),
+        },
+        { values: theme('textShadow') }
+      )
+    })
+  ],
 }

@@ -457,7 +457,7 @@ let ownedPhotosCount = 0
     return `
     <div class="photo w-full h-min relative" albumId="${obj.id}" poster="${obj.userId}">
       <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.src}"/>
-      <button class="deletePhoto absolute top-0 right-0 p-2 hidden">${photoDeleteIcon}</button>
+      <button class="deletePhoto absolute top-0 right-0 p-2 z-20 hidden">${photoDeleteIcon}</button>
     </div>`;
   });
 
@@ -880,7 +880,10 @@ async function displayAlbumEditMode(albumId, ownerId, memberStatus) {
     albumName.remove();
     document.querySelector("#albumName").append(albumNameInput);
   } else {
-    document.querySelectorAll(`div.photo[poster="${currentLocalUser}"] > button.deletePhoto`).forEach((photo) => photo.classList.remove("hidden"))
+    document.querySelectorAll(`div.photo[poster="${currentLocalUser}"] > button.deletePhoto`).forEach((photo) => {
+      photo.classList.add("bg-overlay-bg", "rounded-[10px]");
+      photo.classList.remove("hidden");
+    });
   }
   pageName.textContent = "Edit";
   const page = pageName.getAttribute("page");
