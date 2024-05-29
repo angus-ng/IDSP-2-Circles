@@ -74,22 +74,23 @@ async function displayPhotoUpload(albumData) {
 }
 
 function displayPhotoUploadPreview(albumPhotos) {
-  const albumId = leftButtonSpan.getAttribute("albumId");
-  const rightButtonSpan = document.querySelector(".rightButtonSpan");
+  const albumId = leftHeaderButton.getAttribute("albumId");
 
   if ((albumId === undefined) || (albumId === null)) {
     pageName.textContent = "New Album";
-    leftHeaderButton.innerHTML = `<img src="/lightmode/close_icon.svg" alt="Close Button" id="closeButton">`;
+    leftHeaderButton.innerHTML = closeIcon;
+    leftHeaderButton.id = "closeButton";
     rightHeaderButton.textContent = "Next";
-    rightButtonSpan.id = "albumNextButton";
+    rightHeaderButton.id = "albumNext";
     rightHeaderButton.className = "text-lg";
   }
 
   if (albumId) {
     pageName.textContent = "Add Photos";
-    leftHeaderButton.innerHTML = `<img src="/lightmode/close_icon.svg" alt="Close Button" id="backToAlbumButton">`;
+    leftHeaderButton.innerHTML = closeIcon;
+    leftHeaderButton.id = "backToAlbum";
     rightHeaderButton.textContent = "Done";
-    rightButtonSpan.id = "updateAlbum";
+    rightHeaderButton.id = "updateAlbum";
     rightHeaderButton.className = "text-lg";
   }
 
@@ -120,7 +121,7 @@ function displayPhotoUploadPreview(albumPhotos) {
     carouselDiv.appendChild(slideDiv);
   });
 
-  const pageContent = document.querySelector("#pageContent");
+  const pageContent = document.querySelector(".pageContent");
   pageContent.innerHTML = `
       <div class="flex flex-col h-full w-full items-center">
         <div class="font-light text-11 justify-center text-center text-dark-grey w-full">
@@ -246,15 +247,15 @@ function displayPhotoUploadPreview(albumPhotos) {
 }
 
 async function displayAlbumConfirmation() {
-  const rightButtonSpan = document.querySelector(".rightButtonSpan");
   nav.classList.add("hidden");
 
-  leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="albumConfirmationBackButton"/>`;
+  leftHeaderButton.innerHTML = backIcon;
+  leftHeaderButton.id = "albumConfirmationBack";
 
   pageName.textContent = "Post";
 
   rightHeaderButton.textContent = "Create"
-  rightButtonSpan.id = "createAlbum";
+  rightHeaderButton.id = "createAlbum";
   rightHeaderButton.className = "text-lg";
 
   const carouselDiv = document.createElement("div");

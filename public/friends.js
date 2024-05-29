@@ -31,7 +31,7 @@ async function displayInviteFriends(fromCircle = false, circleId = "") {
   nav.classList.add("hidden");
   let friends = await getFriends(currentLocalUser);
   if (fromCircle && circleId) {
-    const {data, success} = await getCircle(circleId)
+    const { data, success } = await getCircle(circleId)
     if (data && success) {
       const memberList = data.members.map((userObj) => {
         return userObj.user.username;
@@ -45,10 +45,12 @@ async function displayInviteFriends(fromCircle = false, circleId = "") {
   }
   const friendsList = await displayListOfFriends(friends);
   pageName.textContent = "Invite Friends";
+  leftHeaderButton.classList.remove("hidden");
   leftHeaderButton.innerHTML = backIcon;
   leftHeaderButton.id = "circleBackButton";
-  rightHeaderButton.innerHTML = `<button class="text-lg">Next</button>`;
-  rightHeaderButton.id = "nextButton";
+  rightHeaderButton.textContent = "Next";
+  rightHeaderButton.className = "text-lg";
+  rightHeaderButton.id = "circleNext";
   if (fromCircle && circleId) {
     leftHeaderButton.innerHTML = backIcon;
     leftHeaderButton.id = "backToCircle";

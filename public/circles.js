@@ -1,17 +1,20 @@
 async function displayCreateCircle() {
     nav.classList.add("hidden");
     pageName.textContent = `New Circle`;
-  
-    const fromCreateAlbum = rightButtonSpan.getAttribute("fromCreateAlbum");
-    if (fromCreateAlbum === "true") {
-      leftHeaderButton.innerHTML = `<img id="albumConfirmationBackButton" src="/lightmode/back_button.svg" alt="Back Button"/>`;
+
+    leftHeaderButton.classList.remove("hidden");
+    leftHeaderButton.innerHTML = backIcon;
+    if (origin === "fromCreateAlbum") {
+      leftHeaderButton.id = "albumConfirmationBack";
     } else {
-      leftHeaderButton.innerHTML = `<img id="backButton" src="/lightmode/back_button.svg" alt="Back Button"/>`;
+      leftHeaderButton.id = "backToExplore";
     }
+
+    rightHeaderButton.textContent = "Next";
+    rightHeaderButton.className = "text-lg";
+    rightHeaderButton.id = "nextInviteFriends";
   
-    rightHeaderButton.innerHTML = `<img id="nextInviteFriends" src="/lightmode/next_button.svg" alt="Next Button"/>`;
-  
-    const pageContent = document.querySelector("#pageContent");
+    const pageContent = document.querySelector(".pageContent");
     pageContent.innerHTML = `
       <div id="createNewCircle" class="flex flex-col justify-center items-center p-4 bg-light-mode rounded-lg w-full overflow-hidden">
           <div class="shrink-0 mt-14 mb-6 justify-center">
@@ -97,17 +100,21 @@ async function displayCreateCircle() {
 
 async function displayCreateCirclePreview() {
     nav.classList.add("hidden");
-    leftHeaderButton.innerHTML = `<img src="/lightmode/back_button.svg" alt="Back Button" id="circlePreviewBackButton"/>`;
+    leftHeaderButton.innerHTML = backIcon;
+    leftHeaderButton.id = "circlePreviewBack";
     pageName.textContent = "New Circle";
-    const fromCreateAlbum = rightButtonSpan.getAttribute("fromCreateAlbum");
-    const next = document.querySelector("#nextButton");
-    next.src = "/lightmode/create_button.svg";
-    if (fromCreateAlbum === "true") {
-      next.id = "createCircleToAlbum";
-    } else {
-      next.id = "createCircleButton";
-    }
+    // const fromCreateAlbum = rightButtonSpan.getAttribute("fromCreateAlbum");
+    // const next = document.querySelector("#nextButton");
+    
+    // next.src = "/lightmode/create_button.svg";
+    // if (fromCreateAlbum === "true") {
+    //   next.id = "createCircleToAlbum";
+    // } else {
+    //   next.id = "createCircleButton";
+    // }
   
+    rightHeaderButton.textContent = "Create";
+    rightHeaderButton.id = "createCircle";
   
     pageContent.innerHTML = `
       <div id="createNewCircle" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full">
@@ -122,7 +129,7 @@ async function displayCreateCirclePreview() {
                     class="bg-transparent text-24 font-bold border-none text-center flex-1 px-0"
                 />
                 <button id="editButton" class="pl-1">
-                    <img src="/lightmode/edit_icon.svg" alt="Edit Icon"/>
+                    ${editIcon}
                 </button>
             </div>
             <div id="divider" class="mb-2">
