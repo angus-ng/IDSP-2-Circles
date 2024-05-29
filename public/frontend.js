@@ -252,6 +252,27 @@ header.addEventListener("click", async (event) => {
         }
       }
     }
+    case "updateAlbum": {
+      const albumId = leftHeaderButton.getAttribute("albumId");
+  
+      if (albumId) {
+        const { success, data, error } = await updateAlbum(albumId, albumObj);
+        if (success && data) {
+          const albumResponse = await getAlbum(albumId);
+          if (albumResponse.success && albumResponse.data) {
+            albumPhotos = [];
+            await displayPopup("images successfully added");
+            await displayAlbum(albumResponse.data);
+          } else {
+            console.log(albumResponse.error);
+          }
+        } else {
+          console.log(error);
+        }
+      }
+      await cleanUpSectionEventListener();
+      break;
+    }
     case "nextInviteFriends": {
       const circleName = document.querySelector("#circleName");
       newCircleNameInput = circleName.value;
@@ -388,6 +409,7 @@ modal.addEventListener("click", async function (event) {
   }
 
   if (createCircleModalButton) {
+    leftHeaderButton.removeAttribute("circleId");
     clearNewAlbum();
     modal.classList.remove("shown");
     modal.classList.add("hidden");
@@ -529,6 +551,7 @@ async function showCreateOrAddToCircle(circleRender) {
 }
 
 const clearNewAlbum = () => {
+  leftHeaderButton.removeAttribute("albumId");
   albumObj = {};
   albumPhotos = [];
 };

@@ -2025,6 +2025,14 @@ select {
   padding-top: 1.5rem;
 }
 
+.pb-32 {
+  padding-bottom: 8rem;
+}
+
+.pb-36 {
+  padding-bottom: 9rem;
+}
+
 .text-center {
   text-align: center;
 }

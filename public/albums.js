@@ -8,8 +8,8 @@ async function displayPhotoUpload(albumData) {
   
   if (albumData) {
     pageName.textContent = "Add Photos";
-    leftHeaderButton.innerHTML = `<img src="/lightmode/close_icon.svg" alt="Close Button" id="backToAlbumButton">`;
-    leftButtonSpan.setAttribute("albumId", `${albumData.data.id}`);
+    leftHeaderButton.innerHTML = closeIcon;
+    leftHeaderButton.id = "backToAlbum";
   }
 
   rightHeaderButton.innerHTML = "";
@@ -381,10 +381,11 @@ async function displayAlbumConfirmation() {
 }
 
 async function displayAlbum(albumData) {
+  nav.classList.remove("hidden");
   const origin = leftHeaderButton.getAttribute("origin");
   leftHeaderButton.classList.remove("hidden");
   leftHeaderButton.innerHTML = backIcon;
-  console.log(albumData)
+
   if (origin === "fromExploreCircle") {
     leftHeaderButton.id = "backToExploreCircle";
   }
@@ -414,10 +415,6 @@ async function displayAlbum(albumData) {
     leftHeaderButton.setAttribute("circleId", `${albumData.circle.id}`);
   }
 
-  // if (albumConfirmationBackButton) {
-  //   albumConfirmationBackButton.id = "newAlbumToCircleButton";
-  //   albumConfirmationBackButton.setAttribute("circleId", `${albumData.circle.id}`);
-  // }
 const currentUserMembership = albumData.circle.UserCircle.find((member) => member.user.username === currentLocalUser)
   rightHeaderButton.innerHTML = `
   <div class="flex flex-row flex-nowrap gap-2 w-full h-22>
@@ -503,7 +500,7 @@ const currentUserMembership = albumData.circle.UserCircle.find((member) => membe
           </svg>
         </button>
       </div>
-      <div id="photoList" class="pb-28 w-full">
+      <div id="photoList" class="pb-48 w-full">
         <div class="columns-2 gap-4 space-y-4 grid-flow-row">
           ${photoList.join("")}
         </div>
@@ -516,13 +513,7 @@ const currentUserMembership = albumData.circle.UserCircle.find((member) => membe
 
   const user2 = document.querySelector("#user2");
   if (user2) {
-    user2.classList.add(
-      "h-43",
-      "w-43",
-      "col-start-1",
-      "row-start-1",
-      "justify-self-end"
-    );
+    user2.classList.add("h-43", "w-43", "col-start-1", "row-start-1", "justify-self-end");
   }
 
   const user3 = document.querySelector("#user3");
@@ -532,24 +523,17 @@ const currentUserMembership = albumData.circle.UserCircle.find((member) => membe
 
   const user4 = document.querySelector("#user4");
   if (user4) {
-    user4.classList.add(
-      "h-5",
-      "w-5",
-      "col-start-1",
-      "row-start-2",
-      "justify-self-end"
-    );
+    user4.classList.add("h-5", "w-5", "col-start-1", "row-start-2", "justify-self-end");
   }
 
   const albumPhotos = document.querySelector("#albumPhotos");
   albumPhotos.addEventListener("click", async(event) => {
-    const photo = event.target.closest("#photo img");
+    const photo = event.target.closest(".photo img");
     const overlay = event.target.closest("#photoOverlay");
     const addMorePhotos = event.target.closest("#addPhotos");
     const like = event.target.closest(".like");
     
     if (photo) {
-      console.log(photo.src);
       await displayPhoto(photo.src);
     }
 
