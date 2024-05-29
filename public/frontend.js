@@ -65,9 +65,16 @@ header.addEventListener("click", async (event) => {
     }
     case "circleEditButton": {
       const circleId = document.querySelector(".leftButton").getAttribute("circleId");
-      console.log(circleId);
       const ownerId = document.querySelector("#circleEditButton").getAttribute("ownerId")
       await displayCircleEditMode(circleId, ownerId);
+      break;
+    }
+    case "albumEditButton": {
+      leftHeaderButton.id = "backToAlbum";
+      const albumId = document.querySelector(".leftButton").getAttribute("albumId")
+      const ownerId = document.querySelector("#albumEditButton").getAttribute("ownerId")
+      console.log(ownerId)
+      await displayAlbumEditMode(albumId, ownerId);
       break;
     }
     case "backToProfile": {
@@ -116,6 +123,19 @@ header.addEventListener("click", async (event) => {
       if (success && data) {
         nav.classList.remove("hidden");
         await displayCircle(data);
+      }
+      break;
+    }
+    case "deleteAlbum": {
+      const albumId = leftHeaderButton.getAttribute("albumId");
+      await displayConfirmationPopup(`delete album`, { albumId })
+      break;
+    }
+    case "backToAlbum": {
+      const albumId = leftHeaderButton.getAttribute("albumId");
+      const { success, data }= await getAlbum(albumId);
+      if (success && data) {
+        await displayAlbum(data);
       }
       break;
     }

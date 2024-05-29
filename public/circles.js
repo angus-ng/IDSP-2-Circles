@@ -401,13 +401,14 @@ async function displayCircle(circleData) {
           } else {
             leftHeaderButton.setAttribute("origin", "fromCircleProfile");
           }
+          leftHeaderButton.setAttribute("albumId", data.id)
           await displayAlbum(data);
         }
       }
     }
   });
 
-  if (circleData.circle.ownerId === currentLocalUser || (currentUserMembership ? currentUserMembership.mod : false)) {
+  if (currentUserMembership) {
     const inviteMore = document.createElement("button");
     inviteMore.innerHTML = `
     <svg fill="#000000" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

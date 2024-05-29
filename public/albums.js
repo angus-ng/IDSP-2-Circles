@@ -384,7 +384,7 @@ async function displayAlbum(albumData) {
   const origin = leftHeaderButton.getAttribute("origin");
   leftHeaderButton.classList.remove("hidden");
   leftHeaderButton.innerHTML = backIcon;
-
+  console.log(albumData)
   if (origin === "fromExploreCircle") {
     leftHeaderButton.id = "backToExploreCircle";
   }
@@ -418,15 +418,16 @@ async function displayAlbum(albumData) {
   //   albumConfirmationBackButton.id = "newAlbumToCircleButton";
   //   albumConfirmationBackButton.setAttribute("circleId", `${albumData.circle.id}`);
   // }
-
+const currentUserMembership = albumData.circle.UserCircle.find((member) => member.user.username === currentLocalUser)
   rightHeaderButton.innerHTML = `
   <div class="flex flex-row flex-nowrap gap-2 w-full h-22>
     <div class="flex">
-      <button id="editButton">
-        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M22 5.76359C22.0008 5.61883 21.9731 5.47533 21.9183 5.34132C21.8636 5.20731 21.7829 5.08542 21.681 4.98265L17.017 0.318995C16.9142 0.217053 16.7923 0.136401 16.6583 0.0816639C16.5243 0.026927 16.3808 -0.000818536 16.236 1.83843e-05C16.0912 -0.000818536 15.9477 0.026927 15.8137 0.0816639C15.6797 0.136401 15.5578 0.217053 15.455 0.318995L12.342 3.43176L0.319018 15.4539C0.217068 15.5566 0.136411 15.6785 0.0816699 15.8125C0.0269289 15.9466 -0.000818595 16.09 1.83857e-05 16.2348V20.8985C1.83857e-05 21.1902 0.115911 21.4699 0.3222 21.6762C0.52849 21.8825 0.808279 21.9984 1.10002 21.9984H5.76401C5.91793 22.0067 6.07189 21.9827 6.21591 21.9277C6.35993 21.8728 6.49079 21.7882 6.60001 21.6794L18.557 9.6573L21.681 6.59953C21.7814 6.49292 21.8632 6.37023 21.923 6.23655C21.9336 6.14888 21.9336 6.06025 21.923 5.97257C21.9281 5.92137 21.9281 5.86978 21.923 5.81858L22 5.76359ZM5.31301 19.7985H2.20001V16.6858L13.123 5.76359L16.236 8.87636L5.31301 19.7985ZM17.787 7.32547L14.674 4.2127L16.236 2.66182L19.338 5.76359L17.787 7.32547Z" fill="#0E0E0E"/>
-        </svg>
-      </button>
+    ${currentLocalUser === albumData.circle.ownerId || (currentUserMembership? currentUserMembership.mod : false) ? 
+      `<button id="albumEditButton" ownerId="${albumData.circle.ownerId}">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22 5.76359C22.0008 5.61883 21.9731 5.47533 21.9183 5.34132C21.8636 5.20731 21.7829 5.08542 21.681 4.98265L17.017 0.318995C16.9142 0.217053 16.7923 0.136401 16.6583 0.0816639C16.5243 0.026927 16.3808 -0.000818536 16.236 1.83843e-05C16.0912 -0.000818536 15.9477 0.026927 15.8137 0.0816639C15.6797 0.136401 15.5578 0.217053 15.455 0.318995L12.342 3.43176L0.319018 15.4539C0.217068 15.5566 0.136411 15.6785 0.0816699 15.8125C0.0269289 15.9466 -0.000818595 16.09 1.83857e-05 16.2348V20.8985C1.83857e-05 21.1902 0.115911 21.4699 0.3222 21.6762C0.52849 21.8825 0.808279 21.9984 1.10002 21.9984H5.76401C5.91793 22.0067 6.07189 21.9827 6.21591 21.9277C6.35993 21.8728 6.49079 21.7882 6.60001 21.6794L18.557 9.6573L21.681 6.59953C21.7814 6.49292 21.8632 6.37023 21.923 6.23655C21.9336 6.14888 21.9336 6.06025 21.923 5.97257C21.9281 5.92137 21.9281 5.86978 21.923 5.81858L22 5.76359ZM5.31301 19.7985H2.20001V16.6858L13.123 5.76359L16.236 8.87636L5.31301 19.7985ZM17.787 7.32547L14.674 4.2127L16.236 2.66182L19.338 5.76359L17.787 7.32547Z" fill="#0E0E0E"/>
+          </svg>
+      </button>` : ""}
       <button id="shareButton">
         <img src="/lightmode/share_icon.svg" alt="Share Button" id="shareAlbum">
       </button>
@@ -453,9 +454,9 @@ async function displayAlbum(albumData) {
 
   const photoList = albumData.photos.map((obj) => {
     return `
-    <div class="photo w-full h-min relative photo" albumId="${obj.id}">
+    <div class="photo w-full h-min relative" albumId="${obj.id}">
       <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.src}"/>
-      <button class="absolute top-0 right-0 p-2">${photoDeleteIcon}</button>
+      <button class="deletePhoto absolute top-0 right-0 p-2 hidden">${photoDeleteIcon}</button>
     </div>`;
   });
 
@@ -477,7 +478,7 @@ async function displayAlbum(albumData) {
       <div id="memberList" class="grid grid-rows-2 grid-cols-3 mt-8 mx-auto items-center justify-center w-265 gap-2 h-84">
         ${memberList.join("")}
       </div>
-      <div class="mt-4">
+      <div class="relative my-3 flex justify-center items-center max-w-full h-11" id="albumName">
         ${albumName.outerHTML}
       </div>
       <div class="mt-4 flex flex-row items-center justify-center gap-2 mx-auto">
@@ -867,4 +868,31 @@ async function displayComments(albumId, currentUserProfilePicture, circleId) {
     const enterKeyEvent = new KeyboardEvent("keydown", { key: "Enter" });
     newCommentInput.dispatchEvent(enterKeyEvent);
   });
+}
+async function displayAlbumEditMode(albumId, ownerId) {
+  pageName.textContent = "Edit";
+  const page = pageName.getAttribute("page");
+  if (page === "albumEdit") {
+    pageName.classList.add("text-light-mode-accent");
+  }
+
+  document.querySelectorAll(".deletePhoto").forEach((photo) => photo.classList.remove("hidden"))
+  rightHeaderButton.innerHTML = `
+  <div class="flex flex-row flex-nowrap gap-2 items-center">
+  ${currentLocalUser === ownerId ? `
+  <button id="deleteAlbum" class="w-6 h-6">
+    ${deleteIcon}
+  </button>` : ""}
+    <button id="updateAlbum" albumId="${albumId}" class="text-lg">Save</button>
+  </div>`;
+
+  const albumName = document.querySelector("#albumName h2");
+  const albumNameInput = document.createElement("input");
+  albumNameInput.id = "circleNameInput";
+  albumNameInput.type = "text";
+  albumNameInput.placeholder = "Add a circle name";
+  albumNameInput.value = albumName.textContent;
+  albumNameInput.className = "max-w-full text-center bg-transparent text-20 text-black font-light border-dark-grey";
+  albumName.remove();
+  document.querySelector("#albumName").append(albumNameInput);
 }

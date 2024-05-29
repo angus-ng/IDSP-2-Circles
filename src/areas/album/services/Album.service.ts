@@ -194,6 +194,7 @@ export class AlbumService implements IAlbumService {
                     select: {
                         id: true,
                         src: true,
+                        userId: true
                     }
                 },
                 likes: {
@@ -218,9 +219,11 @@ export class AlbumService implements IAlbumService {
                                         username: true,
                                         profilePicture: true
                                     }
-                                }
+                                },
+                                mod: true
                             }
-                        }
+                        },
+                        ownerId: true
                     },
                 },
             },
