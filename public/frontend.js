@@ -73,8 +73,9 @@ header.addEventListener("click", async (event) => {
       leftHeaderButton.id = "backToAlbum";
       const albumId = document.querySelector(".leftButton").getAttribute("albumId")
       const ownerId = document.querySelector("#albumEditButton").getAttribute("ownerId")
+      const memberStatus = document.querySelector("#albumEditButton").getAttribute("memberStatus") 
       console.log(ownerId)
-      await displayAlbumEditMode(albumId, ownerId);
+      await displayAlbumEditMode(albumId, ownerId, memberStatus);
       break;
     }
     case "backToProfile": {
