@@ -43,7 +43,6 @@ main();
 const header = document.querySelector("header");
 header.addEventListener("click", async (event) => {
   const target = event.target.closest("button")
-  //console.log(target.id)
   if (target) {
     switch (target.id) {
       case "backToExplore": {
@@ -554,7 +553,7 @@ async function showCreateOrAddToCircle(circleRender) {
           albumObj.circleSrc = data.circle.picture;
           albumObj.circleName = data.circle.name;
         }
-        await displayAlbumConfirmation();
+        await displayAddLocation();
       }
     }
   });
