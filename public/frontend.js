@@ -127,9 +127,26 @@ header.addEventListener("click", async (event) => {
       }
       break;
     }
+    case "updateAlbum": {
+      const albumId = leftHeaderButton.getAttribute("albumId");
+      const albumName = document.querySelector("#albumNameInput").value;
+      const helperObj = {
+        albumId,
+        albumName
+      }
+      const { success, error} = await updateAlbum(helperObj)
+      if (success && !error) {
+        const { success, data } = await getAlbum(helperObj.albumId)
+        if (success && data) {
+          await displayAlbum(data);
+        }
+      }
+      break;
+    }
     case "deleteAlbum": {
       const albumId = leftHeaderButton.getAttribute("albumId");
-      await displayConfirmationPopup(`delete album`, { albumId })
+      const circleId = leftHeaderButton.getAttribute("circleId");
+      await displayConfirmationPopup(`delete album`, { albumId, circleId });
       break;
     }
     case "backToAlbum": {
@@ -142,7 +159,7 @@ header.addEventListener("click", async (event) => {
     }
     case "inviteDoneButton": {
       saveCheckedFriends()
-      const circleId = leftHeaderButton.getAttribute("circleid")
+      const circleId = leftHeaderButton.getAttribute("circleid");
       leftHeaderButton.removeAttribute("circleId");
       for (let friend of checkedFriends) {
         const { success, data } = await handleSendCircleRequest(friend, circleId);
@@ -253,11 +270,11 @@ header.addEventListener("click", async (event) => {
         }
       }
     }
-    case "updateAlbum": {
+    case "addPhotosToAlbum": {
       const albumId = leftHeaderButton.getAttribute("albumId");
   
       if (albumId) {
-        const { success, data, error } = await updateAlbum(albumId, albumObj);
+        const { success, data, error } = await addPhotosToAlbum(albumId, albumObj);
         if (success && data) {
           const albumResponse = await getAlbum(albumId);
           if (albumResponse.success && albumResponse.data) {

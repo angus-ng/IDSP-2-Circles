@@ -160,13 +160,13 @@ async function likeAlbum(albumId) {
   }
 }
 
-async function updateAlbum(albumId, albumObj) {
+async function addPhotosToAlbum(albumId, albumObj) {
   try {
     if (!albumObj.photos || albumObj.photos.length === 0) {
       return { success: false, data: null, error: "No new photos" };
     }
 
-    let response = await fetch(`/album/${albumId}/update`, {
+    let response = await fetch(`/album/${albumId}/addPhotos`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -625,6 +625,52 @@ async function deleteCircle (circleId) {
       headers: {
         "Content-Type": "application/json",
       }
+    });
+    const jsonResponse = await response.json();
+    return jsonResponse
+  } catch (err) {
+
+  }
+}
+
+async function deleteAlbum (albumId) {
+  try {
+    const response = await fetch(`/album/${albumId}/delete`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      }
+    });
+    const jsonResponse = await response.json();
+    return jsonResponse
+  } catch (err) {
+
+  }
+}
+
+async function deletePhoto (photoId) {
+  try {
+    const response = await fetch(`/album/photo/${photoId}/delete`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      }
+    });
+    const jsonResponse = await response.json();
+    return jsonResponse
+  } catch (err) {
+
+  }
+}
+
+async function updateAlbum (albumHelperObj) {
+  try {
+    const response = await fetch(`/album/update`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(albumHelperObj)
     });
     const jsonResponse = await response.json();
     return jsonResponse

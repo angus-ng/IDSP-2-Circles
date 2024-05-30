@@ -90,7 +90,7 @@ function displayPhotoUploadPreview(albumPhotos) {
     leftHeaderButton.innerHTML = closeIcon;
     leftHeaderButton.id = "backToAlbum";
     rightHeaderButton.textContent = "Done";
-    rightHeaderButton.id = "updateAlbum";
+    rightHeaderButton.id = "addPhotosToAlbum";
     rightHeaderButton.className = "text-lg";
   }
 
@@ -455,7 +455,7 @@ let ownedPhotosCount = 0
 
   const photoList = albumData.photos.map((obj) => {
     return `
-    <div class="photo w-full h-min relative" albumId="${obj.id}" poster="${obj.userId}">
+    <div class="photo w-full h-min relative" photoId="${obj.id}" poster="${obj.userId}">
       <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.src}"/>
       <button class="deletePhoto absolute top-0 right-0 p-2 z-20 hidden">${photoDeleteIcon}</button>
     </div>`;
@@ -536,7 +536,7 @@ let ownedPhotosCount = 0
     const overlay = event.target.closest("#photoOverlay");
     const addMorePhotos = event.target.closest("#addPhotos");
     const like = event.target.closest(".like");
-    
+    const deletePhoto = event.target.closest(".deletePhoto")
     if (photo) {
       await displayPhoto(photo.src);
     }
@@ -578,6 +578,12 @@ let ownedPhotosCount = 0
         }
       }
       return;
+    }
+
+    if (deletePhoto) {
+      const photoId = event.target.closest("div.photo").getAttribute("photoId")
+      const albumId = document.querySelector("div.like").getAttribute("albumId");
+      await displayConfirmationPopup("delete photo", { photoId, albumId });
     }
   });
 }
@@ -872,9 +878,9 @@ async function displayAlbumEditMode(albumId, ownerId, memberStatus) {
 
     const albumName = document.querySelector("#albumName h2");
     const albumNameInput = document.createElement("input");
-    albumNameInput.id = "circleNameInput";
+    albumNameInput.id = "albumNameInput";
     albumNameInput.type = "text";
-    albumNameInput.placeholder = "Add a circle name";
+    albumNameInput.placeholder = "Add a album name";
     albumNameInput.value = albumName.textContent;
     albumNameInput.className = "max-w-full text-center bg-transparent text-20 text-black font-light border-dark-grey";
     albumName.remove();
@@ -882,7 +888,11 @@ async function displayAlbumEditMode(albumId, ownerId, memberStatus) {
   } else {
     document.querySelectorAll(`div.photo[poster="${currentLocalUser}"] > button.deletePhoto`).forEach((photo) => {
       photo.classList.add("bg-overlay-bg", "rounded-[10px]");
-      photo.classList.remove("hidden");
+      if (photo.classList.contains("hidden")) {
+        photo.classList.remove("hidden");
+      } else {
+        photo.classList.add("hidden")
+      }
     });
   }
   pageName.textContent = "Edit";
