@@ -42,20 +42,21 @@ async function initMap() {
     }
     map.createAlbumMarkers = (albumData) => {
       for (let album of albumData.data.Album) {
-        console.log(album);
-        const contentNode = document.createElement("div");
-        contentNode.classList.add("mapAlbum");
-        contentNode.innerHTML = `<div class="relative">
-            <img src="${album.photos[0].src}" class="rounded-full border-4 border-blue-500 w-12 h-12 object-cover aspect-w-1 aspect-h-1" alt="Google Maps Pin">
-            <div class="absolute w-4 h-4 bg-blue-500 rounded-full bottom-0 left-1/2 transform -translate-x-1/2"></div>
-        </div>`;
-        const marker = new AdvancedMarkerElement({
-            map,
-            position: {lat: parseFloat(album.lat), lng: parseFloat(album.long)},
-            content: contentNode,
-            title: album.name,
-        });
-        markers.push(marker)
+        if(album.photo[0]) {
+          const contentNode = document.createElement("div");
+          contentNode.classList.add("mapAlbum");
+          contentNode.innerHTML = `<div class="relative">
+              <img src="${album.photos[0].src}" class="rounded-full border-4 border-blue-500 w-12 h-12 object-cover aspect-w-1 aspect-h-1" alt="Google Maps Pin">
+              <div class="absolute w-4 h-4 bg-blue-500 rounded-full bottom-0 left-1/2 transform -translate-x-1/2"></div>
+          </div>`;
+          const marker = new AdvancedMarkerElement({
+              map,
+              position: {lat: parseFloat(album.lat), lng: parseFloat(album.long)},
+              content: contentNode,
+              title: album.name,
+          });
+          markers.push(marker)
+        }
       }
     }
     if (response.data){
@@ -178,10 +179,6 @@ async function displayAddLocation() {
     const head = document.querySelector("head");
     head.appendChild(script1);
     head.appendChild(script2);
-
-    document.querySelector("#addLocationSkip").addEventListener("click", async function (event) {
-      await displayAlbumConfirmation();
-    });
   } catch (error) {
     console.error(error);
   }

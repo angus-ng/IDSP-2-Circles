@@ -49,26 +49,26 @@ export class AlbumService implements IAlbumService {
             //make the explicit album user relationship
             if (createdAlbum) {
                 let albumGps: any = null
-                if (!newAlbumInput.location) {
-                    let gpsCount = 0
-                    for (let photo of newAlbumInput.photos) {
-                        if (photo.photoSrc.gps && gpsCount === 0) {
-                            gpsCount = 1
-                            albumGps = photo.gps
-                        }
-                    }
-                    for (let i = 0; i < newAlbumInput.photos.length; i++) {
-                        const file = await this._db.prisma.photo.create({
-                            data: {
-                                src: newAlbumInput.photos[i].photoSrc.url,
-                                userId: creator.username,
-                                albumId: createdAlbum.id
-                            }
-                        })
+                let gpsCount = 0
+                for (let photo of newAlbumInput.photos) {
+                    if (photo.photoSrc.gps && gpsCount === 0) {
+                        gpsCount = 1
+                        albumGps = photo.gps
                     }
                 }
-                albumGps = newAlbumInput.location
-                console.log(newAlbumInput.photos)
+                for (let i = 0; i < newAlbumInput.photos.length; i++) {
+                    const file = await this._db.prisma.photo.create({
+                        data: {
+                            src: newAlbumInput.photos[i].photoSrc.url,
+                            userId: creator.username,
+                            albumId: createdAlbum.id
+                        }
+                    })
+                }
+
+                if (newAlbumInput.location) {
+                    albumGps = newAlbumInput.location
+                }
                 if (albumGps) {
                     const albumWithGps = await this._db.prisma.album.update({
                         where: {
@@ -138,7 +138,7 @@ export class AlbumService implements IAlbumService {
         return true
     }
 
-    async likeAlbum(currentUser: string, albumId: string): Promise<{ members: string[], user: string, albumName:string } | undefined> {
+    async likeAlbum(currentUser: string, albumId: string): Promise<{ members: string[], user: string, albumName: string } | undefined> {
         try {
             const existingLike = await this._db.prisma.like.findFirst({
                 where: {
@@ -211,7 +211,7 @@ export class AlbumService implements IAlbumService {
         return isPublic.circle.isPublic;
     }
 
-    async getAlbum(id: string): Promise<AlbumFromGetAlbum| null> {
+    async getAlbum(id: string): Promise<AlbumFromGetAlbum | null> {
         const album = await this._db.prisma.album.findUnique({
             select: {
                 name: true,
@@ -288,7 +288,7 @@ export class AlbumService implements IAlbumService {
                     }
                 })
             }
-            return {newPhotos, album}
+            return { newPhotos, album }
         }
         return album;
     }
@@ -568,7 +568,7 @@ export class AlbumService implements IAlbumService {
         }
     }
 
-    async likeComment(currentUser: string, commentId: string): Promise<void | {owner:string| null, albumName:string, user:string}> {
+    async likeComment(currentUser: string, commentId: string): Promise<void | { owner: string | null, albumName: string, user: string }> {
         try {
             const existingLike = await this._db.prisma.like.findFirst({
                 where: {
@@ -620,7 +620,7 @@ export class AlbumService implements IAlbumService {
                     }
                 });
                 console.log("Comment liked successfully", updatedComment);
-                return {albumName: updatedComment.album.name, user: currentUser, owner: updatedComment.userId}
+                return { albumName: updatedComment.album.name, user: currentUser, owner: updatedComment.userId }
             }
         } catch (err) {
             throw err;
@@ -631,28 +631,28 @@ export class AlbumService implements IAlbumService {
             const album = await this._db.prisma.album.findUnique({
                 where: {
                     id: albumId
-                }, 
+                },
                 include: {
                     circle: {
                         include: {
                             UserCircle: true,
                             owner: {
-                                select: {username : true}
+                                select: { username: true }
                             }
                         },
                     },
                 }
             })
-            if (!album) { 
-             throw new Error("could not find album")   
+            if (!album) {
+                throw new Error("could not find album")
             }
             let isMod = false;
-                const member = album.circle.UserCircle.find((user) => {
-                    user.username === currentUser
-                })
-                if (member) {
-                    isMod = member.mod
-                }
+            const member = album.circle.UserCircle.find((user) => {
+                user.username === currentUser
+            })
+            if (member) {
+                isMod = member.mod
+            }
             if (currentUser === album.circle.owner.username || isMod || currentUser === album.ownerName) {
                 await this._db.prisma.album.delete({
                     where: {
@@ -673,9 +673,9 @@ export class AlbumService implements IAlbumService {
             const photo = await this._db.prisma.photo.findUnique({
                 where: {
                     id: photoId
-                }, 
+                },
                 include: {
-                    album : {
+                    album: {
                         include: {
                             circle: {
                                 include: {
@@ -686,8 +686,8 @@ export class AlbumService implements IAlbumService {
                     }
                 }
             })
-            if (!photo) { 
-                throw new Error("could not find photo")   
+            if (!photo) {
+                throw new Error("could not find photo")
             }
             let isMod = false;
             const member = photo.album.circle.UserCircle.find((user) => {
