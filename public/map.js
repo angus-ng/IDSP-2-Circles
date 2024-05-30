@@ -128,6 +128,9 @@ async function displayAddLocation() {
     <div class="w-full h-full ml-2 bg-light-mode">
       <div class="fixed mb-6">
         <div class="relative w-full h-12 bg-light-mode">
+        <div slot="control-block-start-inline-start" class="w-380 px-10 py-2 mt-2 border-grey border-2 rounded-input-box text-secondary leading-secondary">
+          <gmpx-place-picker placeholder="Enter an address"></gmpx-place-picker>
+        </div>
           <input type="text" id="locationSearchBox" class="w-380 px-10 py-2 mt-2 border-grey border-2 rounded-input-box text-secondary leading-secondary" placeholder="search location">
           <img src="/lightmode/search_icon_grey.svg" alt="search icon" class="absolute left-3 top-3.5 w-25 h-25"/>
         </div>
@@ -137,4 +140,8 @@ async function displayAddLocation() {
       </div>
     </div>
   </div>`;
+  
+  document.querySelector("#addLocationSkip").addEventListener("click", async function (event) {
+    await displayAlbumConfirmation()
+  })
 }

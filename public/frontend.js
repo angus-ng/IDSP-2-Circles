@@ -224,7 +224,7 @@ header.addEventListener("click", async (event) => {
         }
         break;
       }
-      case "albumConfirmationBack": {
+      case "addLocationBack" : {
         const { success, data } = await getUser(currentLocalUser);
         if (success && data) {
           nav.classList.remove("hidden");
@@ -232,6 +232,10 @@ header.addEventListener("click", async (event) => {
           rightHeaderButton.removeAttribute("fromCreateAlbum");
           showCreateOrAddToCircle(circleRender);
         }
+        break;
+      }
+      case "albumConfirmationBack": {
+        await displayAddLocation()
         break;
       }
       case "addCircleBack": {
