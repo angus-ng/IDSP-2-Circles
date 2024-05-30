@@ -15,6 +15,7 @@ class App {
     this._server = http.createServer(this._app);
     this.initializeMiddlewares();
     this.initializeControllers(controllers);
+    this.initializeWebSocket();
   }
 
   public start() {
@@ -33,6 +34,10 @@ class App {
     controllers.forEach((controller) => {
       this._app.use("/", controller.router);
     });
+  }
+
+  private initializeWebSocket() {
+
   }
 }
 

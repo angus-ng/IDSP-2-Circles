@@ -76,7 +76,7 @@ class AuthenticationService {
                     id = user.id;
                 }
                 const User = yield this._db.prisma.user.create({
-                    data: Object.assign(Object.assign({}, user), { id: id, profilePicture: "" })
+                    data: Object.assign(Object.assign({}, user), { id: id })
                 });
                 return User;
             }

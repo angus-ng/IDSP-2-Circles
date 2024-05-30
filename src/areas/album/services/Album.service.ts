@@ -4,265 +4,288 @@ import IAlbumService from "./IAlbumService";
 import { Album, Comment } from '@prisma/client'
 
 export class AlbumService implements IAlbumService {
-  readonly _db: DBClient = DBClient.getInstance();
+    readonly _db: DBClient = DBClient.getInstance();
 
-  async createAlbum(newAlbumInput: any) {
-    console.log("I RAN")
-    //find the logged in user from db
-    const creator = await this._db.prisma.user.findUnique({
-        where: {
-            username: newAlbumInput.creator
-        }
-    })
-
-    if (creator){
-        //make the album
-        const createdAlbum = await this._db.prisma.album.create({
-            data: {
-                name: newAlbumInput.albumName,
-                circleId: newAlbumInput.circleId,
-                ownerName: newAlbumInput.creator
+    async createAlbum(newAlbumInput: any) {
+        //find the logged in user from db
+        const creator = await this._db.prisma.user.findUnique({
+            where: {
+                username: newAlbumInput.creator
             }
         })
 
-        //make the explicit album user relationship
-        if (createdAlbum) {
-            for (let i=0; i < newAlbumInput.photos.length; i++){
-                const file = await this._db.prisma.photo.create({
-                    data: {
-                        src: newAlbumInput.photos[i].photoSrc,
-                        userId: creator.username,
-                        albumId: createdAlbum.id
-                    }
-                })
-            }
-            return createdAlbum;
-        }
-    }
-    return null;
-  }
-
-
-  async checkMembership(id: string, currentUser:string, circleId=false): Promise<boolean> {
-    const user = await this._db.prisma.user.findUnique({
-        where: {
-            username : currentUser
-        }
-    })
-    console.log(circleId)
-    let albumCircleId;
-    if (!circleId) {
-        const foundId = await this._db.prisma.album.findUnique({
-            select: {
-                circleId: true
-            },
-            where: {
-                id: id
-            }
-        })
-        if (foundId){
-            albumCircleId = foundId.circleId
-        }
-    } else {
-        const foundId = await this._db.prisma.circle.findUnique({
-            select: {
-                id: true
-            },
-            where: {
-                id: id
-            }
-        })
-        if (foundId){
-            albumCircleId = foundId!.id
-        }
-    }
-
-    if (!albumCircleId || !user) {
-        return false;
-    } 
-    const membership = await this._db.prisma.userCircle.findFirst({
-        where: {
-            username: user.username,
-            circleId: albumCircleId
-        }
-    })
-
-    if (!membership) {
-        return false;
-    }
-
-    return true
-  }
-
-  async likeAlbum(currentUser: string, albumId: string): Promise<void> {
-    try {
-        const existingLike = await this._db.prisma.like.findFirst({
-            where: {
-                userId: currentUser,
-                albumId: albumId
-            }
-        });
-
-        if (existingLike) {
-            await this._db.prisma.like.delete({
-                where: {
-                    id: existingLike.id
+        if (creator) {
+            //make the album
+            const createdAlbum = await this._db.prisma.album.create({
+                data: {
+                    name: newAlbumInput.albumName,
+                    circleId: newAlbumInput.circleId,
+                    ownerName: newAlbumInput.creator
                 }
-            });
+            })
 
-            await this._db.prisma.album.update({
-                where: {
-                    id: albumId
+            //make the explicit album user relationship
+            if (createdAlbum) {
+                let albumGps: any = null
+                let gpsCount = 0
+                for (let photo of newAlbumInput.photos) {
+                    if (photo.photoSrc.gps && gpsCount === 0) {
+                        gpsCount = 1
+                        albumGps = photo.photoSrc.gps
+                    }
+                }
+                for (let i = 0; i < newAlbumInput.photos.length; i++) {
+                    const file = await this._db.prisma.photo.create({
+                        data: {
+                            src: newAlbumInput.photos[i].photoSrc.url,
+                            userId: creator.username,
+                            albumId: createdAlbum.id
+                        }
+                    })
+                }
+                if (albumGps) {
+                    const albumWithGps = await this._db.prisma.album.update({
+                        where: {
+                            id: createdAlbum.id
+                        },
+                        data: {
+                            lat: albumGps.lat.toString(),
+                            long: albumGps.long.toString()
+                        }
+                    })
+                }
+                return createdAlbum;
+            }
+        }
+        return null;
+    }
+
+
+    async checkMembership(id: string, currentUser: string, circleId = false): Promise<boolean> {
+        const user = await this._db.prisma.user.findUnique({
+            where: {
+                username: currentUser
+            }
+        })
+        console.log(circleId)
+        let albumCircleId;
+        if (!circleId) {
+            const foundId = await this._db.prisma.album.findUnique({
+                select: {
+                    circleId: true
                 },
-                data: {
-                    likeCount: {
-                        decrement: 1
-                    }
+                where: {
+                    id: id
                 }
-            });
-
-            console.log("Album unliked successfully");
+            })
+            if (foundId) {
+                albumCircleId = foundId.circleId
+            }
         } else {
-            await this._db.prisma.like.create({
-                data: {
+            const foundId = await this._db.prisma.circle.findUnique({
+                select: {
+                    id: true
+                },
+                where: {
+                    id: id
+                }
+            })
+            if (foundId) {
+                albumCircleId = foundId!.id
+            }
+        }
+
+        if (!albumCircleId || !user) {
+            return false;
+        }
+        const membership = await this._db.prisma.userCircle.findFirst({
+            where: {
+                username: user.username,
+                circleId: albumCircleId
+            }
+        })
+
+        if (!membership) {
+            return false;
+        }
+
+        return true
+    }
+
+    async likeAlbum(currentUser: string, albumId: string): Promise<void> {
+        try {
+            const existingLike = await this._db.prisma.like.findFirst({
+                where: {
                     userId: currentUser,
                     albumId: albumId
                 }
             });
 
-            await this._db.prisma.album.update({
-                where: {
-                    id: albumId
-                },
-                data: {
-                    likeCount: {
-                        increment: 1
+            if (existingLike) {
+                await this._db.prisma.like.delete({
+                    where: {
+                        id: existingLike.id
                     }
-                }
-            });
+                });
 
-            console.log("Album liked successfully");
-        }
-    } catch (err) {
-        throw err;
-    }
-}
-
-  async checkPublic(id: string): Promise<boolean> {
-    const isPublic = await this._db.prisma.album.findUnique({
-        where: {
-            id: id
-        },
-        select: {
-            circle: {
-                select: {
-                    isPublic: true
-                }
-            }
-        }
-    })
-    if (!isPublic) {
-        return false
-    }
-    return isPublic.circle.isPublic;
-  }
-
-  async getAlbum (id: string): Promise<any> {
-    const album = await this._db.prisma.album.findUnique({
-        select: {
-                name: true,
-                id: true,
-            photos: {
-                select: {
-                    id: true,
-                    src: true,
-                }
-            },
-            likes: {
-                select: {
-                    user: {
-                        select: {
-                            username: true,
-                            profilePicture: true,
+                await this._db.prisma.album.update({
+                    where: {
+                        id: albumId
+                    },
+                    data: {
+                        likeCount: {
+                            decrement: 1
                         }
                     }
-                }
+                });
+
+                console.log("Album unliked successfully");
+            } else {
+                await this._db.prisma.like.create({
+                    data: {
+                        userId: currentUser,
+                        albumId: albumId
+                    }
+                });
+
+                await this._db.prisma.album.update({
+                    where: {
+                        id: albumId
+                    },
+                    data: {
+                        likeCount: {
+                            increment: 1
+                        }
+                    }
+                });
+
+                console.log("Album liked successfully");
+            }
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async checkPublic(id: string): Promise<boolean> {
+        const isPublic = await this._db.prisma.album.findUnique({
+            where: {
+                id: id
             },
-            likeCount: true,
-            circle: {
-                select: {
-                    id: true,
-                    name: true,
-                    UserCircle: {
-                        select: {
-                            user: {
-                                select: {
-                                    username: true,
-                                    profilePicture: true
-                                }
+            select: {
+                circle: {
+                    select: {
+                        isPublic: true
+                    }
+                }
+            }
+        })
+        if (!isPublic) {
+            return false
+        }
+        return isPublic.circle.isPublic;
+    }
+
+    async getAlbum(id: string): Promise<any> {
+        const album = await this._db.prisma.album.findUnique({
+            select: {
+                name: true,
+                id: true,
+                photos: {
+                    select: {
+                        id: true,
+                        src: true,
+                        userId: true
+                    }
+                },
+                likes: {
+                    select: {
+                        user: {
+                            select: {
+                                username: true,
+                                profilePicture: true,
                             }
                         }
                     }
                 },
+                likeCount: true,
+                circle: {
+                    select: {
+                        id: true,
+                        name: true,
+                        UserCircle: {
+                            select: {
+                                user: {
+                                    select: {
+                                        username: true,
+                                        profilePicture: true
+                                    }
+                                },
+                                mod: true
+                            }
+                        },
+                        ownerId: true
+                    },
+                },
             },
-        },
-        where: {
-            id: id
-        }
-    })
-    return album;
-  }
+            where: {
+                id: id
+            }
+        })
+        return album;
+    }
 
-  async updateAlbum(currentUser: string, id: string, newPhotos: any[]): Promise<any> {
-    const hasPermission = await this.checkMembership(id, currentUser);
-    if (!hasPermission) {
-      throw new Error("User does not have permission to update this album.");
-    }
-  
-    const existingAlbum = await this._db.prisma.album.findUnique({
-      where: { id },
-      include: { photos: true }
-    });
-  
-    if (!existingAlbum) {
-      throw new Error("Album not found.");
-    }
-  
-    if (newPhotos) {
-        for (let i=0; i < newPhotos.length; i++){
-            const file = await this._db.prisma.photo.create({
-                data: {
-                    src: newPhotos[i].photoSrc,
-                    userId: currentUser,
-                    albumId: id
-                }
-            })
+    async updateAlbum(currentUser: string, id: string, newPhotos: any[]): Promise<any> {
+        const hasPermission = await this.checkMembership(id, currentUser);
+        if (!hasPermission) {
+            throw new Error("User does not have permission to update this album.");
         }
-        return newPhotos
-    }
-  
-    return this.getAlbum(id);
-  }  
 
-//   async listAlbums (currentUser:string): Promise<{album: Album}[] | void> { // remove this void when implemented
-//     const user = await this._db.prisma.user.findUnique({
-//         where: {
-//             username: currentUser
-//         }
-//     })
-//     //return new Error("Not implemented");
-//   }
-  
-  async getComments(albumId: string): Promise<any> {
-    let album = await this._db.prisma.album.findUnique({
-        where: {
-            id: albumId
+        const existingAlbum = await this._db.prisma.album.findUnique({
+            where: { id },
+            include: { photos: true }
+        });
+
+        if (!existingAlbum) {
+            throw new Error("Album not found.");
         }
-    })
-    if (!album) {
-        return;
+
+        if (newPhotos) {
+            for (let i = 0; i < newPhotos.length; i++) {
+                const file = await this._db.prisma.photo.create({
+                    data: {
+                        src: newPhotos[i].photoSrc.url,
+                        userId: currentUser,
+                        albumId: id,
+                        lat: newPhotos[i].photoSrc.gps ? String(newPhotos[i].photoSrc.gps.lat) : null,
+                        long: newPhotos[i].photoSrc.gps ? String(newPhotos[i].photoSrc.gps.long) : null
+                    }
+                })
+            }
+            return newPhotos
+        }
+
+        return this.getAlbum(id);
     }
-    let comment: any[] = await this._db.prisma.$queryRaw`WITH RECURSIVE NestedComments AS (
+
+    //   async listAlbums (currentUser:string): Promise<{album: Album}[] | void> { // remove this void when implemented
+    //     const user = await this._db.prisma.user.findUnique({
+    //         where: {
+    //             username: currentUser
+    //         }
+    //     })
+    //     //return new Error("Not implemented");
+    //   }
+
+    async getComments(albumId: string): Promise<any> {
+        let album = await this._db.prisma.album.findUnique({
+            where: {
+                id: albumId
+            }
+        })
+        if (!album) {
+            return;
+        }
+        let comment: any[] = await this._db.prisma.$queryRaw`WITH RECURSIVE NestedComments AS (
         -- Anchor member: Select top-level comments (those with NULL parentId)
         SELECT 
           c.id, 
@@ -375,100 +398,123 @@ export class AlbumService implements IAlbumService {
         ORDER BY 
             NestedComments.createdAt;`
 
-    comment = comment.map((comment) => {
-        comment.user = {
-            profilePicture: comment.profilePicture,
-            username: comment.username,
-            displayName: comment.displayName
-        }
-        comment.likedBy ? comment.likedBy = comment.likedBy.split(","): comment.likedBy
-        delete comment.profilePicture;
-        delete comment.username;
-        delete comment.displayName;
-        return comment
-    })
-    const commentMap = new Map;
-    let topLevelComments: Comment[] = [];
-    comment.forEach((comment) => {
-        if (comment.level == 1){
-            topLevelComments.push(comment)
-        }
-        commentMap.set(comment.id, comment)
-        if (comment.level > 1){
-            const parentComment = commentMap.get(comment.parentId);
-            if (parentComment){
-                if (!parentComment.replies){
-                    parentComment.replies = [];
-                }
-                parentComment.replies.push(comment)
+        comment = comment.map((comment) => {
+            comment.user = {
+                profilePicture: comment.profilePicture,
+                username: comment.username,
+                displayName: comment.displayName
             }
-        }
-        delete comment.level
-    })
-
-    return topLevelComments;
-  }
-
-  async createComment(currentUser: string, message: string, albumId: string, commentId?:string) {
-    try {
-        const newComment = await this._db.prisma.comment.create({
-            data: {
-                message: message,
-                userId: currentUser,
-                albumId: albumId
-            }
+            comment.likedBy ? comment.likedBy = comment.likedBy.split(",") : comment.likedBy
+            delete comment.profilePicture;
+            delete comment.username;
+            delete comment.displayName;
+            return comment
         })
-        if (commentId && newComment) {
-            await this._db.prisma.comment.update({
-                where: {
-                    id: commentId
-                }, 
+        const commentMap = new Map;
+        let topLevelComments: Comment[] = [];
+        comment.forEach((comment) => {
+            if (comment.level == 1) {
+                topLevelComments.push(comment)
+            }
+            commentMap.set(comment.id, comment)
+            if (comment.level > 1) {
+                const parentComment = commentMap.get(comment.parentId);
+                if (parentComment) {
+                    if (!parentComment.replies) {
+                        parentComment.replies = [];
+                    }
+                    parentComment.replies.push(comment)
+                }
+            }
+            delete comment.level
+        })
+
+        return topLevelComments;
+    }
+
+    async createComment(currentUser: string, message: string, albumId: string, commentId?: string) {
+        try {
+            const newComment = await this._db.prisma.comment.create({
                 data: {
-                    replies: {connect: newComment} 
+                    message: message,
+                    userId: currentUser,
+                    albumId: albumId
                 }
             })
-            console.log(commentId)
+            if (commentId && newComment) {
+                await this._db.prisma.comment.update({
+                    where: {
+                        id: commentId
+                    },
+                    data: {
+                        replies: { connect: newComment }
+                    }
+                })
+                console.log(commentId)
+            }
+        } catch (err) {
+            throw err;
         }
-      } catch (err) {
-        throw err;
-    }
     }
 
     async deleteComment(currentUser: string, commentId: string) {
         try {
             const comment = await this._db.prisma.comment.findUnique({
                 where: {
-                    id: commentId,
-                    userId: currentUser
+                    id: commentId
                 },
                 select: {
-                    replies: true
+                    userId: true,
+                    replies: true,
+                    album: {
+                        select: {
+                            circle: {
+                                select: {
+                                    id: true,
+                                    ownerId: true
+                                }
+                            }
+                        }
+                    }
                 }
             })
 
             if (!comment) {
-                 return
+                return
             }
-            
-            if (comment.replies.length) {
-                await this._db.prisma.comment.update({
-                    where: {
-                        id: commentId,
-                        userId: currentUser
-                    },
-                    data: {
-                        userId: null,
-                        message: null
+
+            const modStatus = await this._db.prisma.userCircle.findUnique({
+                where: {
+                    username_circleId: {
+                        username: currentUser,
+                        circleId: comment.album.circle.id
                     }
-                })
-            } else {
-                await this._db.prisma.comment.delete({
-                    where: {
-                        id: commentId,
-                        userId: currentUser
-                    }
-                })
+                },
+                select: {
+                    mod: true
+                }
+            })
+
+            if (comment.album.circle.ownerId === currentUser || comment.userId === currentUser || modStatus) {
+                if (comment.replies.length) {
+                    await this._db.prisma.comment.update({
+                        where: {
+                            id: commentId
+                        },
+                        data: {
+                            userId: null,
+                            message: null
+                        }
+                    })
+                } else {
+                    await this._db.prisma.comment.delete({
+                        where: {
+                            id: commentId
+                        }
+                    })
+                }
             }
+
         } catch (err) {
             throw err;
         }
@@ -482,14 +528,14 @@ export class AlbumService implements IAlbumService {
                     commentId: commentId
                 }
             });
-    
+
             if (existingLike) {
                 await this._db.prisma.like.delete({
                     where: {
                         id: existingLike.id
                     }
                 });
-    
+
                 const updatedComment = await this._db.prisma.comment.update({
                     where: {
                         id: commentId
@@ -500,7 +546,7 @@ export class AlbumService implements IAlbumService {
                         }
                     }
                 });
-    
+
                 console.log("Comment unliked successfully", updatedComment);
             } else {
                 await this._db.prisma.like.create({
@@ -509,7 +555,7 @@ export class AlbumService implements IAlbumService {
                         commentId: commentId
                     }
                 });
-    
+
                 const updatedComment = await this._db.prisma.comment.update({
                     where: {
                         id: commentId
@@ -520,10 +566,94 @@ export class AlbumService implements IAlbumService {
                         }
                     }
                 });
-    
-                console.log("Comment liked successfully" , updatedComment);
+
+                console.log("Comment liked successfully", updatedComment);
             }
         } catch (err) {
+            throw err;
+        }
+    }
+    async deleteAlbum(albumId: string, currentUser: string): Promise<void> {
+        try {
+            const album = await this._db.prisma.album.findUnique({
+                where: {
+                    id: albumId
+                }, 
+                include: {
+                    circle: {
+                        include: {
+                            UserCircle: true,
+                            owner: {
+                                select: {username : true}
+                            }
+                        },
+                    },
+                }
+            })
+            if (!album) { 
+             throw new Error("could not find album")   
+            }
+            let isMod = false;
+                const member = album.circle.UserCircle.find((user) => {
+                    user.username === currentUser
+                })
+                if (member) {
+                    isMod = member.mod
+                }
+            if (currentUser === album.circle.owner.username || isMod || currentUser === album.ownerName) {
+                await this._db.prisma.album.delete({
+                    where: {
+                        id: albumId
+                    }
+                })
+            } else {
+                throw new Error("insufficient permissions to delete album")
+            }
+
+        } catch (err) {
+            console.log(err)
+            throw err;
+        }
+    }
+    async deletePhoto(photoId: string, currentUser: string): Promise<void> {
+        try {
+            const photo = await this._db.prisma.photo.findUnique({
+                where: {
+                    id: photoId
+                }, 
+                include: {
+                    album : {
+                        include: {
+                            circle: {
+                                include: {
+                                    UserCircle: true
+                                }
+                            }
+                        }
+                    }
+                }
+            })
+            if (!photo) { 
+                throw new Error("could not find photo")   
+            }
+            let isMod = false;
+            const member = photo.album.circle.UserCircle.find((user) => {
+                user.username === currentUser
+            })
+            if (member) {
+                isMod = member.mod
+            }
+            if (currentUser === photo.album.circle.ownerId || isMod || currentUser === photo.userId) {
+                await this._db.prisma.photo.delete({
+                    where: {
+                        id: photoId
+                    }
+                })
+            } else {
+                throw new Error("insufficient permissions to delete photo")
+            }
+        } catch (err) {
+            console.log(err)
             throw err;
         }
     }

@@ -39,17 +39,20 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
+    "@googlemaps/js-api-loader": "^1.16.6",
     "@kinde-oss/kinde-typescript-sdk": "^2.9.0",
     "@libsql/client": "^0.6.0",
     "@prisma/adapter-libsql": "^5.13.0",
     "@prisma/client": "^5.13.0",
     "@types/livereload": "^0.9.5",
+    "@types/ws": "^8.5.10",
     "bcrypt": "^5.1.1",
     "cloudinary": "^2.2.0",
     "connect-redis": "^7.1.1",
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
+    "exifr": "^7.1.3",
     "express": "^4.19.2",
     "express-session": "^1.18.0",
     "http": "^0.0.1-security",
@@ -62,7 +65,9 @@
     "passport-facebook": "^3.0.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-local": "^1.0.0",
+    "sharp": "^0.33.4",
     "swiped-events": "^1.2.0",
-    "tsx": "^4.7.3"
+    "tsx": "^4.7.3",
+    "ws": "^8.17.0"
   }
 }

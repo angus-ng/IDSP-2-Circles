@@ -13,11 +13,16 @@ class LandingController implements IController {
 
   private initializeRoutes() {
     this.router.get(`${this.path}/`, this.showLandingPage);
+    this.router.get(`${this.path}googleMapKey`, this.getGoogleMapKey);
   }
  
   private showLandingPage = (_: express.Request, res: express.Response) => {
     res.render(path.join(__dirname, "../../../../public/index.html"));
     return;
+  };
+  
+  private getGoogleMapKey = (_: express.Request, res: express.Response) => {
+    return res.status(200).json({success: true, data: process.env.GOOGLE_MAP_API_KEY});
   };
 }
 

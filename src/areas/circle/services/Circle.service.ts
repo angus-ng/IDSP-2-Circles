@@ -31,7 +31,8 @@ export class CircleService implements ICircleService {
             await this._db.prisma.userCircle.create({
                 data: {
                     username: creator.username,
-                    circleId: createdCircle.id
+                    circleId: createdCircle.id,
+                    mod: true
                 }
             })
         }
@@ -56,7 +57,7 @@ export class CircleService implements ICircleService {
         })
     
         if (!user || !circle || circle.ownerId !== user.username) {
-            return;
+            throw new Error("insufficient permissions")
         }
     
         // delete circle
@@ -91,16 +92,20 @@ export class CircleService implements ICircleService {
         throw new Error(error)
     }
   }
-  async checkPublic(id: string): Promise<boolean> {
+  async checkPublic(id: string): Promise<boolean | null> {
     try {
         const isPublic = await this._db.prisma.circle.findUnique({
             where: {
                 id: id
             }
         })
-        return isPublic!.isPublic
+        if (isPublic) {
+            return isPublic.isPublic
+        }
+        return null;
     } catch (err:any){
-        throw new Error(err)
+        console.log(err)
+        return null;
     }
   }
   async getCircle (id: string): Promise<Circle | null> {
@@ -110,6 +115,7 @@ export class CircleService implements ICircleService {
                 albums: {
                     select: {
                         id: true,
+                        circleId: true,
                         name: true,
                         photos: {
                             take: 1
@@ -152,18 +158,34 @@ export class CircleService implements ICircleService {
 //   }
 
   async getMembers (circleId: string) {
-    const members = await this._db.prisma.userCircle.findMany({
+    let members = await this._db.prisma.userCircle.findMany({
         select: {
             user: {
                 select: {
                     username: true,
-                    profilePicture: true
+                    profilePicture: true,
+                    displayName: true
                 }
-            }
+            },
+            mod: true
         },
         where: {
             circleId: circleId
         }
+    })
+    const owner = await this._db.prisma.circle.findUnique({
+        where: {
+            id: circleId
+        },
+        select: {
+            ownerId : true
+        }
+    })
+    members = members.map((member) => {
+        if (member.user.username === owner?.ownerId) {
+            member.user.owner = true;
+        }
+        return member
     })
     return members;
   }
@@ -239,7 +261,19 @@ export class CircleService implements ICircleService {
         const circle = await this._db.prisma.circle.findUnique({
             where: {
                 id: circleObj.circleId,
-                ownerId: currentUser
+                OR: [{
+                    ownerId: currentUser
+                },
+                {
+                    UserCircle: {
+                        some : {
+                            username: currentUser,
+                            circleId: circleObj.circleId,
+                            mod: true
+                        }
+                    }
+                }
+            ]
             }
         })
         if (!circle) {
@@ -256,5 +290,96 @@ export class CircleService implements ICircleService {
             }
         })
         return updatedCircle;
+    }
+    async mod(modHelperObj: {loggedInUser: string, member: string, circleId: string}): Promise<void> {
+        try {
+            const circle = await this._db.prisma.circle.findUnique({
+                where: {
+                    id: modHelperObj.circleId
+                }
+            })
+            if (!circle) {
+                throw new Error("circle not found")
+            }
+            if (circle.ownerId !== modHelperObj.loggedInUser){
+                throw new Error("insufficient permissions")
+            }
+            const relation = await this._db.prisma.userCircle.findUnique({
+                where: {
+                    username_circleId: {
+                        username: modHelperObj.member,
+                        circleId: circle.id
+                    }
+                }
+            })
+            if (!relation) {
+                throw new Error("user is not a member of the circle")
+            }
+            await this._db.prisma.userCircle.update({
+                where: {
+                    username_circleId: {
+                        username: modHelperObj.member,
+                        circleId: circle.id
+                    }
+                },
+                data: {
+                    mod: !(relation.mod)
+                }
+            })
+        } catch (err) {
+            console.log(err)
+            throw err;
+        }
+    }
+    async removeUser(userHelper: { loggedInUser: string; member: string; circleId: string; }): Promise<void> {
+        try {
+            const circle = await this._db.prisma.circle.findUnique({
+                where: {
+                    id: userHelper.circleId
+                }
+            })
+    
+            if (!circle) {
+                throw new Error("missing circle")
+            }
+            if (userHelper.member === circle.ownerId) {
+                throw new Error("Cannot remove the owner");
+            }
+            if (userHelper.loggedInUser === circle.ownerId) {
+                    await this._db.prisma.userCircle.delete({
+                        where: {
+                            username_circleId: {
+                                username: userHelper.member,
+                                circleId: circle.id
+                            }
+                        }
+                    })     
+            } else {
+                const members = await this.getMembers(userHelper.circleId)
+                const found = members.find((member) => member.user.username === userHelper.loggedInUser)
+                if (!found) {
+                    throw new Error("you are not a member of the circle")
+                }
+                if (found.mod === false) {
+                    throw new Error("insufficient permissions")
+                } else {
+                    const removeUser = members.find((member) => member.user.username === userHelper.member)
+                    if (removeUser && (removeUser.mod !== true)){
+                        await this._db.prisma.userCircle.delete({
+                            where: {
+                                username_circleId: {
+                                    username: userHelper.member,
+                                    circleId: circle.id
+                                }
+                            }
+                        })    
+                    } 
+                }
+            }
+            
+        } catch (err) {
+            console.log(err)
+            throw err;
+        }
     }
 }
