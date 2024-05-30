@@ -116,26 +116,26 @@ const pageName = document.querySelector(".pageName");
     }
 }
 
+async function displayAddLocation() {
+  pageName.textContent = "Add Location";
+  leftHeaderButton.innerHTML = backIcon;
+  leftHeaderButton.id = "addLocationBack";
+  rightHeaderButton.textContent = "Skip";
+  rightHeaderButton.className = "text-lg";
+  rightHeaderButton.id = "addLocationSkip";
 
-// async function clearMarkers() {
-//   reload = false
-//   for (let i = 0; i < markers.length; i++) {
-//     markers[i].setMap(null);
-//   }
-//   // markers.forEach(marker => {
-//   //   console.log(marker)
-//   //   console.log(marker.map)
-//   //   reload = true
-//   //   // this is suppose to get rid of marker....
-//   //   marker.map = null;
-//   // });
-//   if (reload) {
-//     // get rid of this location.reload 
-//     // right now theres a problem where if i call the map after calling it once
-//     // the markers wont be placed again because they've been made before and remembered on the page
-//     // refreshing works but its just not ideal.
-//     location.reload(true);
-//     await displayMap()
-//   }
-//   markers = [];
-// }
+  pageContent.innerHTML = `
+  <div id="addLocation" class="flex flex-col items-center p-4 bg-light-mode rounded-lg w-full">
+    <div class="w-full h-full ml-2 bg-light-mode">
+      <div class="fixed mb-6">
+        <div class="relative w-full h-12 bg-light-mode">
+          <input type="text" id="locationSearchBox" class="w-380 px-10 py-2 mt-2 border-grey border-2 rounded-input-box text-secondary leading-secondary" placeholder="search location">
+          <img src="/lightmode/search_icon_grey.svg" alt="search icon" class="absolute left-3 top-3.5 w-25 h-25"/>
+        </div>
+      </div>
+      <div class="flex flex-col shrink-0 justify-center w-380">
+        <div id="suggestedLocations" class="flex flex-col mt-20 pb-48"></div>
+      </div>
+    </div>
+  </div>`;
+}

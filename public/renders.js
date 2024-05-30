@@ -748,7 +748,7 @@ async function displayProfile(userData) {
           id="displayNameInput" 
           class="flex-1 text-center bg-transparent text-20 text-black font-light border-dark-grey"
           placeholder="${userData.displayName ? userData.displayName : "Add a display name"}">
-        <button id="updateDisplayName" class="absolute right-8 w-8 h-8 text-body px-4 text-grey">Save</button>
+        <button id="updateDisplayName" class="absolute right-8 w-auto text-body text-grey">Save</button>
     </div>
 
       <div class="username flex justify-center mt-2">
