@@ -40,7 +40,15 @@ class UserController implements IController {
     try {
       let loggedInUser = await getLocalUser(req, res)
       const { requestee } = req.body
-      await this._service.friend(loggedInUser, requestee)
+      const data = await this._service.friend(loggedInUser, requestee)
+      if(data) {
+        if (data.status === "sentRequest") {
+          io.to(requestee).emit("sentFriendRequest", {requestee, requester:data.requester})
+        } else if (data.status === "accept") {
+          io.to(data.requester).emit("acceptFriendRequest", {requestee, requester:data.requester})
+        }
+      }
+
       res.status(200).json({ success: true, data: null })
     } catch (error: any) {
       throw new Error(error)
@@ -86,7 +94,8 @@ class UserController implements IController {
       let loggedInUser = await getLocalUser(req, res)
       const { requester, requestee } = req.body
       if (loggedInUser === requestee) {
-        await this._service.acceptRequest(requester, requestee)
+        const data = await this._service.acceptRequest(requester, requestee)
+        io.to(requester).emit("acceptFriendRequest", {requestee, requester})
         res.status(200).json({ success: true, data: null })
       } else {
         res.status(400).json({ success: false, error: "Failed to accept friend request" })
@@ -164,7 +173,7 @@ class UserController implements IController {
       res.status(200).json({ success: true, data: null })
     }
   }
-  
+
 
   private getInfoForMap = async (req: Request, res: Response) => {
     try {
@@ -178,7 +187,7 @@ class UserController implements IController {
 
   private getFeed = async (req: Request, res: Response) => {
     try {
-      
+
       let loggedInUser = await getLocalUser(req, res);
       const albumFeed = await this._service.getFeed(loggedInUser);
       if (Array.isArray(albumFeed)) {

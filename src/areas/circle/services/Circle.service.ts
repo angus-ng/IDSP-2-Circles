@@ -167,7 +167,7 @@ export class CircleService implements ICircleService {
     })
     return members;
   }
-  async inviteToCircle(username: string, circleName: string): Promise<void> {
+  async inviteToCircle(username: string, circleName: string): Promise<void | string> {
     try {
         const inviteExists = await this._db.prisma.circleInvite.findFirst({
             where: {
@@ -176,18 +176,25 @@ export class CircleService implements ICircleService {
             }
         })
         if (!inviteExists){
-            await this._db.prisma.circleInvite.create({
+            const circle = await this._db.prisma.circleInvite.create({
                 data:{
                     invitee_username: username,
                     circleId: circleName
+                }, include: {
+                    circle: {
+                        select: {
+                            name: true
+                        }
+                    }
                 }
               })
+              return circle.circle.name
         }
     } catch (error:any) {
         throw new Error(error)
     }
   }
-  async acceptInvite(id: string, username: string): Promise<void> {
+  async acceptInvite(id: string, username: string): Promise<void | any> {
       try {
         const circleInvite = await this._db.prisma.circleInvite.findUnique({
             where: {
@@ -195,6 +202,17 @@ export class CircleService implements ICircleService {
                     circleId: id,
                     invitee_username: username
                 }
+            }, include: {
+                circle: {
+                    select: {
+                        name: true,
+                        UserCircle: {
+                            select: {
+                                username: true
+                            }
+                        }
+                    }
+                },
             }
         })
         if (circleInvite) {
@@ -212,7 +230,8 @@ export class CircleService implements ICircleService {
                     circleId: id
                 }
             })
-            return
+            const members = circleInvite.circle.UserCircle.map(obj => obj.username)
+            return {circleName: circleInvite.circle.name, members: members}
         } else {
             throw new Error("Failed to accept circle invite")
         }
@@ -235,7 +254,7 @@ export class CircleService implements ICircleService {
         }
     }
     
-    async updateCircle(currentUser: string, circleObj: any): Promise<Circle> {
+    async updateCircle(currentUser: string, circleObj: any): Promise<any> {
         const circle = await this._db.prisma.circle.findUnique({
             where: {
                 id: circleObj.circleId,
@@ -245,7 +264,7 @@ export class CircleService implements ICircleService {
         if (!circle) {
             throw new Error("insufficient permissions")
         }
-        const updatedCircle = this._db.prisma.circle.update({
+        const updatedCircle = await this._db.prisma.circle.update({
             where: {
                 id: circleObj.circleId
             }, 
@@ -253,8 +272,18 @@ export class CircleService implements ICircleService {
                 picture: circleObj.circleImg,
                 name: circleObj.circleName,
                 isPublic: circleObj.isPublic
+            }, include: {
+                UserCircle: {
+                    select: {
+                        username: true
+                    }
+                }
             }
         })
-        return updatedCircle;
+        const circleInfo = {
+            ...updatedCircle,
+            members: updatedCircle.UserCircle.map((obj => obj.username))
+        } 
+        return circleInfo;
     }
 }

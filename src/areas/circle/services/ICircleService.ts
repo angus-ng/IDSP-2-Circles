@@ -9,9 +9,9 @@ export default interface ICircleService {
     checkPublic(id:string): Promise<boolean>
     getCircle(id: string): Promise<Circle | null>
     // listCircles(currentUser: string): Promise<{circle: Circle}[]>
-    inviteToCircle(username: string, circleName: string): Promise<void>
+    inviteToCircle(username: string, circleName: string): Promise<void | string>
     getMembers(id: string): Promise<{user: {username: string, profilePicture: string}}[] | null>
-    acceptInvite(id: string, username: string): Promise<void>
+    acceptInvite(id: string, username: string): Promise<void | any>
     removeRequest(id: string, invitee: string): Promise<void>
-    updateCircle(currentUser: string, circleObj: any): Promise<Circle>
+    updateCircle(currentUser: string, circleObj: any): Promise<any>
 }

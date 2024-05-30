@@ -6,7 +6,7 @@ import Activies from "./../../../interfaces/activities.interface";
 export class UserService implements IUserService {
   readonly _db: DBClient = DBClient.getInstance();
 
-  async friend(requester: string, requestee: string): Promise<string | void> {
+  async friend(requester: string, requestee: string): Promise<void|{requestee:string, requester:string, status:string}> {
     try {
       const exists = await this._db.prisma.friendRequest.findUnique({
         where: {
@@ -40,6 +40,7 @@ export class UserService implements IUserService {
           status: false
         }
       })
+      return {requester, requestee, status: "sentRequest"}
     } catch (error: any) {
       throw new Error(error)
     }
@@ -142,7 +143,7 @@ export class UserService implements IUserService {
       throw new Error(error)
     }
   }
-  async acceptRequest(requester: string, requestee: string): Promise<void> {
+  async acceptRequest(requester: string, requestee: string): Promise<void |{requester:string, requestee:string,status:string}> {
     try {
       const friendRequest = await this._db.prisma.friendRequest.findUnique({
         where: {
@@ -174,7 +175,7 @@ export class UserService implements IUserService {
             friend_2_name: requestee
           }
         })
-        return
+        return {requester, requestee, status:"accept"}
       } else {
         throw new Error("You have not been friend requested by this user")
       }

@@ -2538,12 +2538,15 @@ async function displayFriends(username) {
 
   function updateSuggestedFriends(friends) {
     friendsDiv.innerHTML = displayFriendsList(friends, username).join("");
-    if (friends.length === 1) {
-      friendCount.innerHTML = `${friends.length} friend`;
-    } else if (friends.length > 1) {
-      friendCount.innerHTML = `${friends.length} friends`;
-    } else {
-      friendCount.innerHTML = `0 friends`;
+    const friendCount = document.querySelector("friendCount")
+    if(friendCount) {
+      if (friends.length === 1) {
+        friendCount.innerHTML = `${friends.length} friend`;
+      } else if (friends.length > 1) {
+        friendCount.innerHTML = `${friends.length} friends`;
+      } else {
+        friendCount.innerHTML = `0 friends`;
+      }
     }
   }
 
