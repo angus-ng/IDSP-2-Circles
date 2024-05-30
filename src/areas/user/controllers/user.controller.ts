@@ -174,31 +174,7 @@ class UserController implements IController {
       res.status(200).json({success: true, data: null, error: "failed to get album feed"})
     }
   }
-  private getFeed = async (req: Request, res: Response) => {
-    try {
 
-      let loggedInUser = await getLocalUser(req, res);
-      const albumFeed = await this._service.getFeed(loggedInUser);
-      if (Array.isArray(albumFeed)) {
-        const formattedAlbumFeed = albumFeed.map(album => ({
-          ...album,
-          createdAt: timeAgo.format(album.createdAt)
-        }));
-        res.status(200).json({ success: true, data: formattedAlbumFeed })
-      }
-    } catch (err) {
-      res.status(200).json({ success: true, data: null, error: "failed to get album feed" })
-    }
-  }
-  private updateProfilePicture = async (req: Request, res: Response) => {
-    try {
-      const { src } = req.body
-      let loggedInUser = await getLocalUser(req, res);
-      const albumFeed = await this._service.updateProfilePicture(loggedInUser, src)
-    } catch (err) {
-      res.status(200).json({ success: true, data: null, error: "failed to update profile picture" })
-    }
-  }
   private getFeed = async (req: Request, res: Response) => {
     try {
       
