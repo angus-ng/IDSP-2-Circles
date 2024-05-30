@@ -1317,6 +1317,10 @@ select {
   height: 100vh;
 }
 
+.h-10 {
+  height: 2.5rem;
+}
+
 .max-h-400 {
   max-height: 400px;
 }

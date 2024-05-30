@@ -1127,3 +1127,25 @@ async function displayExplore(userData) {
     circleList.scrollLeft = scrollLeft - walk;
   });
 }
+
+async function displaySandboxNav() {
+  const nav = document.querySelector("#nav");
+  nav.classList.remove("hidden");
+  nav.innerHTML = `
+  <div class="border-b border-dark-grey"></div>
+    <footer class="w-full flex justify-center items-center gap-4 pt-4 pb-5 px-6 bg-light-mode-bg text-grey text-13">
+        <img src="/lightmode/logo_with_wordmark.svg" alt="Circles Logo" class="h-12 w-12">
+        <a id="landing" class="flex flex-col items-center cursor-pointer">
+            <p class="text-body mt-1">Login/Register to Circles!</p>
+        </a>
+    </footer>`;
+
+  const navBar = document.querySelector("footer");
+  navBar.addEventListener("click", async function (event) {
+    event.preventDefault();
+    const landing = event.target.closest("#landing");
+    if (landing) {
+      await displayLoginPage();
+    } 
+  });
+}

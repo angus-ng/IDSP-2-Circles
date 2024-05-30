@@ -7,7 +7,7 @@ import { handleUpload } from "../../../helper/HandleSingleUpload";
 import multer from 'multer';
 import { getLocalUser } from "../../../helper/getLocalUser";
 import exifr from 'exifr'
-import path from "node:path";
+import path from "path";
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
@@ -35,7 +35,8 @@ class CircleController implements IController {
     this.router.post(`${this.path}/mod`, ensureAuthenticated, this.mod)
     this.router.post(`${this.path}/user/remove`, ensureAuthenticated, this.removeUser)
     this.router.post(`${this.path}/shareLink/create`, ensureAuthenticated, this.createShareLink)
-    this.router.get(`${this.path}/:id/view/:accessToken`, this.getCircleRestricted);
+    this.router.get(`${this.path}/:id/view/:accessToken`, this.sandbox);
+    this.router.post(`${this.path}/:id/view/:accessToken/`, this.getCircleRestricted);
   }
 
   private uploadImage = async (req: Request, res: Response) => {
@@ -243,15 +244,21 @@ class CircleController implements IController {
   }
   private getCircleRestricted = async (req: Request, res: Response) => {
     try {
-      const { id, accessToken } = req.params;
+      const { id, accessToken } = req.params
+      console.log(id, accessToken)
       if (!id || !accessToken) {
-        return res.status(200).json({ success: true, data: null, error: "invalid request" });
+        return res.status(200).json({ success: true, data: null, error: "invalid request" })
       }
       const shareLink = await this._service.getCircleWithToken(id, accessToken) //this checks ownership/mod
-      return res.status(200).json({ success: true, data: shareLink });
+      return res.status(200).json({ success: true, data:shareLink })
     } catch (err) {
-      res.status(200).json({ success: true, data: null, error: "failed to get circle data" });
+      console.log(err)
+      res.status(200).json({ success: true, data: null, error: "failed to get circle data" })
     }
+  }
+  private sandbox = async (req: Request, res: Response) => {
+    res.sendFile(path.join(__dirname, "../../../../public/index.html"));
+    return;
   }
 }
 

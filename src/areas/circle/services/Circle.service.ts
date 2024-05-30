@@ -135,29 +135,6 @@ export class CircleService implements ICircleService {
     }
   }
 
-//   async listCircles (currentUser:string): Promise<{circle: Circle}[]> {
-//     try {
-//         const user = await this._db.prisma.user.findUnique({
-//             where: {
-//                 username: currentUser
-//             }
-//         })
-//         const circleArr = await this._db.prisma.userCircle.findMany({
-//             select: {
-//                 circle: true
-//             },
-//             where: {
-//                 username: user!.username
-//             }
-//         })
-//         console.log(circleArr)
-    
-//         return circleArr;
-//     } catch (error:any) {
-//         throw new Error(error)
-//     }
-//   }
-
   async getMembers (circleId: string) {
     let members = await this._db.prisma.userCircle.findMany({
         select: {
@@ -423,9 +400,8 @@ export class CircleService implements ICircleService {
             throw err;
         }
     }
-    async getCircleWithToken (circleId: string, token: string): Promise<Circle | null> {
+    async getCircleWithToken (circleId: string, token: string): Promise<any | null> {
         try {
-
             const tokenObj = await this._db.prisma.token.findFirst({ 
                 where: {
                     circleId: circleId,
@@ -437,16 +413,28 @@ export class CircleService implements ICircleService {
                 throw new Error("invalid request")
             }
             const circle = await this._db.prisma.circle.findUnique({
-                include: {
+                select: {
+                    id: true,
+                    name: true,
+                    picture: true,
                     albums: {
                         select: {
-                            id: true,
-                            circleId: true, 
+                            _count: {
+                                select: {
+                                    photos: true
+                                }
+                            },
                             name: true,
                             photos: {
-                                take: 1
-                            },
-                            likes: true
+                                select: {
+                                    src: true
+                                }
+                            }
+                        }
+                    },
+                    _count: {
+                        select: {
+                            UserCircle : true
                         }
                     }
                 },

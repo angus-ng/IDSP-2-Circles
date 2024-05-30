@@ -493,15 +493,7 @@ let ownedPhotosCount = 0
       <div class="grid grid-cols-2 justify-between place-items-center mt-12 mb-2 mr-0">
         <p class="col-span-1 text-base font-medium justify-self-start">${albumData.photos.length} Photos</p>
         <button id="addPhotos" class="col-span-1 justify-self-end w-6 h-6" albumId="${albumData.id}">
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-            <g id="SVGRepo_iconCarrier">
-              <path d="M13 4H8.8C7.11984 4 6.27976 4 5.63803 4.32698C5.07354 4.6146 4.6146 5.07354 4.32698 5.63803C4 6.27976 4 7.11984 4 8.8V15.2C4 16.8802 4 17.7202 4.32698 18.362C4.6146 18.9265 5.07354 19.3854 5.63803 19.673C6.27976 20 7.11984 20 8.8 20H15.2C16.8802 20 17.7202 20 18.362 19.673C18.9265 19.3854 19.3854 18.9265 19.673 18.362C20 17.7202 20 16.8802 20 15.2V11" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-              <path d="M4 16L8.29289 11.7071C8.68342 11.3166 9.31658 11.3166 9.70711 11.7071L13 15M13 15L15.7929 12.2071C16.1834 11.8166 16.8166 11.8166 17.2071 12.2071L20 15M13 15L15.25 17.25" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-              <path d="M18.5 3V5.5M18.5 8V5.5M18.5 5.5H16M18.5 5.5H21" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-            </g>
-          </svg>
+          ${addPhotosIcon}
         </button>
       </div>
       <div id="photoList" class="pb-48 w-full">
@@ -536,7 +528,8 @@ let ownedPhotosCount = 0
     const overlay = event.target.closest("#photoOverlay");
     const addMorePhotos = event.target.closest("#addPhotos");
     const like = event.target.closest(".like");
-    const deletePhoto = event.target.closest(".deletePhoto")
+    const deletePhoto = event.target.closest(".deletePhoto");
+
     if (photo) {
       await displayPhoto(photo.src);
     }
@@ -900,4 +893,58 @@ async function displayAlbumEditMode(albumId, ownerId, memberStatus) {
   if (page === "albumEdit") {
     pageName.classList.add("text-light-mode-accent");
   }
+}
+
+async function displaySandboxAlbum(albumData, circleData) {
+  pageName.textContent = circleData.name;
+  leftHeaderButton.innerHTML = backIcon;
+  leftHeaderButton.id = "backToAlbumSandbox";
+
+  const photoList = albumData.photos.map((obj) => {
+    return `
+    <div class="photo w-full h-min relative">
+      <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.src}"/>
+    </div>`;
+  });
+
+  let albumName = document.createElement("h2");
+  albumName.className = "flex justify-center font-medium text-lg";
+  albumName.textContent = albumData.name;
+
+  pageContent.innerHTML = `
+    <div id="albumPhotos">
+      <div id="circleImage" class="relative flex justify-center mt-6 mb-1.5">
+        <img src="${circleData.picture}" class="rounded-full w-180 h-180 object-cover"/>
+      </div>
+      <div class="relative my-3 flex justify-center items-center max-w-full h-11" id="albumName">
+        ${albumName.outerHTML}
+      </div>
+      <div class="w-full">
+        ${albumData.photos.length} Photos
+      </div>
+      <div id="photoList" class="pb-48 w-full">
+        <div class="columns-2 gap-4 space-y-4 grid-flow-row">
+          ${photoList.join("")}
+        </div>
+      </div>
+  </div>`;
+
+  const albumPhotos = document.querySelector("#albumPhotos");
+  albumPhotos.addEventListener("click", async(event) => {
+    const photo = event.target.closest(".photo img");
+    const overlay = event.target.closest("#photoOverlay");
+    
+    if (photo) {
+      await displayPhoto(photo.src);
+    }
+
+    if (overlay) {
+      const img = event.target.closest("#image");
+      if (img) {
+        event.stopPropagation();
+      } else {
+        overlay.remove();
+      }
+    }
+  });
 }
