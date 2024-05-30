@@ -20,10 +20,26 @@ let checkedFriends = [];
 let navigationHistory = [];
 
 async function initiatePage() {
+  let sandbox = false;
+  const url = document.location.href.split("http://")[1].split("/")
+  if (url.length === 5 && url[1] === "circle" && url[3] === "view") {
+    sandbox = true;
+  } 
   const username = await getSessionFromBackend();
   currentLocalUser = username;
   console.log("current User:", username);
-  if (!currentLocalUser) {
+  if (sandbox && !currentLocalUser) {
+    const sandboxHelper = {
+      circleId : url[2],
+      accessToken : url[4]
+    }
+    const { success, data } = await getSandboxData(sandboxHelper)
+    if (success && data) {
+      await displaySandboxNav();
+      await displaySandboxCircle(data);
+    }
+    return await displayCircle
+  } else if (!currentLocalUser) {
     await displayLoginPage();
   } else {
     const { success, data } = await getUser(username);
@@ -127,9 +143,26 @@ header.addEventListener("click", async (event) => {
       }
       break;
     }
+    case "updateAlbum": {
+      const albumId = leftHeaderButton.getAttribute("albumId");
+      const albumName = document.querySelector("#albumNameInput").value;
+      const helperObj = {
+        albumId,
+        albumName
+      }
+      const { success, error} = await updateAlbum(helperObj)
+      if (success && !error) {
+        const { success, data } = await getAlbum(helperObj.albumId)
+        if (success && data) {
+          await displayAlbum(data);
+        }
+      }
+      break;
+    }
     case "deleteAlbum": {
       const albumId = leftHeaderButton.getAttribute("albumId");
-      await displayConfirmationPopup(`delete album`, { albumId })
+      const circleId = leftHeaderButton.getAttribute("circleId");
+      await displayConfirmationPopup(`delete album`, { albumId, circleId });
       break;
     }
     case "backToAlbum": {
@@ -142,7 +175,7 @@ header.addEventListener("click", async (event) => {
     }
     case "inviteDoneButton": {
       saveCheckedFriends()
-      const circleId = leftHeaderButton.getAttribute("circleid")
+      const circleId = leftHeaderButton.getAttribute("circleid");
       leftHeaderButton.removeAttribute("circleId");
       for (let friend of checkedFriends) {
         const { success, data } = await handleSendCircleRequest(friend, circleId);
@@ -219,12 +252,25 @@ header.addEventListener("click", async (event) => {
       }
       break;
     }
-    case "albumConfirmationBack": {
+    case "addLocationBack": {
       const { success, data } = await getUser(currentLocalUser);
       if (success && data) {
         nav.classList.remove("hidden");
         const circleRender = await displayListOfCircles(data);
         rightHeaderButton.removeAttribute("fromCreateAlbum");
+        showCreateOrAddToCircle(circleRender);
+      }
+      break;
+    }
+    case "addLocationSkip": {
+      await displayAlbumConfirmation();
+      break;
+    }
+    case "albumConfirmationBack": {
+      const { success, data } = await getUser(currentLocalUser);
+      if (success && data) {
+        nav.classList.remove("hidden");
+        const circleRender = await displayListOfCircles(data);
         showCreateOrAddToCircle(circleRender);
       }
       break;
@@ -248,16 +294,18 @@ header.addEventListener("click", async (event) => {
         const { success, data, error } = await getAlbum(albumId);
         if (success && data) {
           await displayPopup("album created");
+          leftHeaderButton.setAttribute("albumId", albumId);
           await displayAlbum(data);
           nav.classList.remove("hidden");
         }
       }
+      break;
     }
-    case "updateAlbum": {
+    case "addPhotosToAlbum": {
       const albumId = leftHeaderButton.getAttribute("albumId");
   
       if (albumId) {
-        const { success, data, error } = await updateAlbum(albumId, albumObj);
+        const { success, data, error } = await addPhotosToAlbum(albumId, albumObj);
         if (success && data) {
           const albumResponse = await getAlbum(albumId);
           if (albumResponse.success && albumResponse.data) {
@@ -361,7 +409,7 @@ header.addEventListener("click", async (event) => {
         }
         leftHeaderButton.removeAttribute("origin");
         await displayPopup("circle created");
-        await displayAlbumConfirmation();
+        await displayAddLocation();
         nav.classList.remove("hidden");
       }
       break;
@@ -381,6 +429,34 @@ header.addEventListener("click", async (event) => {
       }
       break;
     }
+    case "circleShareButton": {
+      const circleId = leftHeaderButton.getAttribute("circleId");
+      const { success, data } = await createShareLink(circleId);
+      if (success) {
+        try {
+          await navigator.clipboard.writeText(`http://localhost:5000${data}`);
+          await displayPopup("share link copied to clipboard");
+        } catch (err) {
+          console.error('Failed to copy link:', err);
+        }
+      } else {
+        console.error('Failed to create share link');
+      }
+    }
+    case "backToAlbumSandbox": {
+      leftHeaderButton.innerHTML = "";
+      const url = document.location.href.split("http://")[1].split("/")
+      const sandboxHelper = {
+        circleId : url[2],
+        accessToken : url[4]
+      }
+      const { success, data } = await getSandboxData(sandboxHelper)
+      if (success && data) {
+        await displaySandboxNav();
+        await displaySandboxCircle(data);
+      }
+      break;
+    }
     default:
       break;
   }
@@ -388,23 +464,37 @@ header.addEventListener("click", async (event) => {
 });
 
 // create Cirlcle/Album modal
+function openModal() {
+  modal.classList.remove("hidden");
+  modal.classList.add("shown");
+}
+
+function closeModal() {
+  modal.classList.remove("shown");
+  modal.classList.add("hidden");
+}
+
 const modal = document.querySelector("#modal");
 modal.addEventListener("click", async function (event) {
   event.preventDefault();
+
+  const modalBox = document.querySelector("#modalBox");
+  if (event.target === modal && !modalBox.contains(event.target)) {
+    closeModal();
+  }
+
   const closeModalButton = event.target.closest("#closeModalButton");
   const createAlbumModalButton = event.target.closest("#createAlbumModalButton");
   const createCircleModalButton = event.target.closest("#createCircleModalButton");
   if (closeModalButton) {
     if (modal.classList.contains("shown")) {
-      modal.classList.remove("shown");
-      modal.classList.add("hidden");
+      closeModal();
     }
   }
 
   if (createAlbumModalButton) {
     clearNewAlbum();
-    modal.classList.remove("shown");
-    modal.classList.add("hidden");
+    closeModal();
     nav.classList.add("hidden");
     await displayPhotoUpload();
   }
@@ -412,8 +502,7 @@ modal.addEventListener("click", async function (event) {
   if (createCircleModalButton) {
     leftHeaderButton.removeAttribute("circleId");
     clearNewAlbum();
-    modal.classList.remove("shown");
-    modal.classList.add("hidden");
+    closeModal();
     await displayCreateCircle();
     await cleanUpSectionEventListener();
   }
@@ -421,8 +510,7 @@ modal.addEventListener("click", async function (event) {
 
 const closeModalSwipe = document.querySelector("#closeModal");
 closeModalSwipe.addEventListener("swiped-down", (event) => {
-  modal.classList.remove("shown");
-  modal.classList.add("hidden");
+  closeModal();
 });
 
 async function handleLocalAuth() {
@@ -452,7 +540,7 @@ pageContent.addEventListener("click", async (event) => {
 
 async function updateCheckbox() {
   if (document.querySelector("#privacyCheckbox").checked) {
-    privacyIcon.src = "/lightmode/globe_icon.svg";
+    privacyIcon.innerHTML = "/lightmode/globe_icon.svg";
     privacyLabel.innerHTML = "Public";
     return;
   }
@@ -541,7 +629,7 @@ async function showCreateOrAddToCircle(circleRender) {
           albumObj.circleSrc = data.circle.picture;
           albumObj.circleName = data.circle.name;
         }
-        await displayAlbumConfirmation();
+        await displayAddLocation();
       }
     }
   });

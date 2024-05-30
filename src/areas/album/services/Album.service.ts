@@ -234,7 +234,7 @@ export class AlbumService implements IAlbumService {
         return album;
     }
 
-    async updateAlbum(currentUser: string, id: string, newPhotos: any[]): Promise<any> {
+    async addPhotos(currentUser: string, id: string, newPhotos: any[]): Promise<any> {
         const hasPermission = await this.checkMembership(id, currentUser);
         if (!hasPermission) {
             throw new Error("User does not have permission to update this album.");
@@ -656,5 +656,48 @@ export class AlbumService implements IAlbumService {
             console.log(err)
             throw err;
         }
+    }
+    async updateAlbum(albumId: string, albumName: string, currentUser: string): Promise<void> {
+        try {
+            const album = await this._db.prisma.album.findUnique({
+                where: {
+                    id: albumId
+                },
+                include: {
+                    circle: {
+                        select: {
+                            ownerId: true,
+                            UserCircle: true
+                        }
+                    }
+                }
+            })
+            if (!album) {
+                throw new Error ("cannot find album")
+            }
+            let isMod = false;
+            const member = album.circle.UserCircle.find((user) => {
+                user.username === currentUser
+            })
+            if (member) {
+                isMod = member.mod
+            }
+            if (currentUser === album.circle.ownerId || isMod || currentUser === album.ownerName) {
+                await this._db.prisma.album.update({
+                    where: {
+                        id: albumId
+                    }, 
+                    data: {
+                        name: albumName
+                    }
+                })
+            } else {
+                throw new Error("insufficient permissions to delete photo")
+            }
+        } catch (err) {
+            console.log(err)
+            throw err;
+        }
+
     }
 }

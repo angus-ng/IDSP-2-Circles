@@ -16,4 +16,6 @@ export default interface ICircleService {
     updateCircle(currentUser: string, circleObj: any): Promise<Circle>
     mod(modHelper: {loggedInUser: string, member: string, circleId: string}): Promise<void>
     removeUser(userHelper: {loggedInUser: string, member: string, circleId: string}): Promise<void>
+    createShareLink(shareHelper: {loggedInUser: string, circleId: string}): Promise<string>
+    getCircleWithToken(circleId: string, token: string): Promise<any | null>
 }

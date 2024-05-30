@@ -37,6 +37,7 @@ model User {
   friends         Friend[]        @relation("friend_1")
   friendOf        Friend[]        @relation("friend_2")
   circleInvites   CircleInvite[]  @relation("circle_invitee")
+  tokens          Token[]
 }
 
 model Friend {
@@ -49,15 +50,16 @@ model Friend {
 }
 
 model Circle {
-  id         String         @id @default(cuid())
-  owner      User           @relation(fields: [ownerId], references: [username])
-  ownerId    String
-  name       String
-  picture    String
-  UserCircle UserCircle[]
-  albums     Album[]
-  invites    CircleInvite[] @relation("circle")
-  isPublic   Boolean        @default(false)
+  id           String         @id @default(cuid())
+  owner        User           @relation(fields: [ownerId], references: [username])
+  ownerId      String
+  name         String
+  picture      String
+  UserCircle   UserCircle[]
+  albums       Album[]
+  invites      CircleInvite[] @relation("circle")
+  isPublic     Boolean        @default(false)
+  accessTokens Token[]
 }
 
 model Album {
@@ -140,4 +142,15 @@ model FriendRequest {
   status        Boolean
 
   @@id([requesterName, requesteeName])
+}
+
+model Token {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  expiresAt   DateTime
+  creator     User     @relation(fields: [creatorId], references: [username], onDelete: Cascade)
+  creatorId   String
+  circle      Circle   @relation(fields: [circleId], references: [id], onDelete: Cascade)
+  circleId    String
+  accessToken String
 }

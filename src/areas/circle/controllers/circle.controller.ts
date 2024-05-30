@@ -7,6 +7,7 @@ import { handleUpload } from "../../../helper/HandleSingleUpload";
 import multer from 'multer';
 import { getLocalUser } from "../../../helper/getLocalUser";
 import exifr from 'exifr'
+import path from "path";
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
@@ -33,6 +34,9 @@ class CircleController implements IController {
     this.router.post(`${this.path}/update`, ensureAuthenticated, this.updateCircle)
     this.router.post(`${this.path}/mod`, ensureAuthenticated, this.mod)
     this.router.post(`${this.path}/user/remove`, ensureAuthenticated, this.removeUser)
+    this.router.post(`${this.path}/shareLink/create`, ensureAuthenticated, this.createShareLink)
+    this.router.get(`${this.path}/:id/view/:accessToken`, this.sandbox);
+    this.router.post(`${this.path}/:id/view/:accessToken/`, this.getCircleRestricted);
   }
 
   private uploadImage = async (req: Request, res: Response) => {
@@ -90,9 +94,7 @@ class CircleController implements IController {
       let loggedInUser = await getLocalUser(req, res)
 
       const { id } = req.params
-      console.log(id)
       await this._service.deleteCircle(id, loggedInUser) //this method also checks if its the owner of the circle, maybe a check should be done separately
-      console.log("hi")
       res.status(200).json({ success: true, data: null})
     } catch (err) {
       console.log(err)
@@ -223,8 +225,40 @@ class CircleController implements IController {
       await this._service.removeUser(userHelper) //this checks ownership, toggles mod status
       return res.status(200).json({ success: true })
     } catch (err) {
-      res.status(200).json({ success: true, data: null, error: "failed to mod/unmod" })
+      res.status(200).json({ success: true, data: null, error: "failed to remove user" })
     }
+  }
+  private createShareLink = async (req: Request, res: Response) => {
+    try {
+      let loggedInUser = await getLocalUser(req, res)
+      const { circleId } = req.body
+      if (!circleId) {
+        return res.status(200).json({ success: true, data: null, error: "missing parameters" })
+      }
+      const shareHelper = { loggedInUser, circleId }
+      const shareLink = await this._service.createShareLink(shareHelper) //this checks ownership/mod
+      return res.status(200).json({ success: true, data:shareLink })
+    } catch (err) {
+      res.status(200).json({ success: true, data: null, error: "failed to create share link" })
+    }
+  }
+  private getCircleRestricted = async (req: Request, res: Response) => {
+    try {
+      const { id, accessToken } = req.params
+      console.log(id, accessToken)
+      if (!id || !accessToken) {
+        return res.status(200).json({ success: true, data: null, error: "invalid request" })
+      }
+      const shareLink = await this._service.getCircleWithToken(id, accessToken) //this checks ownership/mod
+      return res.status(200).json({ success: true, data:shareLink })
+    } catch (err) {
+      console.log(err)
+      res.status(200).json({ success: true, data: null, error: "failed to get circle data" })
+    }
+  }
+  private sandbox = async (req: Request, res: Response) => {
+    res.sendFile(path.join(__dirname, "../../../../public/index.html"));
+    return;
   }
 }
 
