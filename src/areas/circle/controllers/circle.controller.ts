@@ -252,7 +252,6 @@ class CircleController implements IController {
         return res.status(200).json({ success: true, data: null, error: "invalid request" })
       }
       const shareLink = await this._service.getCircleWithToken(id, accessToken) //this checks ownership/mod
-      console.log("BRO")
       return res.status(200).json({ success: true, data:shareLink })
     } catch (err) {
       console.log(err)
