@@ -236,12 +236,25 @@ header.addEventListener("click", async (event) => {
       }
       break;
     }
-    case "albumConfirmationBack": {
+    case "addLocationBack": {
       const { success, data } = await getUser(currentLocalUser);
       if (success && data) {
         nav.classList.remove("hidden");
         const circleRender = await displayListOfCircles(data);
         rightHeaderButton.removeAttribute("fromCreateAlbum");
+        showCreateOrAddToCircle(circleRender);
+      }
+      break;
+    }
+    case "addLocationSkip": {
+      await displayAlbumConfirmation();
+      break;
+    }
+    case "albumConfirmationBack": {
+      const { success, data } = await getUser(currentLocalUser);
+      if (success && data) {
+        nav.classList.remove("hidden");
+        const circleRender = await displayListOfCircles(data);
         showCreateOrAddToCircle(circleRender);
       }
       break;
@@ -378,7 +391,7 @@ header.addEventListener("click", async (event) => {
         }
         leftHeaderButton.removeAttribute("origin");
         await displayPopup("circle created");
-        await displayAlbumConfirmation();
+        await displayAddLocation();
         nav.classList.remove("hidden");
       }
       break;
@@ -558,7 +571,7 @@ async function showCreateOrAddToCircle(circleRender) {
           albumObj.circleSrc = data.circle.picture;
           albumObj.circleName = data.circle.name;
         }
-        await displayAlbumConfirmation();
+        await displayAddLocation();
       }
     }
   });

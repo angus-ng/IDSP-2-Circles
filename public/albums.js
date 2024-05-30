@@ -247,7 +247,7 @@ function displayPhotoUploadPreview(albumPhotos) {
 }
 
 async function displayAlbumConfirmation() {
-  nav.classList.add("hidden");
+  nav.classList.remove("hidden");
 
   leftHeaderButton.innerHTML = backIcon;
   leftHeaderButton.id = "albumConfirmationBack";
@@ -900,6 +900,4 @@ async function displayAlbumEditMode(albumId, ownerId, memberStatus) {
   if (page === "albumEdit") {
     pageName.classList.add("text-light-mode-accent");
   }
-
-
 }
