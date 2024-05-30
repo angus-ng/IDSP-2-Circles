@@ -20,10 +20,26 @@ let checkedFriends = [];
 let navigationHistory = [];
 
 async function initiatePage() {
+  let sandbox = false;
+  const url = document.location.href.split("http://")[1].split("/")
+  if (url.length === 5 && url[1] === "circle" && url[3] === "view") {
+    sandbox = true;
+  } 
   const username = await getSessionFromBackend();
   currentLocalUser = username;
   console.log("current User:", username);
-  if (!currentLocalUser) {
+  if (sandbox && !currentLocalUser) {
+    const sandboxHelper = {
+      circleId : url[2],
+      accessToken : url[4]
+    }
+    const { success, data } = await getSandboxData(sandboxHelper)
+    if (success && data) {
+      //DO SOMETHING
+      await displaySandboxCircle(data)
+    }
+    return await displayCircle
+  } else if (!currentLocalUser) {
     await displayLoginPage();
   } else {
     const { success, data } = await getUser(username);

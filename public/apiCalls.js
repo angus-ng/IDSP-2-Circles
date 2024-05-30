@@ -695,3 +695,19 @@ async function createShareLink (circleId) {
 
   }
 }
+
+async function getSandboxData (sandboxHelper) {
+  try {
+    const response = await fetch(`/circle/${sandboxHelper.circleId}/view/${sandboxHelper.accessToken}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      }
+    });
+    const jsonResponse = await response.json();
+    console.log(jsonResponse)
+    return jsonResponse
+  } catch (err) {
+
+  }
+}
