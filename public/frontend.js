@@ -464,23 +464,37 @@ header.addEventListener("click", async (event) => {
 });
 
 // create Cirlcle/Album modal
+function openModal() {
+  modal.classList.remove("hidden");
+  modal.classList.add("shown");
+}
+
+function closeModal() {
+  modal.classList.remove("shown");
+  modal.classList.add("hidden");
+}
+
 const modal = document.querySelector("#modal");
 modal.addEventListener("click", async function (event) {
   event.preventDefault();
+
+  const modalBox = document.querySelector("#modalBox");
+  if (event.target === modal && !modalBox.contains(event.target)) {
+    closeModal();
+  }
+
   const closeModalButton = event.target.closest("#closeModalButton");
   const createAlbumModalButton = event.target.closest("#createAlbumModalButton");
   const createCircleModalButton = event.target.closest("#createCircleModalButton");
   if (closeModalButton) {
     if (modal.classList.contains("shown")) {
-      modal.classList.remove("shown");
-      modal.classList.add("hidden");
+      closeModal();
     }
   }
 
   if (createAlbumModalButton) {
     clearNewAlbum();
-    modal.classList.remove("shown");
-    modal.classList.add("hidden");
+    closeModal();
     nav.classList.add("hidden");
     await displayPhotoUpload();
   }
@@ -488,8 +502,7 @@ modal.addEventListener("click", async function (event) {
   if (createCircleModalButton) {
     leftHeaderButton.removeAttribute("circleId");
     clearNewAlbum();
-    modal.classList.remove("shown");
-    modal.classList.add("hidden");
+    closeModal();
     await displayCreateCircle();
     await cleanUpSectionEventListener();
   }
@@ -497,8 +510,7 @@ modal.addEventListener("click", async function (event) {
 
 const closeModalSwipe = document.querySelector("#closeModal");
 closeModalSwipe.addEventListener("swiped-down", (event) => {
-  modal.classList.remove("shown");
-  modal.classList.add("hidden");
+  closeModal();
 });
 
 async function handleLocalAuth() {

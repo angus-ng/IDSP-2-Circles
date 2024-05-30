@@ -738,9 +738,7 @@ async function displayComments(albumId, currentUserProfilePicture, circleId) {
     return arr.join("");
   };
 
-  const modal = document.querySelector("#modal");
-  modal.classList.remove("hidden");
-  modal.classList.add("shown");
+  openModal();
   const modalContent = document.querySelector("#modalContent");
   modalContent.innerHTML = `
   <div class="flex flex-col max-w-430 max-h-527 justify-center mx-auto text-black">
@@ -789,8 +787,7 @@ async function displayComments(albumId, currentUserProfilePicture, circleId) {
           <div class="flex justify-between items-center p-3">
             <p class="text-white ml-1">Replying to @${commentUser}</p>
             <button id="closeReply" class="h-4 w-4 mr-2">
-              <svg viewBox="0 0 24.00 24.00" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5 5L19 19M5 19L19 5" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path> </g>
-              </svg>
+              ${closeReplyIcon}
             </button>
           </div>`;
 
@@ -830,11 +827,7 @@ async function displayComments(albumId, currentUserProfilePicture, circleId) {
         like.querySelector("svg path").setAttribute("fill", "#FF4646");
         like.querySelector("svg path").setAttribute("stroke", "#FF4646");
         await likeComment(commentId);
-        return await displayComments(
-          albumId,
-          currentUserProfilePicture,
-          circleId
-        );
+        return await displayComments(albumId, currentUserProfilePicture, circleId);
       }
       return;
     }

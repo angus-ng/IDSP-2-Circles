@@ -145,9 +145,7 @@ async function displayNavBar() {
 }
 
 async function displayNewModal() {
-  const modal = document.querySelector("#modal");
-  modal.classList.remove("hidden");
-  modal.classList.add("shown");
+  openModal();
   const closeModalButton = document.querySelector("#closeModalButton");
   closeModalButton.classList.remove("hidden");
   const modalContent = document.querySelector("#modalContent");

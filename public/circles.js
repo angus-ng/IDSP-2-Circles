@@ -573,8 +573,8 @@ async function displayCircleMembers(circleId) {
 }
 
 async function displaySandboxCircle(circleData){
-  console.log(circleData)
   header.classList.remove("hidden");
+  leftHeaderButton.innerHTML = "";
 
   let circleName = document.createElement("p");
   circleName.className = "text-center text-20 font-bold break-words text-wrap max-w-[234px]";
@@ -584,8 +584,6 @@ async function displaySandboxCircle(circleData){
     let albumName = document.createElement("p");
     albumName.className = "text-white text-shadow shadow-black";
     albumName.textContent = obj.name;
-    // CHANGE ME : placeholder image 
-    console.log(obj.photos[0])
     return `
       <div class="w-full h-min relative album" name="${obj.name}">
         <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.photos[0]? obj.photos[0].src : "/placeholder_image.svg"}"/>
