@@ -383,6 +383,7 @@ async function displayAlbumConfirmation() {
 async function displayAlbum(albumData) {
   nav.classList.remove("hidden");
   const origin = leftHeaderButton.getAttribute("origin");
+  console.log(origin)
   leftHeaderButton.classList.remove("hidden");
   leftHeaderButton.innerHTML = backIcon;
 
