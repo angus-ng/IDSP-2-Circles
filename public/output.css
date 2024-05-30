@@ -860,6 +860,14 @@ select {
   top: 7px;
 }
 
+.left-\[70px\] {
+  left: 70px;
+}
+
+.top-\[70px\] {
+  top: 70px;
+}
+
 .-z-10 {
   z-index: -10;
 }

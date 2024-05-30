@@ -540,7 +540,7 @@ pageContent.addEventListener("click", async (event) => {
 
 async function updateCheckbox() {
   if (document.querySelector("#privacyCheckbox").checked) {
-    privacyIcon.src = "/lightmode/globe_icon.svg";
+    privacyIcon.innerHTML = "/lightmode/globe_icon.svg";
     privacyLabel.innerHTML = "Public";
     return;
   }
