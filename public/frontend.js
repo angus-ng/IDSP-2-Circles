@@ -238,6 +238,10 @@ header.addEventListener("click", async (event) => {
         await displayAlbumConfirmation()
         break;
       }
+      case "addLocationSkip" : {
+        await displayAlbumConfirmation()
+        break
+      }
       case "albumConfirmationBack": {
         await displayAddLocation()
         break;
@@ -374,7 +378,7 @@ header.addEventListener("click", async (event) => {
           }
           leftHeaderButton.removeAttribute("origin");
           await displayPopup("circle created");
-          await displayAlbumConfirmation();
+          await displayAddLocation();
           nav.classList.remove("hidden");
         }
         break;
