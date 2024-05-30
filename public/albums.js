@@ -870,7 +870,7 @@ async function displayAlbumEditMode(albumId, ownerId, memberStatus) {
     rightHeaderButton.innerHTML = `
     <div class="flex flex-row flex-nowrap gap-2 items-center">
     ${currentLocalUser === ownerId ? `
-    <button id="deleteAlbum" class="w-6 h-6">
+    <button id="deleteAlbum" albumId="${albumId}" class="w-6 h-6">
       ${deleteIcon}
     </button>` : ""}
       <button id="updateAlbum" albumId="${albumId}" class="text-lg">Save</button>

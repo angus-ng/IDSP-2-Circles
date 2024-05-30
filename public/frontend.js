@@ -278,10 +278,12 @@ header.addEventListener("click", async (event) => {
         const { success, data, error } = await getAlbum(albumId);
         if (success && data) {
           await displayPopup("album created");
+          leftHeaderButton.setAttribute("albumId", albumId);
           await displayAlbum(data);
           nav.classList.remove("hidden");
         }
       }
+      break;
     }
     case "addPhotosToAlbum": {
       const albumId = leftHeaderButton.getAttribute("albumId");

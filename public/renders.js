@@ -507,9 +507,14 @@ async function displayProfile(userData) {
 
   const friendText = userData._count.friends === 1 ? "Friend" : "Friends";
 
+  const settings = document.createElement("div");
+  settings.id = "settings";
+  settings.className = "absolute top-0 right-0 w-6 h-6 items-center justify-center cursor-pointer";
+  settings.innerHTML = settingsIcon;
+
   pageContent.innerHTML = `
   <div id="profilePage" class="relative pt-2 pb-16 mb-4 w-full">
-    ${currentLocalUser === userData.username ? `<div id="settings" class="absolute top-0 right-0 w-6 h-6 items-center justify-center cursor-pointer"><img src="/lightmode/settings_icon.svg"></div>` : ""}
+    ${currentLocalUser === userData.username ? `${settings.outerHTML}` : ""}
     <div class="flex justify-center mb-4">
       <img id="profilePicture" src="${userData.profilePicture}" class="w-110 h-110 object-cover rounded-full"/>
     </div>
@@ -530,9 +535,7 @@ async function displayProfile(userData) {
         </div>
       </div>
     </div>
-    <div id="addAsFriend" class="flex justify-center">
-
-    </div>
+    <div id="addAsFriend" class="flex justify-center"></div>
     <div id="profileTabs" class="w-full justify-center mx-auto">
       <ul class="flex flex-row w-full justify-center -mb-px text-sm font-medium text-center text-dark-grey gap-6">
         <li id="albumTab" class="me-2 w-full mr-0">
