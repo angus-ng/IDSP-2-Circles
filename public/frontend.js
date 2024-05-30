@@ -236,10 +236,13 @@ header.addEventListener("click", async (event) => {
       }
       case "addLocationNext" : {
         await displayAlbumConfirmation()
+        leftHeaderButton.setAttribute("origin", "fromAlbumCreation")
+
         break;
       }
       case "addLocationSkip" : {
         await displayAlbumConfirmation()
+        leftHeaderButton.setAttribute("origin", "fromAlbumCreation")
         break
       }
       case "albumConfirmationBack": {

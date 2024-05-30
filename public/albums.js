@@ -383,7 +383,6 @@ async function displayAlbumConfirmation() {
 async function displayAlbum(albumData) {
   nav.classList.remove("hidden");
   const origin = leftHeaderButton.getAttribute("origin");
-  console.log(origin)
   leftHeaderButton.classList.remove("hidden");
   leftHeaderButton.innerHTML = backIcon;
 
@@ -410,6 +409,11 @@ async function displayAlbum(albumData) {
 
   if (origin === "fromSearchProfileCircle") {
     leftHeaderButton.id = "backToSearchCircle";
+  }
+
+  if (origin === "fromAlbumCreation") {
+    leftHeaderButton.id = "backToCircle"
+    leftHeaderButton.setAttribute("username", currentLocalUser)
   }
 
   if (albumData.circle.id) {
