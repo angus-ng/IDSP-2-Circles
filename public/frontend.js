@@ -483,9 +483,8 @@ async function getAlbumName() {
   console.log(document.querySelector("#albumName").value, albumNameInput, "getAlbumName")
   if (albumNameInput) {
     console.log("helpme")
-    const albumName = document.querySelector("#albumName").value;
-    return "swag"
-    //return albumName;
+    const albumName = albumNameInput.value;
+    return albumName;
   } else {
     return null;
   }
