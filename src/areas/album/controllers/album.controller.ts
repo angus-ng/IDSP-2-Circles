@@ -39,9 +39,10 @@ class AlbumController implements IController {
   }
 
   private createAlbum = async (req: Request, res: Response) => {
+    console.log(req.body)
     try {
       let loggedInUser = await getLocalUser(req, res)
-      const { photos, isCircle, name } = req.body
+      const { photos, isCircle, name, location } = req.body
       if (!isCircle || !name || !photos.length) {
         throw new Error("missing params")
       }
@@ -50,8 +51,10 @@ class AlbumController implements IController {
         photos: photos,
         albumName: name,
         circleId: id,
-        creator: loggedInUser
+        creator: loggedInUser,
+        location: location
       }
+      console.log(albumObj)
       const member = await this._service.checkMembership(id, loggedInUser, true)
       if (!member) {
         console.log("SHIT")

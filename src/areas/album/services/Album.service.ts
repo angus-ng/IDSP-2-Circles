@@ -49,22 +49,26 @@ export class AlbumService implements IAlbumService {
             //make the explicit album user relationship
             if (createdAlbum) {
                 let albumGps: any = null
-                let gpsCount = 0
-                for (let photo of newAlbumInput.photos) {
-                    if (photo.gps && gpsCount === 0) {
-                        gpsCount = 1
-                        albumGps = photo.gps
+                if (!newAlbumInput.location) {
+                    let gpsCount = 0
+                    for (let photo of newAlbumInput.photos) {
+                        if (photo.photoSrc.gps && gpsCount === 0) {
+                            gpsCount = 1
+                            albumGps = photo.gps
+                        }
+                    }
+                    for (let i = 0; i < newAlbumInput.photos.length; i++) {
+                        const file = await this._db.prisma.photo.create({
+                            data: {
+                                src: newAlbumInput.photos[i].photoSrc.url,
+                                userId: creator.username,
+                                albumId: createdAlbum.id
+                            }
+                        })
                     }
                 }
-                for (let i = 0; i < newAlbumInput.photos.length; i++) {
-                    const file = await this._db.prisma.photo.create({
-                        data: {
-                            src: newAlbumInput.photos[i].photoSrc,
-                            userId: creator.username,
-                            albumId: createdAlbum.id
-                        }
-                    })
-                }
+                albumGps = newAlbumInput.location
+                console.log(newAlbumInput.photos)
                 if (albumGps) {
                     const albumWithGps = await this._db.prisma.album.update({
                         where: {

@@ -2,6 +2,8 @@ let map;
 let storedMap;
 let markers = [];
 let scriptImported = false;
+let autocomplete
+
 
 async function initMap() {
   const { Map } =  await google.maps.importLibrary("maps");
@@ -128,9 +130,6 @@ async function displayAddLocation() {
     <div class="w-full h-full ml-2 bg-light-mode">
       <div class="fixed mb-6">
         <div class="relative w-full h-12 bg-light-mode">
-        <div slot="control-block-start-inline-start" class="w-380 px-10 py-2 mt-2 border-grey border-2 rounded-input-box text-secondary leading-secondary">
-          <gmpx-place-picker placeholder="Enter an address"></gmpx-place-picker>
-        </div>
           <input type="text" id="locationSearchBox" class="w-380 px-10 py-2 mt-2 border-grey border-2 rounded-input-box text-secondary leading-secondary" placeholder="search location">
           <img src="/lightmode/search_icon_grey.svg" alt="search icon" class="absolute left-3 top-3.5 w-25 h-25"/>
         </div>
@@ -140,8 +139,50 @@ async function displayAddLocation() {
       </div>
     </div>
   </div>`;
-  
-  document.querySelector("#addLocationSkip").addEventListener("click", async function (event) {
-    await displayAlbumConfirmation()
-  })
+
+  try {
+    const googleMapKeyresponse = await fetch("/googleMapKey");
+    const googleMapKeyresponseJson = await googleMapKeyresponse.json();
+    const googleMapKey = googleMapKeyresponseJson.data;
+
+    const script1 = document.createElement("script");
+    script1.src = `https://maps.googleapis.com/maps/api/js?key=${googleMapKey}&libraries=places&callback=initAutocomplete`;
+    script1.defer = true;
+    script1.async = true;
+
+    const script2 = document.createElement("script");
+    script2.innerHTML = `
+      function initAutocomplete() {
+        const input = document.querySelector("#locationSearchBox");
+        const autocomplete = new google.maps.places.Autocomplete(input);
+        autocomplete.addListener('place_changed', function() {
+          const place = autocomplete.getPlace();
+          console.log(place)
+          if (!place.geometry) {
+            console.error("Place details not available for input: '" + place.name + "'");
+            return;
+          }
+          rightHeaderButton.textContent = "Next";
+          rightHeaderButton.className = "text-lg";
+          rightHeaderButton.id = "addLocationNext";
+          let popupMessage = 'Selected '+ place.name
+          displayPopup(popupMessage)
+          albumObj.location = {lat: place.geometry.location.lat(), long: place.geometry.location.lng()}
+          console.log("Place Name: " + place.name);
+          console.log("Place Address: " + place.formatted_address);
+          console.log("Place Location (Lat, Lng): " + place.geometry.location.lat() + ", " + place.geometry.location.lng());
+        });
+      }
+    `;
+
+    const head = document.querySelector("head");
+    head.appendChild(script1);
+    head.appendChild(script2);
+
+    document.querySelector("#addLocationSkip").addEventListener("click", async function (event) {
+      await displayAlbumConfirmation();
+    });
+  } catch (error) {
+    console.error(error);
+  }
 }

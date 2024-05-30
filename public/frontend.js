@@ -234,6 +234,10 @@ header.addEventListener("click", async (event) => {
         }
         break;
       }
+      case "addLocationNext" : {
+        await displayAlbumConfirmation()
+        break;
+      }
       case "albumConfirmationBack": {
         await displayAddLocation()
         break;
@@ -476,10 +480,12 @@ async function updateCheckbox() {
 
 async function getAlbumName() {
   const albumNameInput = document.querySelector("#albumName");
-
+  console.log(document.querySelector("#albumName").value, albumNameInput, "getAlbumName")
   if (albumNameInput) {
-    const albumName = albumNameInput.value;
-    return albumName;
+    console.log("helpme")
+    const albumName = document.querySelector("#albumName").value;
+    return "swag"
+    //return albumName;
   } else {
     return null;
   }
