@@ -686,7 +686,7 @@ async function createShareLink (circleId) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({circleId})
+      body: JSON.stringify({ circleId })
     });
     const jsonResponse = await response.json();
     console.log(jsonResponse)

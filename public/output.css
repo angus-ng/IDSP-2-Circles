@@ -828,8 +828,8 @@ select {
   right: 0px;
 }
 
-.right-5 {
-  right: 1.25rem;
+.right-8 {
+  right: 2rem;
 }
 
 .top-0 {
@@ -858,14 +858,6 @@ select {
 
 .top-search {
   top: 7px;
-}
-
-.right-6 {
-  right: 1.5rem;
-}
-
-.right-8 {
-  right: 2rem;
 }
 
 .-z-10 {

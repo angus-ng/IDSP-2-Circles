@@ -415,7 +415,17 @@ header.addEventListener("click", async (event) => {
     }
     case "circleShareButton": {
       const circleId = leftHeaderButton.getAttribute("circleId");
-      const { success, data } = await createShareLink(circleId)
+      const { success, data } = await createShareLink(circleId);
+      if (success) {
+        try {
+          await navigator.clipboard.writeText(`http://localhost:5000${data}`);
+          await displayPopup("share link copied to clipboard");
+        } catch (err) {
+          console.error('Failed to copy link:', err);
+        }
+      } else {
+        console.error('Failed to create share link');
+      }
     }
     default:
       break;

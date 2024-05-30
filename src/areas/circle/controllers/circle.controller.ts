@@ -93,9 +93,7 @@ class CircleController implements IController {
       let loggedInUser = await getLocalUser(req, res)
 
       const { id } = req.params
-      console.log(id)
       await this._service.deleteCircle(id, loggedInUser) //this method also checks if its the owner of the circle, maybe a check should be done separately
-      console.log("hi")
       res.status(200).json({ success: true, data: null})
     } catch (err) {
       console.log(err)
@@ -245,15 +243,14 @@ class CircleController implements IController {
   }
   private getCircleRestricted = async (req: Request, res: Response) => {
     try {
-      res.render(path.join(__dirname, "../../../../public/sandbox.html"));
-      const { id, token } = req.params
-      if (!id || token) {
-        return res.status(200).json({ success: true, data: null, error: "invalid request" })
+      const { id, accessToken } = req.params;
+      if (!id || !accessToken) {
+        return res.status(200).json({ success: true, data: null, error: "invalid request" });
       }
-      const shareLink = await this._service.getCircleWithToken(id, token) //this checks ownership/mod
-      return res.status(200).json({ success: true, data:shareLink })
+      const shareLink = await this._service.getCircleWithToken(id, accessToken) //this checks ownership/mod
+      return res.status(200).json({ success: true, data: shareLink });
     } catch (err) {
-      res.status(200).json({ success: true, data: null, error: "failed to get circle data" })
+      res.status(200).json({ success: true, data: null, error: "failed to get circle data" });
     }
   }
 }
