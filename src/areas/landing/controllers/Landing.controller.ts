@@ -1,5 +1,5 @@
 import express from "express";
-import { forwardAuthenticated } from "../../../middleware/authentication.middleware";
+import { ensureAuthenticated ,forwardAuthenticated } from "../../../middleware/authentication.middleware";
 import IController from "../../../interfaces/controller.interface";
 import path from "path";
 
@@ -13,7 +13,7 @@ class LandingController implements IController {
 
   private initializeRoutes() {
     this.router.get(`${this.path}/`, this.showLandingPage);
-    this.router.get(`${this.path}googleMapKey`, this.getGoogleMapKey);
+    this.router.get(`${this.path}googleMapKey`, ensureAuthenticated, this.getGoogleMapKey);
   }
  
   private showLandingPage = (_: express.Request, res: express.Response) => {

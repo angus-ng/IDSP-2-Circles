@@ -413,6 +413,10 @@ header.addEventListener("click", async (event) => {
       }
       break;
     }
+    case "circleShareButton": {
+      const circleId = leftHeaderButton.getAttribute("circleId");
+      const { success, data } = await createShareLink(circleId)
+    }
     default:
       break;
   }

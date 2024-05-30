@@ -678,3 +678,20 @@ async function updateAlbum (albumHelperObj) {
 
   }
 }
+
+async function createShareLink (circleId) {
+  try {
+    const response = await fetch(`/circle/shareLink/create`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({circleId})
+    });
+    const jsonResponse = await response.json();
+    console.log(jsonResponse)
+    return jsonResponse
+  } catch (err) {
+
+  }
+}

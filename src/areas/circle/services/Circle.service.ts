@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import DBClient from "../../../PrismaClient";
 import ICircle from "../../../interfaces/circle.interface";
 import ICircleService from "./ICircleService";
@@ -382,4 +383,80 @@ export class CircleService implements ICircleService {
             throw err;
         }
     }
+    async createShareLink(shareHelper: { loggedInUser: string; circleId: string; }): Promise<string> {
+        try {
+            const circle = await this._db.prisma.circle.findUnique({
+                where: {
+                    id: shareHelper.circleId
+                }, 
+                select: {
+                    ownerId: true,
+                    UserCircle: true
+                }
+            })
+            if (!circle) {
+                throw new Error ("could not find circle")
+            }
+            let isMod = false;
+            const member = circle.UserCircle.find((user) => {
+                user.username === shareHelper.loggedInUser
+            })
+            if (member) {
+                isMod = member.mod
+            }
+            if (shareHelper.loggedInUser === circle.ownerId || isMod) {
+                const expiry = new Date(new Date().setDate(new Date().getDate() + 7))
+                const token = await this._db.prisma.token.create({
+                    data: {
+                        expiresAt: expiry,
+                        creatorId: shareHelper.loggedInUser,
+                        circleId: shareHelper.circleId,
+                        accessToken: randomUUID()
+                    }
+                })
+                return `/circle/${shareHelper.circleId}/view/${token.accessToken}`
+            } else {
+                throw new Error("insufficient permissions to create share link")
+            }
+        } catch (err) {
+            console.log(err)
+            throw err;
+        }
+    }
+    async getCircleWithToken (circleId: string, token: string): Promise<Circle | null> {
+        try {
+
+            const tokenObj = await this._db.prisma.token.findFirst({ 
+                where: {
+                    circleId: circleId,
+                    accessToken: token
+                }
+            })
+            const requestTime = new Date()
+            if (!tokenObj || (tokenObj.expiresAt.valueOf() - requestTime.valueOf()) <= 0) {
+                throw new Error("invalid request")
+            }
+            const circle = await this._db.prisma.circle.findUnique({
+                include: {
+                    albums: {
+                        select: {
+                            id: true,
+                            circleId: true, 
+                            name: true,
+                            photos: {
+                                take: 1
+                            },
+                            likes: true
+                        }
+                    }
+                },
+                where: {
+                    id: circleId
+                }
+            })
+            return circle;
+        } catch (error:any) {
+            throw new Error(error)
+        }
+      }
 }
