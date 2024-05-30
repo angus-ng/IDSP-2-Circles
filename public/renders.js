@@ -433,13 +433,11 @@ async function displayProfile(userData) {
 
   rightHeaderButton.innerHTML = "";
   leftHeaderButton.innerHTML = backIcon;
-  // leftHeaderButton.id = "profileBackButton";
   leftHeaderButton.removeAttribute("circleId");
   leftHeaderButton.setAttribute("username", user);
   
   const origin = leftHeaderButton.getAttribute("origin");
   const secondaryOrigin = leftHeaderButton.getAttribute("secondaryOrigin");
-  console.log(secondaryOrigin)
 
   if (origin === "fromSearch") {
     if (secondaryOrigin === "fromFriendsList") {
@@ -461,8 +459,6 @@ async function displayProfile(userData) {
   if (currentLocalUser === user && secondaryOrigin !== "fromFriendsList" && origin !== "fromFriendRequests") {
     leftHeaderButton.classList.add("hidden");
   }
-
-  console.log(navigationHistory, navigationHistory.length)
   
   if (navigationHistory.length === 0 || navigationHistory[navigationHistory.length - 1] !== user) {
     navigationHistory.push(user);
@@ -620,7 +616,6 @@ async function displayProfile(userData) {
 
     if (albumDiv) {
       const user = document.querySelector("span.user").getAttribute("username");
-
       if (user) {
         if (albumDiv.hasAttribute("id")) {
           let { success, data, error } = await getAlbum(albumDiv.id);
@@ -638,7 +633,6 @@ async function displayProfile(userData) {
         albumList.classList.remove("hidden");
         circleList.classList.add("hidden");
       }
-
       albumTabLink.querySelector("svg path").setAttribute("fill", "black");
       albumTabLink.classList.add("text-black");
       albumTabLink.classList.add("border-black");
@@ -742,24 +736,20 @@ async function displayProfile(userData) {
     leftHeaderButton.innerHTML = backIcon;
     leftHeaderButton.id = "currentUserProfile";
     rightHeaderButton.innerHTML = "";
-    console.log(userData)
-
-    const hiddenImageInput = document.createElement("input");
-    hiddenImageInput.id = "fileUpload";
-    hiddenImageInput.type ="file";
-    hiddenImageInput.multiple = "false";
-    hiddenImageInput.className = "hidden";
 
     pageContent.innerHTML = `
     <div id="settingsPage" class="flex flex-col pt-2 pb-200 mb-4 w-full">
       <div class="flex justify-center mb-4">
-        <img id="profilePicture" src="${userData.profilePicture}" class="w-110 h-110 object-cover rounded-full"/>
-        ${hiddenImageInput.outerHTML}
+        <img id="profilePicture" src="${userData.profilePicture}" class="relative w-110 h-110 object-cover rounded-full"/>
       </div>
-      <div class="flex justify-center mt-2">
-        ${userData.displayName ? userData.displayName : userData.username}
+      <div class="displayName flex justify-center mt-2">
+        <input 
+          type="text" 
+          id="displayNameInput" 
+          class="max-w-full text-center bg-transparent text-20 text-black font-light border-dark-grey"
+          placeholder="${userData.displayName ? userData.displayName : "add a display name"}">
       </div>
-      <div class="flex justify-center mt-2">
+      <div class="username flex justify-center mt-2">
         ${username.outerHTML}
       </div>
       <div id="albumSettings" class="w-full mt-6">
@@ -853,8 +843,33 @@ async function displayProfile(userData) {
       </div>
     </div>`;
 
+
+    displayNameInput.addEventListener("input", async(event) => {
+      event.preventDefault();
+      userData.displayName = event.target.value;
+      await updateDisplayName(userData.displayName);
+      await displaySettings();
+    });
+
     const profilePicture = document.querySelector("#profilePicture");
-    profilePicture.addEventListener("click", async(event) => {
+
+    const hiddenImageInput = document.createElement("input");
+    hiddenImageInput.id = "fileUpload";
+    hiddenImageInput.type ="file";
+    hiddenImageInput.multiple = "false";
+    hiddenImageInput.className = "hidden z-50";
+
+    const editOverlay = document.createElement("div");
+    editOverlay.className = "absolute bg-image-overlay rounded-full z-30 w-110 h-110";
+    profilePicture.parentNode.append(editOverlay);
+  
+    const overlayEditIcon = document.createElement("div");
+    overlayEditIcon.innerHTML = editIconCircle;
+    overlayEditIcon.className = "absolute top-[45px] left-[45px] z-40";
+    editOverlay.append(overlayEditIcon);
+    profilePicture.parentNode.append(hiddenImageInput);
+
+    editOverlay.addEventListener("click", async(event) => {
       event.preventDefault();
       await hiddenProfileInput.click();
     })

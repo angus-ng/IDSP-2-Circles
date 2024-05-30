@@ -33,7 +33,8 @@ class UserController implements IController {
     this.router.get(`${this.path}/ifEmailTaken/:email`, this.ifEmailTaken);
     this.router.get(`${this.path}/profilePicture`, ensureAuthenticated, this.profilePicture);
     this.router.get(`${this.path}/feed`, ensureAuthenticated, this.getFeed);
-    this.router.post(`${this.path}/updateProfilePicture`, ensureAuthenticated, this.updateProfilePicture)
+    this.router.post(`${this.path}/updateProfilePicture`, ensureAuthenticated, this.updateProfilePicture);
+    this.router.post(`${this.path}/updateDisplayName`, ensureAuthenticated, this.updateDisplayName);
     this.router.get(`${this.path}/mapInfo`, ensureAuthenticated, this.getInfoForMap);
   }
   private friend = async (req: Request, res: Response) => {
@@ -182,38 +183,24 @@ class UserController implements IController {
   }
   private updateProfilePicture = async (req: Request, res: Response) => {
     try {
-      const { src } = req.body
+      const { src } = req.body;
       let loggedInUser = await getLocalUser(req, res);
-      const albumFeed = await this._service.updateProfilePicture(loggedInUser, src)
+      const newProfilePicture = await this._service.updateProfilePicture(loggedInUser, src);
     } catch (err) {
       res.status(200).json({ success: true, data: null, error: "failed to update profile picture" })
     }
   }
-  private getFeed = async (req: Request, res: Response) => {
+
+  private updateDisplayName = async (req: Request, res: Response) => {
     try {
-      
+      const { name } = req.body;
       let loggedInUser = await getLocalUser(req, res);
-      const albumFeed = await this._service.getFeed(loggedInUser);
-      if (Array.isArray(albumFeed)) {
-        const formattedAlbumFeed = albumFeed.map(album => ({
-          ...album,
-          createdAt: timeAgo.format(album.createdAt)
-        }));
-        res.status(200).json({ success: true, data: formattedAlbumFeed })
-      }
+      const newDisplayName = await this._service.updateDisplayName(loggedInUser, name);
     } catch (err) {
-      res.status(200).json({ success: true, data: null, error: "failed to get album feed" })
+
     }
   }
-  private updateProfilePicture = async (req: Request, res: Response) => {
-    try {
-      const { src } = req.body
-      let loggedInUser = await getLocalUser(req, res);
-      const albumFeed = await this._service.updateProfilePicture(loggedInUser, src)
-    } catch (err) {
-      res.status(200).json({ success: true, data: null, error: "failed to update profile picture" })
-    }
-  }
+
   private getInfoForMap = async (req: Request, res: Response) => {
     try {
       let loggedInUser = await getLocalUser(req, res)

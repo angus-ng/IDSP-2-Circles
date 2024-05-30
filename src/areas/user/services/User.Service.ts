@@ -511,6 +511,20 @@ export class UserService implements IUserService {
 
     }
   }
+  async updateDisplayName(currentUser: string, name: string): Promise<void> {
+    try {
+      await this._db.prisma.user.update({
+        where: {
+          username: currentUser
+        }, 
+        data: {
+          displayName : name
+        }
+      })
+    } catch (err) {
+
+    }
+  }
   async getInfoForMap(username: string): Promise<any> {
     const albums = await this._db.prisma.user.findUnique({
       where: {

@@ -848,6 +848,38 @@ select {
   top: 7px;
 }
 
+.left-\[20px\] {
+  left: 20px;
+}
+
+.top-\[20px\] {
+  top: 20px;
+}
+
+.left-\[40px\] {
+  left: 40px;
+}
+
+.top-\[40px\] {
+  top: 40px;
+}
+
+.left-\[45px\] {
+  left: 45px;
+}
+
+.top-\[45px\] {
+  top: 45px;
+}
+
+.left-\[75px\] {
+  left: 75px;
+}
+
+.top-\[75px\] {
+  top: 75px;
+}
+
 .-z-10 {
   z-index: -10;
 }
