@@ -6,7 +6,7 @@ export default interface ICircleService {
     createCircle(newCircleInput: any):any
     deleteCircle(id: string, currentUser: string): Promise<void>
     checkMembership(id: string, currentUser: string): Promise<boolean>
-    checkPublic(id:string): Promise<boolean>
+    checkPublic(id:string): Promise<boolean | null>
     getCircle(id: string): Promise<Circle | null>
     // listCircles(currentUser: string): Promise<{circle: Circle}[]>
     inviteToCircle(username: string, circleName: string): Promise<void | string>
@@ -14,4 +14,6 @@ export default interface ICircleService {
     acceptInvite(id: string, username: string): Promise<void | any>
     removeRequest(id: string, invitee: string): Promise<void>
     updateCircle(currentUser: string, circleObj: any): Promise<any>
+    mod(modHelper: {loggedInUser: string, member: string, circleId: string}): Promise<void>
+    removeUser(userHelper: {loggedInUser: string, member: string, circleId: string}): Promise<void>
 }

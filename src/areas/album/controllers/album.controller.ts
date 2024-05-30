@@ -34,6 +34,8 @@ class AlbumController implements IController {
     this.router.post(`${this.path}/comment/new`, ensureAuthenticated, this.newComment);
     this.router.post(`${this.path}/comment/delete`, ensureAuthenticated, this.deleteComment);
     this.router.post(`${this.path}/comment/like`, ensureAuthenticated, this.likeComment);
+    this.router.post(`${this.path}/:id/delete`, ensureAuthenticated, this.deleteAlbum);
+    this.router.post(`${this.path}/photo/:id/delete`, ensureAuthenticated, this.deletePhoto);
   }
 
   private createAlbum = async (req: Request, res: Response) => {
@@ -156,8 +158,8 @@ class AlbumController implements IController {
   // }
 
   private getComments = async (req: Request, res: Response) => {
-    let loggedInUser = await getLocalUser(req, res)
     try {
+      let loggedInUser = await getLocalUser(req, res)
       const { albumId } = req.body;
       const publicStatus = await this._service.checkPublic(albumId)
       if (!publicStatus) {
@@ -189,8 +191,8 @@ class AlbumController implements IController {
   }
 
   private newComment = async (req: Request, res: Response) => {
-    let loggedInUser = await getLocalUser(req, res)
     try {
+      let loggedInUser = await getLocalUser(req, res)
       const { message, albumId, commentId } = req.body;
       console.log(message, albumId, commentId);
       const publicStatus = await this._service.checkPublic(albumId)
@@ -221,8 +223,8 @@ class AlbumController implements IController {
   }
 
   private deleteComment = async (req: Request, res: Response) => {
-    let loggedInUser = await getLocalUser(req, res)
     try {
+      let loggedInUser = await getLocalUser(req, res)
       const { commentId } = req.body;
 
       await this._service.deleteComment(loggedInUser, commentId);
@@ -233,9 +235,8 @@ class AlbumController implements IController {
   }
 
   private likeComment = async (req: Request, res: Response) => {
-    let loggedInUser = await getLocalUser(req, res)
-
     try {
+      let loggedInUser = await getLocalUser(req, res)
       const { commentId } = req.body;
       const data = await this._service.likeComment(loggedInUser, commentId);
       if (data) {
@@ -246,6 +247,27 @@ class AlbumController implements IController {
       res.json({ success: true, data: null });
     } catch (err) {
       res.json({ success: true, data: null, error: "failed to like comment" });
+    }
+  }
+
+  private deleteAlbum = async (req: Request, res: Response) => {
+    try {
+      let loggedInUser = await getLocalUser(req, res)
+      const { id } = req.params
+      await this._service.deleteAlbum(id, loggedInUser);
+      res.json({success: true, data: null})
+    } catch (err) {
+      res.json({ success: true, data: null, error: "failed to delete album" });
+    }
+  }
+
+  private deletePhoto = async (req: Request, res: Response) => {
+    try {
+      let loggedInUser = await getLocalUser(req, res)
+      const { id } = req.params
+      await this._service.deletePhoto(id, loggedInUser);
+    } catch (err) {
+      res.json({ success: true, data: null, error: "failed to delete photo" });
     }
   }
 }

@@ -458,7 +458,29 @@ export class UserService implements IUserService {
                 createdAt: "desc"
               },
               include: {
-                likes: true
+                likes: {
+                  select: {
+                      user: {
+                          select: {
+                              username: true,
+                              profilePicture: true,
+                          }
+                    }
+                  }
+                },
+                owner: {
+                  select: {
+                    displayName: true,
+                    username: true,
+                    profilePicture: true
+                  }
+                },
+                circle: {
+                  select: {
+                    picture: true
+                  }
+                },
+                photos: true
               }
         })
         if (albums.length){
@@ -475,6 +497,20 @@ export class UserService implements IUserService {
       throw err;
     }
   
+  }
+  async updateProfilePicture(currentUser: string, src: string): Promise<void> {
+    try {
+      await this._db.prisma.user.update({
+        where: {
+          username: currentUser
+        }, 
+        data: {
+          profilePicture : src
+        }
+      })
+    } catch (err) {
+
+    }
   }
   async getInfoForMap(username: string): Promise<any> {
     const albums = await this._db.prisma.user.findUnique({

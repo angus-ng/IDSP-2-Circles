@@ -216,6 +216,7 @@ export class AlbumService implements IAlbumService {
                     select: {
                         id: true,
                         src: true,
+                        userId: true
                     }
                 },
                 likes: {
@@ -240,9 +241,11 @@ export class AlbumService implements IAlbumService {
                                         username: true,
                                         profilePicture: true
                                     }
-                                }
+                                },
+                                mod: true
                             }
-                        }
+                        },
+                        ownerId: true
                     },
                 },
             },
@@ -273,9 +276,11 @@ export class AlbumService implements IAlbumService {
             for (let i = 0; i < newPhotos.length; i++) {
                 const file = await this._db.prisma.photo.create({
                     data: {
-                        src: newPhotos[i].photoSrc,
+                        src: newPhotos[i].photoSrc.url,
                         userId: currentUser,
-                        albumId: id
+                        albumId: id,
+                        lat: newPhotos[i].photoSrc.gps ? String(newPhotos[i].photoSrc.gps.lat) : null,
+                        long: newPhotos[i].photoSrc.gps ? String(newPhotos[i].photoSrc.gps.long) : null
                     }
                 })
             }
@@ -500,11 +505,21 @@ export class AlbumService implements IAlbumService {
         try {
             const comment = await this._db.prisma.comment.findUnique({
                 where: {
-                    id: commentId,
-                    userId: currentUser
+                    id: commentId
                 },
                 select: {
-                    replies: true
+                    userId: true,
+                    replies: true,
+                    album: {
+                        select: {
+                            circle: {
+                                select: {
+                                    id: true,
+                                    ownerId: true
+                                }
+                            }
+                        }
+                    }
                 }
             })
 
@@ -512,25 +527,38 @@ export class AlbumService implements IAlbumService {
                 return
             }
 
-            if (comment.replies.length) {
-                await this._db.prisma.comment.update({
-                    where: {
-                        id: commentId,
-                        userId: currentUser
-                    },
-                    data: {
-                        userId: null,
-                        message: null
+            const modStatus = await this._db.prisma.userCircle.findUnique({
+                where: {
+                    username_circleId: {
+                        username: currentUser,
+                        circleId: comment.album.circle.id
                     }
-                })
-            } else {
-                await this._db.prisma.comment.delete({
-                    where: {
-                        id: commentId,
-                        userId: currentUser
-                    }
-                })
+                },
+                select: {
+                    mod: true
+                }
+            })
+
+            if (comment.album.circle.ownerId === currentUser || comment.userId === currentUser || modStatus) {
+                if (comment.replies.length) {
+                    await this._db.prisma.comment.update({
+                        where: {
+                            id: commentId
+                        },
+                        data: {
+                            userId: null,
+                            message: null
+                        }
+                    })
+                } else {
+                    await this._db.prisma.comment.delete({
+                        where: {
+                            id: commentId
+                        }
+                    })
+                }
             }
+
         } catch (err) {
             throw err;
         }
@@ -591,6 +619,90 @@ export class AlbumService implements IAlbumService {
                 return {albumName: updatedComment.album.name, user: currentUser, owner: updatedComment.userId}
             }
         } catch (err) {
+            throw err;
+        }
+    }
+    async deleteAlbum(albumId: string, currentUser: string): Promise<void> {
+        try {
+            const album = await this._db.prisma.album.findUnique({
+                where: {
+                    id: albumId
+                }, 
+                include: {
+                    circle: {
+                        include: {
+                            UserCircle: true,
+                            owner: {
+                                select: {username : true}
+                            }
+                        },
+                    },
+                }
+            })
+            if (!album) { 
+             throw new Error("could not find album")   
+            }
+            let isMod = false;
+                const member = album.circle.UserCircle.find((user) => {
+                    user.username === currentUser
+                })
+                if (member) {
+                    isMod = member.mod
+                }
+            if (currentUser === album.circle.owner.username || isMod || currentUser === album.ownerName) {
+                await this._db.prisma.album.delete({
+                    where: {
+                        id: albumId
+                    }
+                })
+            } else {
+                throw new Error("insufficient permissions to delete album")
+            }
+
+        } catch (err) {
+            console.log(err)
+            throw err;
+        }
+    }
+    async deletePhoto(photoId: string, currentUser: string): Promise<void> {
+        try {
+            const photo = await this._db.prisma.photo.findUnique({
+                where: {
+                    id: photoId
+                }, 
+                include: {
+                    album : {
+                        include: {
+                            circle: {
+                                include: {
+                                    UserCircle: true
+                                }
+                            }
+                        }
+                    }
+                }
+            })
+            if (!photo) { 
+                throw new Error("could not find photo")   
+            }
+            let isMod = false;
+            const member = photo.album.circle.UserCircle.find((user) => {
+                user.username === currentUser
+            })
+            if (member) {
+                isMod = member.mod
+            }
+            if (currentUser === photo.album.circle.ownerId || isMod || currentUser === photo.userId) {
+                await this._db.prisma.photo.delete({
+                    where: {
+                        id: photoId
+                    }
+                })
+            } else {
+                throw new Error("insufficient permissions to delete photo")
+            }
+        } catch (err) {
+            console.log(err)
             throw err;
         }
     }

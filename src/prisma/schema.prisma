@@ -79,11 +79,11 @@ model Album {
 }
 
 model Photo {
-  id      String @id @default(cuid())
+  id      String  @id @default(cuid())
   src     String
-  album   Album  @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  album   Album   @relation(fields: [albumId], references: [id], onDelete: Cascade)
   albumId String
-  poster  User   @relation(fields: [userId], references: [username])
+  poster  User    @relation(fields: [userId], references: [username])
   userId  String
   lat     String?
   long    String?
@@ -97,7 +97,7 @@ model Comment {
   userId    String?
   likeCount Int       @default(0)
   likes     Like[]
-  album     Album     @relation(fields: [albumId], references: [id])
+  album     Album     @relation(fields: [albumId], references: [id], onDelete: Cascade)
   albumId   String
   replies   Comment[] @relation("replies")
   parent    Comment?  @relation("replies", fields: [parentId], references: [id])
@@ -116,10 +116,11 @@ model Like {
 }
 
 model UserCircle {
-  user     User   @relation(fields: [username], references: [username])
+  user     User    @relation(fields: [username], references: [username])
   username String
-  circle   Circle @relation(fields: [circleId], references: [id], onDelete: Cascade)
+  circle   Circle  @relation(fields: [circleId], references: [id], onDelete: Cascade)
   circleId String
+  mod      Boolean @default(false)
 
   @@id([username, circleId])
 }
@@ -136,7 +137,7 @@ model UserAlbum {
 model CircleInvite {
   invitee          User   @relation("circle_invitee", fields: [invitee_username], references: [username])
   invitee_username String
-  circle           Circle @relation("circle", fields: [circleId], references: [id])
+  circle           Circle @relation("circle", fields: [circleId], references: [id], onDelete: Cascade)
   circleId         String
 
   @@id([invitee_username, circleId])

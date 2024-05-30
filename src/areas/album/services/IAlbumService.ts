@@ -35,4 +35,6 @@ export default interface IAlbumService {
     createComment(currentUser: string, message: string, albumId: string, commentId?:string): Promise<any>
     deleteComment(currentUser: string, commentId: string): Promise<void>
     likeComment(currentUser: string, commentId: string): Promise<void| {owner:string | null, albumName:string | undefined, user:string}>
+    deleteAlbum(albumId: string, currentUser: string): Promise<void>
+    deletePhoto(photoId: string, currentUser: string): Promise<void>
 }

@@ -94,7 +94,8 @@ theme: {
       '44': '44px',
       '366': '366px',
       '85': '85px',
-      '167': '167px'
+      '167': '167px',
+      '176': '176px'
     },
     maxWidth: {
       '430':'430px'
@@ -131,7 +132,8 @@ theme: {
       '22': '22px',
       '85': '85px',
       '104': '104px',
-      '167': '167px'
+      '167': '167px',
+      '176': '176px'
     },
     maxHeight: {
       '527': '527px',
@@ -180,17 +182,17 @@ theme: {
       fill: ['hover', 'focus']
   }
 },
-plugins: [
-  require('@tailwindcss/forms'),
-  plugin(function ({ matchUtilities, theme }) {
-    matchUtilities(
-      {
-        'text-shadow': (value) => ({
-          textShadow: value,
-        }),
-      },
-      { values: theme('textShadow') }
-    )
-  })
-],
+  plugins: [
+    require('@tailwindcss/forms'),
+    plugin(function ({ matchUtilities, theme }) {
+      matchUtilities(
+        {
+          'text-shadow': (value) => ({
+            textShadow: value,
+          }),
+        },
+        { values: theme('textShadow') }
+      )
+    })
+  ],
 }
