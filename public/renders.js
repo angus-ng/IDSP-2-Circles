@@ -742,13 +742,15 @@ async function displayProfile(userData) {
       <div class="flex justify-center mb-4">
         <img id="profilePicture" src="${userData.profilePicture}" class="relative w-110 h-110 object-cover rounded-full"/>
       </div>
-      <div class="displayName flex justify-center mt-2">
+      <div class="displayName relative flex justify-center items-center w-full mt-2 mx-auto">
         <input 
           type="text" 
           id="displayNameInput" 
-          class="max-w-full text-center bg-transparent text-20 text-black font-light border-dark-grey"
-          placeholder="${userData.displayName ? userData.displayName : "add a display name"}">
-      </div>
+          class="flex-1 text-center bg-transparent text-20 text-black font-light border-dark-grey"
+          placeholder="${userData.displayName ? userData.displayName : "Add a display name"}">
+        <button id="updateDisplayName" class="absolute right-8 w-8 h-8 text-body px-4 text-grey">Save</button>
+    </div>
+
       <div class="username flex justify-center mt-2">
         ${username.outerHTML}
       </div>
@@ -844,9 +846,12 @@ async function displayProfile(userData) {
     </div>`;
 
 
-    displayNameInput.addEventListener("input", async(event) => {
+    const saveButton = document.querySelector("#updateDisplayName");
+    const displayNameInput = document.querySelector("#displayNameInput");
+
+    saveButton.addEventListener("click", async(event) => {
       event.preventDefault();
-      userData.displayName = event.target.value;
+      userData.displayName = displayNameInput.value;
       await updateDisplayName(userData.displayName);
       await displaySettings();
     });
