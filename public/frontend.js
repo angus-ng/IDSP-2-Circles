@@ -28,6 +28,7 @@ async function initiatePage() {
   } else {
     const { success, data } = await getUser(username);
     if (success && data) {
+      socket.emit("joinRoom", currentLocalUser)
       await displayExplore(data);
     }
   }
@@ -42,347 +43,349 @@ main();
 const header = document.querySelector("header");
 header.addEventListener("click", async (event) => {
   const target = event.target.closest("button")
-  console.log(target.id)
-  switch (target.id) {
-    case "backToExplore": {
-      const { success, data } = await getUser(currentLocalUser);
-      await displayExplore(data);
-      break;
-    }
-    case "currentUserProfile": {
-      const { success, data } = await getUser(currentLocalUser);
-      await displayProfile(data);
-      break;
-    }
-    case "mapButton": {
-      await displayMap();
-      break;
-    }
-    case "backToExplore": {
-      const { success, data } = await getUser(currentLocalUser);
-      await displayExplore(data);
-      break;
-    }
-    case "circleEditButton": {
-      const circleId = document.querySelector(".leftButton").getAttribute("circleId");
-      const ownerId = document.querySelector("#circleEditButton").getAttribute("ownerId")
-      await displayCircleEditMode(circleId, ownerId);
-      break;
-    }
-    case "albumEditButton": {
-      leftHeaderButton.id = "backToAlbum";
-      const albumId = document.querySelector(".leftButton").getAttribute("albumId")
-      const ownerId = document.querySelector("#albumEditButton").getAttribute("ownerId")
-      const memberStatus = document.querySelector("#albumEditButton").getAttribute("memberStatus") 
-      console.log(ownerId)
-      await displayAlbumEditMode(albumId, ownerId, memberStatus);
-      break;
-    }
-    case "backToProfile": {
-      const user = leftHeaderButton.getAttribute("username");
-      const { success, data } = await getUser(user);
-      if (success && data) {
+  //console.log(target.id)
+  if (target) {
+    switch (target.id) {
+      case "backToExplore": {
+        const { success, data } = await getUser(currentLocalUser);
+        await displayExplore(data);
+        break;
+      }
+      case "currentUserProfile": {
+        const { success, data } = await getUser(currentLocalUser);
         await displayProfile(data);
+        break;
       }
-      break;
-    }
-    case "updateCircle": {
-      pageName.classList.remove("text-light-mode-accent");
-      const privacyCheckbox = document.querySelector("#privacyCheckbox");
-      const circleImage = document.querySelector("#circleImage img");
-      const circleNameInput = document.querySelector("#circleNameInput");
-      const circleId = leftHeaderButton.getAttribute("circleId");
-  
-      if (!circleNameInput.value) {
-        return displayPopup("Missing circle name");
+      case "mapButton": {
+        await displayMap();
+        break;
       }
-  
-      const circleObj = {
-        circleId,
-        circleImg: circleImage.src,
-        circleName: circleNameInput.value,
-        isPublic: privacyCheckbox.checked
+      case "backToExplore": {
+        const { success, data } = await getUser(currentLocalUser);
+        await displayExplore(data);
+        break;
       }
-      const {success, data } = await updateCircle(circleObj);
-      let circleIdFromUpdate = data;
-      if (success && data) {
-        const { success, data } = await getCircle(circleIdFromUpdate);
-        if (success && data) {
-          await displayCircle(data);
-        }
+      case "circleEditButton": {
+        const circleId = document.querySelector(".leftButton").getAttribute("circleId");
+        const ownerId = document.querySelector("#circleEditButton").getAttribute("ownerId")
+        await displayCircleEditMode(circleId, ownerId);
+        break;
       }
-      break;
-    }
-    case "deleteCircle": {
-      const circleId = leftHeaderButton.getAttribute("circleId");
-      await displayConfirmationPopup(`delete circle`, { circleId })
-      break;
-    }
-    case "backToCircle": {
-      const circleId = leftHeaderButton.getAttribute("circleId");
-      const { success, data } = await getCircle(circleId);
-      if (success && data) {
-        nav.classList.remove("hidden");
-        await displayCircle(data);
+      case "albumEditButton": {
+        leftHeaderButton.id = "backToAlbum";
+        const albumId = document.querySelector(".leftButton").getAttribute("albumId")
+        const ownerId = document.querySelector("#albumEditButton").getAttribute("ownerId")
+        const memberStatus = document.querySelector("#albumEditButton").getAttribute("memberStatus") 
+        console.log(ownerId)
+        await displayAlbumEditMode(albumId, ownerId, memberStatus);
+        break;
       }
-      break;
-    }
-    case "deleteAlbum": {
-      const albumId = leftHeaderButton.getAttribute("albumId");
-      await displayConfirmationPopup(`delete album`, { albumId })
-      break;
-    }
-    case "backToAlbum": {
-      const albumId = leftHeaderButton.getAttribute("albumId");
-      const { success, data }= await getAlbum(albumId);
-      if (success && data) {
-        await displayAlbum(data);
-      }
-      break;
-    }
-    case "inviteDoneButton": {
-      saveCheckedFriends()
-      const circleId = leftHeaderButton.getAttribute("circleid")
-      leftHeaderButton.removeAttribute("circleId");
-      for (let friend of checkedFriends) {
-        const { success, data } = await handleSendCircleRequest(friend, circleId);
-      }
-      checkedFriends = [];
-      const {success, data} = await getCircle(circleId);
-      if (success && data) {
-        nav.classList.remove("hidden");
-        await displayCircle(data)
-      }
-      break;
-    }
-    case "friendsBackButton": {
-      navigationHistory.pop();
-      const previousUser = navigationHistory[navigationHistory.length - 1];
-      const { success, data } = await getUser(previousUser);
-      if (success && data) {
-        if (navigationHistory.length === 1) {
-          leftHeaderButton.removeAttribute("secondaryOrigin");
-        }
-        return await displayProfile(data);
-      }
-      break;
-    }
-    case "backToSearch": {
-      await displaySearch();
-      break;
-    }
-    case "backToSearchProfile": {
-        leftHeaderButton.setAttribute("origin", "fromSearch");
+      case "backToProfile": {
         const user = leftHeaderButton.getAttribute("username");
         const { success, data } = await getUser(user);
         if (success && data) {
           await displayProfile(data);
         }
-      break;
-    }
-    case "backToSearchCircle": {
-      leftHeaderButton.setAttribute("origin", "fromSearchProfile");
-      const circleId = leftHeaderButton.getAttribute("circleId");
-      const { success, data } = await getCircle(circleId);
-      if (success && data) {
-        await displayCircle(data);
+        break;
       }
-      break;
-    }
-    case "backToExploreCircle": {
-      const circleId = leftHeaderButton.getAttribute("circleId");
-      const { success, data } = await getCircle(circleId);
-      if (success && data) {
-        leftHeaderButton.id = "backToExplore";
-        await displayCircle(data);
-      }
-      break;
-    }
-    case "toActivity": {
-      await displayActivity();
-      break;
-    }
-    case "closeButton": {
-      newCircleNameInput = "";
-      nav.classList.remove("hidden");
-      const { success, data } = await getUser(currentLocalUser);
-      if (success && data) {
-        await displayExplore(data);
-      }
-      break;
-    }
-    case "albumNext": {
-      const { success, data } = await getUser(currentLocalUser);
-      if (success && data) {
-        const circleRender = await displayListOfCircles(data);
-        await showCreateOrAddToCircle(circleRender);
-      }
-      break;
-    }
-    case "albumConfirmationBack": {
-      const { success, data } = await getUser(currentLocalUser);
-      if (success && data) {
-        nav.classList.remove("hidden");
-        const circleRender = await displayListOfCircles(data);
-        rightHeaderButton.removeAttribute("fromCreateAlbum");
-        showCreateOrAddToCircle(circleRender);
-      }
-      break;
-    }
-    case "addCircleBack": {
-      await displayPhotoUploadPreview(albumPhotos);
-      break;
-    }
-    case "createAlbum": {
-      const albumName = await getAlbumName();
-      albumObj.name = albumName;
-      const { success, data, error } = await handleCreateAlbum(albumObj);
-      if (error) {
-        if (error === "Missing album name") {
-          await displayPopup("Please add a title to your album");
+      case "updateCircle": {
+        pageName.classList.remove("text-light-mode-accent");
+        const privacyCheckbox = document.querySelector("#privacyCheckbox");
+        const circleImage = document.querySelector("#circleImage img");
+        const circleNameInput = document.querySelector("#circleNameInput");
+        const circleId = leftHeaderButton.getAttribute("circleId");
+    
+        if (!circleNameInput.value) {
+          return displayPopup("Missing circle name");
         }
-        return;
-      }
-      const albumId = data;
-      if (success && data) {
-        const { success, data, error } = await getAlbum(albumId);
-        if (success && data) {
-          await displayPopup("album created");
-          await displayAlbum(data);
-          nav.classList.remove("hidden");
+    
+        const circleObj = {
+          circleId,
+          circleImg: circleImage.src,
+          circleName: circleNameInput.value,
+          isPublic: privacyCheckbox.checked
         }
-      }
-    }
-    case "updateAlbum": {
-      const albumId = leftHeaderButton.getAttribute("albumId");
-  
-      if (albumId) {
-        const { success, data, error } = await updateAlbum(albumId, albumObj);
+        const {success, data } = await updateCircle(circleObj);
+        let circleIdFromUpdate = data;
         if (success && data) {
-          const albumResponse = await getAlbum(albumId);
-          if (albumResponse.success && albumResponse.data) {
-            albumPhotos = [];
-            await displayPopup("images successfully added");
-            await displayAlbum(albumResponse.data);
-          } else {
-            console.log(albumResponse.error);
+          const { success, data } = await getCircle(circleIdFromUpdate);
+          if (success && data) {
+            await displayCircle(data);
           }
-        } else {
-          console.log(error);
         }
+        break;
       }
-      await cleanUpSectionEventListener();
-      break;
-    }
-    case "nextInviteFriends": {
-      const circleName = document.querySelector("#circleName");
-      newCircleNameInput = circleName.value;
-      circleImgSrc = document.querySelector("#circleImage").src;
-      isPrivacyPublic = document.querySelector("#privacyCheckbox").checked;
-      await displayInviteFriends();
-      break;
-    }
-    case "circleBackButton": {
-      await displayCreateCircle();
-      const circleName = document.querySelector("#circleName");
-      document.querySelector("#privacyCheckbox").checked = isPrivacyPublic;
-      document.querySelector("#circleImage").src = circleImgSrc;
-      const addPictureButton = document.querySelector("#addPicture");
-      addPictureButton.textContent = "Change Picture";
-      addPictureButton.className = "w-380 h-45 bg-white border-2 border-dark-grey text-dark-grey rounded-input-box fixed bottom-8";
-      circleName.value = newCircleNameInput;
-      await updateCheckbox();
-      break;
-    }
-    case "circleNext": {
-      saveCheckedFriends();
-      await displayCreateCirclePreview();
-      circleName.value = newCircleNameInput;
-      document.querySelector("#privacyCheckbox").checked = isPrivacyPublic;
-      document.querySelector("#circleImage").src = circleImgSrc;
-      await updateCheckbox();
-      break;
-    }
-    case "circlePreviewBack": {
-      const circleName = document.querySelector("#circleName");
-      circleImgSrc = document.querySelector("#circleImage").src;
-      isPrivacyPublic = document.querySelector("#privacyCheckbox").checked;
-      newCircleNameInput = circleName.value;
-      await displayInviteFriends();
-      break;
-    }
-    case "createCircle": {
-      isPrivacyPublic = document.querySelector("#privacyCheckbox").checked;
-      const { success, data, error } = await handleCreateCircle();
-      if (error) {
-        if (error === "Missing circle name") {
-          await displayPopup("Please add a title to your circle");
-        }
-        return;
+      case "deleteCircle": {
+        const circleId = leftHeaderButton.getAttribute("circleId");
+        await displayConfirmationPopup(`delete circle`, { circleId })
+        break;
       }
-      const circleId = data;
-      if (success && data) {
-        for (let friend of checkedFriends) {
-          const { success, data } = await handleSendCircleRequest(friend, circleId);
-        }
-        checkedFriends = [];
-        const { success, data, error } = await getCircle(circleId);
+      case "backToCircle": {
+        const circleId = leftHeaderButton.getAttribute("circleId");
+        const { success, data } = await getCircle(circleId);
         if (success && data) {
-          await displayPopup("circle created");
+          nav.classList.remove("hidden");
           await displayCircle(data);
         }
-        nav.classList.remove("hidden");
+        break;
       }
-      break;
-    }
-    case "createCircleToAlbum": {
-      isPrivacyPublic = document.querySelector("#privacyCheckbox").checked;
-      const { success, data, error } = await handleCreateCircle();
-      if (error) {
-        if (error === "Missing circle name") {
-          await displayPopup("Please add a title to your circle");
+      case "deleteAlbum": {
+        const albumId = leftHeaderButton.getAttribute("albumId");
+        await displayConfirmationPopup(`delete album`, { albumId })
+        break;
+      }
+      case "backToAlbum": {
+        const albumId = leftHeaderButton.getAttribute("albumId");
+        const { success, data }= await getAlbum(albumId);
+        if (success && data) {
+          await displayAlbum(data);
         }
-        console.log(error);
-        return;
+        break;
       }
-      const circleId = data;
-      if (success && data) {
+      case "inviteDoneButton": {
+        saveCheckedFriends()
+        const circleId = leftHeaderButton.getAttribute("circleid")
+        leftHeaderButton.removeAttribute("circleId");
         for (let friend of checkedFriends) {
           const { success, data } = await handleSendCircleRequest(friend, circleId);
         }
         checkedFriends = [];
-        albumObj.isCircle = true;
-        albumObj.id = circleId;
-
-        let { success, data, error } = await getCircle(circleId);
+        const {success, data} = await getCircle(circleId);
         if (success && data) {
-          albumObj.circleSrc = data.circle.picture;
-          albumObj.circleName = data.circle.name;
+          nav.classList.remove("hidden");
+          await displayCircle(data)
         }
-        leftHeaderButton.removeAttribute("origin");
-        await displayPopup("circle created");
-        await displayAlbumConfirmation();
+        break;
+      }
+      case "friendsBackButton": {
+        navigationHistory.pop();
+        const previousUser = navigationHistory[navigationHistory.length - 1];
+        const { success, data } = await getUser(previousUser);
+        if (success && data) {
+          if (navigationHistory.length === 1) {
+            leftHeaderButton.removeAttribute("secondaryOrigin");
+          }
+          return await displayProfile(data);
+        }
+        break;
+      }
+      case "backToSearch": {
+        await displaySearch();
+        break;
+      }
+      case "backToSearchProfile": {
+          leftHeaderButton.setAttribute("origin", "fromSearch");
+          const user = leftHeaderButton.getAttribute("username");
+          const { success, data } = await getUser(user);
+          if (success && data) {
+            await displayProfile(data);
+          }
+        break;
+      }
+      case "backToSearchCircle": {
+        leftHeaderButton.setAttribute("origin", "fromSearchProfile");
+        const circleId = leftHeaderButton.getAttribute("circleId");
+        const { success, data } = await getCircle(circleId);
+        if (success && data) {
+          await displayCircle(data);
+        }
+        break;
+      }
+      case "backToExploreCircle": {
+        const circleId = leftHeaderButton.getAttribute("circleId");
+        const { success, data } = await getCircle(circleId);
+        if (success && data) {
+          leftHeaderButton.id = "backToExplore";
+          await displayCircle(data);
+        }
+        break;
+      }
+      case "toActivity": {
+        await displayActivity();
+        break;
+      }
+      case "closeButton": {
+        newCircleNameInput = "";
         nav.classList.remove("hidden");
+        const { success, data } = await getUser(currentLocalUser);
+        if (success && data) {
+          await displayExplore(data);
+        }
+        break;
       }
-      break;
+      case "albumNext": {
+        const { success, data } = await getUser(currentLocalUser);
+        if (success && data) {
+          const circleRender = await displayListOfCircles(data);
+          await showCreateOrAddToCircle(circleRender);
+        }
+        break;
+      }
+      case "albumConfirmationBack": {
+        const { success, data } = await getUser(currentLocalUser);
+        if (success && data) {
+          nav.classList.remove("hidden");
+          const circleRender = await displayListOfCircles(data);
+          rightHeaderButton.removeAttribute("fromCreateAlbum");
+          showCreateOrAddToCircle(circleRender);
+        }
+        break;
+      }
+      case "addCircleBack": {
+        await displayPhotoUploadPreview(albumPhotos);
+        break;
+      }
+      case "createAlbum": {
+        const albumName = await getAlbumName();
+        albumObj.name = albumName;
+        const { success, data, error } = await handleCreateAlbum(albumObj);
+        if (error) {
+          if (error === "Missing album name") {
+            await displayPopup("Please add a title to your album");
+          }
+          return;
+        }
+        const albumId = data;
+        if (success && data) {
+          const { success, data, error } = await getAlbum(albumId);
+          if (success && data) {
+            await displayPopup("album created");
+            await displayAlbum(data);
+            nav.classList.remove("hidden");
+          }
+        }
+      }
+      case "updateAlbum": {
+        const albumId = leftHeaderButton.getAttribute("albumId");
+    
+        if (albumId) {
+          const { success, data, error } = await updateAlbum(albumId, albumObj);
+          if (success && data) {
+            const albumResponse = await getAlbum(albumId);
+            if (albumResponse.success && albumResponse.data) {
+              albumPhotos = [];
+              await displayPopup("images successfully added");
+              await displayAlbum(albumResponse.data);
+            } else {
+              console.log(albumResponse.error);
+            }
+          } else {
+            console.log(error);
+          }
+        }
+        await cleanUpSectionEventListener();
+        break;
+      }
+      case "nextInviteFriends": {
+        const circleName = document.querySelector("#circleName");
+        newCircleNameInput = circleName.value;
+        circleImgSrc = document.querySelector("#circleImage").src;
+        isPrivacyPublic = document.querySelector("#privacyCheckbox").checked;
+        await displayInviteFriends();
+        break;
+      }
+      case "circleBackButton": {
+        await displayCreateCircle();
+        const circleName = document.querySelector("#circleName");
+        document.querySelector("#privacyCheckbox").checked = isPrivacyPublic;
+        document.querySelector("#circleImage").src = circleImgSrc;
+        const addPictureButton = document.querySelector("#addPicture");
+        addPictureButton.textContent = "Change Picture";
+        addPictureButton.className = "w-380 h-45 bg-white border-2 border-dark-grey text-dark-grey rounded-input-box fixed bottom-8";
+        circleName.value = newCircleNameInput;
+        await updateCheckbox();
+        break;
+      }
+      case "circleNext": {
+        saveCheckedFriends();
+        await displayCreateCirclePreview();
+        circleName.value = newCircleNameInput;
+        document.querySelector("#privacyCheckbox").checked = isPrivacyPublic;
+        document.querySelector("#circleImage").src = circleImgSrc;
+        await updateCheckbox();
+        break;
+      }
+      case "circlePreviewBack": {
+        const circleName = document.querySelector("#circleName");
+        circleImgSrc = document.querySelector("#circleImage").src;
+        isPrivacyPublic = document.querySelector("#privacyCheckbox").checked;
+        newCircleNameInput = circleName.value;
+        await displayInviteFriends();
+        break;
+      }
+      case "createCircle": {
+        isPrivacyPublic = document.querySelector("#privacyCheckbox").checked;
+        const { success, data, error } = await handleCreateCircle();
+        if (error) {
+          if (error === "Missing circle name") {
+            await displayPopup("Please add a title to your circle");
+          }
+          return;
+        }
+        const circleId = data;
+        if (success && data) {
+          for (let friend of checkedFriends) {
+            const { success, data } = await handleSendCircleRequest(friend, circleId);
+          }
+          checkedFriends = [];
+          const { success, data, error } = await getCircle(circleId);
+          if (success && data) {
+            await displayPopup("circle created");
+            await displayCircle(data);
+          }
+          nav.classList.remove("hidden");
+        }
+        break;
+      }
+      case "createCircleToAlbum": {
+        isPrivacyPublic = document.querySelector("#privacyCheckbox").checked;
+        const { success, data, error } = await handleCreateCircle();
+        if (error) {
+          if (error === "Missing circle name") {
+            await displayPopup("Please add a title to your circle");
+          }
+          console.log(error);
+          return;
+        }
+        const circleId = data;
+        if (success && data) {
+          for (let friend of checkedFriends) {
+            const { success, data } = await handleSendCircleRequest(friend, circleId);
+          }
+          checkedFriends = [];
+          albumObj.isCircle = true;
+          albumObj.id = circleId;
+  
+          let { success, data, error } = await getCircle(circleId);
+          if (success && data) {
+            albumObj.circleSrc = data.circle.picture;
+            albumObj.circleName = data.circle.name;
+          }
+          leftHeaderButton.removeAttribute("origin");
+          await displayPopup("circle created");
+          await displayAlbumConfirmation();
+          nav.classList.remove("hidden");
+        }
+        break;
+      }
+      case "inviteDone": {
+        saveCheckedFriends()
+        const circleId = leftHeaderButton.getAttribute("circleId");
+        leftHeaderButton.removeAttribute("circleId");
+        for (let friend of checkedFriends) {
+          const { success, data } = await handleSendCircleRequest(friend, circleId);
+        }
+        checkedFriends = [];
+        const { success, data } = await getCircle(circleId);
+        if (success && data) {
+          nav.classList.remove("hidden");
+          await displayCircle(data);
+        }
+        break;
+      }
+      default:
+        break;
     }
-    case "inviteDone": {
-      saveCheckedFriends()
-      const circleId = leftHeaderButton.getAttribute("circleId");
-      leftHeaderButton.removeAttribute("circleId");
-      for (let friend of checkedFriends) {
-        const { success, data } = await handleSendCircleRequest(friend, circleId);
-      }
-      checkedFriends = [];
-      const { success, data } = await getCircle(circleId);
-      if (success && data) {
-        nav.classList.remove("hidden");
-        await displayCircle(data);
-      }
-      break;
-    }
-    default:
-      break;
   }
 
 });
@@ -638,4 +641,5 @@ const displayCircleEditMode = (circleId, ownerId) => {
     "max-w-full text-center bg-transparent text-20 text-black font-light border-dark-grey";
   circleName.remove();
   document.querySelector("#circleName").append(circleNameInput);
+
 }

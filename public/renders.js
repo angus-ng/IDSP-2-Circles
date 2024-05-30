@@ -1,38 +1,38 @@
 function displayLoginPage() {
   pageContent.innerHTML = `
-  <div id="loginPage" class="flex flex-col items-center rounded-lg w-full z-10">
-  <div class="flex-shrink-0 mt-2 mb-6">
-      <img src="/lightmode/logo_with_wordmark.svg" alt="Logo with Wordmark"/>  
-  </div>
-  <form action="/auth/login">
-  <button>
-  <img src="/lightmode/login_button.svg" alt="Login Button"/>
-  </button>
-  </form>
-  <form action="/auth/register">
-  <button>
-  Register ( put a register button here)
-  </button>
-  </form>
-  <div class="flex items-center mt-4 mb-6">
-      <div class="grid grid-cols-2 w-full">
-          <div class="col-start-0">
-              <input type="checkbox" name="rememberMe" id="rememberMe" class="size-5">
-              <label for="rememberMe" class="ml-2 text-secondary">Remember Me</label>
-          </div>
-          <div class="justify-self-end">
-              <a class="text-secondary leading-secondary text-light-mode-accent text-decoration-line: underline cursor-pointer">Forgot Password?</a>
+    <div id="loginPage" class="flex flex-col items-center rounded-lg w-full z-10">
+      <div class="flex-shrink-0 mt-2 mb-6">
+          <img src="/lightmode/logo_with_wordmark.svg" alt="Logo with Wordmark"/>  
+      </div>
+      <form action="/auth/login">
+      <button>
+      <img src="/lightmode/login_button.svg" alt="Login Button"/>
+      </button>
+      </form>
+      <form action="/auth/register">
+      <button>
+      Register ( put a register button here)
+      </button>
+      </form>
+      <div class="flex items-center mt-4 mb-6">
+          <div class="grid grid-cols-2 w-full">
+              <div class="col-start-0">
+                  <input type="checkbox" name="rememberMe" id="rememberMe" class="size-5">
+                  <label for="rememberMe" class="ml-2 text-secondary">Remember Me</label>
+              </div>
+              <div class="justify-self-end">
+                  <a class="text-secondary leading-secondary text-light-mode-accent text-decoration-line: underline cursor-pointer">Forgot Password?</a>
+              </div>
           </div>
       </div>
-  </div>
-      </div>
+          </div>
 
-  <div class="flex items-center justify-between mt-6 gap-1">
-      <p class="text-secondary leading-secondary">Don't have an account?</p>
-      <a id="signUp" class="text-secondary leading-secondary text-light-mode-accent text-decoration-line: underline cursor-pointer">Sign up</a>
-  </div>
-</div>
-</div>`;
+      <div class="flex items-center justify-between mt-6 gap-1">
+          <p class="text-secondary leading-secondary">Don't have an account?</p>
+          <a id="signUp" class="text-secondary leading-secondary text-light-mode-accent text-decoration-line: underline cursor-pointer">Sign up</a>
+      </div>
+    </div>
+  </div>`;
 }
 
 async function displayNavBar() {

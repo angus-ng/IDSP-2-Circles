@@ -15,5 +15,6 @@ export default interface IUserService {
     getProfilePicture(username: string): Promise<string>
     getFeed(username: string): Promise<string>
     updateProfilePicture(currentUser: string, src: string): Promise<void>
+    updateDisplayName(currentUser: string, name: string): Promise<void>
     getInfoForMap(username: string): Promise<any>
 }

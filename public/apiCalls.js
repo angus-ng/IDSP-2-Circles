@@ -532,6 +532,23 @@ async function updateProfilePicture (src) {
   }
 }
 
+async function updateDisplayName(name) {
+  try {
+    const response = await fetch(`/user/updateDisplayName`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({name: name})
+    });
+
+    const jsonResponse = await response.json();
+    return jsonResponse
+  } catch (err) {
+
+  }
+}
+
 async function getAlbumFeed () {
   try {
     const response = await fetch(`/user/feed`);
