@@ -135,10 +135,8 @@ class CircleController implements IController {
       return res.status(200).json({ success: true, data: null });
     }
     console.log("inviting", requestee, "to", circleId, "...")
-    const circle = await this._service.inviteToCircle(requestee, circleId)
-    if (circle) {
-      io.to(requestee).emit("circleInvite", {user:loggedInUser, circleName: circle})
-    }
+    await this._service.inviteToCircle(requestee, circleId)
+
     //change to verify selected are friends of current user
 
     return res.status(200).json({ success: true, data: null });
@@ -156,10 +154,7 @@ class CircleController implements IController {
     let loggedInUser = await getLocalUser(req, res)
     try {
       if (loggedInUser === invitee) {
-        const circle = await this._service.acceptInvite(id, invitee)
-        for (let member of circle.members) {
-          io.to(member).emit('acceptCircleInvite', {user: loggedInUser, circleName: circle.circleName})
-        }
+        await this._service.acceptInvite(id, invitee)
       }
       return res.status(200).json({ success: true, data: null });
     } catch (error) {
@@ -175,7 +170,7 @@ class CircleController implements IController {
         await this._service.removeRequest(id, invitee)
         res.status(200).json({ success: true, data: null })
       } else {
-        res.status(400).json({ success: false, error: "Failed to remove circle invite" })
+        res.status(400).json({ success: false, error: "Failed to accept friend request" })
       }
     } catch (error: any) {
       throw new Error(error)
@@ -197,9 +192,6 @@ class CircleController implements IController {
         isPublic
       }
       const circle = await this._service.updateCircle(loggedInUser, circleObj) //this checks for ownership
-      for (let member of circle.members) {
-        io.to(member).emit("updateCircle", {user: loggedInUser, circleName: circle.name})
-      }
       res.status(200).json({ success: true, data: circle.id })
     } catch (err) {
       console.log(err)

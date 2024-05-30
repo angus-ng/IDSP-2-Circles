@@ -28,7 +28,6 @@ async function initiatePage() {
   } else {
     const { success, data } = await getUser(username);
     if (success && data) {
-      socket.emit("joinRoom", currentLocalUser)
       await displayExplore(data);
     }
   }

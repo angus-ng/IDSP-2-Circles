@@ -29,11 +29,6 @@ class App {
     this._server.listen(this._port, () => {
       console.log(`App running at: http://localhost:${this._port}/ 🚀`);
     });
-    io.on("connection", async (socket) => {
-      socket.on('joinRoom', function(roomName) {
-        socket.join(roomName)
-      });
-    });
   }
 
   private initializeMiddlewares() {

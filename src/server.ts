@@ -16,6 +16,7 @@ import AlbumController from './areas/album/controllers/album.controller';
 import { AlbumService } from './areas/album/services';
 import UserController from './areas/user/controllers/user.controller';
 import { UserService } from './areas/user/services';
+import { io } from './app';
 
 const cloudinary = require("cloudinary").v2;
 
