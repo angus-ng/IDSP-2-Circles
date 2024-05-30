@@ -909,43 +909,46 @@ async function displayExplore(userData) {
       circleImage.className = "circle w-8 h-8 rounded-full object-cover";
       circleImage.src = obj.circle.picture;
       
-      let albumImage = document.createElement("img");
-      albumImage.className = "w-176 h-176 rounded-xl object-cover";
-      albumImage.src = obj.photos[0].src;
-      albumImage.alt = `${obj.name}'s album cover`;
-      const userLiked = obj.likes.some(like => like.user.username === currentLocalUser);
-      const likedClass = userLiked ? "liked" : "";
-      const heartColor = userLiked ? "#FF4646" : "none";
-      const heartColorStroke = userLiked ? "#FF4646" : "white";
-  
-      return `
-      <div class="w-full bg-white p-3 rounded-12.75 h-[280px] overflow-hidden">
-        <div class="albumCard">
-            <div class="w-full h-min relative overflow-hidden album" id="${obj.id}" circleid="${obj.circleId}">
-            <div>${albumImage.outerHTML}</div>
-            <div class="absolute top-0 right-0 m-2 flex items-start justify-end gap-1 p2">${circleImage.outerHTML}</div>
-            <div class="m-2 text-secondary font-semibold absolute inset-0 flex items-end justify-start">
-                ${albumName.outerHTML}
-            </div>
-            <div class="absolute inset-0 flex items-end justify-end gap-1 p-2">
-                <div class="like cursor-pointer ${likedClass}">
-                  <svg width="20" height="19" viewBox="0 0 20 19" fill="${heartColor}" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M9.22318 16.2905L9.22174 16.2892C6.62708 13.9364 4.55406 12.0515 3.11801 10.2946C1.69296 8.55118 1 7.05624 1 5.5C1 2.96348 2.97109 1 5.5 1C6.9377 1 8.33413 1.67446 9.24117 2.73128L10 3.61543L10.7588 2.73128C11.6659 1.67446 13.0623 1 14.5 1C17.0289 1 19 2.96348 19 5.5C19 7.05624 18.307 8.55118 16.882 10.2946C15.4459 12.0515 13.3729 13.9364 10.7783 16.2892L10.7768 16.2905L10 16.9977L9.22318 16.2905Z" stroke="${heartColorStroke}" stroke-width="2"/>
-                  </svg>
-                </div>
-                <div class="comment cursor-pointer" albumid="${obj.id}">
-                  <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M10.5 19.125C8.79414 19.125 7.12658 18.6192 5.70821 17.6714C4.28983 16.7237 3.18434 15.3767 2.53154 13.8006C1.87873 12.2246 1.70793 10.4904 2.04073 8.81735C2.37352 7.14426 3.19498 5.60744 4.4012 4.40121C5.60743 3.19498 7.14426 2.37353 8.81735 2.04073C10.4904 1.70793 12.2246 1.87874 13.8006 2.53154C15.3767 3.18435 16.7237 4.28984 17.6714 5.70821C18.6192 7.12658 19.125 8.79414 19.125 10.5C19.125 11.926 18.78 13.2705 18.1667 14.455L19.125 19.125L14.455 18.1667C13.2705 18.78 11.925 19.125 10.5 19.125Z" stroke="#F8F4EA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </div>
+      if(obj.photos[0]) {
+
+        let albumImage = document.createElement("img");
+        albumImage.className = "w-176 h-176 rounded-xl object-cover";
+        albumImage.src = obj.photos[0].src;
+        albumImage.alt = `${obj.name}'s album cover`;
+        const userLiked = obj.likes.some(like => like.user.username === currentLocalUser);
+        const likedClass = userLiked ? "liked" : "";
+        const heartColor = userLiked ? "#FF4646" : "none";
+        const heartColorStroke = userLiked ? "#FF4646" : "white";
+    
+        return `
+        <div class="w-full bg-white p-3 rounded-12.75 h-[280px] overflow-hidden">
+          <div class="albumCard">
+              <div class="w-full h-min relative overflow-hidden album" id="${obj.id}" circleid="${obj.circleId}">
+              <div>${albumImage.outerHTML}</div>
+              <div class="absolute top-0 right-0 m-2 flex items-start justify-end gap-1 p2">${circleImage.outerHTML}</div>
+              <div class="m-2 text-secondary font-semibold absolute inset-0 flex items-end justify-start">
+                  ${albumName.outerHTML}
+              </div>
+              <div class="absolute inset-0 flex items-end justify-end gap-1 p-2">
+                  <div class="like cursor-pointer ${likedClass}">
+                    <svg width="20" height="19" viewBox="0 0 20 19" fill="${heartColor}" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.22318 16.2905L9.22174 16.2892C6.62708 13.9364 4.55406 12.0515 3.11801 10.2946C1.69296 8.55118 1 7.05624 1 5.5C1 2.96348 2.97109 1 5.5 1C6.9377 1 8.33413 1.67446 9.24117 2.73128L10 3.61543L10.7588 2.73128C11.6659 1.67446 13.0623 1 14.5 1C17.0289 1 19 2.96348 19 5.5C19 7.05624 18.307 8.55118 16.882 10.2946C15.4459 12.0515 13.3729 13.9364 10.7783 16.2892L10.7768 16.2905L10 16.9977L9.22318 16.2905Z" stroke="${heartColorStroke}" stroke-width="2"/>
+                    </svg>
+                  </div>
+                  <div class="comment cursor-pointer" albumid="${obj.id}">
+                    <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M10.5 19.125C8.79414 19.125 7.12658 18.6192 5.70821 17.6714C4.28983 16.7237 3.18434 15.3767 2.53154 13.8006C1.87873 12.2246 1.70793 10.4904 2.04073 8.81735C2.37352 7.14426 3.19498 5.60744 4.4012 4.40121C5.60743 3.19498 7.14426 2.37353 8.81735 2.04073C10.4904 1.70793 12.2246 1.87874 13.8006 2.53154C15.3767 3.18435 16.7237 4.28984 17.6714 5.70821C18.6192 7.12658 19.125 8.79414 19.125 10.5C19.125 11.926 18.78 13.2705 18.1667 14.455L19.125 19.125L14.455 18.1667C13.2705 18.78 11.925 19.125 10.5 19.125Z" stroke="#F8F4EA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="h-20">
-        ${userDiv.outerHTML}
-        ${creationDate.outerHTML}
-        </div>
-    </div>`;
+          <div class="h-20">
+          ${userDiv.outerHTML}
+          ${creationDate.outerHTML}
+          </div>
+      </div>`;
+      }
     }));
     return { feedData: albumList };
   }
