@@ -267,15 +267,6 @@ export class AlbumService implements IAlbumService {
         return this.getAlbum(id);
     }
 
-    //   async listAlbums (currentUser:string): Promise<{album: Album}[] | void> { // remove this void when implemented
-    //     const user = await this._db.prisma.user.findUnique({
-    //         where: {
-    //             username: currentUser
-    //         }
-    //     })
-    //     //return new Error("Not implemented");
-    //   }
-
     async getComments(albumId: string): Promise<any> {
         let album = await this._db.prisma.album.findUnique({
             where: {
