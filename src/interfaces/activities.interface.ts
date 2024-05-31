@@ -1,7 +1,13 @@
-import { CircleInvite, FriendRequest } from "@prisma/client"
+import { Activity, CircleInvite, FriendRequest } from "@prisma/client"
 
-interface Activies {
+interface Activities {
     friendRequests: FriendRequest[]
     circleInvites: CircleInvite[]
+    newCommentActivities: any[]
+    replyToCommentActivities: any[]
+    likeAlbumActivities: any[],
+    newPhotoActivities: any[]
+    likeCommentActivities: any[]
+    newAlbumActivities: any[]
 }
-export default Activies
+export default Activities

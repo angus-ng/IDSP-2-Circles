@@ -81,6 +81,19 @@ export class AlbumService implements IAlbumService {
                     })
                 }
                 const members = await getMembers(createdAlbum.circleId, this._db)
+
+                for (const member of members) {
+                    if (member !== newAlbumInput.creator) {
+                        await this._db.prisma.activity.create({
+                            data: {
+                                type: 'NEW_ALBUM',
+                                userId: member,
+                                albumId: createdAlbum.id
+                            }
+                        });
+                    }
+                }
+
                 return { user: newAlbumInput.creator, members, circleName: createdAlbum.circle.name, id: createdAlbum.id };
             }
         }
@@ -166,7 +179,7 @@ export class AlbumService implements IAlbumService {
                 });
                 console.log("Album unliked successfully");
             } else {
-                await this._db.prisma.like.create({
+                const like = await this._db.prisma.like.create({
                     data: {
                         userId: currentUser,
                         albumId: albumId
@@ -184,6 +197,23 @@ export class AlbumService implements IAlbumService {
                     }
                 });
                 const members = await getMembers(album.circleId, this._db)
+
+
+                // Create activity for liking the album for each member
+
+                for (const member of members) {
+                    if (member !== currentUser) {
+                        await this._db.prisma.activity.create({
+                            data: {
+                                type: 'LIKE_ALBUM',
+                                userId: member,
+                                albumId: albumId,
+                                likeId: like.id
+                            }
+                        });
+                    }
+                }
+
                 console.log("Album liked successfully");
                 return { members, user: currentUser, albumName: album.name };
             }
@@ -266,7 +296,7 @@ export class AlbumService implements IAlbumService {
         if (!hasPermission) {
             throw new Error("User does not have permission to update this album.");
         }
-
+        let photos =[]
         const existingAlbum = await this._db.prisma.album.findUnique({
             where: { id },
             include: { photos: true }
@@ -287,6 +317,20 @@ export class AlbumService implements IAlbumService {
                         long: newPhotos[i].photoSrc.gps ? String(newPhotos[i].photoSrc.gps.long) : null
                     }
                 })
+                photos.push(file)
+            }
+            const members = await getMembers(existingAlbum.circleId, this._db)
+            for (const member of members) {
+                if (member !== currentUser) {
+                    await this._db.prisma.activity.create({
+                        data: {
+                            type: 'ADD_PHOTOS',
+                            userId: member,
+                            albumId: id,
+                            photoId: photos[0].id
+                        }
+                    });
+                }
             }
             return { newPhotos, album }
         }
@@ -466,6 +510,24 @@ export class AlbumService implements IAlbumService {
                     }
                 }
             })
+            const albumMembers = await this._db.prisma.album.findUnique({
+                where: { id: albumId },
+                select: { circle: { select: { UserCircle: { select: { username: true } } } } }
+            });
+            const members = albumMembers?.circle.UserCircle.map((circle) => circle.username);
+            if (members) {
+                const filteredMembers = members.filter((member) => member !== currentUser);
+                for (const member of filteredMembers) {
+                    await this._db.prisma.activity.create({
+                        data: {
+                            type: 'NEW_COMMENT',
+                            userId: member,
+                            albumId: albumId,
+                            commentId: newComment.id
+                        }
+                    });
+                }
+            }
             if (commentId && newComment) {
                 childComment = await this._db.prisma.comment.update({
                     where: {
@@ -473,7 +535,8 @@ export class AlbumService implements IAlbumService {
                     },
                     data: {
                         replies: { connect: newComment }
-                    }, include: {
+                    },
+                    include: {
                         parent: {
                             select: {
                                 userId: true
@@ -485,6 +548,18 @@ export class AlbumService implements IAlbumService {
             if (childComment) {
                 if (childComment.parent)
                     childComment = childComment.parent
+                if (childComment.userId) {
+                    await this._db.prisma.activity.create({
+                        data: {
+                            type: 'REPLY_TO_COMMENT',
+                            userId: childComment.userId,
+                            albumId: albumId,
+                            commentId: commentId,
+                            repliedToUserId: childComment.parent.userId
+                        }
+                    });
+                }
+
             }
             if (childComment) {
                 return { user: currentUser, albumName: newComment.album.name, owner: newComment.album.ownerName, parentUser: childComment.userId }
@@ -610,6 +685,18 @@ export class AlbumService implements IAlbumService {
                         }
                     }
                 });
+                if (updatedComment.userId !== null) {
+                    await this._db.prisma.activity.create({
+                        data: {
+                            type: 'LIKE_COMMENT',
+                            userId: updatedComment.userId,
+                            commentId: commentId,
+                            albumId: updatedComment.albumId,
+                            createdAt: new Date(),
+                            likeId: like.id
+                        }
+                    });
+                }
                 console.log("Comment liked successfully", updatedComment);
                 return { albumName: updatedComment.album.name, user: currentUser, owner: updatedComment.userId }
             }

@@ -141,7 +141,10 @@ header.addEventListener("click", async (event) => {
         await displayCircle(data);
       }
       break;
-    }
+    } 
+    case "backToActivities" :
+      await displayActivity()
+      break;
     case "updateAlbum": {
       const albumId = leftHeaderButton.getAttribute("albumId");
       const albumName = document.querySelector("#albumNameInput").value;
