@@ -37,13 +37,13 @@ class AlbumController {
                     throw new Error("missing params");
                 }
                 const { id } = req.body;
-                console.log(id);
                 const albumObj = {
                     photos: photos,
                     albumName: name,
                     circleId: id,
                     creator: loggedInUser
                 };
+                console.log(albumObj);
                 const member = yield this._service.checkMembership(id, loggedInUser, true);
                 if (!member) {
                     console.log("SHIT");
@@ -59,8 +59,14 @@ class AlbumController {
             }
         });
         this.updateAlbum = (req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.updateAlbum = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const { id } = req.params;
+                const { photos } = req.body;
+                console.log(photos);
+                if (!Array.isArray(photos) || photos.length === 0) {
+                    return res.status(400).json({ success: false, error: "Invalid photos array" });
+                }
                 const { photos } = req.body;
                 console.log(photos);
                 if (!Array.isArray(photos) || photos.length === 0) {
@@ -85,8 +91,8 @@ class AlbumController {
             }
         });
         this.likeAlbum = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            let loggedInUser = req.user.username;
             try {
+                let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
                 const { albumId } = req.body;
                 yield this._service.likeAlbum(loggedInUser, albumId);
                 res.json({ success: true, data: null });
@@ -100,6 +106,7 @@ class AlbumController {
                 const { id } = req.params;
                 //ensure its public / user is a member of the circle
                 let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
+                console.log(loggedInUser, id);
                 const publicStatus = yield this._service.checkPublic(id);
                 if (!publicStatus) {
                     const member = yield this._service.checkMembership(id, loggedInUser);
@@ -109,12 +116,20 @@ class AlbumController {
                 }
                 const album = yield this._service.getAlbum(id);
                 console.log(album);
+                console.log(album);
                 res.status(200).json({ success: true, data: album });
             }
             catch (err) {
                 res.status(200).json({ success: true, data: null, err: "Could not fetch album" });
+                res.status(200).json({ success: true, data: null, err: "Could not fetch album" });
             }
         });
+        // private getAlbumList = async (req:Request, res:Response) => {
+        //   let loggedInUser = await getLocalUser(req, res)
+        //   console.log (loggedInUser)
+        //   const albums = await this._service.listAlbums(loggedInUser)
+        //   res.json({success: true, data: albums});
+        // }
         // private getAlbumList = async (req:Request, res:Response) => {
         //   let loggedInUser = await getLocalUser(req, res)
         //   console.log (loggedInUser)
@@ -125,6 +140,12 @@ class AlbumController {
             let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
             try {
                 const { albumId } = req.body;
+                const publicStatus = yield this._service.checkPublic(albumId);
+                if (!publicStatus) {
+                    const member = yield this._service.checkMembership(albumId, loggedInUser);
+                    if (!member) {
+                        return res.status(200).json({ success: true, data: null });
+                    }
                 const publicStatus = yield this._service.checkPublic(albumId);
                 if (!publicStatus) {
                     const member = yield this._service.checkMembership(albumId, loggedInUser);
@@ -176,6 +197,7 @@ class AlbumController {
         });
         this.deleteComment = (req, res) => __awaiter(this, void 0, void 0, function* () {
             let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
+            let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
             try {
                 const { commentId } = req.body;
                 yield this._service.deleteComment(loggedInUser, commentId);
@@ -186,6 +208,7 @@ class AlbumController {
             }
         });
         this.likeComment = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
             let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
             try {
                 const { commentId } = req.body;
@@ -202,7 +225,10 @@ class AlbumController {
     initializeRoutes() {
         this.router.post(`${this.path}/create`, authentication_middleware_1.ensureAuthenticated, upload.none(), this.createAlbum);
         this.router.post(`${this.path}/:id/update`, authentication_middleware_1.ensureAuthenticated, this.updateAlbum);
+        this.router.post(`${this.path}/:id/update`, authentication_middleware_1.ensureAuthenticated, this.updateAlbum);
         this.router.get(`${this.path}/:id`, authentication_middleware_1.ensureAuthenticated, this.showAlbum);
+        // this.router.post(`${this.path}/list`, ensureAuthenticated, this.getAlbumList);
+        this.router.post(`${this.path}/like`, authentication_middleware_1.ensureAuthenticated, this.likeAlbum);
         // this.router.post(`${this.path}/list`, ensureAuthenticated, this.getAlbumList);
         this.router.post(`${this.path}/like`, authentication_middleware_1.ensureAuthenticated, this.likeAlbum);
         this.router.post(`${this.path}/comments`, authentication_middleware_1.ensureAuthenticated, this.getComments);

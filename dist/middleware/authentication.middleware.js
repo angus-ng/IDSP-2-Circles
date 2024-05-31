@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.setCurrentUser = exports.forwardAuthenticated = exports.ensureAuthenticated = void 0;
 const kinde_1 = require("../areas/authentication/config/kinde");
 const ensureAuthenticated = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    if (req.isAuthenticated() || (yield kinde_1.kindeClient.isAuthenticated((0, kinde_1.sessionManager)(req, res)))) {
+    if (yield kinde_1.kindeClient.isAuthenticated((0, kinde_1.sessionManager)(req, res))) {
         return next();
     }
     res.redirect("/");

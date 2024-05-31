@@ -117,7 +117,6 @@ function displayPhotoUploadPreview(albumPhotos) {
     img.alt = `image ${index}`;
 
     slideDiv.appendChild(img);
-
     carouselDiv.appendChild(slideDiv);
   });
 
@@ -129,9 +128,7 @@ function displayPhotoUploadPreview(albumPhotos) {
           <p class="">your album</p>
         </div>
         <div id="addPhotos" class="flex-1 flex-col items-center bg-light-mode w-430 overflow-hidden p-2">
-          <div class="w-full">
-            
-          </div>
+          <div class="w-full"></div>
           <div class="w-full mt-3">
             <h1 class="text-h2 leading-h2 font-medium">Upload more files<h1>
           </div>
@@ -409,6 +406,11 @@ async function displayAlbum(albumData) {
 
   if (origin === "fromSearchProfileCircle") {
     leftHeaderButton.id = "backToSearchCircle";
+  }
+
+  if (origin === "fromAlbumCreation") {
+    leftHeaderButton.id = "backToCircle"
+    leftHeaderButton.setAttribute("username", currentLocalUser)
   }
 
   if (albumData.circle.id) {

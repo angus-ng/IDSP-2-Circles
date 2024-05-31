@@ -13,8 +13,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const passport_1 = __importDefault(require("passport"));
 const kinde_1 = require("../config/kinde");
+const SocketIO_1 = require("../../../helper/SocketIO");
 class AuthenticationController {
     constructor(service) {
         this.path = "/auth";
@@ -45,10 +45,12 @@ class AuthenticationController {
             }
             //@ts-ignore
             req.user = user;
+            (0, SocketIO_1.initializeSocket)();
             return res.redirect("/");
         });
         this.logout = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const logoutUrl = yield kinde_1.kindeClient.logout((0, kinde_1.sessionManager)(req, res));
+            return res.redirect("/");
             return res.redirect("/");
         });
         this.getSession = (req, res) => __awaiter(this, void 0, void 0, function* () {
@@ -68,63 +70,13 @@ class AuthenticationController {
                 res.json({ success: false, errorMessage: "Not logged in" });
             }
         });
-        this.local = (req, res, next) => {
-            passport_1.default.authenticate("local", function (err, user, info) {
-                if (err || !user) {
-                    return res.status(200).json({ success: true, data: null });
-                }
-                req.logIn(user, function (err) {
-                    return __awaiter(this, void 0, void 0, function* () {
-                        if (err) {
-                            return res.status(200).json({ success: true, data: null });
-                        }
-                        res.status(200).json({ success: true, data: req.user.username });
-                    });
-                });
-            })(req, res, next);
-        };
-        this.registration = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
-            const userProfile = req.body;
-            try {
-                const user = yield this._service.findUserByEmail(userProfile.email);
-                if (!user) {
-                    yield this._service.createUser(userProfile);
-                    res.redirect("/");
-                }
-                else {
-                    const error = new Error(userProfile.email);
-                    const errorMessage = error.message;
-                    res.render("authentication/views/register", { errorMessage });
-                    throw error;
-                }
-            }
-            catch (err) {
-                next(err);
-            }
-        });
-        this.facebook = passport_1.default.authenticate("facebook");
-        this.facebookCb = passport_1.default.authenticate("facebook", {
-            successRedirect: "/",
-            failureRedirect: '/'
-        });
-        this.google = passport_1.default.authenticate("google");
-        this.googleCb = passport_1.default.authenticate("google", {
-            successRedirect: "/",
-            failureRedirect: '/'
-        });
         this.initializeRoutes();
         this._service = service;
     }
     initializeRoutes() {
         this.router.get(`${this.path}/getSession`, this.getSession);
-        this.router.post(`${this.path}/register`, this.registration);
-        this.router.post(`${this.path}/local`, this.local);
         this.router.get(`${this.path}/login`, this.login);
         this.router.get(`${this.path}/register`, this.register);
-        this.router.get(`${this.path}/facebook`, this.facebook);
-        this.router.get(`${this.path}/facebook/callback`, this.facebookCb);
-        this.router.get(`${this.path}/google`, this.google);
-        this.router.get(`${this.path}/google/callback`, this.googleCb);
         this.router.get(`${this.path}/callback`, this.callback);
         this.router.get(`${this.path}/logout`, this.logout);
     }

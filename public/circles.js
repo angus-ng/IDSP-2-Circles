@@ -247,6 +247,12 @@ async function displayCircle(circleData) {
   if (origin === "fromExplore") {
     leftHeaderButton.id = "backToExplore";
   }
+
+  if(origin === "fromAlbumCreation") {
+    leftHeaderButton.id = "backToProfile"
+    leftHeaderButton.setAttribute("username", currentLocalUser)
+  }
+
   const currentUserMembership = circleData.members.find((member) => member.user.username === currentLocalUser)
   rightHeaderButton.innerHTML = `
   <div class="flex flex-row flex-nowrap gap-2 w-full h-22">

@@ -23,16 +23,19 @@ const sessionManager = (req, res) => ({
     getSessionItem(key) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
+            //@ts-ignore
             return (_a = req.session) === null || _a === void 0 ? void 0 : _a[key];
         });
     },
     setSessionItem(key, value) {
         return __awaiter(this, void 0, void 0, function* () {
+            //@ts-ignore
             req.session[key] = value;
         });
     },
     removeSessionItem(key) {
         return __awaiter(this, void 0, void 0, function* () {
+            //@ts-ignore
             delete req.session[key];
         });
     },
