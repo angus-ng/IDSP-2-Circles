@@ -2,11 +2,12 @@ let map;
 let storedMap;
 let markers = [];
 let scriptImported = false;
+let autocomplete
+
 
 async function initMap() {
   const { Map } =  await google.maps.importLibrary("maps");
   const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
-
   try { 
     const response = await getMapInfo();
     let lat = 49
@@ -41,20 +42,21 @@ async function initMap() {
     }
     map.createAlbumMarkers = (albumData) => {
       for (let album of albumData.data.Album) {
-        console.log(album);
-        const contentNode = document.createElement("div");
-        contentNode.classList.add("mapAlbum");
-        contentNode.innerHTML = `<div class="relative">
-            <img src="${album.photos[0].src}" class="rounded-full border-4 border-blue-500 w-12 h-12 object-cover aspect-w-1 aspect-h-1" alt="Google Maps Pin">
-            <div class="absolute w-4 h-4 bg-blue-500 rounded-full bottom-0 left-1/2 transform -translate-x-1/2"></div>
-        </div>`;
-        const marker = new AdvancedMarkerElement({
-            map,
-            position: {lat: parseFloat(album.lat), lng: parseFloat(album.long)},
-            content: contentNode,
-            title: album.name,
-        });
-        markers.push(marker)
+        if(album.photos[0]) {
+          const contentNode = document.createElement("div");
+          contentNode.classList.add("mapAlbum");
+          contentNode.innerHTML = `<div class="relative">
+              <img src="${album.photos[0].src}" class="rounded-full border-4 border-blue-500 w-12 h-12 object-cover aspect-w-1 aspect-h-1" alt="Google Maps Pin">
+              <div class="absolute w-4 h-4 bg-blue-500 rounded-full bottom-0 left-1/2 transform -translate-x-1/2"></div>
+          </div>`;
+          const marker = new AdvancedMarkerElement({
+              map,
+              position: {lat: parseFloat(album.lat), lng: parseFloat(album.long)},
+              content: contentNode,
+              title: album.name,
+          });
+          markers.push(marker)
+        }
       }
     }
     if (response.data){
@@ -138,4 +140,46 @@ async function displayAddLocation() {
       </div>
     </div>
   </div>`;
+
+  try {
+    const googleMapKeyresponse = await fetch("/googleMapKey");
+    const googleMapKeyresponseJson = await googleMapKeyresponse.json();
+    const googleMapKey = googleMapKeyresponseJson.data;
+
+    const script1 = document.createElement("script");
+    script1.src = `https://maps.googleapis.com/maps/api/js?key=${googleMapKey}&libraries=places&callback=initAutocomplete`;
+    script1.defer = true;
+    script1.async = true;
+
+    const script2 = document.createElement("script");
+    script2.innerHTML = `
+      function initAutocomplete() {
+        const input = document.querySelector("#locationSearchBox");
+        const autocomplete = new google.maps.places.Autocomplete(input);
+        autocomplete.addListener('place_changed', function() {
+          const place = autocomplete.getPlace();
+          console.log(place)
+          if (!place.geometry) {
+            console.error("Place details not available for input: '" + place.name + "'");
+            return;
+          }
+          rightHeaderButton.textContent = "Next";
+          rightHeaderButton.className = "text-lg";
+          rightHeaderButton.id = "addLocationNext";
+          let popupMessage = 'Selected '+ place.name
+          displayPopup(popupMessage)
+          albumObj.location = {lat: place.geometry.location.lat(), long: place.geometry.location.lng()}
+          console.log("Place Name: " + place.name);
+          console.log("Place Address: " + place.formatted_address);
+          console.log("Place Location (Lat, Lng): " + place.geometry.location.lat() + ", " + place.geometry.location.lng());
+        });
+      }
+    `;
+
+    const head = document.querySelector("head");
+    head.appendChild(script1);
+    head.appendChild(script2);
+  } catch (error) {
+    console.error(error);
+  }
 }

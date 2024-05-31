@@ -69,7 +69,9 @@ async function displayInviteFriends(fromCircle = false, circleId = "") {
       <div class="relative w-full h-9 mt-8">
         <form onkeydown="return event.key != 'Enter';">
           <input class="w-380 px-10 py-2 border-grey border-2 rounded-input-box text-secondary leading-secondary" placeholder="search friends"/>
-          <img src="/lightmode/search_icon_grey.svg" alt="search icon" class="absolute left-3 top-search w-25 h-25"/>
+          <div class="absolute left-3 top-search w-25 h-25">
+          ${searchBarIcon}
+          </div>
         </form>
       </div>
       <div class="shrink-0 mt-10 mb-6 justify-center w-full">
@@ -111,7 +113,9 @@ async function displayFriends(username) {
           <div class="h-9 bg-light-mode w-full mt-6">
               <form onkeydown="return event.key != 'Enter';" class="h-9 bg-light-mode w-full relative">
                 <input id="searchFriendsBox" class="w-380    px-10 py-2 border-grey border-2 rounded-input-box text-secondary leading-secondary bg-white" placeholder="search friends"/>
-                <img src="/lightmode/search_icon_grey.svg" alt="search icon" class="absolute left-3 top-search w-25 h-25"/>
+                <div class="absolute left-3 top-search w-25 h-25">
+                ${searchBarIcon}
+                </div>
               </form>
           </div>
         </div>
@@ -178,6 +182,7 @@ async function displayFriends(username) {
       if (user) {
         const { success, data } = await getUser(user.id);
         if (success && data) {
+          leftHeaderButton.setAttribute("origin", "fromSearch")
           leftHeaderButton.setAttribute("secondaryOrigin", "fromFriendsList");
           return await displayProfile(data);
         }

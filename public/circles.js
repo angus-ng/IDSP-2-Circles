@@ -22,7 +22,6 @@ async function displayCreateCircle() {
           <div class="shrink-0 mt-14 mb-6 justify-center">
               <img id="circleImage" src="/placeholder_image.svg" alt="Placeholder Image" class="object-cover w-234 h-230 rounded-full cursor-pointer"/>                     
           </div>
-      
           <div class="flex-1 flex flex-col justify-between w-full px-4">
             <div>
               <form class="flex flex-col" onkeydown="return event.key != 'Enter';">
@@ -86,8 +85,7 @@ async function displayCreateCircle() {
       }
   
       addPictureButton.textContent = "Change Picture";
-      addPictureButton.className =
-        "w-380 h-45 bg-white border-2 border-dark-grey text-dark-grey rounded-input-box fixed bottom-8";
+      addPictureButton.className = "w-380 h-45 bg-white border-2 border-dark-grey text-dark-grey rounded-input-box fixed bottom-8";
     });
   
     privacyCheckbox.addEventListener("change", async function () {
@@ -247,6 +245,12 @@ async function displayCircle(circleData) {
   if (origin === "fromExplore") {
     leftHeaderButton.id = "backToExplore";
   }
+
+  if(origin === "fromAlbumCreation") {
+    leftHeaderButton.id = "backToProfile"
+    leftHeaderButton.setAttribute("username", currentLocalUser)
+  }
+
   const currentUserMembership = circleData.members.find((member) => member.user.username === currentLocalUser)
   rightHeaderButton.innerHTML = `
   <div class="flex flex-row flex-nowrap gap-2 w-full h-22">

@@ -27,9 +27,6 @@ class UserController {
             try {
                 let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
                 const { requestee } = req.body;
-                if (!loggedInUser) {
-                    throw new Error("Not logged in");
-                }
                 yield this._service.friend(loggedInUser, requestee);
                 res.status(200).json({ success: true, data: null });
             }
@@ -57,8 +54,6 @@ class UserController {
             try {
                 let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
                 const { username } = req.body;
-                console.log(username);
-                console.log(req.body);
                 const friends = yield this._service.getFriends(username);
                 res.status(200).json({ success: true, data: friends });
             }
@@ -69,9 +64,6 @@ class UserController {
         this.getActivities = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
-                if (!loggedInUser) {
-                    throw new Error("Not logged in");
-                }
                 const activities = yield this._service.getActivities(loggedInUser);
                 res.status(200).json({ success: true, data: activities });
             }
@@ -173,10 +165,7 @@ class UserController {
             try {
                 let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
                 const albumFeed = yield this._service.getFeed(loggedInUser);
-                if (Array.isArray(albumFeed)) {
-                    const formattedAlbumFeed = albumFeed.map(album => (Object.assign(Object.assign({}, album), { createdAt: timeAgo.format(album.createdAt) })));
-                    res.status(200).json({ success: true, data: formattedAlbumFeed });
-                }
+                res.status(200).json({ success: true, data: albumFeed });
             }
             catch (err) {
                 res.status(200).json({ success: true, data: null, error: "failed to get album feed" });

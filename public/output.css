@@ -816,12 +816,8 @@ select {
   left: 0.75rem;
 }
 
-.left-\[45px\] {
-  left: 45px;
-}
-
-.left-\[75px\] {
-  left: 75px;
+.left-\[70px\] {
+  left: 70px;
 }
 
 .right-0 {
@@ -848,24 +844,12 @@ select {
   top: 0.875rem;
 }
 
-.top-\[45px\] {
-  top: 45px;
-}
-
-.top-\[75px\] {
-  top: 75px;
+.top-\[70px\] {
+  top: 70px;
 }
 
 .top-search {
   top: 7px;
-}
-
-.left-\[70px\] {
-  left: 70px;
-}
-
-.top-\[70px\] {
-  top: 70px;
 }
 
 .-z-10 {
@@ -964,11 +948,6 @@ select {
 .my-5 {
   margin-top: 1.25rem;
   margin-bottom: 1.25rem;
-}
-
-.my-6 {
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
 }
 
 .-mb-px {
@@ -1119,6 +1098,10 @@ select {
   margin-top: 0.75rem;
 }
 
+.mt-32 {
+  margin-top: 8rem;
+}
+
 .mt-4 {
   margin-top: 4px;
 }
@@ -1143,6 +1126,14 @@ select {
   margin-top: 105px;
 }
 
+.mt-5 {
+  margin-top: 1.25rem;
+}
+
+.inline {
+  display: inline;
+}
+
 .flex {
   display: flex;
 }
@@ -1161,11 +1152,6 @@ select {
 
 .hidden {
   display: none;
-}
-
-.size-5 {
-  width: 1.25rem;
-  height: 1.25rem;
 }
 
 .h-100 {
@@ -1325,10 +1311,6 @@ select {
   height: 100vh;
 }
 
-.h-10 {
-  height: 2.5rem;
-}
-
 .max-h-400 {
   max-height: 400px;
 }
@@ -1471,10 +1453,6 @@ select {
 
 .w-image {
   width: 178px;
-}
-
-.w-input-box {
-  width: 377px;
 }
 
 .w-popup {
@@ -1649,12 +1627,6 @@ select {
   --tw-space-x-reverse: 0;
   margin-right: calc(0.5rem * var(--tw-space-x-reverse));
   margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
-}
-
-.space-x-4 > :not([hidden]) ~ :not([hidden]) {
-  --tw-space-x-reverse: 0;
-  margin-right: calc(1rem * var(--tw-space-x-reverse));
-  margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
 }
 
 .space-y-0 > :not([hidden]) ~ :not([hidden]) {

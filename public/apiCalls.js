@@ -3,7 +3,7 @@ async function handleCreateCircle() {
     const circlePhoto = document.querySelector("#circleImage");
     const circleName = document.querySelector("#circleName").value;
     if (!circleName) {
-      return { success: true, data: null, error: "Missing circle name" };
+      return { success: true, data: null, error: "Missing circlge name" };
     }
 
     const formData = new FormData();
@@ -66,6 +66,7 @@ async function uploadFile(file) {
   }
 }
 
+//NOT USED ANYMORE DELETE
 async function localAuth() {
   let emailInput = document.querySelector("#emailInput");
   let passwordInput = document.querySelector("#passwordInput");
@@ -165,7 +166,7 @@ async function addPhotosToAlbum(albumId, albumObj) {
     if (!albumObj.photos || albumObj.photos.length === 0) {
       return { success: false, data: null, error: "No new photos" };
     }
-
+    
     let response = await fetch(`/album/${albumId}/addPhotos`, {
       method: "POST",
       headers: {
@@ -175,6 +176,7 @@ async function addPhotosToAlbum(albumId, albumObj) {
     });
 
     const jsonResponse = await response.json();
+    console.log(jsonResponse)
     return jsonResponse;
   } catch (err) {
     return { success: false, data: null, error: err.message };
