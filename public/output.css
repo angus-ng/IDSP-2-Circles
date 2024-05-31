@@ -852,6 +852,18 @@ select {
   top: 7px;
 }
 
+.right-10 {
+  right: 2.5rem;
+}
+
+.right-20 {
+  right: 5rem;
+}
+
+.right-2 {
+  right: 0.5rem;
+}
+
 .-z-10 {
   z-index: -10;
 }
@@ -1126,10 +1138,6 @@ select {
   margin-top: 105px;
 }
 
-.mt-5 {
-  margin-top: 1.25rem;
-}
-
 .inline {
   display: inline;
 }
@@ -1140,10 +1148,6 @@ select {
 
 .inline-flex {
   display: inline-flex;
-}
-
-.table {
-  display: table;
 }
 
 .grid {
@@ -1172,6 +1176,10 @@ select {
 
 .h-12 {
   height: 3rem;
+}
+
+.h-14 {
+  height: 3.5rem;
 }
 
 .h-176 {
@@ -1311,8 +1319,8 @@ select {
   height: 100vh;
 }
 
-.h-14 {
-  height: 3.5rem;
+.h-7 {
+  height: 1.75rem;
 }
 
 .max-h-400 {
@@ -1447,6 +1455,10 @@ select {
   width: 30px;
 }
 
+.w-\[400px\] {
+  width: 400px;
+}
+
 .w-auto {
   width: auto;
 }
@@ -1459,10 +1471,6 @@ select {
   width: 178px;
 }
 
-.w-popup {
-  width: 398px;
-}
-
 .w-request {
   width: 78px;
 }
@@ -1471,8 +1479,16 @@ select {
   width: 100vw;
 }
 
-.w-\[400px\] {
-  width: 400px;
+.w-96 {
+  width: 24rem;
+}
+
+.w-\[380px\] {
+  width: 380px;
+}
+
+.w-7 {
+  width: 1.75rem;
 }
 
 .max-w-430 {
@@ -1679,6 +1695,10 @@ select {
 
 .break-words {
   overflow-wrap: break-word;
+}
+
+.break-all {
+  word-break: break-all;
 }
 
 .rounded-12\.75 {
@@ -1944,6 +1964,11 @@ select {
   padding-right: 2.5rem;
 }
 
+.px-2 {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
 .px-4 {
   padding-left: 1rem;
   padding-right: 1rem;
@@ -1969,9 +1994,9 @@ select {
   padding-bottom: 1rem;
 }
 
-.px-2 {
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
+.px-3 {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
 }
 
 .pb-0 {

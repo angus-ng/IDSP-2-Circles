@@ -234,18 +234,18 @@ async function displayFriendRequests() {
   
     let friendRequestsList = friendRequests.map((request) => {
       let username = document.createElement("h2");
-      username.className = "font-medium text-14 leading-tertiary";
+      username.className = "font-medium text-14 leading-tertiary text-wrap	";
       username.textContent = `@${request.requester.username}`;
       const displayName = username.cloneNode(true);
       request.requester.displayName
         ? (displayName.textContent = request.requester.displayName)
         : (displayName.textContent = request.requester.username);
       return `
-      <div class="flex items-center my-5 user" id="${request.requester.username}">
+      <div class="flex items-center my-5 gap-2 user" id="${request.requester.username}">
         <div class="flex-none w-58">
           <img class="rounded-full w-58 h-58 object-cover" src="${request.requester.profilePicture}" alt="${request.requester.username}'s profile picture"/>
         </div>
-        <div class="ml-8 flex-none w-110 grid grid-rows-2">
+        <div class="flex-1 grid grid-rows-2">
           <div>
             ${displayName.outerHTML}
           </div>
