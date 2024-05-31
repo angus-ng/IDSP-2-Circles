@@ -418,7 +418,7 @@ export class CircleService implements ICircleService {
                         accessToken: randomUUID()
                     }
                 })
-                return `/circle/${shareHelper.circleId}/view/${token.accessToken}`
+                return `circle/${shareHelper.circleId}/view/${token.accessToken}`
             } else {
                 throw new Error("insufficient permissions to create share link")
             }

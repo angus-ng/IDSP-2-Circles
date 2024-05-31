@@ -454,7 +454,7 @@ class CircleService {
                             accessToken: (0, node_crypto_1.randomUUID)()
                         }
                     });
-                    return `/circle/${shareHelper.circleId}/view/${token.accessToken}`;
+                    return `circle/${shareHelper.circleId}/view/${token.accessToken}`;
                 }
                 else {
                     throw new Error("insufficient permissions to create share link");
