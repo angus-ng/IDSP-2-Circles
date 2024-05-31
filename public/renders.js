@@ -1,35 +1,19 @@
 function displayLoginPage() {
   pageContent.innerHTML = `
-    <div id="loginPage" class="flex flex-col items-center rounded-lg w-full z-10">
-      <div class="flex-shrink-0 mt-2 mb-6">
-          <img src="/lightmode/logo_with_wordmark.svg" alt="Logo with Wordmark"/>  
+    <div id="loginPage" class="flex flex-col items-center rounded-lg w-full h-screen z-10">
+      <div class="h-380 mt-32 mb-6">
+          ${logoWithWordmark} 
       </div>
-      <form action="/auth/login">
-      <button>
-      <img src="/lightmode/login_button.svg" alt="Login Button"/>
-      </button>
-      </form>
-      <form action="/auth/register">
-      <button>
-      Register ( put a register button here)
-      </button>
-      </form>
-      <div class="flex items-center mt-4 mb-6">
-          <div class="grid grid-cols-2 w-full">
-              <div class="col-start-0">
-                  <input type="checkbox" name="rememberMe" id="rememberMe" class="size-5">
-                  <label for="rememberMe" class="ml-2 text-secondary">Remember Me</label>
-              </div>
-              <div class="justify-self-end">
-                  <a class="text-secondary leading-secondary text-light-mode-accent text-decoration-line: underline cursor-pointer">Forgot Password?</a>
-              </div>
-          </div>
+      <div class="h-45 mt-10">
+        <form action="/auth/login">
+          <button class="w-380 h-45 bg-light-mode-accent rounded-input-box text-white">Login</button>
+        </form>
       </div>
-          </div>
-
-      <div class="flex items-center justify-between mt-6 gap-1">
-          <p class="text-secondary leading-secondary">Don't have an account?</p>
-          <a id="signUp" class="text-secondary leading-secondary text-light-mode-accent text-decoration-line: underline cursor-pointer">Sign up</a>
+      <div class="h-45 mt-10">
+        <form action="/auth/register">
+          <p class="text-body leading-body inline">Don't have an account?</p>
+          <button class="text-body leading-body inline text-light-mode-accent text-decoration-line: underline cursor-pointer">Sign up</button>
+        </form>
       </div>
     </div>
   </div>`;
