@@ -1,7 +1,0 @@
-<svg width="430" height="85" viewBox="0 0 430 85" fill="none" xmlns="http://www.w3.org/2000/svg">
-<mask id="path-1-inside-1_3224_5540" fill="white">
-<path d="M0 0H430V85H0V0Z"/>
-</mask>
-<path d="M0 0H430V85H0V0Z" fill="#F8F4EA"/>
-<path d="M0 1H430V-1H0V1Z" fill="#737373" mask="url(#path-1-inside-1_3224_5540)"/>
-</svg>

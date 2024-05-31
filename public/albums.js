@@ -27,7 +27,7 @@ async function displayPhotoUpload(albumData) {
             <input id="fileUpload" type="file" class="hidden" multiple="false" />
           </form>
           <div class="flex justify-center mt-64 md:mt-52 mb-6">
-            <img id="uploadIcon" src="/lightmode/upload_photo.svg" alt="Upload Icon" />
+            ${uploadIcon}
           </div>
           <div class="flex justify-center">
             <p class="text-base text-grey leading-body">drag and drop to&nbsp;</p>
@@ -138,7 +138,7 @@ function displayPhotoUploadPreview(albumPhotos) {
             </form>
             <div class="flex flex-col justify-center items-center mx-auto">
               <div class="flex justify-center mt-28 md:mt-16 mb-5">
-                <img id="uploadIcon" src="/lightmode/upload_photo_grey.svg" alt="Upload Icon"/>
+                ${uploadIcon}
               </div>
               <div class="flex justify-center">
                 <p class="text-base text-dark-grey leading-body">drag and drop to&nbsp;</p>
@@ -427,12 +427,10 @@ let ownedPhotosCount = 0
     <div class="flex">
     ${currentLocalUser === albumData.circle.ownerId || (currentUserMembership? currentUserMembership.mod : false) || (ownedPhotosCount > 0 ? true : false) ? 
       `<button id="albumEditButton" ownerId="${albumData.circle.ownerId}" memberStatus="${currentUserMembership.mod}">
-          <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M22 5.76359C22.0008 5.61883 21.9731 5.47533 21.9183 5.34132C21.8636 5.20731 21.7829 5.08542 21.681 4.98265L17.017 0.318995C16.9142 0.217053 16.7923 0.136401 16.6583 0.0816639C16.5243 0.026927 16.3808 -0.000818536 16.236 1.83843e-05C16.0912 -0.000818536 15.9477 0.026927 15.8137 0.0816639C15.6797 0.136401 15.5578 0.217053 15.455 0.318995L12.342 3.43176L0.319018 15.4539C0.217068 15.5566 0.136411 15.6785 0.0816699 15.8125C0.0269289 15.9466 -0.000818595 16.09 1.83857e-05 16.2348V20.8985C1.83857e-05 21.1902 0.115911 21.4699 0.3222 21.6762C0.52849 21.8825 0.808279 21.9984 1.10002 21.9984H5.76401C5.91793 22.0067 6.07189 21.9827 6.21591 21.9277C6.35993 21.8728 6.49079 21.7882 6.60001 21.6794L18.557 9.6573L21.681 6.59953C21.7814 6.49292 21.8632 6.37023 21.923 6.23655C21.9336 6.14888 21.9336 6.06025 21.923 5.97257C21.9281 5.92137 21.9281 5.86978 21.923 5.81858L22 5.76359ZM5.31301 19.7985H2.20001V16.6858L13.123 5.76359L16.236 8.87636L5.31301 19.7985ZM17.787 7.32547L14.674 4.2127L16.236 2.66182L19.338 5.76359L17.787 7.32547Z" fill="#0E0E0E"/>
-          </svg>
+        ${circleEditIcon}
       </button>` : ""}
       <button id="shareButton">
-        <img src="/lightmode/share_icon.svg" alt="Share Button" id="shareAlbum">
+        ${shareIcon}
       </button>
     </div>
   </div>`;
@@ -633,9 +631,7 @@ async function displayListOfAlbums(data, user, profile = false) {
             </svg>
           </div>
           <div class="comment cursor-pointer" albumid="${obj.id}">
-            <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M10.5 19.125C8.79414 19.125 7.12658 18.6192 5.70821 17.6714C4.28983 16.7237 3.18434 15.3767 2.53154 13.8006C1.87873 12.2246 1.70793 10.4904 2.04073 8.81735C2.37352 7.14426 3.19498 5.60744 4.4012 4.40121C5.60743 3.19498 7.14426 2.37353 8.81735 2.04073C10.4904 1.70793 12.2246 1.87874 13.8006 2.53154C15.3767 3.18435 16.7237 4.28984 17.6714 5.70821C18.6192 7.12658 19.125 8.79414 19.125 10.5C19.125 11.926 18.78 13.2705 18.1667 14.455L19.125 19.125L14.455 18.1667C13.2705 18.78 11.925 19.125 10.5 19.125Z" stroke="#F8F4EA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+            ${commentIcon}
           </div>
         </div>
       </div>`;

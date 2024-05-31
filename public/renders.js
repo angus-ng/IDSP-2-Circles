@@ -26,23 +26,23 @@ async function displayNavBar() {
   <div class="border-b border-dark-grey"></div>
       <footer class="w-full flex justify-between items-center pt-4 pb-5 px-6 bg-light-mode-bg text-grey text-13">
           <a id="explore" class="flex flex-col items-center cursor-pointer">        
-              <img src="/lightmode/explore_icon.svg" alt="Explore Icon">
+              ${exploreIcon}
               <p class="mt-1">explore</p>
           </a>
           <a id="search" class="flex flex-col items-center cursor-pointer">
-              <img src="/lightmode/search_icon.svg" alt="Search Icon">
+              ${searchIcon}
               <p class="mt-1">search</p>
           </a>
           <a id="new" class="flex flex-col items-center cursor-pointer">
-              <img src="/lightmode/new_icon.svg" alt="New Icon">
+              ${newIcon}
               <p class="mt-1">new</p>
           </a>
           <a id="activity" class="flex flex-col items-center cursor-pointer">
-              <img src="/lightmode/activity_icon.svg" alt="Activity Icon">
+              ${activityIcon}
               <p class="mt-1">activity</p>         
           </a>
           <a id="profile" class="flex flex-col items-center cursor-pointer">
-              <img src="/lightmode/profile_icon.svg" alt="Profile Icon">
+              ${profileIcon}
               <p class="mt-1">profile</p>
           </a>
       </footer>`;
@@ -107,11 +107,11 @@ async function displayNewModal() {
   modalContent.innerHTML = `
   <div class="flex flex-row gap-6 justify-center text-light-mode-accent font-medium text-14 text-center">
     <button id="createAlbumModalButton" class="ml-1 flex-col">
-        <img src="/lightmode/create_album_icon.svg" alt="New Album Icon">
+        ${newAlbumIcon}
         <p class="mt-3 text-center">create album</p>
     </button>
     <button id="createCircleModalButton" class="ml-1 flex-col">
-        <img src="/lightmode/create_circle_icon.svg" alt="New Circle Icon">
+        ${newCircleIcon}
         <p class="mt-3 text-center">create circle</p>
     </button>                        
   </div>`;
@@ -710,7 +710,6 @@ async function displayProfile(userData) {
     leftHeaderButton.innerHTML = backIcon;
     leftHeaderButton.id = "currentUserProfile";
     rightHeaderButton.innerHTML = "";
-    console.log(userData)
 
     const hiddenImageInput = document.createElement("input");
     hiddenImageInput.id = "fileUpload";
@@ -839,7 +838,6 @@ async function displayExplore(userData) {
   let feedRender = "";
   if (success && data) {
     const { feedData } = await displayFriendAlbums(data);
-    console.log("FEED", data)
     if (feedData) {
       feedRender = feedData.join("");
     }
@@ -1043,7 +1041,7 @@ async function displaySandboxNav() {
     <footer class="w-full flex justify-center items-center gap-4 pt-4 pb-5 px-6 bg-light-mode-bg text-grey text-13">
         <img src="/lightmode/logo_with_wordmark.svg" alt="Circles Logo" class="h-12 w-12">
         <a id="landing" class="flex flex-col items-center cursor-pointer">
-            <p class="text-body mt-1">Login/Register to Circles!</p>
+            <p class="text-body font-bold mt-1">Login / Register to Circles!</p>
         </a>
     </footer>`;
 
