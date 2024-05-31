@@ -20,7 +20,7 @@ let navigationHistory = [];
 
 async function initiatePage() {
   let sandbox = false;
-  const url = document.location.href.split("http://")[1].split("/")
+  const url = document.location.href.split("https://")[1].split("/")
   if (url.length === 5 && url[1] === "circle" && url[3] === "view") {
     sandbox = true;
   } 

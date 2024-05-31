@@ -31,10 +31,8 @@ const server = new app_1.default([
     new Landing_controller_1.default(),
     new circle_controller_1.default(new services_1.CircleService()),
     new album_controller_1.default(new services_2.AlbumService()),
-    // new PostController(new PostService()),
     new user_controller_1.default(new services_3.UserService()),
     new Authentication_controller_1.default(new Authentication_service_1.AuthenticationService()),
-    // new SearchController(new SearchService())
     // new SettingController(new SettingService()),
 ]);
 server.start();

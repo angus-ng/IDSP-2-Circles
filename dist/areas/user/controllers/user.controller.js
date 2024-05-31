@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const authentication_middleware_1 = require("../../../middleware/authentication.middleware");
 const getLocalUser_1 = require("../../../helper/getLocalUser");
+const app_1 = require("../../../app");
 const javascript_time_ago_1 = __importDefault(require("javascript-time-ago"));
 const en_1 = __importDefault(require("javascript-time-ago/locale/en"));
 javascript_time_ago_1.default.addLocale(en_1.default);
@@ -27,7 +28,15 @@ class UserController {
             try {
                 let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
                 const { requestee } = req.body;
-                yield this._service.friend(loggedInUser, requestee);
+                const data = yield this._service.friend(loggedInUser, requestee);
+                if (data) {
+                    if (data.status === "sentRequest") {
+                        app_1.io.to(requestee).emit("sentFriendRequest", { requestee, requester: data.requester });
+                    }
+                    else if (data.status === "accept") {
+                        app_1.io.to(data.requester).emit("acceptFriendRequest", { requestee, requester: data.requester });
+                    }
+                }
                 res.status(200).json({ success: true, data: null });
             }
             catch (error) {
@@ -76,7 +85,8 @@ class UserController {
                 let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
                 const { requester, requestee } = req.body;
                 if (loggedInUser === requestee) {
-                    yield this._service.acceptRequest(requester, requestee);
+                    const data = yield this._service.acceptRequest(requester, requestee);
+                    app_1.io.to(requester).emit("acceptFriendRequest", { requestee, requester });
                     res.status(200).json({ success: true, data: null });
                 }
                 else {
@@ -157,22 +167,51 @@ class UserController {
                 res.status(200).json({ success: true, data: src });
             }
             catch (err) {
+                res.status(200).json({ success: true, data: null, error: "failed to get album feed" });
+            }
+        });
+        this.updateProfilePicture = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { src } = req.body;
+                let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
+                const newProfilePicture = yield this._service.updateProfilePicture(loggedInUser, src);
+            }
+            catch (err) {
+                res.status(200).json({ success: true, data: null, error: "failed to update profile picture" });
+            }
+        });
+        this.updateDisplayName = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { name } = req.body;
+                let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
+                const newDisplayName = yield this._service.updateDisplayName(loggedInUser, name);
+            }
+            catch (err) {
+            }
+        });
+        this.getInfoForMap = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
+                const info = yield this._service.getInfoForMap(loggedInUser);
+                res.status(200).json({ success: true, data: info });
+            }
+            catch (error) {
                 res.status(200).json({ success: true, data: null });
             }
         });
-<<<<<<< HEAD
         this.getFeed = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
                 const albumFeed = yield this._service.getFeed(loggedInUser);
-                res.status(200).json({ success: true, data: albumFeed });
+                if (Array.isArray(albumFeed)) {
+                    const formattedAlbumFeed = albumFeed.map(album => (Object.assign(Object.assign({}, album), { createdAt: timeAgo.format(album.createdAt) })));
+                    res.status(200).json({ success: true, data: formattedAlbumFeed });
+                }
             }
             catch (err) {
                 res.status(200).json({ success: true, data: null, error: "failed to get album feed" });
             }
         });
-=======
->>>>>>> 7f1ee5d461e9ec3323ab005ce3220eae94e61e11
         this.initializeRoutes();
         this._service = userService;
     }
@@ -188,10 +227,10 @@ class UserController {
         this.router.post(`${this.path}/get`, authentication_middleware_1.ensureAuthenticated, this.getUser);
         this.router.get(`${this.path}/ifEmailTaken/:email`, this.ifEmailTaken);
         this.router.get(`${this.path}/profilePicture`, authentication_middleware_1.ensureAuthenticated, this.profilePicture);
-<<<<<<< HEAD
         this.router.get(`${this.path}/feed`, authentication_middleware_1.ensureAuthenticated, this.getFeed);
-=======
->>>>>>> 7f1ee5d461e9ec3323ab005ce3220eae94e61e11
+        this.router.post(`${this.path}/updateProfilePicture`, authentication_middleware_1.ensureAuthenticated, this.updateProfilePicture);
+        this.router.post(`${this.path}/updateDisplayName`, authentication_middleware_1.ensureAuthenticated, this.updateDisplayName);
+        this.router.get(`${this.path}/mapInfo`, authentication_middleware_1.ensureAuthenticated, this.getInfoForMap);
     }
 }
 exports.default = UserController;
