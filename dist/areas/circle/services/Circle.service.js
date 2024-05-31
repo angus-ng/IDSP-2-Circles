@@ -27,7 +27,6 @@ class CircleService {
                     username: newCircleInput.creator
                 }
             });
-            console.log(newCircleInput);
             if (creator) {
                 //make the circle
                 const createdCircle = yield this._db.prisma.circle.create({
@@ -38,7 +37,6 @@ class CircleService {
                         isPublic: newCircleInput.isPublic
                     }
                 });
-                console.log(createdCircle);
                 //make the explicit circle user relationship
                 if (createdCircle) {
                     yield this._db.prisma.userCircle.create({
@@ -49,7 +47,6 @@ class CircleService {
                         }
                     });
                 }
-                console.log("CREATED CIRCLE", createdCircle.id);
                 return createdCircle;
             }
             return null;

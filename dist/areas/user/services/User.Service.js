@@ -599,7 +599,6 @@ class UserService {
                     }
                 }
             });
-            console.log(albums);
             return albums;
         });
     }

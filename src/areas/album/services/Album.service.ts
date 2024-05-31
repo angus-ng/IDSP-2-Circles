@@ -164,7 +164,6 @@ export class AlbumService implements IAlbumService {
                         }
                     }
                 });
-                console.log("Album unliked successfully");
             } else {
                 await this._db.prisma.like.create({
                     data: {
@@ -183,8 +182,7 @@ export class AlbumService implements IAlbumService {
                         }
                     }
                 });
-                const members = await getMembers(album.circleId, this._db)
-                console.log("Album liked successfully");
+                const members = await getMembers(album.circleId, this._db);
                 return { members, user: currentUser, albumName: album.name };
             }
         } catch (err) {
@@ -585,7 +583,6 @@ export class AlbumService implements IAlbumService {
                         }
                     }
                 });
-                console.log("Comment unliked successfully", updatedComment);
             } else {
                 const like = await this._db.prisma.like.create({
                     data: {
@@ -610,7 +607,6 @@ export class AlbumService implements IAlbumService {
                         }
                     }
                 });
-                console.log("Comment liked successfully", updatedComment);
                 return { albumName: updatedComment.album.name, user: currentUser, owner: updatedComment.userId }
             }
         } catch (err) {

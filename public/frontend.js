@@ -26,7 +26,6 @@ async function initiatePage() {
   } 
   const username = await getSessionFromBackend();
   currentLocalUser = username;
-  console.log("current User:", username);
   if (sandbox && !currentLocalUser) {
     const sandboxHelper = {
       circleId : url[2],
@@ -57,8 +56,7 @@ main();
 
 const header = document.querySelector("header");
 header.addEventListener("click", async (event) => {
-  const target = event.target.closest("button")
-  console.log(target.id)
+  const target = event.target.closest("button");
   switch (target.id) {
     case "backToExplore": {
       const { success, data } = await getUser(currentLocalUser);
@@ -438,7 +436,7 @@ header.addEventListener("click", async (event) => {
       const { success, data } = await createShareLink(circleId);
       if (success) {
         try {
-          await navigator.clipboard.writeText(`http://localhost:5000${data}`);
+          await navigator.clipboard.writeText(`https://idsp-2-circles.fly.dev/${data}`);
           await displayPopup("share link copied to clipboard");
         } catch (err) {
           console.error('Failed to copy link:', err);
@@ -571,7 +569,6 @@ async function cleanUpSectionEventListener() {
   section.removeEventListener("mousedown", sectionUploadClick, true);
   section.removeEventListener("dragover", sectionDrag, true);
   section.removeEventListener("drop", sectionDrop, true);
-  console.log("CLEANED");
 }
 
 async function sectionUploadClick(event) {

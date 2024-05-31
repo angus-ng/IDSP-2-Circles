@@ -47,7 +47,6 @@ class CircleController implements IController {
       const cldRes = await handleUpload(dataURI);
       try {
         let { latitude, longitude } = await exifr.gps(b64)
-        console.log("HERE", cldRes)
         if (cldRes.format === "heic"){
           cldRes.url = cldRes.url.split(".heic")[0] + ".jpg"
         }
@@ -118,10 +117,7 @@ class CircleController implements IController {
       }
 
       const circle = await this._service.getCircle(id)
-      console.log(circle)
       const members = await this._service.getMembers(id)
-      console.log(members)
-
       return res.status(200).json({ success: true, data: { circle, members } })
     } catch (err) {
       return res.status(200).json({ success: true, data: null, error: "unable to get circle"});
@@ -136,7 +132,6 @@ class CircleController implements IController {
     if (!member) {
       return res.status(200).json({ success: true, data: null });
     }
-    console.log("inviting", requestee, "to", circleId, "...")
     const circle = await this._service.inviteToCircle(requestee, circleId)
     if (circle) {
       io.to(requestee).emit("circleInvite", {user:loggedInUser, circleName: circle})
@@ -188,7 +183,6 @@ class CircleController implements IController {
     try {
       let loggedInUser = await getLocalUser(req, res)
       const { circleId, circleImg, circleName, isPublic } = req.body
-      console.log(req.body)
       if (!circleId || !circleImg || !circleName || typeof isPublic !== "boolean") {
         return res.status(200).json({ success: true, data: null, error: "missing parameters" })
       }
@@ -255,8 +249,7 @@ class CircleController implements IController {
   }
   private getCircleRestricted = async (req: Request, res: Response) => {
     try {
-      const { id, accessToken } = req.params
-      console.log(id, accessToken)
+      const { id, accessToken } = req.params;
       if (!id || !accessToken) {
         return res.status(200).json({ success: true, data: null, error: "invalid request" })
       }

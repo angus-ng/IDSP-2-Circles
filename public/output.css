@@ -1311,6 +1311,10 @@ select {
   height: 100vh;
 }
 
+.h-14 {
+  height: 3.5rem;
+}
+
 .max-h-400 {
   max-height: 400px;
 }
@@ -1465,6 +1469,10 @@ select {
 
 .w-screen {
   width: 100vw;
+}
+
+.w-\[400px\] {
+  width: 400px;
 }
 
 .max-w-430 {
@@ -1959,6 +1967,11 @@ select {
 .py-4 {
   padding-top: 1rem;
   padding-bottom: 1rem;
+}
+
+.px-2 {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }
 
 .pb-0 {

@@ -255,7 +255,6 @@ async function displayConfirmationPopup(activity, helperObj) {
         }
       }
       if (activity === "delete album") {
-        console.log(helperObj)
         const { success, error } = await deleteAlbum(helperObj.albumId)
         if (success && !error) {
           closeWindowAfterAction();
@@ -402,8 +401,6 @@ async function displayProfile(userData) {
   
   const origin = leftHeaderButton.getAttribute("origin");
   const secondaryOrigin = leftHeaderButton.getAttribute("secondaryOrigin");
-  console.log(secondaryOrigin)
-
   if (origin === "fromSearch") {
     if (secondaryOrigin === "fromFriendsList") {
       leftHeaderButton.id = "friendsBackButton";
@@ -424,8 +421,6 @@ async function displayProfile(userData) {
   if (currentLocalUser === user && secondaryOrigin !== "fromFriendsList" && origin !== "fromFriendRequests") {
     leftHeaderButton.classList.add("hidden");
   }
-
-  console.log(navigationHistory, navigationHistory.length)
   
   if (navigationHistory.length === 0 || navigationHistory[navigationHistory.length - 1] !== user) {
     navigationHistory.push(user);

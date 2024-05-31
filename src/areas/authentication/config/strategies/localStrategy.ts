@@ -21,7 +21,6 @@ const localStrategy = new LocalStrategy(
   async (email: string, password: string, done: VerifyCallback) => {
     try {
       const user = await db.getUserByEmailAndPassword(email, password);
-      console.log(user)
       done (null, user)
     } catch (error: any) {
       done(error)

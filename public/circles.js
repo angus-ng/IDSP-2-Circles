@@ -5,7 +5,6 @@ async function displayCreateCircle() {
 
     leftHeaderButton.classList.remove("hidden");
     leftHeaderButton.innerHTML = backIcon;
-    console.log(origin)
     if (origin === "fromCreateAlbum") {
       leftHeaderButton.id = "albumConfirmationBack";
     } else {
@@ -291,8 +290,6 @@ async function displayCircle(circleData) {
     const likedClass = userLiked ? "liked" : "";
     const heartColor = userLiked ? "#FF4646" : "none";
     const heartColorStroke = userLiked ? "#FF4646" : "white";
-    // CHANGE ME : placeholder image 
-    console.log(obj.photos[0])
     return `
       <div class="w-full h-min relative album" id="${obj.id}" circleid="${obj.circleId}">
         <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.photos[0]? obj.photos[0].src : "/placeholder_image.svg"}"/>

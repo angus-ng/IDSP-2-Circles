@@ -40,7 +40,6 @@ class AlbumController implements IController {
   }
 
   private createAlbum = async (req: Request, res: Response) => {
-    console.log(req.body)
     try {
       let loggedInUser = await getLocalUser(req, res)
       const { photos, isCircle, name, location } = req.body
@@ -55,10 +54,8 @@ class AlbumController implements IController {
         creator: loggedInUser,
         location: location
       }
-      console.log(albumObj)
       const member = await this._service.checkMembership(id, loggedInUser, true)
       if (!member) {
-        console.log("SHIT")
         return res.status(200).json({ success: true, data: null });
       }
       const newAlbum = await this._service.createAlbum(albumObj)
@@ -135,7 +132,6 @@ class AlbumController implements IController {
       const { id } = req.params
       //ensure its public / user is a member of the circle
       let loggedInUser = await getLocalUser(req, res)
-      console.log(loggedInUser, id)
       const publicStatus = await this._service.checkPublic(id)
       if (!publicStatus) {
         const member = await this._service.checkMembership(id, loggedInUser)
@@ -189,7 +185,6 @@ class AlbumController implements IController {
     try {
       let loggedInUser = await getLocalUser(req, res)
       const { message, albumId, commentId } = req.body;
-      console.log(message, albumId, commentId);
       const publicStatus = await this._service.checkPublic(albumId)
       if (!publicStatus) {
         const member = await this._service.checkMembership(albumId, loggedInUser);

@@ -14,7 +14,6 @@ export class CircleService implements ICircleService {
             username: newCircleInput.creator
         }
     })
-    console.log(newCircleInput)
 
     if (creator) {
         //make the circle
@@ -26,7 +25,6 @@ export class CircleService implements ICircleService {
                 isPublic: newCircleInput.isPublic
             }
         })
-        console.log(createdCircle)
         //make the explicit circle user relationship
         if (createdCircle) {
             await this._db.prisma.userCircle.create({
@@ -37,7 +35,6 @@ export class CircleService implements ICircleService {
                 }
             })
         }
-        console.log("CREATED CIRCLE", createdCircle.id)
         return createdCircle;
     }
     return null;

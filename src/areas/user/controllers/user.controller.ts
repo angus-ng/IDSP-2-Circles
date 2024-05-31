@@ -147,22 +147,17 @@ class UserController implements IController {
       let { username } = req.body
 
       const profileObj = await this._service.getUser(username, loggedInUser)
-      console.log(loggedInUser, username)
-      console.log(profileObj)
       res.status(200).json({ success: true, data: profileObj })
     } catch (error) {
-      console.log(error)
       res.status(200).json({ success: true, data: null, error: error })
     }
   }
   private ifEmailTaken = async (req: Request, res: Response) => {
     try {
       const { email } = req.params
-      console.log(email)
       const emailTaken = await this._service.ifEmailTaken(email)
       res.status(200).json({ success: emailTaken })
     } catch (error) {
-      console.log(error)
       res.status(200).json({ error: error })
     }
   }

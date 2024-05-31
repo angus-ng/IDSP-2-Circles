@@ -29,7 +29,6 @@ class AlbumController {
         this.path = "/album";
         this.router = (0, express_1.Router)();
         this.createAlbum = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            console.log(req.body);
             try {
                 let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
                 const { photos, isCircle, name, location } = req.body;
@@ -44,10 +43,8 @@ class AlbumController {
                     creator: loggedInUser,
                     location: location
                 };
-                console.log(albumObj);
                 const member = yield this._service.checkMembership(id, loggedInUser, true);
                 if (!member) {
-                    console.log("SHIT");
                     return res.status(200).json({ success: true, data: null });
                 }
                 const newAlbum = yield this._service.createAlbum(albumObj);
@@ -121,7 +118,6 @@ class AlbumController {
                 const { id } = req.params;
                 //ensure its public / user is a member of the circle
                 let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
-                console.log(loggedInUser, id);
                 const publicStatus = yield this._service.checkPublic(id);
                 if (!publicStatus) {
                     const member = yield this._service.checkMembership(id, loggedInUser);
@@ -171,7 +167,6 @@ class AlbumController {
             try {
                 let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
                 const { message, albumId, commentId } = req.body;
-                console.log(message, albumId, commentId);
                 const publicStatus = yield this._service.checkPublic(albumId);
                 if (!publicStatus) {
                     const member = yield this._service.checkMembership(albumId, loggedInUser);

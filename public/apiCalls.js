@@ -125,7 +125,6 @@ async function getAlbum(albumId) {
 
 async function handleCreateAlbum(albumObj) {
   try {
-    console.log(albumObj);
     if (!albumObj.name) {
       return { success: true, data: null, error: "Missing album name" };
     }
@@ -176,7 +175,6 @@ async function addPhotosToAlbum(albumId, albumObj) {
     });
 
     const jsonResponse = await response.json();
-    console.log(jsonResponse)
     return jsonResponse;
   } catch (err) {
     return { success: false, data: null, error: err.message };
@@ -691,8 +689,7 @@ async function createShareLink (circleId) {
       body: JSON.stringify({ circleId })
     });
     const jsonResponse = await response.json();
-    console.log(jsonResponse)
-    return jsonResponse
+    return jsonResponse;
   } catch (err) {
 
   }
@@ -707,8 +704,7 @@ async function getSandboxData (sandboxHelper) {
       }
     });
     const jsonResponse = await response.json();
-    console.log(jsonResponse)
-    return jsonResponse
+    return jsonResponse;
   } catch (err) {
 
   }

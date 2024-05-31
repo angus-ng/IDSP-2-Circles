@@ -547,7 +547,6 @@ export class UserService implements IUserService {
         }
       }
     })
-    console.log(albums)
     return albums
   }
 }

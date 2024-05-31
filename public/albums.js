@@ -53,8 +53,6 @@ async function displayPhotoUpload(albumData) {
       const files = event.target.files;
       for (let i = 0; i < files.length; i++) {
         const file = await uploadFile(files[i]);
-        console.log(file)
-
         albumPhotos.push(file);
       }
       if (files.length > 0) {
@@ -112,7 +110,6 @@ function displayPhotoUploadPreview(albumPhotos) {
 
     const img = document.createElement("img");
     img.className = "rounded-12.75 h-image w-image object-cover";
-    console.log(photo)
     img.src = photo.photoSrc.url;
     img.alt = `image ${index}`;
 
@@ -224,7 +221,6 @@ function displayPhotoUploadPreview(albumPhotos) {
       const files = event.target.files;
       for (let i = 0; i < files.length; i++) {
         const file = await uploadFile(files[i]);
-        console.log(file)
         albumPhotos.push(file);
       }
       
@@ -598,7 +594,6 @@ async function displayPhoto(photoSrc) {
 }
 
 async function displayListOfAlbums(data, user, profile = false) {
-  console.log("PROFILE", data)
   const albumList = data.Album.map((obj) => {
     let albumName = document.createElement("p");
     albumName.className = "text-white text-shadow shadow-black";
@@ -648,7 +643,6 @@ async function displayComments(albumId, currentUserProfilePicture, circleId) {
   const { success, data } = await getComments(albumId);
   //return early do something on error
   if (!(success && data)) {
-    console.log("could not fetch comment data");
     return;
   }
   const circleResponse = await getCircle(circleId)
@@ -657,8 +651,6 @@ async function displayComments(albumId, currentUserProfilePicture, circleId) {
   }
   const currentUserMembership = circleMembers.find((member) => member.user.username === currentLocalUser)
   const circleOwner = circleMembers.find((member) => member.user["owner"] !== undefined)
-  console.log(data)
-  console.log("OWNER", circleOwner)
   const showCommentsRecursively = (comments, level = 0) => {
     const arr = comments.map((comment) => {
       const likeDiv = document.createElement("div");
@@ -849,7 +841,6 @@ async function displayComments(albumId, currentUserProfilePicture, circleId) {
   });
 }
 async function displayAlbumEditMode(albumId, ownerId, memberStatus) {
-  console.log(memberStatus)
   if (currentLocalUser === ownerId || memberStatus === "true"){
     document.querySelectorAll(".deletePhoto").forEach((photo) => photo.classList.remove("hidden"))
     rightHeaderButton.innerHTML = `

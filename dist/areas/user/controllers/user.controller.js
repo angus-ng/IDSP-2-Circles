@@ -138,9 +138,6 @@ class UserController {
             try {
                 let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
                 let { username } = req.body;
-                const profileObj = yield this._service.getUser(username, loggedInUser);
-                console.log(loggedInUser, username);
-                console.log(profileObj);
                 res.status(200).json({ success: true, data: profileObj });
             }
             catch (error) {

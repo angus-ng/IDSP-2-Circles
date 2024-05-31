@@ -33,7 +33,6 @@ class CircleController {
                 const cldRes = yield (0, HandleSingleUpload_1.handleUpload)(dataURI);
                 try {
                     let { latitude, longitude } = yield exifr_1.default.gps(b64);
-                    console.log("HERE", cldRes);
                     if (cldRes.format === "heic") {
                         cldRes.url = cldRes.url.split(".heic")[0] + ".jpg";
                     }
@@ -88,7 +87,6 @@ class CircleController {
                 const { id } = req.params;
                 //ensure user is a member of the circle
                 let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
-                console.log(id);
                 const publicStatus = yield this._service.checkPublic(id);
                 if (!publicStatus) {
                     const member = yield this._service.checkMembership(id, loggedInUser);
@@ -97,9 +95,7 @@ class CircleController {
                     }
                 }
                 const circle = yield this._service.getCircle(id);
-                console.log(circle);
                 const members = yield this._service.getMembers(id);
-                console.log(members);
                 return res.status(200).json({ success: true, data: { circle, members } });
             }
             catch (err) {
@@ -113,7 +109,6 @@ class CircleController {
             if (!member) {
                 return res.status(200).json({ success: true, data: null });
             }
-            console.log("inviting", requestee, "to", circleId, "...");
             const circle = yield this._service.inviteToCircle(requestee, circleId);
             if (circle) {
                 app_1.io.to(requestee).emit("circleInvite", { user: loggedInUser, circleName: circle });
@@ -162,7 +157,6 @@ class CircleController {
             try {
                 let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
                 const { circleId, circleImg, circleName, isPublic } = req.body;
-                console.log(req.body);
                 if (!circleId || !circleImg || !circleName || typeof isPublic !== "boolean") {
                     return res.status(200).json({ success: true, data: null, error: "missing parameters" });
                 }
@@ -233,7 +227,6 @@ class CircleController {
         this.getCircleRestricted = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const { id, accessToken } = req.params;
-                console.log(id, accessToken);
                 if (!id || !accessToken) {
                     return res.status(200).json({ success: true, data: null, error: "invalid request" });
                 }
