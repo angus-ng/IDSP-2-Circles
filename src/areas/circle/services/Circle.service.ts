@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import DBClient from "../../../PrismaClient";
 import ICircle from "../../../interfaces/circle.interface";
 import ICircleService from "./ICircleService";
@@ -133,29 +134,6 @@ export class CircleService implements ICircleService {
         throw new Error(error)
     }
   }
-
-//   async listCircles (currentUser:string): Promise<{circle: Circle}[]> {
-//     try {
-//         const user = await this._db.prisma.user.findUnique({
-//             where: {
-//                 username: currentUser
-//             }
-//         })
-//         const circleArr = await this._db.prisma.userCircle.findMany({
-//             select: {
-//                 circle: true
-//             },
-//             where: {
-//                 username: user!.username
-//             }
-//         })
-//         console.log(circleArr)
-    
-//         return circleArr;
-//     } catch (error:any) {
-//         throw new Error(error)
-//     }
-//   }
 
   async getMembers (circleId: string) {
     let members = await this._db.prisma.userCircle.findMany({
@@ -411,4 +389,91 @@ export class CircleService implements ICircleService {
             throw err;
         }
     }
+    async createShareLink(shareHelper: { loggedInUser: string; circleId: string; }): Promise<string> {
+        try {
+            const circle = await this._db.prisma.circle.findUnique({
+                where: {
+                    id: shareHelper.circleId
+                }, 
+                select: {
+                    ownerId: true,
+                    UserCircle: true
+                }
+            })
+            if (!circle) {
+                throw new Error ("could not find circle")
+            }
+            let isMod = false;
+            const member = circle.UserCircle.find((user) => {
+                user.username === shareHelper.loggedInUser
+            })
+            if (member) {
+                isMod = member.mod
+            }
+            if (shareHelper.loggedInUser === circle.ownerId || isMod) {
+                const expiry = new Date(new Date().setDate(new Date().getDate() + 7))
+                const token = await this._db.prisma.token.create({
+                    data: {
+                        expiresAt: expiry,
+                        creatorId: shareHelper.loggedInUser,
+                        circleId: shareHelper.circleId,
+                        accessToken: randomUUID()
+                    }
+                })
+                return `/circle/${shareHelper.circleId}/view/${token.accessToken}`
+            } else {
+                throw new Error("insufficient permissions to create share link")
+            }
+        } catch (err) {
+            console.log(err)
+            throw err;
+        }
+    }
+    async getCircleWithToken (circleId: string, token: string): Promise<any | null> {
+        try {
+            const tokenObj = await this._db.prisma.token.findFirst({ 
+                where: {
+                    circleId: circleId,
+                    accessToken: token
+                }
+            })
+            const requestTime = new Date()
+            if (!tokenObj || (tokenObj.expiresAt.valueOf() - requestTime.valueOf()) <= 0) {
+                throw new Error("invalid request")
+            }
+            const circle = await this._db.prisma.circle.findUnique({
+                select: {
+                    id: true,
+                    name: true,
+                    picture: true,
+                    albums: {
+                        select: {
+                            _count: {
+                                select: {
+                                    photos: true
+                                }
+                            },
+                            name: true,
+                            photos: {
+                                select: {
+                                    src: true
+                                }
+                            }
+                        }
+                    },
+                    _count: {
+                        select: {
+                            UserCircle : true
+                        }
+                    }
+                },
+                where: {
+                    id: circleId
+                }
+            })
+            return circle;
+        } catch (error:any) {
+            throw new Error(error)
+        }
+      }
 }

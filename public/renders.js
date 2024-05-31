@@ -116,9 +116,7 @@ async function displayNavBar() {
 }
 
 async function displayNewModal() {
-  const modal = document.querySelector("#modal");
-  modal.classList.remove("hidden");
-  modal.classList.add("shown");
+  openModal();
   const closeModalButton = document.querySelector("#closeModalButton");
   closeModalButton.classList.remove("hidden");
   const modalContent = document.querySelector("#modalContent");
@@ -238,6 +236,17 @@ async function displayConfirmationPopup(activity, helperObj) {
     </svg>`;
   }
 
+  if (activity === "delete photo") {
+    confirmationDetails.innerHTML = `
+      <p class="text-14">Deleting a photo is permanent.</p>
+      <p class="text-14">This action can not be undone.</p>`;
+    contextButton.textContent = "Delete";
+    confirmationIcon.innerHTML = `
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M4.25 3.55357V4.57143H1.0625C0.780707 4.57143 0.510456 4.67867 0.311199 4.86955C0.111942 5.06044 0 5.31933 0 5.58929C0 5.85924 0.111942 6.11813 0.311199 6.30902C0.510456 6.4999 0.780707 6.60714 1.0625 6.60714H1.4875L2.64208 17.6679C2.69475 18.1699 2.94015 18.6353 3.33069 18.9738C3.72122 19.3123 4.22907 19.4998 4.75575 19.5H12.2442C12.7709 19.4998 13.2788 19.3123 13.6693 18.9738C14.0599 18.6353 14.3052 18.1699 14.3579 17.6679L15.5125 6.60714H15.9375C16.2193 6.60714 16.4895 6.4999 16.6888 6.30902C16.8881 6.11813 17 5.85924 17 5.58929C17 5.31933 16.8881 5.06044 16.6888 4.86955C16.4895 4.67867 16.2193 4.57143 15.9375 4.57143H12.75V3.55357C12.75 2.74371 12.4142 1.96703 11.8164 1.39437C11.2186 0.821715 10.4079 0.5 9.5625 0.5H7.4375C6.59212 0.5 5.78137 0.821715 5.1836 1.39437C4.58582 1.96703 4.25 2.74371 4.25 3.55357ZM7.4375 2.53571C7.15571 2.53571 6.88546 2.64295 6.6862 2.83384C6.48694 3.02472 6.375 3.28362 6.375 3.55357V4.57143H10.625V3.55357C10.625 3.28362 10.5131 3.02472 10.3138 2.83384C10.1145 2.64295 9.84429 2.53571 9.5625 2.53571H7.4375ZM5.7375 7.28571C5.87707 7.27895 6.01666 7.29864 6.14827 7.34364C6.27989 7.38864 6.40095 7.45807 6.50451 7.54795C6.60808 7.63783 6.69212 7.74641 6.75182 7.86745C6.81151 7.9885 6.8457 8.11964 6.85242 8.25336L7.242 15.7176C7.25239 15.9851 7.15236 16.2458 6.96357 16.4432C6.77479 16.6405 6.51244 16.7587 6.23336 16.7721C5.95428 16.7855 5.68093 16.693 5.47251 16.5147C5.2641 16.3364 5.13739 16.0866 5.11983 15.8194L4.73025 8.35514C4.723 8.22154 4.7433 8.08789 4.79001 7.96181C4.83672 7.83574 4.90891 7.71973 5.00246 7.6204C5.09601 7.52108 5.20908 7.44039 5.3352 7.38297C5.46133 7.32554 5.59803 7.29249 5.7375 7.28571ZM11.2625 7.28571C11.402 7.29232 11.5387 7.3252 11.6649 7.38246C11.7911 7.43973 11.9043 7.52026 11.9979 7.61946C12.0916 7.71866 12.164 7.83457 12.2108 7.96057C12.2577 8.08657 12.2782 8.22019 12.2712 8.35379L11.8816 15.8181C11.864 16.0852 11.7373 16.335 11.5289 16.5133C11.3205 16.6916 11.0471 16.7841 10.7681 16.7707C10.489 16.7573 10.2266 16.6392 10.0378 16.4418C9.84906 16.2444 9.74903 15.9838 9.75942 15.7163L10.149 8.252C10.1633 7.98266 10.2886 7.72976 10.4974 7.54885C10.7061 7.36793 10.9813 7.27242 11.2625 7.28571Z" fill="#0E0E0E"/>
+    </svg>`;
+  }
+
   const confirmEventHandler = async (event) => {
     event.stopImmediatePropagation();
     const cancelButton = event.target.closest("#cancelButton");
@@ -279,6 +288,29 @@ async function displayConfirmationPopup(activity, helperObj) {
           if (success && data) {
             closeWindowAfterAction();
             await displayExplore(data);
+          }
+        }
+      }
+      if (activity === "delete album") {
+        console.log(helperObj)
+        const { success, error } = await deleteAlbum(helperObj.albumId)
+        if (success && !error) {
+          closeWindowAfterAction();
+          const { success, data } = await getCircle(helperObj.circleId)
+          if (success && data) {
+            leftHeaderButton.id = "backToExplore"
+            leftHeaderButton.setAttribute("circleId", helperObj.circleId)
+            await displayCircle(data);
+          }
+        }
+      }
+      if (activity === "delete photo") {
+        const { success, error } = await deletePhoto(helperObj.photoId)
+        if (success && !error) {
+          closeWindowAfterAction();
+          const { success, data } = await getAlbum(helperObj.albumId)
+          if (success && data) {
+            await displayAlbum(data);
           }
         }
       }
@@ -448,9 +480,14 @@ async function displayProfile(userData) {
 
   const friendText = userData._count.friends === 1 ? "Friend" : "Friends";
 
+  const settings = document.createElement("div");
+  settings.id = "settings";
+  settings.className = "absolute top-0 right-0 w-6 h-6 items-center justify-center cursor-pointer";
+  settings.innerHTML = settingsIcon;
+
   pageContent.innerHTML = `
   <div id="profilePage" class="relative pt-2 pb-16 mb-4 w-full">
-    ${currentLocalUser === userData.username ? `<div id="settings" class="absolute top-0 right-0 w-6 h-6 items-center justify-center cursor-pointer"><img src="/lightmode/settings_icon.svg"></div>` : ""}
+    ${currentLocalUser === userData.username ? `${settings.outerHTML}` : ""}
     <div class="flex justify-center mb-4">
       <img id="profilePicture" src="${userData.profilePicture}" class="w-110 h-110 object-cover rounded-full"/>
     </div>
@@ -473,9 +510,7 @@ async function displayProfile(userData) {
         </div>
       </div>
     </div>
-    <div id="addAsFriend" class="flex justify-center">
-
-    </div>
+    <div id="addAsFriend" class="flex justify-center"></div>
     <div id="profileTabs" class="w-full justify-center mx-auto">
       <ul class="flex flex-row w-full justify-center -mb-px text-sm font-medium text-center text-dark-grey gap-6">
         <li id="albumTab" class="me-2 w-full mr-0">
@@ -1061,5 +1096,27 @@ async function displayExplore(userData) {
     const x = event.pageX - circleList.offsetLeft;
     const walk = (x - startX) * 1.5;
     circleList.scrollLeft = scrollLeft - walk;
+  });
+}
+
+async function displaySandboxNav() {
+  const nav = document.querySelector("#nav");
+  nav.classList.remove("hidden");
+  nav.innerHTML = `
+  <div class="border-b border-dark-grey"></div>
+    <footer class="w-full flex justify-center items-center gap-4 pt-4 pb-5 px-6 bg-light-mode-bg text-grey text-13">
+        <img src="/lightmode/logo_with_wordmark.svg" alt="Circles Logo" class="h-12 w-12">
+        <a id="landing" class="flex flex-col items-center cursor-pointer">
+            <p class="text-body mt-1">Login/Register to Circles!</p>
+        </a>
+    </footer>`;
+
+  const navBar = document.querySelector("footer");
+  navBar.addEventListener("click", async function (event) {
+    event.preventDefault();
+    const landing = event.target.closest("#landing");
+    if (landing) {
+      await displayLoginPage();
+    } 
   });
 }
