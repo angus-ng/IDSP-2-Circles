@@ -144,22 +144,13 @@ class AlbumController implements IController {
         }
       }
 
-      const album = await this._service.getAlbum(id)
-      console.log(album)
+      const album = await this._service.getAlbum(id);
       res.status(200).json({ success: true, data: album });
 
     } catch (err) {
       res.status(200).json({ success: true, data: null, err: "Could not fetch album" })
     }
   }
-
-  // private getAlbumList = async (req:Request, res:Response) => {
-  //   let loggedInUser = await getLocalUser(req, res)
-  //   console.log (loggedInUser)
-  //   const albums = await this._service.listAlbums(loggedInUser)
-
-  //   res.json({success: true, data: albums});
-  // }
 
   private getComments = async (req: Request, res: Response) => {
     try {
@@ -259,7 +250,7 @@ class AlbumController implements IController {
       let loggedInUser = await getLocalUser(req, res)
       const { id } = req.params
       await this._service.deleteAlbum(id, loggedInUser);
-      res.json({success: true, data: null})
+      res.json({ success: true, data: null })
     } catch (err) {
       res.json({ success: true, data: null, error: "failed to delete album" });
     }
@@ -281,9 +272,9 @@ class AlbumController implements IController {
       let loggedInUser = await getLocalUser(req, res)
       const { albumId, albumName } = req.body
       await this._service.updateAlbum(albumId, albumName, loggedInUser)
-      res.json({success: true, data: null})
+      res.json({ success: true, data: null })
     } catch (err) {
-      res.json({ success: true, data: null, error: "failed to update album"})
+      res.json({ success: true, data: null, error: "failed to update album" })
     }
   }
 }

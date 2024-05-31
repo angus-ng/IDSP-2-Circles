@@ -166,7 +166,7 @@ async function addPhotosToAlbum(albumId, albumObj) {
     if (!albumObj.photos || albumObj.photos.length === 0) {
       return { success: false, data: null, error: "No new photos" };
     }
-
+    
     let response = await fetch(`/album/${albumId}/addPhotos`, {
       method: "POST",
       headers: {
@@ -176,6 +176,7 @@ async function addPhotosToAlbum(albumId, albumObj) {
     });
 
     const jsonResponse = await response.json();
+    console.log(jsonResponse)
     return jsonResponse;
   } catch (err) {
     return { success: false, data: null, error: err.message };

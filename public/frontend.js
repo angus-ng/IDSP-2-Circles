@@ -6,7 +6,6 @@ const rightButtonSpan = document.querySelector(".rightButtonSpan");
 const rightHeaderButton = document.querySelector(".rightButton");
 pageName.setAttribute("page", "");
 const origin = pageName.getAttribute("origin");
-const destination = pageName.getAttribute("destination");
 
 let currentLocalUser;
 let isPrivacyPublic = false;
@@ -146,10 +145,8 @@ header.addEventListener("click", async (event) => {
     case "updateAlbum": {
       const albumId = leftHeaderButton.getAttribute("albumId");
       const albumName = document.querySelector("#albumNameInput").value;
-      const helperObj = {
-        albumId,
-        albumName
-      }
+      const helperObj = { albumId, albumName }
+
       const { success, error} = await updateAlbum(helperObj)
       if (success && !error) {
         const { success, data } = await getAlbum(helperObj.albumId)
@@ -169,6 +166,7 @@ header.addEventListener("click", async (event) => {
       const albumId = leftHeaderButton.getAttribute("albumId");
       const { success, data }= await getAlbum(albumId);
       if (success && data) {
+        albumPhotos = [];
         await displayAlbum(data);
       }
       break;
@@ -189,7 +187,9 @@ header.addEventListener("click", async (event) => {
       break;
     }
     case "friendsBackButton": {
-      navigationHistory.pop();
+      if (navigationHistory.length > 1) {
+        navigationHistory.pop();
+      }
       const previousUser = navigationHistory[navigationHistory.length - 1];
       const { success, data } = await getUser(previousUser);
       if (success && data) {
@@ -238,6 +238,7 @@ header.addEventListener("click", async (event) => {
     case "closeButton": {
       newCircleNameInput = "";
       nav.classList.remove("hidden");
+      albumPhotos = [];
       const { success, data } = await getUser(currentLocalUser);
       if (success && data) {
         await displayExplore(data);
@@ -262,17 +263,18 @@ header.addEventListener("click", async (event) => {
       }
       break;
     }
+    case "addLocationNext" : {
+      await displayAlbumConfirmation()
+      leftHeaderButton.setAttribute("origin", "fromAlbumCreation")
+      break;
+    }
     case "addLocationSkip": {
       await displayAlbumConfirmation();
+      leftHeaderButton.setAttribute("origin", "fromAlbumCreation")
       break;
     }
     case "albumConfirmationBack": {
-      const { success, data } = await getUser(currentLocalUser);
-      if (success && data) {
-        nav.classList.remove("hidden");
-        const circleRender = await displayListOfCircles(data);
-        showCreateOrAddToCircle(circleRender);
-      }
+      await displayAddLocation()
       break;
     }
     case "addCircleBack": {
@@ -296,6 +298,7 @@ header.addEventListener("click", async (event) => {
           await displayPopup("album created");
           leftHeaderButton.setAttribute("albumId", albumId);
           await displayAlbum(data);
+          albumPhotos = [];
           nav.classList.remove("hidden");
         }
       }
@@ -442,6 +445,7 @@ header.addEventListener("click", async (event) => {
       } else {
         console.error('Failed to create share link');
       }
+      break;
     }
     case "backToAlbumSandbox": {
       leftHeaderButton.innerHTML = "";
@@ -487,9 +491,7 @@ modal.addEventListener("click", async function (event) {
   const createAlbumModalButton = event.target.closest(
     "#createAlbumModalButton"
   );
-  const createCircleModalButton = event.target.closest(
-    "#createCircleModalButton"
-  );
+  const createCircleModalButton = event.target.closest("#createCircleModalButton");
   if (closeModalButton) {
     if (modal.classList.contains("shown")) {
       closeModal();
@@ -554,9 +556,7 @@ async function updateCheckbox() {
 
 async function getAlbumName() {
   const albumNameInput = document.querySelector("#albumName");
-  console.log(document.querySelector("#albumName").value, albumNameInput, "getAlbumName")
   if (albumNameInput) {
-    console.log("helpme")
     const albumName = albumNameInput.value;
     return albumName;
   } else {
@@ -614,8 +614,8 @@ async function showCreateOrAddToCircle(circleRender) {
       <p>to be added to</p>
     </div>
     <div id="createNewCircle" class="grid place-items-center mb-2">
-      <img src="/create_new_circle.svg" class="rounded-full w-100 h-100 object-cover mb-2"/></img>
-      <p class="text-center text-secondary">create new circle</p>
+      ${createNewCircleIcon}
+      <p class="text-center text-secondary mt-4">create new circle</p>
     </div>
     <div id="circleList" class="m-auto grid grid-cols-3 gap-4 mt-6 mb-12 place-items-center">
       ${circleRender.join("")}
@@ -665,10 +665,8 @@ const displayCircleEditMode = (circleId, ownerId) => {
 
   rightHeaderButton.innerHTML = `
   <div class="flex flex-row flex-nowrap gap-2 items-center">
-  ${currentLocalUser === ownerId ? `
-  <button id="deleteCircle" class="w-6 h-6">
-    ${deleteIcon}
-  </button>` : ""}
+    ${currentLocalUser === ownerId ? `
+    <button id="deleteCircle" class="w-6 h-6">${deleteIcon}</button>` : ""}
     <button id="updateCircle" circleid="${circleId}" class="text-lg">Save</button>
   </div>`;
 
@@ -723,9 +721,7 @@ const displayCircleEditMode = (circleId, ownerId) => {
   circleNameInput.type = "text";
   circleNameInput.placeholder = "Add a circle name";
   circleNameInput.value = circleName.textContent;
-  circleNameInput.className =
-    "max-w-full text-center bg-transparent text-20 text-black font-light border-dark-grey";
+  circleNameInput.className = "max-w-full text-center bg-transparent text-20 text-black font-light border-dark-grey";
   circleName.remove();
   document.querySelector("#circleName").append(circleNameInput);
-
 }

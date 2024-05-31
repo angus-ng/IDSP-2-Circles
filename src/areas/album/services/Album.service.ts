@@ -261,6 +261,7 @@ export class AlbumService implements IAlbumService {
     }
 
     async addPhotos(currentUser: string, id: string, newPhotos: any[]): Promise<any> {
+        const album = await this.getAlbum(id)
         const hasPermission = await this.checkMembership(id, currentUser);
         if (!hasPermission) {
             throw new Error("User does not have permission to update this album.");
@@ -287,19 +288,10 @@ export class AlbumService implements IAlbumService {
                     }
                 })
             }
-            return newPhotos
+            return { newPhotos, album }
         }
-        return this.getAlbum(id);
+        return album;
     }
-
-    //   async listAlbums (currentUser:string): Promise<{album: Album}[] | void> { // remove this void when implemented
-    //     const user = await this._db.prisma.user.findUnique({
-    //         where: {
-    //             username: currentUser
-    //         }
-    //     })
-    //     //return new Error("Not implemented");
-    //   }
 
     async getComments(albumId: string): Promise<any> {
         let album = await this._db.prisma.album.findUnique({
@@ -725,7 +717,7 @@ export class AlbumService implements IAlbumService {
                 }
             })
             if (!album) {
-                throw new Error ("cannot find album")
+                throw new Error("cannot find album")
             }
             let isMod = false;
             const member = album.circle.UserCircle.find((user) => {
@@ -738,7 +730,7 @@ export class AlbumService implements IAlbumService {
                 await this._db.prisma.album.update({
                     where: {
                         id: albumId
-                    }, 
+                    },
                     data: {
                         name: albumName
                     }
