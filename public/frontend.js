@@ -138,6 +138,7 @@ header.addEventListener("click", async (event) => {
       const { success, data } = await getCircle(circleId);
       if (success && data) {
         nav.classList.remove("hidden");
+        albumPhotos = [];
         await displayCircle(data);
       }
       break;
@@ -166,6 +167,7 @@ header.addEventListener("click", async (event) => {
       const albumId = leftHeaderButton.getAttribute("albumId");
       const { success, data }= await getAlbum(albumId);
       if (success && data) {
+        albumPhotos = [];
         await displayAlbum(data);
       }
       break;
@@ -235,6 +237,7 @@ header.addEventListener("click", async (event) => {
     case "closeButton": {
       newCircleNameInput = "";
       nav.classList.remove("hidden");
+      albumPhotos = [];
       const { success, data } = await getUser(currentLocalUser);
       if (success && data) {
         await displayExplore(data);

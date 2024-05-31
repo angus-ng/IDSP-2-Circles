@@ -546,6 +546,7 @@ let ownedPhotosCount = 0
     }
 
     if (addMorePhotos) {
+      nav.classList.add("hidden");
       const albumId = addMorePhotos.getAttribute("albumId");
       const albumData = await getAlbum(albumId);
       await displayPhotoUpload(albumData);
