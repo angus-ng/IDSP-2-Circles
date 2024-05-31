@@ -39,6 +39,7 @@ model User {
   friendOf        Friend[]        @relation("friend_2")
   circleInvites   CircleInvite[]  @relation("circle_invitee")
   tokens          Token[]
+  Activity        Activity[]
 }
 
 model Friend {
@@ -78,43 +79,47 @@ model Album {
   circleId  String
   lat       String?
   long      String?
+  Activity  Activity[]
 }
 
 model Photo {
-  id      String  @id @default(cuid())
-  src     String
-  album   Album   @relation(fields: [albumId], references: [id], onDelete: Cascade)
-  albumId String
-  poster  User    @relation(fields: [userId], references: [username])
-  userId  String
-  lat     String?
-  long    String?
+  id       String     @id @default(cuid())
+  src      String
+  album    Album      @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  albumId  String
+  poster   User       @relation(fields: [userId], references: [username])
+  userId   String
+  lat      String?
+  long     String?
+  Activity Activity[]
 }
 
 model Comment {
-  id        String    @id @default(cuid())
-  createdAt DateTime  @default(now())
+  id        String     @id @default(cuid())
+  createdAt DateTime   @default(now())
   message   String?
-  user      User?     @relation(fields: [userId], references: [username])
+  user      User?      @relation(fields: [userId], references: [username])
   userId    String?
-  likeCount Int       @default(0)
+  likeCount Int        @default(0)
   likes     Like[]
-  album     Album     @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  album     Album      @relation(fields: [albumId], references: [id], onDelete: Cascade)
   albumId   String
-  replies   Comment[] @relation("replies")
-  parent    Comment?  @relation("replies", fields: [parentId], references: [id])
+  replies   Comment[]  @relation("replies")
+  parent    Comment?   @relation("replies", fields: [parentId], references: [id])
   parentId  String?
+  Activity  Activity[]
 }
 
 model Like {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [username])
+  id        String     @id @default(cuid())
+  createdAt DateTime   @default(now())
+  user      User       @relation(fields: [userId], references: [username])
   userId    String
-  Comment   Comment? @relation(fields: [commentId], references: [id])
+  Comment   Comment?   @relation(fields: [commentId], references: [id], onDelete: Cascade)
   commentId String?
-  album     Album?   @relation(fields: [albumId], references: [id])
+  album     Album?     @relation(fields: [albumId], references: [id], onDelete: Cascade)
   albumId   String?
+  Activity  Activity[]
 }
 
 model UserCircle {
@@ -164,4 +169,21 @@ model Token {
   circle      Circle   @relation(fields: [circleId], references: [id], onDelete: Cascade)
   circleId    String
   accessToken String
+}
+
+model Activity {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  type      String
+  user      User     @relation(fields: [userId], references: [username], onDelete: Cascade)
+  userId    String
+  album     Album?   @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  albumId   String?
+  comment   Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  commentId String?
+  repliedToUserId String?
+  like      Like?    @relation(fields: [likeId], references: [id], onDelete: Cascade)
+  likeId    String?
+  photo     Photo?   @relation(fields: [photoId], references: [id], onDelete: Cascade)
+  photoId   String?
 }

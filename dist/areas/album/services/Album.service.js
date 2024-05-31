@@ -91,6 +91,17 @@ class AlbumService {
                         });
                     }
                     const members = yield getMembers(createdAlbum.circleId, this._db);
+                    for (const member of members) {
+                        if (member !== newAlbumInput.creator) {
+                            yield this._db.prisma.activity.create({
+                                data: {
+                                    type: 'NEW_ALBUM',
+                                    userId: member,
+                                    albumId: createdAlbum.id
+                                }
+                            });
+                        }
+                    }
                     return { user: newAlbumInput.creator, members, circleName: createdAlbum.circle.name, id: createdAlbum.id };
                 }
             }
@@ -173,7 +184,7 @@ class AlbumService {
                     });
                 }
                 else {
-                    yield this._db.prisma.like.create({
+                    const like = yield this._db.prisma.like.create({
                         data: {
                             userId: currentUser,
                             albumId: albumId
@@ -190,6 +201,19 @@ class AlbumService {
                         }
                     });
                     const members = yield getMembers(album.circleId, this._db);
+                    // Create activity for liking the album for each member
+                    for (const member of members) {
+                        if (member !== currentUser) {
+                            yield this._db.prisma.activity.create({
+                                data: {
+                                    type: 'LIKE_ALBUM',
+                                    userId: member,
+                                    albumId: albumId,
+                                    likeId: like.id
+                                }
+                            });
+                        }
+                    }
                     return { members, user: currentUser, albumName: album.name };
                 }
             }
@@ -275,6 +299,7 @@ class AlbumService {
             if (!hasPermission) {
                 throw new Error("User does not have permission to update this album.");
             }
+            let photos = [];
             const existingAlbum = yield this._db.prisma.album.findUnique({
                 where: { id },
                 include: { photos: true }
@@ -293,6 +318,20 @@ class AlbumService {
                             long: newPhotos[i].photoSrc.gps ? String(newPhotos[i].photoSrc.gps.long) : null
                         }
                     });
+                    photos.push(file);
+                }
+                const members = yield getMembers(existingAlbum.circleId, this._db);
+                for (const member of members) {
+                    if (member !== currentUser) {
+                        yield this._db.prisma.activity.create({
+                            data: {
+                                type: 'ADD_PHOTOS',
+                                userId: member,
+                                albumId: id,
+                                photoId: photos[0].id
+                            }
+                        });
+                    }
                 }
                 return { newPhotos, album };
             }
@@ -472,6 +511,24 @@ class AlbumService {
                         }
                     }
                 });
+                const albumMembers = yield this._db.prisma.album.findUnique({
+                    where: { id: albumId },
+                    select: { circle: { select: { UserCircle: { select: { username: true } } } } }
+                });
+                const members = albumMembers === null || albumMembers === void 0 ? void 0 : albumMembers.circle.UserCircle.map((circle) => circle.username);
+                if (members) {
+                    const filteredMembers = members.filter((member) => member !== currentUser);
+                    for (const member of filteredMembers) {
+                        yield this._db.prisma.activity.create({
+                            data: {
+                                type: 'NEW_COMMENT',
+                                userId: member,
+                                albumId: albumId,
+                                commentId: newComment.id
+                            }
+                        });
+                    }
+                }
                 if (commentId && newComment) {
                     childComment = yield this._db.prisma.comment.update({
                         where: {
@@ -479,7 +536,8 @@ class AlbumService {
                         },
                         data: {
                             replies: { connect: newComment }
-                        }, include: {
+                        },
+                        include: {
                             parent: {
                                 select: {
                                     userId: true
@@ -491,6 +549,17 @@ class AlbumService {
                 if (childComment) {
                     if (childComment.parent)
                         childComment = childComment.parent;
+                    if (childComment.userId) {
+                        yield this._db.prisma.activity.create({
+                            data: {
+                                type: 'REPLY_TO_COMMENT',
+                                userId: childComment.userId,
+                                albumId: albumId,
+                                commentId: commentId,
+                                repliedToUserId: childComment.parent.userId
+                            }
+                        });
+                    }
                 }
                 if (childComment) {
                     return { user: currentUser, albumName: newComment.album.name, owner: newComment.album.ownerName, parentUser: childComment.userId };
@@ -615,6 +684,18 @@ class AlbumService {
                             }
                         }
                     });
+                    if (updatedComment.userId !== null) {
+                        yield this._db.prisma.activity.create({
+                            data: {
+                                type: 'LIKE_COMMENT',
+                                userId: updatedComment.userId,
+                                commentId: commentId,
+                                albumId: updatedComment.albumId,
+                                createdAt: new Date(),
+                                likeId: like.id
+                            }
+                        });
+                    }
                     return { albumName: updatedComment.album.name, user: currentUser, owner: updatedComment.userId };
                 }
             }

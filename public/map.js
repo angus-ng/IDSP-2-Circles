@@ -56,9 +56,9 @@ async function initMap() {
               title: album.name,
           });
           markers.push(marker)
-        }
       }
     }
+  }
     if (response.data){
       map.createAlbumMarkers(response)
     }

@@ -400,6 +400,10 @@ async function displayAlbum(albumData) {
     leftHeaderButton.setAttribute("origin", "fromProfile");
   }
 
+  if (origin === 'fromActivities') {
+    leftHeaderButton.id = "backToActivities"
+  }
+
   if (origin === "fromSearchProfileCircle") {
     leftHeaderButton.id = "backToSearchCircle";
   }

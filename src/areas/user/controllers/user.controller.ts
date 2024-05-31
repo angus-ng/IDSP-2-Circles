@@ -37,6 +37,7 @@ class UserController implements IController {
     this.router.post(`${this.path}/updateProfilePicture`, ensureAuthenticated, this.updateProfilePicture);
     this.router.post(`${this.path}/updateDisplayName`, ensureAuthenticated, this.updateDisplayName);
     this.router.get(`${this.path}/mapInfo`, ensureAuthenticated, this.getInfoForMap);
+    this.router.post(`${this.path}/clearActivities`, ensureAuthenticated, this.clearActivities)
   }
   private friend = async (req: Request, res: Response) => {
     try {
@@ -88,6 +89,16 @@ class UserController implements IController {
       res.status(200).json({ success: true, data: activities })
     } catch (error: any) {
       throw new Error(error)
+    }
+  }
+
+  private clearActivities = async (req: Request, res: Response) => {
+    try {
+      let loggedInUser = await getLocalUser(req, res)
+      const data = await this._service.clearActivities(loggedInUser)
+      res.status(200).json({ success: true, data: data })
+    } catch (error) {
+      
     }
   }
 

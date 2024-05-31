@@ -21,6 +21,8 @@ class PassportConfig {
             passport_1.default.use(passportStrategy.name, passportStrategy.strategy);
         });
         passport_1.default.serializeUser(function (user, done) {
+            console.log("the user is: ");
+            console.log(user.username);
             done(null, user.id);
         });
         passport_1.default.deserializeUser(function (id, done) {

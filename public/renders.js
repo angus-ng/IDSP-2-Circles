@@ -282,11 +282,19 @@ async function displayConfirmationPopup(activity, helperObj) {
   confirmationPopup.addEventListener("click", confirmEventHandler, true);
 }
 
+let skip = 0;
+const take = 10;
+let isLoading = false;
+
 async function displayActivity() {
   pageName.textContent = "All Activity";
   rightHeaderButton.innerHTML = "";
   leftHeaderButton.innerHTML = "";
-  const { friendRequests, circleInvites } = await getActivities(currentLocalUser);
+  const { friendRequests, circleInvites, newCommentActivities,replyToCommentActivities, likeAlbumActivities, likeCommentActivities, newPhotoActivities, newAlbumActivities } = await getActivities(currentLocalUser);
+
+  const allActivities = [...newCommentActivities, ...replyToCommentActivities, ...likeAlbumActivities, ...likeCommentActivities, ...newPhotoActivities, ...newAlbumActivities];
+  allActivities.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
   const noCircleInvites = `<p class="text-secondary text-medium-grey" >No circle invites pending.</p>`;
   const circleInvitePreviews = [];
   for (i = 0; i < circleInvites.length; i++) {
@@ -331,42 +339,176 @@ async function displayActivity() {
     friendRequestsPreviews.push(friendImg.outerHTML);
   }
 
+  function displaySingleActivity(obj) {
+    return `<div class="flex items-center my-3 user cursor-pointer" id="activity-item" albumId="${obj.albumId}" type="${obj.type}" circleId="${obj.circleId}" profilePicture="${obj.profilePicture}">
+    <div class="flex-none w-58">
+      <img username="${obj.user.username}" class="rounded-full w-58 h-58 object-cover" src="${obj.user.profilePicture}" alt="${obj.user.username}'s profile picture"/>
+    </div>
+    <div class="ml-8 flex-none w-207">
+      ${obj.activity} 
+      ${obj.message}
+    </div>
+    <div class="ml-8 w-5">
+      <div class="flex-none w-58">
+        <img class="w-58 h-58 object-cover" src="${obj.photo}" alt="album cover picture"/>
+      </div>
+    </div>
+  </div>`
+  } 
+
+  const noActivities = `<p class="text-secondary text-medium-grey" >No recent activities.</p>`;
+  const activityPreviews = allActivities.map(activity => {
+    let activityContent = '';
+    let activityObj = {}
+    console.log(activity)
+    switch (activity.type) {
+      case 'NEW_COMMENT':
+        activityObj = {
+          user: activity.comment.user,
+          message: activity.comment.message,
+          activity:`commented under ${activity.album.name}:`,
+          photo: activity.album.photos[0].src,
+          albumId: activity.album.id,
+          type: "comment",
+          circleId: activity.album.circle.id,
+          profilePicture: activity.user.profilePicture
+        }
+        activityContent = displaySingleActivity(activityObj);
+        break;
+      case 'REPLY_TO_COMMENT':
+        //doesnt work
+        break;
+      case 'LIKE_ALBUM':
+        activityObj = {
+          user: activity.like.user,
+          message: activity.album.name,
+          activity: `liked your album:`,
+          photo: activity.album.photos[0].src,
+          albumId: activity.album.id,
+          type: "album",
+        }
+        activityContent = displaySingleActivity(activityObj);
+        break;
+      case 'ADD_PHOTOS':
+        activityObj = {
+          user: activity.photo.poster,
+          message: activity.photo.album.name,
+          activity: `added photos to the album:`,
+          photo: activity.photo.album.photos[0].src,
+          albumId: activity.albumId,
+          type: "album"
+        }
+        activityContent = displaySingleActivity(activityObj)
+        break;
+      case 'LIKE_COMMENT':
+        activityObj = {
+          user: activity.like.user,
+          message: `${activity.comment.message}`,
+          activity: `liked your comment under ${activity.comment.album.name}:`,
+          photo: activity.comment.album.photos[0].src,
+          albumId: activity.albumId,
+          type: "comment",
+          circleId: activity.comment.album.circle.id,
+          profilePicture: activity.user.profilePicture
+        }
+        activityContent = displaySingleActivity(activityObj)
+        break
+      case 'NEW_ALBUM' : 
+        activityObj = {
+          user: activity.album.owner,
+          message: `${activity.album.name}`,
+          activity: `made a new album:`,
+          photo: activity.album.photos[0].src,
+          albumId: activity.album.id,
+          type: "album"
+        }
+        activityContent = displaySingleActivity(activityObj)
+        break;
+    }
+    return `<div class="activity-item">${activityContent}<p class="text-secondary">${new Date(activity.createdAt).toLocaleString()}</p></div>`;
+  });
+
+
   pageContent.innerHTML = `
-    <div id="activityPage" class="flex-non flex-col py-2 w-full h-full">
-        <div id="circleInviteSection" class="h-100 border-solid border border-y-black border-x-transparent w-full flex items-center flex-wrap flex-row justify-between space-y-0">
-            <div class="w-full">
-                <h2 class="font-medium text-base">Circle Invites</h2>
-            </div>
-            <div id="circleInvites" class="flex w-full">
-                <div class="flex w-180 h-33 items-center">
-                    ${circleInvites.length
-                        ? circleInvitePreviews.join("")
-                        : noCircleInvites}
-                </div>
-                <div class="flex w-2 h-33 items-center ml-auto">
-                    ${activityArrowIcon}
-                </div>
-            </div>
-        </div>
-        <div id="friendInviteSection" class="h-100 border-solid border border-t-transparent border-b-black border-x-transparent w-full flex items-center flex-wrap flex-row space-y-0">
-            <div class="w-full">
-                <h2 class="font-medium text-base">Friend Requests</h2>
-            </div>
-            <div id="friendRequests" class="flex w-full">
+  <div id="activityPage" class="flex-non flex-col py-2 w-full h-full">
+      <div id="circleInviteSection" class="h-100 border-solid border border-y-black border-x-transparent w-full flex items-center flex-wrap flex-row justify-between space-y-0">
+          <div class="w-full">
+              <h2 class="font-medium text-base">Circle Invites</h2>
+          </div>
+          <div id="circleInvites" class="flex w-full">
               <div class="flex w-180 h-33 items-center">
-                  ${friendRequests.length
-                      ? friendRequestsPreviews.join("")
-                      : noFriendRequests}
+                  ${circleInvites.length
+                      ? circleInvitePreviews.join("")
+                      : noCircleInvites}
               </div>
               <div class="flex w-2 h-33 items-center ml-auto">
                   ${activityArrowIcon}
               </div>
+          </div>
+      </div>
+      <div id="friendInviteSection" class="h-100 border-solid border border-t-transparent border-b-black border-x-transparent w-full flex items-center flex-wrap flex-row space-y-0">
+          <div class="w-full">
+              <h2 class="font-medium text-base">Friend Requests</h2>
+          </div>
+          <div id="friendRequests" class="flex w-full">
+            <div class="flex w-180 h-33 items-center">
+                ${friendRequests.length
+                    ? friendRequestsPreviews.join("")
+                    : noFriendRequests}
             </div>
-        </div>
-    </div>`;
+            <div class="flex w-2 h-33 items-center ml-auto">
+                ${activityArrowIcon}
+            </div>
+          </div>
+      </div>
+      <div id="otherActivitiesSection" class="h-100  w-full flex items-center flex-wrap flex-row space-y-0">
+          <div class="w-full flex items-center" id="otherActivitiesText">
+              <h2 class="font-medium text-base">Recent Activities</h2>
+              ${allActivities.length === 0
+                ? ""
+                : `<h3 id="clearActivities" class="ml-auto cursor-pointer">Clear activities</h3>`}
+          </div>
+          <div id="otherActivities" class="flex w-full flex-col">
+              ${allActivities.length
+                  ? activityPreviews.join("")
+                  : noActivities}
+          </div>
+      </div>
+    </div>`
 
+    
   const activityPage = document.querySelector("#activityPage");
+  if (allActivities.length!==0) {
+    const clearActivitiesButton = document.querySelector("#clearActivities")
+    clearActivitiesButton.addEventListener("click", async (event) => {
+      await clearActivities()
+      displayPopup("Successfully cleared activities")
+      await displayActivity()
+    })
+  }
+  const otherActivitiesContainer = document.getElementById("otherActivities");
 
+  otherActivitiesContainer.addEventListener("click", async (event) => {
+  const clickedActivity = event.target.closest(".activity-item");
+    if (clickedActivity) {
+        const albumId = clickedActivity.firstChild.getAttribute("albumid")
+        const type = clickedActivity.firstChild.getAttribute("type")
+        console.log(type, clickedActivity.firstChild)
+        if (type === "album") {
+          let { success, data, error } = await getAlbum(albumId);
+            if (success && data) {
+              leftHeaderButton.setAttribute("origin", "fromActivities");
+              leftHeaderButton.setAttribute("albumId", albumId)
+              await displayAlbum(data);
+            }
+        } else if (type === "comment") {
+          const circleId = clickedActivity.firstChild.getAttribute("circleid")
+          const profilePicture = clickedActivity.firstChild.getAttribute("profilePicture")
+          await displayComments(albumId, profilePicture, circleId);
+          return;
+        }
+    }
+});
   activityPage.addEventListener("click", async (event) => {
     const circleInvitesDiv = event.target.closest("#circleInvites");
     const friendRequestsDiv = event.target.closest("#friendRequests");

@@ -87,6 +87,7 @@ class CircleController {
                 const { id } = req.params;
                 //ensure user is a member of the circle
                 let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
+                console.log(id);
                 const publicStatus = yield this._service.checkPublic(id);
                 if (!publicStatus) {
                     const member = yield this._service.checkMembership(id, loggedInUser);

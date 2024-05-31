@@ -198,6 +198,16 @@ async function getActivities() {
   const responseJson = await response.json();
   return responseJson.data;
 }
+async function clearActivities() {
+  const response = await fetch(`/user/clearActivities`, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+  });
+  const responseJson = await response.json();
+  return responseJson
+}
 
 async function acceptCircleInvite(id, invitee) {
   try {

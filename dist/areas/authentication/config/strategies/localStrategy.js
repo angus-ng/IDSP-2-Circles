@@ -18,7 +18,6 @@ const localStrategy = new passport_local_1.Strategy({
 }, (email, password, done) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const user = yield db.getUserByEmailAndPassword(email, password);
-        console.log(user);
         done(null, user);
     }
     catch (error) {

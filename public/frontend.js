@@ -79,15 +79,16 @@ header.addEventListener("click", async (event) => {
     }
     case "circleEditButton": {
       const circleId = document.querySelector(".leftButton").getAttribute("circleId");
-      const ownerId = document.querySelector("#circleEditButton").getAttribute("ownerId");
+      const ownerId = document.querySelector("#circleEditButton").getAttribute("ownerId")
       await displayCircleEditMode(circleId, ownerId);
       break;
     }
     case "albumEditButton": {
       leftHeaderButton.id = "backToAlbum";
-      const albumId = document.querySelector(".leftButton").getAttribute("albumId");
-      const ownerId = document.querySelector("#albumEditButton").getAttribute("ownerId");
-      const memberStatus = document.querySelector("#albumEditButton").getAttribute("memberStatus");
+      const albumId = document.querySelector(".leftButton").getAttribute("albumId")
+      const ownerId = document.querySelector("#albumEditButton").getAttribute("ownerId")
+      const memberStatus = document.querySelector("#albumEditButton").getAttribute("memberStatus") 
+      console.log(ownerId)
       await displayAlbumEditMode(albumId, ownerId, memberStatus);
       break;
     }
@@ -136,11 +137,13 @@ header.addEventListener("click", async (event) => {
       const { success, data } = await getCircle(circleId);
       if (success && data) {
         nav.classList.remove("hidden");
-        albumPhotos = [];
         await displayCircle(data);
       }
       break;
-    }
+    } 
+    case "backToActivities" :
+      await displayActivity()
+      break;
     case "updateAlbum": {
       const albumId = leftHeaderButton.getAttribute("albumId");
       const albumName = document.querySelector("#albumNameInput").value;

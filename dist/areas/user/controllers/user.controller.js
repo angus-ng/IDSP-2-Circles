@@ -80,6 +80,15 @@ class UserController {
                 throw new Error(error);
             }
         });
+        this.clearActivities = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
+                const data = yield this._service.clearActivities(loggedInUser);
+                res.status(200).json({ success: true, data: data });
+            }
+            catch (error) {
+            }
+        });
         this.acceptFriendRequest = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
@@ -138,22 +147,20 @@ class UserController {
             try {
                 let loggedInUser = yield (0, getLocalUser_1.getLocalUser)(req, res);
                 let { username } = req.body;
+                const profileObj = yield this._service.getUser(username, loggedInUser);
                 res.status(200).json({ success: true, data: profileObj });
             }
             catch (error) {
-                console.log(error);
                 res.status(200).json({ success: true, data: null, error: error });
             }
         });
         this.ifEmailTaken = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const { email } = req.params;
-                console.log(email);
                 const emailTaken = yield this._service.ifEmailTaken(email);
                 res.status(200).json({ success: emailTaken });
             }
             catch (error) {
-                console.log(error);
                 res.status(200).json({ error: error });
             }
         });
@@ -228,6 +235,7 @@ class UserController {
         this.router.post(`${this.path}/updateProfilePicture`, authentication_middleware_1.ensureAuthenticated, this.updateProfilePicture);
         this.router.post(`${this.path}/updateDisplayName`, authentication_middleware_1.ensureAuthenticated, this.updateDisplayName);
         this.router.get(`${this.path}/mapInfo`, authentication_middleware_1.ensureAuthenticated, this.getInfoForMap);
+        this.router.post(`${this.path}/clearActivities`, authentication_middleware_1.ensureAuthenticated, this.clearActivities);
     }
 }
 exports.default = UserController;
