@@ -30,6 +30,7 @@ model User {
   Like            Like[]
   UserCircle      UserCircle[]
   Circle          Circle[]
+  UserAlbum UserAlbum[]
   Album           Album[]
   Photos          Photo[]
   requestsSent    FriendRequest[] @relation("requester")
@@ -72,6 +73,7 @@ model Album {
   likes     Like[]
   photos    Photo[]
   comments  Comment[]
+  UserAlbum UserAlbum[]
   circle    Circle    @relation(fields: [circleId], references: [id], onDelete: Cascade)
   circleId  String
   lat       String?
@@ -123,6 +125,15 @@ model UserCircle {
   mod      Boolean @default(false)
 
   @@id([username, circleId])
+}
+
+model UserAlbum {
+  user     User   @relation(fields: [username], references: [username])
+  username String
+  album   Album @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  albumId String
+
+  @@id([username, albumId])
 }
 
 model CircleInvite {

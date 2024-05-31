@@ -17,6 +17,7 @@ const authentication_middleware_1 = require("../../../middleware/authentication.
 const HandleSingleUpload_1 = require("../../../helper/HandleSingleUpload");
 const multer_1 = __importDefault(require("multer"));
 const getLocalUser_1 = require("../../../helper/getLocalUser");
+const exifr_1 = __importDefault(require("exifr"));
 const storage = multer_1.default.memoryStorage();
 const upload = (0, multer_1.default)({ storage });
 class CircleController {
@@ -24,10 +25,25 @@ class CircleController {
         this.path = "/circle";
         this.router = (0, express_1.Router)();
         this.uploadImage = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const b64 = Buffer.from(req.file.buffer).toString('base64');
-            const dataURI = `data:${req.file.mimetype};base64,${b64}`;
-            const cldRes = yield (0, HandleSingleUpload_1.handleUpload)(dataURI);
-            res.json({ message: 'File uploaded successfully', data: cldRes.url });
+            try {
+                const b64 = Buffer.from(req.file.buffer).toString('base64');
+                const dataURI = `data:${req.file.mimetype};base64,${b64}`;
+                const cldRes = yield (0, HandleSingleUpload_1.handleUpload)(dataURI);
+                try {
+                    let { latitude, longitude } = yield exifr_1.default.gps(b64);
+                    console.log("HERE", cldRes);
+                    if (cldRes.format === "heic") {
+                        cldRes.url = cldRes.url.split(".heic")[0] + ".jpg";
+                    }
+                    res.json({ message: 'File uploaded successfully', data: { url: cldRes.url, gps: { lat: latitude, long: longitude } } });
+                }
+                catch (error) {
+                    res.json({ message: 'File uploaded successfully', data: { url: cldRes.url, gps: null } });
+                }
+            }
+            catch (error) {
+                console.log(error);
+            }
         });
         this.createCircle = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {

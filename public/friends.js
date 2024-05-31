@@ -178,6 +178,7 @@ async function displayFriends(username) {
       if (user) {
         const { success, data } = await getUser(user.id);
         if (success && data) {
+          leftHeaderButton.setAttribute("origin", "fromSearch")
           leftHeaderButton.setAttribute("secondaryOrigin", "fromFriendsList");
           return await displayProfile(data);
         }

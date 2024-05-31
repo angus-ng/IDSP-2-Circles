@@ -1,12 +1,28 @@
-import { name } from "ejs";
 import DBClient from "../../../PrismaClient";
-import IAlbumService from "./IAlbumService";
+import IAlbumService, { AlbumFromGetAlbum } from "./IAlbumService";
 import { Album, Comment } from '@prisma/client'
+
+const getMembers = async (circleId: string, db: any) => {
+    const members = await db.prisma.userCircle.findMany({
+        select: {
+            user: {
+                select: {
+                    username: true,
+                }
+            }
+        },
+        where: {
+            circleId: circleId
+        }
+    })
+    //@ts-ignore
+    return members.map(obj => obj.user.username);
+}
 
 export class AlbumService implements IAlbumService {
     readonly _db: DBClient = DBClient.getInstance();
 
-    async createAlbum(newAlbumInput: any) {
+    async createAlbum(newAlbumInput: any): Promise<{ user: string, members: string[], circleName: string, id: string } | undefined> {
         //find the logged in user from db
         const creator = await this._db.prisma.user.findUnique({
             where: {
@@ -21,6 +37,12 @@ export class AlbumService implements IAlbumService {
                     name: newAlbumInput.albumName,
                     circleId: newAlbumInput.circleId,
                     ownerName: newAlbumInput.creator
+                }, include: {
+                    circle: {
+                        select: {
+                            name: true
+                        }
+                    }
                 }
             })
 
@@ -31,7 +53,7 @@ export class AlbumService implements IAlbumService {
                 for (let photo of newAlbumInput.photos) {
                     if (photo.photoSrc.gps && gpsCount === 0) {
                         gpsCount = 1
-                        albumGps = photo.photoSrc.gps
+                        albumGps = photo.gps
                     }
                 }
                 for (let i = 0; i < newAlbumInput.photos.length; i++) {
@@ -42,6 +64,10 @@ export class AlbumService implements IAlbumService {
                             albumId: createdAlbum.id
                         }
                     })
+                }
+
+                if (newAlbumInput.location) {
+                    albumGps = newAlbumInput.location
                 }
                 if (albumGps) {
                     const albumWithGps = await this._db.prisma.album.update({
@@ -54,10 +80,11 @@ export class AlbumService implements IAlbumService {
                         }
                     })
                 }
-                return createdAlbum;
+                const members = await getMembers(createdAlbum.circleId, this._db)
+                return { user: newAlbumInput.creator, members, circleName: createdAlbum.circle.name, id: createdAlbum.id };
             }
         }
-        return null;
+        return;
     }
 
 
@@ -67,7 +94,6 @@ export class AlbumService implements IAlbumService {
                 username: currentUser
             }
         })
-        console.log(circleId)
         let albumCircleId;
         if (!circleId) {
             const foundId = await this._db.prisma.album.findUnique({
@@ -112,7 +138,7 @@ export class AlbumService implements IAlbumService {
         return true
     }
 
-    async likeAlbum(currentUser: string, albumId: string): Promise<void> {
+    async likeAlbum(currentUser: string, albumId: string): Promise<{ members: string[], user: string, albumName: string } | undefined> {
         try {
             const existingLike = await this._db.prisma.like.findFirst({
                 where: {
@@ -138,7 +164,6 @@ export class AlbumService implements IAlbumService {
                         }
                     }
                 });
-
                 console.log("Album unliked successfully");
             } else {
                 await this._db.prisma.like.create({
@@ -148,7 +173,7 @@ export class AlbumService implements IAlbumService {
                     }
                 });
 
-                await this._db.prisma.album.update({
+                const album = await this._db.prisma.album.update({
                     where: {
                         id: albumId
                     },
@@ -158,8 +183,9 @@ export class AlbumService implements IAlbumService {
                         }
                     }
                 });
-
+                const members = await getMembers(album.circleId, this._db)
                 console.log("Album liked successfully");
+                return { members, user: currentUser, albumName: album.name };
             }
         } catch (err) {
             throw err;
@@ -185,7 +211,7 @@ export class AlbumService implements IAlbumService {
         return isPublic.circle.isPublic;
     }
 
-    async getAlbum(id: string): Promise<any> {
+    async getAlbum(id: string): Promise<AlbumFromGetAlbum | null> {
         const album = await this._db.prisma.album.findUnique({
             select: {
                 name: true,
@@ -261,10 +287,9 @@ export class AlbumService implements IAlbumService {
                     }
                 })
             }
-            return newPhotos
+            return { newPhotos, album }
         }
-
-        return this.getAlbum(id);
+        return album;
     }
 
     //   async listAlbums (currentUser:string): Promise<{album: Album}[] | void> { // remove this void when implemented
@@ -434,23 +459,45 @@ export class AlbumService implements IAlbumService {
 
     async createComment(currentUser: string, message: string, albumId: string, commentId?: string) {
         try {
+            let childComment;
             const newComment = await this._db.prisma.comment.create({
                 data: {
                     message: message,
                     userId: currentUser,
                     albumId: albumId
+                }, include: {
+                    album: {
+                        select: {
+                            name: true,
+                            ownerName: true
+                        }
+                    }
                 }
             })
             if (commentId && newComment) {
-                await this._db.prisma.comment.update({
+                childComment = await this._db.prisma.comment.update({
                     where: {
                         id: commentId
                     },
                     data: {
                         replies: { connect: newComment }
+                    }, include: {
+                        parent: {
+                            select: {
+                                userId: true
+                            }
+                        }
                     }
                 })
-                console.log(commentId)
+            }
+            if (childComment) {
+                if (childComment.parent)
+                    childComment = childComment.parent
+            }
+            if (childComment) {
+                return { user: currentUser, albumName: newComment.album.name, owner: newComment.album.ownerName, parentUser: childComment.userId }
+            } else {
+                return { user: currentUser, albumName: newComment.album.name, owner: newComment.album.ownerName, parentUser: null }
             }
         } catch (err) {
             throw err;
@@ -520,7 +567,7 @@ export class AlbumService implements IAlbumService {
         }
     }
 
-    async likeComment(currentUser: string, commentId: string): Promise<void> {
+    async likeComment(currentUser: string, commentId: string): Promise<void | { owner: string | null, albumName: string, user: string }> {
         try {
             const existingLike = await this._db.prisma.like.findFirst({
                 where: {
@@ -546,10 +593,9 @@ export class AlbumService implements IAlbumService {
                         }
                     }
                 });
-
                 console.log("Comment unliked successfully", updatedComment);
             } else {
-                await this._db.prisma.like.create({
+                const like = await this._db.prisma.like.create({
                     data: {
                         userId: currentUser,
                         commentId: commentId
@@ -564,10 +610,16 @@ export class AlbumService implements IAlbumService {
                         likeCount: {
                             increment: 1
                         }
+                    }, include: {
+                        album: {
+                            select: {
+                                name: true
+                            }
+                        }
                     }
                 });
-
                 console.log("Comment liked successfully", updatedComment);
+                return { albumName: updatedComment.album.name, user: currentUser, owner: updatedComment.userId }
             }
         } catch (err) {
             throw err;
@@ -578,28 +630,28 @@ export class AlbumService implements IAlbumService {
             const album = await this._db.prisma.album.findUnique({
                 where: {
                     id: albumId
-                }, 
+                },
                 include: {
                     circle: {
                         include: {
                             UserCircle: true,
                             owner: {
-                                select: {username : true}
+                                select: { username: true }
                             }
                         },
                     },
                 }
             })
-            if (!album) { 
-             throw new Error("could not find album")   
+            if (!album) {
+                throw new Error("could not find album")
             }
             let isMod = false;
-                const member = album.circle.UserCircle.find((user) => {
-                    user.username === currentUser
-                })
-                if (member) {
-                    isMod = member.mod
-                }
+            const member = album.circle.UserCircle.find((user) => {
+                user.username === currentUser
+            })
+            if (member) {
+                isMod = member.mod
+            }
             if (currentUser === album.circle.owner.username || isMod || currentUser === album.ownerName) {
                 await this._db.prisma.album.delete({
                     where: {
@@ -620,9 +672,9 @@ export class AlbumService implements IAlbumService {
             const photo = await this._db.prisma.photo.findUnique({
                 where: {
                     id: photoId
-                }, 
+                },
                 include: {
-                    album : {
+                    album: {
                         include: {
                             circle: {
                                 include: {
@@ -633,8 +685,8 @@ export class AlbumService implements IAlbumService {
                     }
                 }
             })
-            if (!photo) { 
-                throw new Error("could not find photo")   
+            if (!photo) {
+                throw new Error("could not find photo")
             }
             let isMod = false;
             const member = photo.album.circle.UserCircle.find((user) => {

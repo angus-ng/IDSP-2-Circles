@@ -4,6 +4,7 @@ import IUserService from "../services/IUserService";
 import { ensureAuthenticated } from "../../../middleware/authentication.middleware";
 import { kindeClient, sessionManager } from "../../../areas/authentication/config/kinde";
 import { getLocalUser } from "../../../helper/getLocalUser";
+import { io } from '../../../app';
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
 
@@ -41,7 +42,15 @@ class UserController implements IController {
     try {
       let loggedInUser = await getLocalUser(req, res)
       const { requestee } = req.body
-      await this._service.friend(loggedInUser, requestee)
+      const data = await this._service.friend(loggedInUser, requestee)
+      if(data) {
+        if (data.status === "sentRequest") {
+          io.to(requestee).emit("sentFriendRequest", {requestee, requester:data.requester})
+        } else if (data.status === "accept") {
+          io.to(data.requester).emit("acceptFriendRequest", {requestee, requester:data.requester})
+        }
+      }
+
       res.status(200).json({ success: true, data: null })
     } catch (error: any) {
       throw new Error(error)
@@ -87,7 +96,8 @@ class UserController implements IController {
       let loggedInUser = await getLocalUser(req, res)
       const { requester, requestee } = req.body
       if (loggedInUser === requestee) {
-        await this._service.acceptRequest(requester, requestee)
+        const data = await this._service.acceptRequest(requester, requestee)
+        io.to(requester).emit("acceptFriendRequest", {requestee, requester})
         res.status(200).json({ success: true, data: null })
       } else {
         res.status(400).json({ success: false, error: "Failed to accept friend request" })
@@ -165,22 +175,6 @@ class UserController implements IController {
       res.status(200).json({success: true, data: null, error: "failed to get album feed"})
     }
   }
-  private getFeed = async (req: Request, res: Response) => {
-    try {
-      
-      let loggedInUser = await getLocalUser(req, res);
-      const albumFeed = await this._service.getFeed(loggedInUser);
-      if (Array.isArray(albumFeed)) {
-        const formattedAlbumFeed = albumFeed.map(album => ({
-          ...album,
-          createdAt: timeAgo.format(album.createdAt)
-        }));
-        res.status(200).json({ success: true, data: formattedAlbumFeed })
-      }
-    } catch (err) {
-      res.status(200).json({ success: true, data: null, error: "failed to get album feed" })
-    }
-  }
   private updateProfilePicture = async (req: Request, res: Response) => {
     try {
       const { src } = req.body;
@@ -208,6 +202,22 @@ class UserController implements IController {
       res.status(200).json({ success: true, data: info })
     } catch (error) {
       res.status(200).json({ success: true, data: null })
+    }
+  }
+  private getFeed = async (req: Request, res: Response) => {
+    try {
+      
+      let loggedInUser = await getLocalUser(req, res);
+      const albumFeed = await this._service.getFeed(loggedInUser);
+      if (Array.isArray(albumFeed)) {
+        const formattedAlbumFeed = albumFeed.map(album => ({
+          ...album,
+          createdAt: timeAgo.format(album.createdAt)
+        }));
+        res.status(200).json({ success: true, data: formattedAlbumFeed })
+      }
+    } catch (err) {
+      res.status(200).json({ success: true, data: null, error: "failed to get album feed" })
     }
   }
 }

@@ -13,10 +13,14 @@ class LandingController {
             res.render(path_1.default.join(__dirname, "../../../../public/index.html"));
             return;
         };
+        this.getGoogleMapKey = (_, res) => {
+            return res.status(200).json({ success: true, data: process.env.GOOGLE_MAP_API_KEY });
+        };
         this.initializeRoutes();
     }
     initializeRoutes() {
         this.router.get(`${this.path}/`, this.showLandingPage);
+        this.router.get(`${this.path}googleMapKey`, this.getGoogleMapKey);
     }
 }
 exports.default = LandingController;

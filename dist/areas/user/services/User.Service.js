@@ -15,6 +15,13 @@ var __asyncValues = (this && this.__asyncValues) || function (o) {
     function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
     function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
 };
+var __asyncValues = (this && this.__asyncValues) || function (o) {
+    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+    var m = o[Symbol.asyncIterator], i;
+    return m ? m.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i);
+    function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
+    function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -342,6 +349,17 @@ class UserService {
                                         }
                                     }
                                 },
+                                },
+                                likes: {
+                                    select: {
+                                        user: {
+                                            select: {
+                                                username: true,
+                                                profilePicture: true,
+                                            }
+                                        }
+                                    }
+                                },
                             }
                         }
                     },
@@ -388,6 +406,17 @@ class UserService {
                             id: true,
                             name: true,
                             ownerName: true,
+                            photos: true,
+                            likes: {
+                                select: {
+                                    user: {
+                                        select: {
+                                            username: true,
+                                            profilePicture: true
+                                        }
+                                    }
+                                }
+                            }
                             photos: true,
                             likes: {
                                 select: {
@@ -462,7 +491,6 @@ class UserService {
             return user.profilePicture;
         });
     }
-<<<<<<< HEAD
     getFeed(username) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a, e_1, _b, _c;
@@ -489,18 +517,13 @@ class UserService {
                                         },
                                         ownerName: friend.friend_2_name
                                     },
-                                    {
-                                        circle: {
+                                    { circle: {
                                             UserCircle: { some: { user: { username: username } } }
                                         },
-                                        ownerName: friend.friend_2_name
-                                    }]
+                                        ownerName: friend.friend_2_name }]
                             },
                             orderBy: {
                                 createdAt: "desc"
-                            },
-                            include: {
-                                likes: true
                             }
                         });
                         if (albums.length) {
@@ -525,7 +548,29 @@ class UserService {
             }
         });
     }
-=======
->>>>>>> 7f1ee5d461e9ec3323ab005ce3220eae94e61e11
+    getInfoForMap(username) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const albums = yield this._db.prisma.user.findUnique({
+                where: {
+                    username: username
+                },
+                include: {
+                    Album: {
+                        where: {
+                            NOT: {
+                                lat: null,
+                                long: null
+                            }
+                        },
+                        include: {
+                            photos: {}
+                        }
+                    }
+                }
+            });
+            console.log(albums);
+            return albums;
+        });
+    }
 }
 exports.UserService = UserService;

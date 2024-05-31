@@ -411,6 +411,11 @@ async function displayAlbum(albumData) {
     leftHeaderButton.id = "backToSearchCircle";
   }
 
+  if (origin === "fromAlbumCreation") {
+    leftHeaderButton.id = "backToCircle"
+    leftHeaderButton.setAttribute("username", currentLocalUser)
+  }
+
   if (albumData.circle.id) {
     leftHeaderButton.setAttribute("circleId", `${albumData.circle.id}`);
   }

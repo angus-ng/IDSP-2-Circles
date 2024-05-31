@@ -38,12 +38,31 @@ class AlbumService {
                 });
                 //make the explicit album user relationship
                 if (createdAlbum) {
+                    let albumGps = null;
+                    let gpsCount = 0;
+                    for (let photo of newAlbumInput.photos) {
+                        if (photo.gps && gpsCount === 0) {
+                            gpsCount = 1;
+                            albumGps = photo.gps;
+                        }
+                    }
                     for (let i = 0; i < newAlbumInput.photos.length; i++) {
                         const file = yield this._db.prisma.photo.create({
                             data: {
                                 src: newAlbumInput.photos[i].photoSrc,
                                 userId: creator.username,
                                 albumId: createdAlbum.id
+                            }
+                        });
+                    }
+                    if (albumGps) {
+                        const albumWithGps = yield this._db.prisma.album.update({
+                            where: {
+                                id: createdAlbum.id
+                            },
+                            data: {
+                                lat: albumGps.lat.toString(),
+                                long: albumGps.long.toString()
                             }
                         });
                     }
