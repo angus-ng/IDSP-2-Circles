@@ -42,6 +42,7 @@ async function initMap() {
     }
     map.createAlbumMarkers = (albumData) => {
       for (let album of albumData.data.Album) {
+        if(album.photos[0]) {
           const contentNode = document.createElement("div");
           contentNode.classList.add("mapAlbum");
           contentNode.innerHTML = `<div class="relative">
@@ -57,6 +58,7 @@ async function initMap() {
           markers.push(marker)
       }
     }
+  }
     if (response.data){
       map.createAlbumMarkers(response)
     }

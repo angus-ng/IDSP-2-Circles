@@ -15,13 +15,6 @@ var __asyncValues = (this && this.__asyncValues) || function (o) {
     function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
     function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
 };
-var __asyncValues = (this && this.__asyncValues) || function (o) {
-    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
-    var m = o[Symbol.asyncIterator], i;
-    return m ? m.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i);
-    function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
-    function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -65,6 +58,7 @@ class UserService {
                         status: false
                     }
                 });
+                return { requester, requestee, status: "sentRequest" };
             }
             catch (error) {
                 throw new Error(error);
@@ -164,11 +158,272 @@ class UserService {
                         circle: {}
                     }
                 });
+                const newCommentActivities = yield this._db.prisma.activity.findMany({
+                    where: {
+                        userId: username,
+                        type: 'NEW_COMMENT'
+                    },
+                    orderBy: {
+                        createdAt: 'desc'
+                    },
+                    select: {
+                        id: true,
+                        type: true,
+                        createdAt: true,
+                        user: {
+                            select: {
+                                username: true,
+                                profilePicture: true
+                            }
+                        },
+                        album: {
+                            select: {
+                                name: true,
+                                photos: {
+                                    take: 1,
+                                    select: {
+                                        src: true
+                                    }
+                                },
+                                id: true,
+                                circle: {
+                                    select: {
+                                        id: true
+                                    }
+                                }
+                            }
+                        },
+                        comment: {
+                            include: {
+                                user: {
+                                    select: {
+                                        username: true,
+                                        profilePicture: true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+                const replyToCommentActivities = yield this._db.prisma.activity.findMany({
+                    where: {
+                        userId: username,
+                        type: 'REPLY_TO_COMMENT'
+                    },
+                    orderBy: {
+                        createdAt: 'desc'
+                    },
+                    select: {
+                        id: true,
+                        type: true,
+                        createdAt: true,
+                        user: {
+                            select: {
+                                username: true,
+                            }
+                        },
+                        album: {
+                            select: {
+                                name: true,
+                                photos: {
+                                    take: 1,
+                                    select: {
+                                        src: true
+                                    },
+                                },
+                                id: true
+                            }
+                        },
+                        comment: {
+                            select: {
+                                message: true,
+                                userId: true
+                            }
+                        }
+                    }
+                });
+                const likeAlbumActivities = yield this._db.prisma.activity.findMany({
+                    where: {
+                        userId: username,
+                        type: 'LIKE_ALBUM'
+                    },
+                    orderBy: {
+                        createdAt: 'desc'
+                    },
+                    select: {
+                        id: true,
+                        type: true,
+                        createdAt: true,
+                        user: {
+                            select: {
+                                username: true,
+                            }
+                        },
+                        album: {
+                            select: {
+                                name: true,
+                                photos: {
+                                    take: 1,
+                                    select: {
+                                        src: true
+                                    }
+                                },
+                                id: true
+                            }
+                        },
+                        like: {
+                            select: {
+                                user: {
+                                    select: {
+                                        username: true,
+                                        profilePicture: true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+                const likeCommentActivities = yield this._db.prisma.activity.findMany({
+                    where: {
+                        userId: username,
+                        type: "LIKE_COMMENT"
+                    }, orderBy: {
+                        createdAt: 'desc'
+                    },
+                    include: {
+                        comment: {
+                            include: {
+                                album: {
+                                    select: {
+                                        photos: {
+                                            take: 1,
+                                            select: {
+                                                src: true
+                                            }
+                                        },
+                                        name: true,
+                                        id: true,
+                                        circle: {
+                                            select: {
+                                                id: true
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        like: {
+                            include: {
+                                user: {
+                                    select: {
+                                        profilePicture: true,
+                                        username: true
+                                    }
+                                }
+                            }
+                        },
+                        user: {
+                            select: {
+                                profilePicture: true
+                            }
+                        }
+                    }
+                });
+                const newPhotoActivities = yield this._db.prisma.activity.findMany({
+                    where: {
+                        userId: username,
+                        type: "ADD_PHOTOS"
+                    },
+                    orderBy: {
+                        createdAt: 'desc'
+                    },
+                    include: {
+                        photo: {
+                            include: {
+                                album: {
+                                    select: {
+                                        name: true,
+                                        photos: {
+                                            take: 1,
+                                            select: {
+                                                src: true
+                                            }
+                                        }
+                                    }
+                                },
+                                poster: {
+                                    select: {
+                                        username: true,
+                                        profilePicture: true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+                const newAlbumActivities = yield this._db.prisma.activity.findMany({
+                    where: {
+                        userId: username,
+                        type: "NEW_ALBUM"
+                    },
+                    orderBy: {
+                        createdAt: 'desc'
+                    },
+                    select: {
+                        id: true,
+                        type: true,
+                        createdAt: true,
+                        user: {
+                            select: {
+                                username: true,
+                            }
+                        },
+                        album: {
+                            select: {
+                                name: true,
+                                photos: {
+                                    take: 1,
+                                    select: {
+                                        src: true
+                                    }
+                                },
+                                owner: {
+                                    select: {
+                                        username: true,
+                                        profilePicture: true
+                                    }
+                                },
+                                id: true
+                            }
+                        },
+                    }
+                });
                 const activities = {
                     friendRequests: friendRequests,
                     circleInvites: circleInvites,
+                    newCommentActivities: newCommentActivities,
+                    replyToCommentActivities: replyToCommentActivities,
+                    likeAlbumActivities: likeAlbumActivities,
+                    newPhotoActivities: newPhotoActivities,
+                    likeCommentActivities: likeCommentActivities,
+                    newAlbumActivities: newAlbumActivities
                 };
                 return activities;
+            }
+            catch (error) {
+                throw new Error(error);
+            }
+        });
+    }
+    clearActivities(username) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                yield this._db.prisma.activity.deleteMany({
+                    where: {
+                        userId: username
+                    }
+                });
+                return;
             }
             catch (error) {
                 throw new Error(error);
@@ -208,7 +463,7 @@ class UserService {
                             friend_2_name: requestee
                         }
                     });
-                    return;
+                    return { requester, requestee, status: "accept" };
                 }
                 else {
                     throw new Error("You have not been friend requested by this user");
@@ -349,17 +604,6 @@ class UserService {
                                         }
                                     }
                                 },
-                                },
-                                likes: {
-                                    select: {
-                                        user: {
-                                            select: {
-                                                username: true,
-                                                profilePicture: true,
-                                            }
-                                        }
-                                    }
-                                },
                             }
                         }
                     },
@@ -406,17 +650,6 @@ class UserService {
                             id: true,
                             name: true,
                             ownerName: true,
-                            photos: true,
-                            likes: {
-                                select: {
-                                    user: {
-                                        select: {
-                                            username: true,
-                                            profilePicture: true
-                                        }
-                                    }
-                                }
-                            }
                             photos: true,
                             likes: {
                                 select: {
@@ -517,13 +750,40 @@ class UserService {
                                         },
                                         ownerName: friend.friend_2_name
                                     },
-                                    { circle: {
+                                    {
+                                        circle: {
                                             UserCircle: { some: { user: { username: username } } }
                                         },
-                                        ownerName: friend.friend_2_name }]
+                                        ownerName: friend.friend_2_name
+                                    }]
                             },
                             orderBy: {
                                 createdAt: "desc"
+                            },
+                            include: {
+                                likes: {
+                                    select: {
+                                        user: {
+                                            select: {
+                                                username: true,
+                                                profilePicture: true,
+                                            }
+                                        }
+                                    }
+                                },
+                                owner: {
+                                    select: {
+                                        displayName: true,
+                                        username: true,
+                                        profilePicture: true
+                                    }
+                                },
+                                circle: {
+                                    select: {
+                                        picture: true
+                                    }
+                                },
+                                photos: true
                             }
                         });
                         if (albums.length) {
@@ -545,6 +805,38 @@ class UserService {
             }
             catch (err) {
                 throw err;
+            }
+        });
+    }
+    updateProfilePicture(currentUser, src) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                yield this._db.prisma.user.update({
+                    where: {
+                        username: currentUser
+                    },
+                    data: {
+                        profilePicture: src
+                    }
+                });
+            }
+            catch (err) {
+            }
+        });
+    }
+    updateDisplayName(currentUser, name) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                yield this._db.prisma.user.update({
+                    where: {
+                        username: currentUser
+                    },
+                    data: {
+                        displayName: name
+                    }
+                });
+            }
+            catch (err) {
             }
         });
     }

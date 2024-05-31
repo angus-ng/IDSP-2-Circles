@@ -14,7 +14,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const kinde_1 = require("../config/kinde");
-const SocketIO_1 = require("../../../helper/SocketIO");
 class AuthenticationController {
     constructor(service) {
         this.path = "/auth";
@@ -31,12 +30,18 @@ class AuthenticationController {
             const url = new URL(`${req.protocol}://${req.get("host")}${req.url}`);
             yield kinde_1.kindeClient.handleRedirectToApp((0, kinde_1.sessionManager)(req, res), url);
             const kindeUser = yield kinde_1.kindeClient.getUser((0, kinde_1.sessionManager)(req, res));
+            console.log(kindeUser);
             let user = yield this._service.getUserById(kindeUser.id);
             if (!user) {
                 //@ts-ignore
+                let username = kindeUser.username;
+                if (!username) {
+                    username = kindeUser.given_name + kindeUser.family_name + Math.floor(Math.random() * 100000);
+                }
+                //@ts-ignore
                 user = yield this._service.createUser({
                     id: kindeUser.id,
-                    username: kindeUser.given_name + kindeUser.family_name + Math.floor(Math.random() * 100000),
+                    username: username,
                     firstName: kindeUser.family_name,
                     lastName: kindeUser.given_name,
                     profilePicture: kindeUser.picture || "/placeholder_image.svg",
@@ -45,12 +50,10 @@ class AuthenticationController {
             }
             //@ts-ignore
             req.user = user;
-            (0, SocketIO_1.initializeSocket)();
             return res.redirect("/");
         });
         this.logout = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const logoutUrl = yield kinde_1.kindeClient.logout((0, kinde_1.sessionManager)(req, res));
-            return res.redirect("/");
             return res.redirect("/");
         });
         this.getSession = (req, res) => __awaiter(this, void 0, void 0, function* () {

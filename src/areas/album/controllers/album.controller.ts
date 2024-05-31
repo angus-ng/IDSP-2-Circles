@@ -26,7 +26,7 @@ class AlbumController implements IController {
 
   private initializeRoutes() {
     this.router.post(`${this.path}/create`, ensureAuthenticated, upload.none(), this.createAlbum);
-    this.router.post(`${this.path}/:id/update`, ensureAuthenticated, this.updateAlbum);
+    this.router.post(`${this.path}/:id/addPhotos`, ensureAuthenticated, this.addPhotos);
     this.router.get(`${this.path}/:id`, ensureAuthenticated, this.showAlbum);
     // this.router.post(`${this.path}/list`, ensureAuthenticated, this.getAlbumList);
     this.router.post(`${this.path}/like`, ensureAuthenticated, this.likeAlbum);
@@ -36,6 +36,7 @@ class AlbumController implements IController {
     this.router.post(`${this.path}/comment/like`, ensureAuthenticated, this.likeComment);
     this.router.post(`${this.path}/:id/delete`, ensureAuthenticated, this.deleteAlbum);
     this.router.post(`${this.path}/photo/:id/delete`, ensureAuthenticated, this.deletePhoto);
+    this.router.post(`${this.path}/update`, ensureAuthenticated, this.updateAlbum)
   }
 
   private createAlbum = async (req: Request, res: Response) => {
@@ -76,7 +77,7 @@ class AlbumController implements IController {
     }
   }
 
-  private updateAlbum = async (req: Request, res: Response) => {
+  private addPhotos = async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
       const { photos } = req.body;
@@ -90,11 +91,11 @@ class AlbumController implements IController {
         return res.status(403).json({ success: false, error: "User is not a member of this album" });
       }
 
-      const updatedAlbum = await this._service.updateAlbum(loggedInUser, id, photos);
+      const updatedAlbum = await this._service.addPhotos(loggedInUser, id, photos);
       if (!updatedAlbum) {
         return res.status(404).json({ success: false, error: "Album not found" });
       }
-
+      //@ts-ignore
       const members = updatedAlbum.album.circle.UserCircle.map((obj => obj.user.username))
      for (let user of members) {
       if (user !== loggedInUser) {
@@ -143,22 +144,13 @@ class AlbumController implements IController {
         }
       }
 
-      const album = await this._service.getAlbum(id)
-      console.log(album)
+      const album = await this._service.getAlbum(id);
       res.status(200).json({ success: true, data: album });
 
     } catch (err) {
       res.status(200).json({ success: true, data: null, err: "Could not fetch album" })
     }
   }
-
-  // private getAlbumList = async (req:Request, res:Response) => {
-  //   let loggedInUser = await getLocalUser(req, res)
-  //   console.log (loggedInUser)
-  //   const albums = await this._service.listAlbums(loggedInUser)
-
-  //   res.json({success: true, data: albums});
-  // }
 
   private getComments = async (req: Request, res: Response) => {
     try {
@@ -258,7 +250,7 @@ class AlbumController implements IController {
       let loggedInUser = await getLocalUser(req, res)
       const { id } = req.params
       await this._service.deleteAlbum(id, loggedInUser);
-      res.json({success: true, data: null})
+      res.json({ success: true, data: null })
     } catch (err) {
       res.json({ success: true, data: null, error: "failed to delete album" });
     }
@@ -269,8 +261,20 @@ class AlbumController implements IController {
       let loggedInUser = await getLocalUser(req, res)
       const { id } = req.params
       await this._service.deletePhoto(id, loggedInUser);
+      res.json({success: true, data: null})
     } catch (err) {
       res.json({ success: true, data: null, error: "failed to delete photo" });
+    }
+  }
+
+  private updateAlbum = async (req: Request, res: Response) => {
+    try {
+      let loggedInUser = await getLocalUser(req, res)
+      const { albumId, albumName } = req.body
+      await this._service.updateAlbum(albumId, albumName, loggedInUser)
+      res.json({ success: true, data: null })
+    } catch (err) {
+      res.json({ success: true, data: null, error: "failed to update album" })
     }
   }
 }

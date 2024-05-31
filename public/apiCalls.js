@@ -161,13 +161,13 @@ async function likeAlbum(albumId) {
   }
 }
 
-async function updateAlbum(albumId, albumObj) {
+async function addPhotosToAlbum(albumId, albumObj) {
   try {
     if (!albumObj.photos || albumObj.photos.length === 0) {
       return { success: false, data: null, error: "No new photos" };
     }
-
-    let response = await fetch(`/album/${albumId}/update`, {
+    
+    let response = await fetch(`/album/${albumId}/addPhotos`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -176,6 +176,7 @@ async function updateAlbum(albumId, albumObj) {
     });
 
     const jsonResponse = await response.json();
+    console.log(jsonResponse)
     return jsonResponse;
   } catch (err) {
     return { success: false, data: null, error: err.message };
@@ -198,6 +199,16 @@ async function getActivities() {
   const response = await fetch(`/user/getActivities/`);
   const responseJson = await response.json();
   return responseJson.data;
+}
+async function clearActivities() {
+  const response = await fetch(`/user/clearActivities`, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+  });
+  const responseJson = await response.json();
+  return responseJson
 }
 
 async function acceptCircleInvite(id, invitee) {
@@ -628,6 +639,85 @@ async function deleteCircle (circleId) {
       }
     });
     const jsonResponse = await response.json();
+    return jsonResponse
+  } catch (err) {
+
+  }
+}
+
+async function deleteAlbum (albumId) {
+  try {
+    const response = await fetch(`/album/${albumId}/delete`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      }
+    });
+    const jsonResponse = await response.json();
+    return jsonResponse
+  } catch (err) {
+
+  }
+}
+
+async function deletePhoto (photoId) {
+  try {
+    const response = await fetch(`/album/photo/${photoId}/delete`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      }
+    });
+    const jsonResponse = await response.json();
+    return jsonResponse
+  } catch (err) {
+
+  }
+}
+
+async function updateAlbum (albumHelperObj) {
+  try {
+    const response = await fetch(`/album/update`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(albumHelperObj)
+    });
+    const jsonResponse = await response.json();
+    return jsonResponse
+  } catch (err) {
+
+  }
+}
+
+async function createShareLink (circleId) {
+  try {
+    const response = await fetch(`/circle/shareLink/create`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ circleId })
+    });
+    const jsonResponse = await response.json();
+    console.log(jsonResponse)
+    return jsonResponse
+  } catch (err) {
+
+  }
+}
+
+async function getSandboxData (sandboxHelper) {
+  try {
+    const response = await fetch(`/circle/${sandboxHelper.circleId}/view/${sandboxHelper.accessToken}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      }
+    });
+    const jsonResponse = await response.json();
+    console.log(jsonResponse)
     return jsonResponse
   } catch (err) {
 

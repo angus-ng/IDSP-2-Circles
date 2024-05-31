@@ -27,7 +27,7 @@ async function displayPhotoUpload(albumData) {
             <input id="fileUpload" type="file" class="hidden" multiple="false" />
           </form>
           <div class="flex justify-center mt-64 md:mt-52 mb-6">
-            <img id="uploadIcon" src="/lightmode/upload_photo.svg" alt="Upload Icon" />
+            ${uploadIcon}
           </div>
           <div class="flex justify-center">
             <p class="text-base text-grey leading-body">drag and drop to&nbsp;</p>
@@ -90,7 +90,7 @@ function displayPhotoUploadPreview(albumPhotos) {
     leftHeaderButton.innerHTML = closeIcon;
     leftHeaderButton.id = "backToAlbum";
     rightHeaderButton.textContent = "Done";
-    rightHeaderButton.id = "updateAlbum";
+    rightHeaderButton.id = "addPhotosToAlbum";
     rightHeaderButton.className = "text-lg";
   }
 
@@ -117,7 +117,6 @@ function displayPhotoUploadPreview(albumPhotos) {
     img.alt = `image ${index}`;
 
     slideDiv.appendChild(img);
-
     carouselDiv.appendChild(slideDiv);
   });
 
@@ -129,9 +128,7 @@ function displayPhotoUploadPreview(albumPhotos) {
           <p class="">your album</p>
         </div>
         <div id="addPhotos" class="flex-1 flex-col items-center bg-light-mode w-430 overflow-hidden p-2">
-          <div class="w-full">
-            
-          </div>
+          <div class="w-full"></div>
           <div class="w-full mt-3">
             <h1 class="text-h2 leading-h2 font-medium">Upload more files<h1>
           </div>
@@ -141,7 +138,7 @@ function displayPhotoUploadPreview(albumPhotos) {
             </form>
             <div class="flex flex-col justify-center items-center mx-auto">
               <div class="flex justify-center mt-28 md:mt-16 mb-5">
-                <img id="uploadIcon" src="/lightmode/upload_photo_grey.svg" alt="Upload Icon"/>
+                ${uploadIcon}
               </div>
               <div class="flex justify-center">
                 <p class="text-base text-dark-grey leading-body">drag and drop to&nbsp;</p>
@@ -407,8 +404,17 @@ async function displayAlbum(albumData) {
     leftHeaderButton.setAttribute("origin", "fromProfile");
   }
 
+  if (origin === 'fromActivities') {
+    leftHeaderButton.id = "backToActivities"
+  }
+
   if (origin === "fromSearchProfileCircle") {
     leftHeaderButton.id = "backToSearchCircle";
+  }
+
+  if (origin === "fromAlbumCreation") {
+    leftHeaderButton.id = "backToCircle"
+    leftHeaderButton.setAttribute("username", currentLocalUser)
   }
 
   if (albumData.circle.id) {
@@ -425,12 +431,10 @@ let ownedPhotosCount = 0
     <div class="flex">
     ${currentLocalUser === albumData.circle.ownerId || (currentUserMembership? currentUserMembership.mod : false) || (ownedPhotosCount > 0 ? true : false) ? 
       `<button id="albumEditButton" ownerId="${albumData.circle.ownerId}" memberStatus="${currentUserMembership.mod}">
-          <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M22 5.76359C22.0008 5.61883 21.9731 5.47533 21.9183 5.34132C21.8636 5.20731 21.7829 5.08542 21.681 4.98265L17.017 0.318995C16.9142 0.217053 16.7923 0.136401 16.6583 0.0816639C16.5243 0.026927 16.3808 -0.000818536 16.236 1.83843e-05C16.0912 -0.000818536 15.9477 0.026927 15.8137 0.0816639C15.6797 0.136401 15.5578 0.217053 15.455 0.318995L12.342 3.43176L0.319018 15.4539C0.217068 15.5566 0.136411 15.6785 0.0816699 15.8125C0.0269289 15.9466 -0.000818595 16.09 1.83857e-05 16.2348V20.8985C1.83857e-05 21.1902 0.115911 21.4699 0.3222 21.6762C0.52849 21.8825 0.808279 21.9984 1.10002 21.9984H5.76401C5.91793 22.0067 6.07189 21.9827 6.21591 21.9277C6.35993 21.8728 6.49079 21.7882 6.60001 21.6794L18.557 9.6573L21.681 6.59953C21.7814 6.49292 21.8632 6.37023 21.923 6.23655C21.9336 6.14888 21.9336 6.06025 21.923 5.97257C21.9281 5.92137 21.9281 5.86978 21.923 5.81858L22 5.76359ZM5.31301 19.7985H2.20001V16.6858L13.123 5.76359L16.236 8.87636L5.31301 19.7985ZM17.787 7.32547L14.674 4.2127L16.236 2.66182L19.338 5.76359L17.787 7.32547Z" fill="#0E0E0E"/>
-          </svg>
+        ${circleEditIcon}
       </button>` : ""}
       <button id="shareButton">
-        <img src="/lightmode/share_icon.svg" alt="Share Button" id="shareAlbum">
+        ${shareIcon}
       </button>
     </div>
   </div>`;
@@ -455,7 +459,7 @@ let ownedPhotosCount = 0
 
   const photoList = albumData.photos.map((obj) => {
     return `
-    <div class="photo w-full h-min relative" albumId="${obj.id}" poster="${obj.userId}">
+    <div class="photo w-full h-min relative" photoId="${obj.id}" poster="${obj.userId}">
       <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.src}"/>
       <button class="deletePhoto absolute top-0 right-0 p-2 z-20 hidden">${photoDeleteIcon}</button>
     </div>`;
@@ -493,15 +497,7 @@ let ownedPhotosCount = 0
       <div class="grid grid-cols-2 justify-between place-items-center mt-12 mb-2 mr-0">
         <p class="col-span-1 text-base font-medium justify-self-start">${albumData.photos.length} Photos</p>
         <button id="addPhotos" class="col-span-1 justify-self-end w-6 h-6" albumId="${albumData.id}">
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-            <g id="SVGRepo_iconCarrier">
-              <path d="M13 4H8.8C7.11984 4 6.27976 4 5.63803 4.32698C5.07354 4.6146 4.6146 5.07354 4.32698 5.63803C4 6.27976 4 7.11984 4 8.8V15.2C4 16.8802 4 17.7202 4.32698 18.362C4.6146 18.9265 5.07354 19.3854 5.63803 19.673C6.27976 20 7.11984 20 8.8 20H15.2C16.8802 20 17.7202 20 18.362 19.673C18.9265 19.3854 19.3854 18.9265 19.673 18.362C20 17.7202 20 16.8802 20 15.2V11" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-              <path d="M4 16L8.29289 11.7071C8.68342 11.3166 9.31658 11.3166 9.70711 11.7071L13 15M13 15L15.7929 12.2071C16.1834 11.8166 16.8166 11.8166 17.2071 12.2071L20 15M13 15L15.25 17.25" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-              <path d="M18.5 3V5.5M18.5 8V5.5M18.5 5.5H16M18.5 5.5H21" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-            </g>
-          </svg>
+          ${addPhotosIcon}
         </button>
       </div>
       <div id="photoList" class="pb-48 w-full">
@@ -536,7 +532,8 @@ let ownedPhotosCount = 0
     const overlay = event.target.closest("#photoOverlay");
     const addMorePhotos = event.target.closest("#addPhotos");
     const like = event.target.closest(".like");
-    
+    const deletePhoto = event.target.closest(".deletePhoto");
+
     if (photo) {
       await displayPhoto(photo.src);
     }
@@ -551,6 +548,7 @@ let ownedPhotosCount = 0
     }
 
     if (addMorePhotos) {
+      nav.classList.add("hidden");
       const albumId = addMorePhotos.getAttribute("albumId");
       const albumData = await getAlbum(albumId);
       await displayPhotoUpload(albumData);
@@ -578,6 +576,12 @@ let ownedPhotosCount = 0
         }
       }
       return;
+    }
+
+    if (deletePhoto) {
+      const photoId = event.target.closest("div.photo").getAttribute("photoId")
+      const albumId = document.querySelector("div.like").getAttribute("albumId");
+      await displayConfirmationPopup("delete photo", { photoId, albumId });
     }
   });
 }
@@ -631,9 +635,7 @@ async function displayListOfAlbums(data, user, profile = false) {
             </svg>
           </div>
           <div class="comment cursor-pointer" albumid="${obj.id}">
-            <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M10.5 19.125C8.79414 19.125 7.12658 18.6192 5.70821 17.6714C4.28983 16.7237 3.18434 15.3767 2.53154 13.8006C1.87873 12.2246 1.70793 10.4904 2.04073 8.81735C2.37352 7.14426 3.19498 5.60744 4.4012 4.40121C5.60743 3.19498 7.14426 2.37353 8.81735 2.04073C10.4904 1.70793 12.2246 1.87874 13.8006 2.53154C15.3767 3.18435 16.7237 4.28984 17.6714 5.70821C18.6192 7.12658 19.125 8.79414 19.125 10.5C19.125 11.926 18.78 13.2705 18.1667 14.455L19.125 19.125L14.455 18.1667C13.2705 18.78 11.925 19.125 10.5 19.125Z" stroke="#F8F4EA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+            ${commentIcon}
           </div>
         </div>
       </div>`;
@@ -739,9 +741,7 @@ async function displayComments(albumId, currentUserProfilePicture, circleId) {
     return arr.join("");
   };
 
-  const modal = document.querySelector("#modal");
-  modal.classList.remove("hidden");
-  modal.classList.add("shown");
+  openModal();
   const modalContent = document.querySelector("#modalContent");
   modalContent.innerHTML = `
   <div class="flex flex-col max-w-430 max-h-527 justify-center mx-auto text-black">
@@ -790,8 +790,7 @@ async function displayComments(albumId, currentUserProfilePicture, circleId) {
           <div class="flex justify-between items-center p-3">
             <p class="text-white ml-1">Replying to @${commentUser}</p>
             <button id="closeReply" class="h-4 w-4 mr-2">
-              <svg viewBox="0 0 24.00 24.00" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5 5L19 19M5 19L19 5" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path> </g>
-              </svg>
+              ${closeReplyIcon}
             </button>
           </div>`;
 
@@ -831,11 +830,7 @@ async function displayComments(albumId, currentUserProfilePicture, circleId) {
         like.querySelector("svg path").setAttribute("fill", "#FF4646");
         like.querySelector("svg path").setAttribute("stroke", "#FF4646");
         await likeComment(commentId);
-        return await displayComments(
-          albumId,
-          currentUserProfilePicture,
-          circleId
-        );
+        return await displayComments(albumId, currentUserProfilePicture, circleId);
       }
       return;
     }
@@ -864,7 +859,7 @@ async function displayAlbumEditMode(albumId, ownerId, memberStatus) {
     rightHeaderButton.innerHTML = `
     <div class="flex flex-row flex-nowrap gap-2 items-center">
     ${currentLocalUser === ownerId ? `
-    <button id="deleteAlbum" class="w-6 h-6">
+    <button id="deleteAlbum" albumId="${albumId}" class="w-6 h-6">
       ${deleteIcon}
     </button>` : ""}
       <button id="updateAlbum" albumId="${albumId}" class="text-lg">Save</button>
@@ -872,9 +867,9 @@ async function displayAlbumEditMode(albumId, ownerId, memberStatus) {
 
     const albumName = document.querySelector("#albumName h2");
     const albumNameInput = document.createElement("input");
-    albumNameInput.id = "circleNameInput";
+    albumNameInput.id = "albumNameInput";
     albumNameInput.type = "text";
-    albumNameInput.placeholder = "Add a circle name";
+    albumNameInput.placeholder = "Add a album name";
     albumNameInput.value = albumName.textContent;
     albumNameInput.className = "max-w-full text-center bg-transparent text-20 text-black font-light border-dark-grey";
     albumName.remove();
@@ -882,7 +877,11 @@ async function displayAlbumEditMode(albumId, ownerId, memberStatus) {
   } else {
     document.querySelectorAll(`div.photo[poster="${currentLocalUser}"] > button.deletePhoto`).forEach((photo) => {
       photo.classList.add("bg-overlay-bg", "rounded-[10px]");
-      photo.classList.remove("hidden");
+      if (photo.classList.contains("hidden")) {
+        photo.classList.remove("hidden");
+      } else {
+        photo.classList.add("hidden")
+      }
     });
   }
   pageName.textContent = "Edit";
@@ -890,4 +889,58 @@ async function displayAlbumEditMode(albumId, ownerId, memberStatus) {
   if (page === "albumEdit") {
     pageName.classList.add("text-light-mode-accent");
   }
+}
+
+async function displaySandboxAlbum(albumData, circleData) {
+  pageName.textContent = circleData.name;
+  leftHeaderButton.innerHTML = backIcon;
+  leftHeaderButton.id = "backToAlbumSandbox";
+
+  const photoList = albumData.photos.map((obj) => {
+    return `
+    <div class="photo w-full h-min relative">
+      <img class="w-full max-h-56 h-min rounded-xl object-cover" src="${obj.src}"/>
+    </div>`;
+  });
+
+  let albumName = document.createElement("h2");
+  albumName.className = "flex justify-center font-medium text-lg";
+  albumName.textContent = albumData.name;
+
+  pageContent.innerHTML = `
+    <div id="albumPhotos">
+      <div id="circleImage" class="relative flex justify-center mt-6 mb-1.5">
+        <img src="${circleData.picture}" class="rounded-full w-180 h-180 object-cover"/>
+      </div>
+      <div class="relative my-3 flex justify-center items-center max-w-full h-11" id="albumName">
+        ${albumName.outerHTML}
+      </div>
+      <div class="w-full">
+        ${albumData.photos.length} Photos
+      </div>
+      <div id="photoList" class="pb-48 w-full">
+        <div class="columns-2 gap-4 space-y-4 grid-flow-row">
+          ${photoList.join("")}
+        </div>
+      </div>
+  </div>`;
+
+  const albumPhotos = document.querySelector("#albumPhotos");
+  albumPhotos.addEventListener("click", async(event) => {
+    const photo = event.target.closest(".photo img");
+    const overlay = event.target.closest("#photoOverlay");
+    
+    if (photo) {
+      await displayPhoto(photo.src);
+    }
+
+    if (overlay) {
+      const img = event.target.closest("#image");
+      if (img) {
+        event.stopPropagation();
+      } else {
+        overlay.remove();
+      }
+    }
+  });
 }

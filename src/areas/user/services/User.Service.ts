@@ -1,12 +1,12 @@
 import { User } from "@prisma/client";
 import DBClient from "../../../PrismaClient";
 import IUserService from "./IUserService";
-import Activies from "./../../../interfaces/activities.interface";
+import Activities from "./../../../interfaces/activities.interface";
 
 export class UserService implements IUserService {
   readonly _db: DBClient = DBClient.getInstance();
 
-  async friend(requester: string, requestee: string): Promise<void|{requestee:string, requester:string, status:string}> {
+  async friend(requester: string, requestee: string): Promise<void | { requestee: string, requester: string, status: string }> {
     try {
       const exists = await this._db.prisma.friendRequest.findUnique({
         where: {
@@ -40,7 +40,7 @@ export class UserService implements IUserService {
           status: false
         }
       })
-      return {requester, requestee, status: "sentRequest"}
+      return { requester, requestee, status: "sentRequest" }
     } catch (error: any) {
       throw new Error(error)
     }
@@ -111,7 +111,7 @@ export class UserService implements IUserService {
 
     }
   }
-  async getActivities(username: string): Promise<void | Activies> {
+  async getActivities(username: string): Promise<void | Activities> {
     try {
       const friendRequests = await this._db.prisma.friendRequest.findMany({
         where: {
@@ -134,16 +134,277 @@ export class UserService implements IUserService {
           circle: {}
         }
       })
-      const activities: Activies = {
+      const newCommentActivities = await this._db.prisma.activity.findMany({
+        where: {
+          userId: username,
+          type: 'NEW_COMMENT'
+        },
+        orderBy: {
+          createdAt: 'desc'
+        },
+        select: {
+          id: true,
+          type: true,
+          createdAt: true,
+          user: {
+            select: {
+              username: true,
+              profilePicture: true
+            }
+          },
+          album: {
+            select: {
+              name: true,
+              photos: {
+                take: 1,
+                select: {
+                  src: true
+                }
+              },
+              id: true,
+              circle: {
+                select: {
+                  id:true
+                }
+              }
+            }
+          },
+          comment: {
+            include: {
+              user: {
+                select: {
+                  username: true,
+                  profilePicture: true
+                }
+              }
+            }
+          }
+        }
+      });
+
+      const replyToCommentActivities = await this._db.prisma.activity.findMany({
+        where: {
+          userId: username,
+          type: 'REPLY_TO_COMMENT'
+        },
+        orderBy: {
+          createdAt: 'desc'
+        },
+        select: {
+          id: true,
+          type: true,
+          createdAt: true,
+          user: {
+            select: {
+              username: true,
+            }
+          },
+          album: {
+            select: {
+              name: true,
+              photos: {
+                take: 1,
+                select: {
+                  src: true
+                },
+              },
+              id: true
+            }
+          },
+          comment: {
+            select: {
+              message: true,
+              userId: true
+            }
+          }
+        }
+      });
+
+      const likeAlbumActivities = await this._db.prisma.activity.findMany({
+        where: {
+          userId: username,
+          type: 'LIKE_ALBUM'
+        },
+        orderBy: {
+          createdAt: 'desc'
+        },
+        select: {
+          id: true,
+          type: true,
+          createdAt: true,
+          user: {
+            select: {
+              username: true,
+            }
+          },
+          album: {
+            select: {
+              name: true,
+              photos: {
+                take: 1,
+                select: {
+                  src: true
+                }
+              },
+              id: true
+            }
+          },
+          like: {
+            select: {
+              user: {
+                select: {
+                  username: true,
+                  profilePicture: true
+                }
+              }
+            }
+          }
+        }
+      });
+      const likeCommentActivities = await this._db.prisma.activity.findMany({
+        where: {
+          userId: username,
+          type: "LIKE_COMMENT"
+        }, orderBy: {
+          createdAt: 'desc'
+        },
+        include: {
+          comment: {
+            include: {
+              album: {
+                select: {
+                  photos: {
+                    take: 1,
+                    select: {
+                      src: true
+                    }
+                  },
+                  name: true,
+                  id: true,
+                  circle: {
+                    select: {
+                      id:true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          like: {
+            include: {
+              user: {
+                select: {
+                  profilePicture: true,
+                  username: true
+                }
+              }
+            }
+          },
+          user: {
+            select: {
+              profilePicture: true
+            }
+          }
+        }
+      })
+      const newPhotoActivities = await this._db.prisma.activity.findMany({
+        where: {
+          userId: username,
+          type: "ADD_PHOTOS"
+        },
+        orderBy: {
+          createdAt: 'desc'
+        },
+        include: {
+          photo: {
+            include: {
+              album: {
+                select: {
+                  name: true,
+                  photos: {
+                    take: 1,
+                    select: {
+                      src: true
+                    }
+                  }
+                }
+              },
+              poster: {
+                select: {
+                  username: true,
+                  profilePicture: true
+                }
+              }
+            }
+          }
+        }
+      })
+      const newAlbumActivities = await this._db.prisma.activity.findMany({
+        where: {
+          userId: username,
+          type: "NEW_ALBUM"
+        },
+        orderBy: {
+          createdAt: 'desc'
+        },
+        select: {
+          id: true,
+          type: true,
+          createdAt: true,
+          user: {
+            select: {
+              username: true,
+            }
+          },
+          album: {
+            select: {
+              name: true,
+              photos: {
+                take: 1,
+                select: {
+                  src: true
+                }
+              },
+              owner: {
+                select: {
+                  username: true,
+                  profilePicture: true
+                }
+              },
+              id: true
+            }
+          },
+        }
+      })
+      const activities: Activities = {
         friendRequests: friendRequests,
         circleInvites: circleInvites,
-      }
+        newCommentActivities: newCommentActivities,
+        replyToCommentActivities: replyToCommentActivities,
+        likeAlbumActivities: likeAlbumActivities,
+        newPhotoActivities: newPhotoActivities,
+        likeCommentActivities: likeCommentActivities,
+        newAlbumActivities: newAlbumActivities
+      };
+
       return activities
     } catch (error: any) {
       throw new Error(error)
     }
   }
-  async acceptRequest(requester: string, requestee: string): Promise<void |{requester:string, requestee:string,status:string}> {
+  async clearActivities(username: string): Promise<any> {
+    try {
+      await this._db.prisma.activity.deleteMany({
+        where: {
+          userId: username
+        }
+      });
+      return
+    } catch (error: any) {
+      throw new Error(error);
+    }
+  }
+  async acceptRequest(requester: string, requestee: string): Promise<void | { requester: string, requestee: string, status: string }> {
     try {
       const friendRequest = await this._db.prisma.friendRequest.findUnique({
         where: {
@@ -175,7 +436,7 @@ export class UserService implements IUserService {
             friend_2_name: requestee
           }
         })
-        return {requester, requestee, status:"accept"}
+        return { requester, requestee, status: "accept" }
       } else {
         throw new Error("You have not been friend requested by this user")
       }
@@ -299,12 +560,12 @@ export class UserService implements IUserService {
               },
               likes: {
                 select: {
-                    user: {
-                        select: {
-                            username: true,
-                            profilePicture: true,
-                        }
+                  user: {
+                    select: {
+                      username: true,
+                      profilePicture: true,
                     }
+                  }
                 }
               },
             }
@@ -436,9 +697,9 @@ export class UserService implements IUserService {
           friend_2_name: true
         }
       })
-  
-      const friendAlbums:any = [];
-      
+
+      const friendAlbums: any = [];
+
       for await (const friend of friends) {
         const albums = await this._db.prisma.album.findMany({
           where: {
@@ -450,62 +711,63 @@ export class UserService implements IUserService {
             },
             {
               circle: {
-                UserCircle: {some: {user: {username: username}}}
+                UserCircle: { some: { user: { username: username } } }
               },
-              ownerName: friend.friend_2_name}]
-              },
-              orderBy: {
-                createdAt: "desc"
-              },
-              include: {
-                likes: {
+              ownerName: friend.friend_2_name
+            }]
+          },
+          orderBy: {
+            createdAt: "desc"
+          },
+          include: {
+            likes: {
+              select: {
+                user: {
                   select: {
-                      user: {
-                          select: {
-                              username: true,
-                              profilePicture: true,
-                          }
-                    }
-                  }
-                },
-                owner: {
-                  select: {
-                    displayName: true,
                     username: true,
-                    profilePicture: true
+                    profilePicture: true,
                   }
-                },
-                circle: {
-                  select: {
-                    picture: true
-                  }
-                },
-                photos: true
+                }
               }
+            },
+            owner: {
+              select: {
+                displayName: true,
+                username: true,
+                profilePicture: true
+              }
+            },
+            circle: {
+              select: {
+                picture: true
+              }
+            },
+            photos: true
+          }
         })
-        if (albums.length){
+        if (albums.length) {
           albums.forEach((album) => {
             friendAlbums.push(album)
           })
         }
       }
-  
-      friendAlbums.sort((a:any, b:any) => b.createdAt - a.createdAt)
-      
+
+      friendAlbums.sort((a: any, b: any) => b.createdAt - a.createdAt)
+
       return friendAlbums
     } catch (err) {
       throw err;
     }
-  
+
   }
   async updateProfilePicture(currentUser: string, src: string): Promise<void> {
     try {
       await this._db.prisma.user.update({
         where: {
           username: currentUser
-        }, 
+        },
         data: {
-          profilePicture : src
+          profilePicture: src
         }
       })
     } catch (err) {
@@ -517,9 +779,9 @@ export class UserService implements IUserService {
       await this._db.prisma.user.update({
         where: {
           username: currentUser
-        }, 
+        },
         data: {
-          displayName : name
+          displayName: name
         }
       })
     } catch (err) {
@@ -541,7 +803,7 @@ export class UserService implements IUserService {
           },
           include: {
             photos: {
-              
+
             }
           }
         }

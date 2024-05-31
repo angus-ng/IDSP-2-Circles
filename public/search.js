@@ -8,7 +8,7 @@ async function displaySearch() {
           <div class="fixed mb-6">
             <div class="relative w-full h-12 bg-light-mode">
               <input type="text" id="searchBox" class="w-380 px-10 py-2 mt-2 border-grey border-2 rounded-input-box text-secondary leading-secondary" placeholder="search account">
-              <img src="/lightmode/search_icon_grey.svg" alt="search icon" class="absolute left-3 top-3.5 w-25 h-25"/>
+              <div class="absolute left-3 top-3.5 w-25 h-25">${searchBarIcon}</div>
             </div>
           </div>
           <div class="flex flex-col shrink-0 justify-center w-380">

@@ -7,7 +7,7 @@ import { io } from '../../../app';
 
 declare global {
   namespace Express {
-    interface User extends IUser {}
+    interface User extends IUser { }
   }
 }
 
@@ -15,10 +15,10 @@ class AuthenticationController implements IController {
   public path = "/auth";
   public router = express.Router();
   private _service: IAuthenticationService;
-  
+
   constructor(service: IAuthenticationService) {
     this.initializeRoutes();
-    this._service = service; 
+    this._service = service;
   }
   private initializeRoutes() {
     this.router.get(`${this.path}/getSession`, this.getSession)
@@ -28,7 +28,7 @@ class AuthenticationController implements IController {
     this.router.get(`${this.path}/logout`, this.logout)
   }
 
-  private login = async (req:Request, res:Response) => {
+  private login = async (req: Request, res: Response) => {
     const loginUrl = await kindeClient.login(sessionManager(req, res));
     return res.redirect(loginUrl.toString());
   }
@@ -42,12 +42,18 @@ class AuthenticationController implements IController {
     const url = new URL(`${req.protocol}://${req.get("host")}${req.url}`);
     await kindeClient.handleRedirectToApp(sessionManager(req, res), url);
     const kindeUser = await kindeClient.getUser(sessionManager(req, res))
+    console.log(kindeUser)
     let user = await this._service.getUserById(kindeUser.id)
     if (!user) {
       //@ts-ignore
+      let username = kindeUser.username
+      if (!username) {
+        username = kindeUser.given_name + kindeUser.family_name + Math.floor(Math.random() * 100000)
+      }
+      //@ts-ignore
       user = await this._service.createUser({
         id: kindeUser.id,
-        username: kindeUser.given_name + kindeUser.family_name + Math.floor(Math.random()*100000),
+        username: username,
         firstName: kindeUser.family_name,
         lastName: kindeUser.given_name,
         profilePicture: kindeUser.picture || "/placeholder_image.svg",
@@ -61,22 +67,22 @@ class AuthenticationController implements IController {
   }
 
   private logout = async (req: Request, res: Response) => {
-      const logoutUrl = await kindeClient.logout(sessionManager(req, res));
-      return res.redirect("/");
+    const logoutUrl = await kindeClient.logout(sessionManager(req, res));
+    return res.redirect("/");
   }
 
   private getSession = async (req: Request, res: Response) => {
     try {
       if (req.user) {
-        res.json({success: true, username: req.user?.username})
+        res.json({ success: true, username: req.user?.username })
       } else {
         const kindeUser = await kindeClient.getUser(sessionManager(req, res))
         const user = await this._service.getUserById(kindeUser.id)
-        res.json({success: true, username: user?.username})
+        res.json({ success: true, username: user?.username })
       }
       // make this return the user family name igven name picture email id whatvere u want or make user make a new name.
     } catch (error) {
-      res.json({success: false, errorMessage: "Not logged in"})
+      res.json({ success: false, errorMessage: "Not logged in" })
     }
   }
 }
