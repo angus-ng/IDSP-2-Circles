@@ -95,7 +95,7 @@ class AlbumController implements IController {
       if (!updatedAlbum) {
         return res.status(404).json({ success: false, error: "Album not found" });
       }
-
+      //@ts-ignore
       const members = updatedAlbum.album.circle.UserCircle.map((obj => obj.user.username))
      for (let user of members) {
       if (user !== loggedInUser) {

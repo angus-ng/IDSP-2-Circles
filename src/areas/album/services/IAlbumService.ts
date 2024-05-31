@@ -25,7 +25,7 @@ export interface AlbumFromGetAlbum {
 export default interface IAlbumService {
     createAlbum(newAlbumInput: any):Promise<{user: string, members:string[], circleName:string, id:string}|undefined>
     //deleteAlbum(id: string, currentUser: string): Promise<void>
-    addPhotos(currentUser: string, albumId: string, newPhoto: any[]): Promise<Album | null>
+    addPhotos(currentUser: string, albumId: string, newPhoto: any[]): Promise<any | null>
     checkMembership(id: string, currentUser: string, circleId?: boolean): Promise<boolean>
     checkPublic(id: string): Promise<boolean>
     getAlbum(id: string): Promise<AlbumFromGetAlbum | null>
