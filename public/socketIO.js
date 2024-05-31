@@ -10,6 +10,10 @@ socket.on('newAlbum',function(data){
 })
 
 socket.on('updateAlbum',function(data){
+  if (data.photoCount == "1") {
+    displayPopup(`${data.user} has added a photo in ${data.albumName}`)
+    return
+  }
   displayPopup(`${data.user} has added ${data.photoCount} photos in ${data.albumName}`)
   console.log(data.user, data.albumId);
 })   

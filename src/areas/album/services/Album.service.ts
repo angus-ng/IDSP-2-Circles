@@ -543,6 +543,9 @@ export class AlbumService implements IAlbumService {
                     }
                 })
             }
+            console.log(childComment)
+
+            console.log(childComment)
             if (childComment) {
                 if (childComment.parent)
                     childComment = childComment.parent

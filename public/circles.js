@@ -228,6 +228,7 @@ async function displayListOfCirclesHorizontally(data) {
 async function displayCircle(circleData) {
 
   const origin = leftHeaderButton.getAttribute("origin");
+  console.log(origin)
   const circleId = circleData.circle.id;
   leftHeaderButton.innerHTML = backIcon;
   leftHeaderButton.setAttribute("circleId", circleId);

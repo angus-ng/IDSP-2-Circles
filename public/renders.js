@@ -784,7 +784,7 @@ async function displayProfile(userData) {
           if (origin === "fromSearch") {
             leftHeaderButton.setAttribute("origin", "fromSearchProfile");
           } else {
-            leftHeaderButton.setAttribute("origin", "fromProfile");
+            leftHeaderButton.setAttribute("origin", "fromSearchProfile");
           }
           await displayCircle(data, userData.username);
         }
