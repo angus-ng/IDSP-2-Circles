@@ -93,7 +93,7 @@ async function displayCreateCircle() {
       const privacyLabel = document.querySelector("#privacyLabel");
       privacyIcon.src = "/lightmode/lock_icon.svg";
       privacyLabel.innerHTML = "Private";
-      updateCheckbox();
+      await updateCheckbox();
     });
     return;
   }
