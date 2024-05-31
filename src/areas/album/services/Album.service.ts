@@ -261,6 +261,7 @@ export class AlbumService implements IAlbumService {
     }
 
     async addPhotos(currentUser: string, id: string, newPhotos: any[]): Promise<any> {
+        const album = await this.getAlbum(id)
         const hasPermission = await this.checkMembership(id, currentUser);
         if (!hasPermission) {
             throw new Error("User does not have permission to update this album.");
