@@ -341,9 +341,9 @@ async function displayActivity() {
   }
 
   function displaySingleActivity(obj) {
-    return `<div class="flex items-center my-3 user" id="activity-item" albumId="${obj.albumId}" type="${obj.type}" circleId="${obj.circleId}" profilePicture="${obj.profilePicture}">
+    return `<div class="flex items-center my-3 user cursor-pointer" id="activity-item" albumId="${obj.albumId}" type="${obj.type}" circleId="${obj.circleId}" profilePicture="${obj.profilePicture}">
     <div class="flex-none w-58">
-      <img username="${obj.user.username} class="rounded-full w-58 h-58 object-cover" src="${obj.user.profilePicture}" alt="${obj.user.username}'s profile picture"/>
+      <img username="${obj.user.username}" class="rounded-full w-58 h-58 object-cover" src="${obj.user.profilePicture}" alt="${obj.user.username}'s profile picture"/>
     </div>
     <div class="ml-8 flex-none w-207">
       ${obj.activity} 
