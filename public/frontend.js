@@ -188,7 +188,9 @@ header.addEventListener("click", async (event) => {
       break;
     }
     case "friendsBackButton": {
-      navigationHistory.pop();
+      if (navigationHistory.length > 1) {
+        navigationHistory.pop();
+      }
       const previousUser = navigationHistory[navigationHistory.length - 1];
       const { success, data } = await getUser(previousUser);
       if (success && data) {
