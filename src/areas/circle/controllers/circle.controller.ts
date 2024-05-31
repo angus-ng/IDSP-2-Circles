@@ -200,7 +200,9 @@ class CircleController implements IController {
       }
       const circle = await this._service.updateCircle(loggedInUser, circleObj) //this checks for ownership
       for (let member of circle.members) {
-        io.to(member).emit("updateCircle", {user: loggedInUser, circleName: circle.name})
+        if (member !== loggedInUser) {
+          io.to(member).emit("updateCircle", {user: loggedInUser, circleName: circle.name})
+        }
       }
       res.status(200).json({ success: true, data: circle.id })
     } catch (err) {
