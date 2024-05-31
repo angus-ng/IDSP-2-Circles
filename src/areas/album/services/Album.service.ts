@@ -556,6 +556,7 @@ export class AlbumService implements IAlbumService {
                             userId: childComment.userId,
                             albumId: albumId,
                             commentId: commentId,
+                            //@ts-ignore
                             repliedToUserId: childComment.parent.userId
                         }
                     });

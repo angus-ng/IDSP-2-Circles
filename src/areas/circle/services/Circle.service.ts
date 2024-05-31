@@ -158,6 +158,7 @@ export class CircleService implements ICircleService {
     })
     members = members.map((member) => {
         if (member.user.username === owner?.ownerId) {
+            //@ts-ignore
             member.user.owner = true;
         }
         return member

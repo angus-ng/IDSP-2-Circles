@@ -178,6 +178,7 @@ class CircleService {
             });
             members = members.map((member) => {
                 if (member.user.username === (owner === null || owner === void 0 ? void 0 : owner.ownerId)) {
+                    //@ts-ignore
                     member.user.owner = true;
                 }
                 return member;

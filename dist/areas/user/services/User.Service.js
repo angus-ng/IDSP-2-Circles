@@ -161,7 +161,12 @@ class UserService {
                 const newCommentActivities = yield this._db.prisma.activity.findMany({
                     where: {
                         userId: username,
-                        type: 'NEW_COMMENT'
+                        type: 'NEW_COMMENT',
+                        comment: {
+                            message: {
+                                not: null
+                            }
+                        }
                     },
                     orderBy: {
                         createdAt: 'desc'
@@ -208,7 +213,7 @@ class UserService {
                 const replyToCommentActivities = yield this._db.prisma.activity.findMany({
                     where: {
                         userId: username,
-                        type: 'REPLY_TO_COMMENT'
+                        type: 'REPLY_TO_COMMENT',
                     },
                     orderBy: {
                         createdAt: 'desc'

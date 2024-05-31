@@ -546,6 +546,8 @@ class AlbumService {
                         }
                     });
                 }
+                console.log(childComment);
+                console.log(childComment);
                 if (childComment) {
                     if (childComment.parent)
                         childComment = childComment.parent;
@@ -556,6 +558,7 @@ class AlbumService {
                                 userId: childComment.userId,
                                 albumId: albumId,
                                 commentId: commentId,
+                                //@ts-ignore
                                 repliedToUserId: childComment.parent.userId
                             }
                         });
