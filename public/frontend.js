@@ -88,7 +88,6 @@ header.addEventListener("click", async (event) => {
       const albumId = document.querySelector(".leftButton").getAttribute("albumId")
       const ownerId = document.querySelector("#albumEditButton").getAttribute("ownerId")
       const memberStatus = document.querySelector("#albumEditButton").getAttribute("memberStatus") 
-      console.log(ownerId)
       await displayAlbumEditMode(albumId, ownerId, memberStatus);
       break;
     }
@@ -451,7 +450,7 @@ header.addEventListener("click", async (event) => {
     }
     case "backToAlbumSandbox": {
       leftHeaderButton.innerHTML = "";
-      const url = document.location.href.split("http://")[1].split("/")
+      const url = document.location.href.split("https://")[1].split("/")
       const sandboxHelper = {
         circleId : url[2],
         accessToken : url[4]

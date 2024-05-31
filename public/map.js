@@ -155,7 +155,6 @@ async function displayAddLocation() {
         const autocomplete = new google.maps.places.Autocomplete(input);
         autocomplete.addListener('place_changed', function() {
           const place = autocomplete.getPlace();
-          console.log(place)
           if (!place.geometry) {
             console.error("Place details not available for input: '" + place.name + "'");
             return;
@@ -166,9 +165,6 @@ async function displayAddLocation() {
           let popupMessage = 'Selected '+ place.name
           displayPopup(popupMessage)
           albumObj.location = {lat: place.geometry.location.lat(), long: place.geometry.location.lng()}
-          console.log("Place Name: " + place.name);
-          console.log("Place Address: " + place.formatted_address);
-          console.log("Place Location (Lat, Lng): " + place.geometry.location.lat() + ", " + place.geometry.location.lng());
         });
       }
     `;

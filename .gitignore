@@ -1,7 +1,7 @@
 node_modules
 .env
 error.log
+.dockerignore
+docker-entrypoint
 Dockerfile
 fly.toml
-docker-entrypoint
-.dockerignore

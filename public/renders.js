@@ -360,7 +360,6 @@ async function displayActivity() {
   const activityPreviews = allActivities.map(activity => {
     let activityContent = '';
     let activityObj = {}
-    console.log(activity)
     switch (activity.type) {
       case 'NEW_COMMENT':
         activityObj = {
@@ -493,7 +492,6 @@ async function displayActivity() {
     if (clickedActivity) {
         const albumId = clickedActivity.firstChild.getAttribute("albumid")
         const type = clickedActivity.firstChild.getAttribute("type")
-        console.log(type, clickedActivity.firstChild)
         if (type === "album") {
           let { success, data, error } = await getAlbum(albumId);
             if (success && data) {
