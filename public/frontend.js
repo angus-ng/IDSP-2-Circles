@@ -20,7 +20,7 @@ let navigationHistory = [];
 
 async function initiatePage() {
   let sandbox = false;
-  const url = document.location.href.split("https://")[1].split("/")
+  const url = document.location.href.split("http://")[1].split("/")
   if (url.length === 5 && url[1] === "circle" && url[3] === "view") {
     sandbox = true;
   } 
@@ -37,6 +37,8 @@ async function initiatePage() {
       await displaySandboxCircle(data);
     }
     return await displayCircle
+  } else if (sandbox && currentLocalUser) {
+    await displayConfirmationPopup("Invited to Circle", { url })
   } else if (!currentLocalUser) {
     await displayLoginPage();
   } else {
@@ -450,7 +452,7 @@ header.addEventListener("click", async (event) => {
     }
     case "backToAlbumSandbox": {
       leftHeaderButton.innerHTML = "";
-      const url = document.location.href.split("https://")[1].split("/")
+      const url = document.location.href.split("http://")[1].split("/")
       const sandboxHelper = {
         circleId : url[2],
         accessToken : url[4]

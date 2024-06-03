@@ -211,6 +211,13 @@ async function displayConfirmationPopup(activity, helperObj) {
     confirmationIcon.innerHTML = largeDeleteIcon;
   }
 
+  if (activity === "Invited to Circle") {
+    confirmationDetails.innerHTML = `
+      <p class="text-14">You have been invited to join.</p>`;
+    contextButton.textContent = "Join";
+    confirmationIcon.innerHTML = shareIcon;
+  }
+
   const confirmEventHandler = async (event) => {
     event.stopImmediatePropagation();
     const cancelButton = event.target.closest("#cancelButton");
@@ -222,6 +229,15 @@ async function displayConfirmationPopup(activity, helperObj) {
     }
     if (cancelButton) {
       closeWindowAfterAction();
+
+      if (activity === "Invited to Circle") {
+        const { success, data } = await getUser(currentLocalUser);
+        if (success && data) {
+          window.location = "/";
+          await displayExplore(data);
+        }
+      }
+      return;
     }
 
     if (contextButton) {
@@ -275,6 +291,10 @@ async function displayConfirmationPopup(activity, helperObj) {
             await displayAlbum(data);
           }
         }
+      }
+
+      if (activity === "Invited to Circle") {
+        console.log("do something")
       }
     }
   };

@@ -473,7 +473,6 @@ let ownedPhotosCount = 0
   const likedClass = userLiked ? "liked" : "";
   const heartColor = userLiked ? "#FF4646" : "none";
   const heartColorStroke = userLiked ? "#FF4646" : "black";
-  
   pageContent.innerHTML = `
     <div id="albumPhotos">
       <div id="memberList" class="grid grid-rows-2 grid-cols-3 mt-8 mx-auto items-center justify-center w-265 gap-2 h-84">
@@ -492,9 +491,9 @@ let ownedPhotosCount = 0
       </div>
       <div class="grid grid-cols-2 justify-between place-items-center mt-12 mb-2 mr-0">
         <p class="col-span-1 text-base font-medium justify-self-start">${albumData.photos.length} Photos</p>
-        <button id="addPhotos" class="col-span-1 justify-self-end w-6 h-6" albumId="${albumData.id}">
+        ${currentUserMembership ? `<button id="addPhotos" class="col-span-1 justify-self-end w-6 h-6" albumId="${albumData.id}">
           ${addPhotosIcon}
-        </button>
+        </button>` : ""}
       </div>
       <div id="photoList" class="pb-48 w-full">
         <div class="columns-2 gap-4 space-y-4 grid-flow-row">
