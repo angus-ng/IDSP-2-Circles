@@ -964,8 +964,10 @@ async function displayProfile(userData) {
     saveButton.addEventListener("click", async(event) => {
       event.preventDefault();
       userData.displayName = displayNameInput.value;
-      await updateDisplayName(userData.displayName);
-      await displaySettings();
+      const {success, error} = await updateDisplayName(userData.displayName);
+      if (success && !error) {
+        await displayPopup("Display name updated.")
+      }
     });
 
     const profilePicture = document.querySelector("#profilePicture");

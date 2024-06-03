@@ -196,8 +196,9 @@ class UserController implements IController {
       const { name } = req.body;
       let loggedInUser = await getLocalUser(req, res);
       const newDisplayName = await this._service.updateDisplayName(loggedInUser, name);
+      res.status(200).json({ success: true, data: null })
     } catch (err) {
-
+      res.status(200).json({ success: true, data: null, error: "failed to update display name"})
     }
   }
 
