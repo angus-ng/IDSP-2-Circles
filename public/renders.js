@@ -255,9 +255,13 @@ async function displayConfirmationPopup(activity, helperObj) {
       }
       if (activity.slice(0, 6) === "remove") {
         const { success, error } = await removeFromCircle(helperObj)
+        if (error) {
+          closeWindowAfterAction();
+          return await displayPopup(error);
+        }
         if (success && !error) { 
           closeWindowAfterAction();
-            await displayCircleMembers(helperObj.circleId);
+          await displayCircleMembers(helperObj.circleId);
         }
       }
       if (activity === "delete circle") {

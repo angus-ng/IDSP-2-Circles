@@ -429,9 +429,9 @@ let ownedPhotosCount = 0
       `<button id="albumEditButton" ownerId="${albumData.circle.ownerId}" memberStatus="${currentUserMembership.mod}">
         ${circleEditIcon}
       </button>` : ""}
-      <button id="shareButton">
+      ${albumData.circle.ownerId === currentLocalUser || (currentUserMembership ? currentUserMembership.mod : false) ? `<button id="albumShareButton">
         ${shareIcon}
-      </button>
+      </button>` : ""}
     </div>
   </div>`;
   pageName.textContent = albumData.circle.name;

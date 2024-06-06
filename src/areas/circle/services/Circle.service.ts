@@ -350,7 +350,7 @@ export class CircleService implements ICircleService {
             if (userHelper.member === circle.ownerId) {
                 throw new Error("Cannot remove the owner");
             }
-            if (userHelper.loggedInUser === circle.ownerId) {
+            if (userHelper.loggedInUser === circle.ownerId || userHelper.member === userHelper.loggedInUser) {
                     await this._db.prisma.userCircle.delete({
                         where: {
                             username_circleId: {

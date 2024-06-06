@@ -259,9 +259,9 @@ async function displayCircle(circleData) {
         ${circleEditIcon}
         <span circleid=${circleData.circle.id}></span>
       </button>
-      <button id="circleShareButton">
+      ${circleData.circle.ownerId === currentLocalUser || (currentUserMembership ? currentUserMembership.mod : false) ? `<button id="circleShareButton">
         ${shareIcon}
-      </button>
+      </button>` : ""}
     </div>
   </div>`;
   pageName.textContent = "";
@@ -519,7 +519,6 @@ async function displayCircleMembers(circleId) {
           </svg>
         </div>
       </div>`;
-
     return `
       <div class="w-full flex items-center my-5 user" id="${member.user.username}" mod="${member.mod}">
         <div class="flex-none w-58">
@@ -529,7 +528,10 @@ async function displayCircleMembers(circleId) {
           ${displayName.outerHTML}
           ${username.outerHTML}
         </div>
-        ${(currentLocalUser === circleData.circle.ownerId || ((currentUserMembership && !member.mod) ? currentUserMembership.mod: false)) && member.user.username !== circleData.circle.ownerId ? 
+        ${(currentLocalUser === circleData.circle.ownerId || 
+          currentLocalUser === member.user.username || 
+          ((currentUserMembership && !member.mod) ? currentUserMembership.mod: false)) 
+          && member.user.username !== circleData.circle.ownerId ? 
           `<div class="ml-auto pr-2">
             ${removeMemberIcon}
             </div>`: ""}
@@ -545,7 +547,7 @@ async function displayCircleMembers(circleId) {
 
   pageContent.innerHTML = `
     <div id="circleMembersPage" class="w-full px-0 mx-0">
-      <div class="flex flex-col items-center my-5">
+      <div class="flex flex-col items-center my-5 pb-48">
         ${membersList}
       </div>
     </div>`;
@@ -564,6 +566,9 @@ async function displayCircleMembers(circleId) {
         }
 
         if (modIcon) {
+          if (member === currentLocalUser) {
+            return;
+          }
           if (currentStatus === "true"){ 
             await displayConfirmationPopup(`unmod ${member}`, { member, circleId: circleData.circle.id });
           } else {
